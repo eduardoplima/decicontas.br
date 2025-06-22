@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "decicontas-br"
+version = "0.1.0"
+description = "NER pipeline for TCE/RN decisions"
+authors = ["Eduardo Lima <eduardoplima@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.12,<3.13"
+
+
+[tool.poetry.group.dev.dependencies]
+skweak = "^0.3.3"
+label-studio = "^1.17.0"
+seqeval = "^1.2.2"
+ipykernel = "^6.29.5"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
