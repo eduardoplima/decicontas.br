@@ -1,9 +1,23 @@
-from typing import Literal
+from typing import Literal, List
 from pydantic import BaseModel, Field, field_validator
 from datetime import date
 
 # ====================
-# Submodelos de entidades
+# Modelos de Entidades Nomeada
+# ====================
+
+class Entidade(BaseModel):
+    start: int = Field(...)
+    end: int = Field(...)
+    text: str = Field(...)
+    label: str = Field(...)
+
+class NERResposta(BaseModel):
+    entidades: List[Entidade]
+
+
+# ====================
+# Modelos de entidades para informações estruturadas
 # ====================
 
 class MultaFixa(BaseModel):
