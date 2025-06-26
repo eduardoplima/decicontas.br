@@ -71,7 +71,7 @@ class Obrigacao(BaseModel):
     """
     descricao_obrigacao: str | None = Field(default=None, description="Descrição da obrigação.")
     tipo_obrigacao: Literal["fazer", "não fazer"] | None = Field(default=None, description="Tipo da obrigação.")
-    prazo_cumprimento_obrigacao: date | None = Field(default=None, description="Prazo estipulado para cumprimento.")
+    prazo_cumprimento_obrigacao: str | None = Field(default=None, description="Prazo estipulado para cumprimento.")
     data_cumprimento_obrigacao: date | None = Field(default=None, description="Data de cumprimento efetivo.")
     nome_responsavel_obrigacaomulta: str | None = Field(default=None, description="Nome do responsável pela obrigação.")
     orgao_responsavel_obrigacaomulta: str | None = Field(default=None, description="Órgão responsável pela obrigação.")
