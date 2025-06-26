@@ -17,6 +17,7 @@ from .schema import (
     ObrigacaoMulta
 )
 
+
 exemplo_1 = '''
 DECIDEM os Conselheiros do Tribunal de Contas do Estado, à unanimidade, em consonância com a informação do Corpo Técnico e com o parecer do Ministério Público que atua junto a esta Corte de Contas, acolhendo integralmente o voto do Conselheiro Relator, julgar: a) pela DENEGAÇÃO DE REGISTRO ao ato concessivo da aposentadoria e à despesa dele decorrente; b) pela determinação ao IPERN, à vista da Lei Complementar Estadual nº 547/2015, para que, no prazo de 60 (sessenta) dias, após o trânsito em julgado desta decisão, adote as correções necessárias para regularização do ato concessório, do cálculo dos proventos e de sua respectiva implantação; c) no caso de descumprimento da presente decisão, a responsabilização do titular da pasta responsável por seu atendimento, sem prejuízo da multa cominatória desde já fixada no valor de R$ 50,00 (cinquenta reais) por dia que superar o interregno fixado no item `b`, com base no art. 110 da Lei Complementar Estadual nº 464/2012, valor este passível de revisão e limitado ao teto previsto no art. 323, inciso II, alínea `f`, do Regimento Interno, a ser apurado por ocasião de eventual subsistência de mora.
 '''
@@ -68,7 +69,7 @@ label_3 = Decisao(
             base_calculo_multapercentual=4172.49,
             nome_responsavel_multapercentual="Giodano Bruno de Castro Galvão",
         )],
-    ressarcimentos=[
+    recomendacoes=[
         Recomendacao(
             descricao_recomendacao="recomendação para a atual Gestão da Câmara Municipal de Monte Alegre para que adote as providências necessárias ao cumprimento das exigências previstas nos arts. 16, 17 e 21 da Lei de Responsabilidade Fiscal, inclusive com o reconhecimento da nulidade do aumento concedido caso se comprove a sua incompatibilidade com as exigências legais e com os limites constitucionais.",
             prazo_cumprimento_recomendacao="",
@@ -77,7 +78,7 @@ label_3 = Decisao(
         )
     ],
     obrigacoes=[],
-    recomendacoes=[],
+    ressarcimentos=[],
     obrigacoes_multa=[]
 )
 
@@ -325,53 +326,33 @@ TOOL_USE_EXAMPLES = [
     (exemplo_8, label_8),
 ]
 
-class Example(TypedDict):
-    """A representation of an example consisting of text input and expected tool calls.
-
-    For extraction, the tool calls are represented as instances of pydantic model.
-    """
-
-    input: str  # This is the example text
-    tool_calls: List[BaseModel]  # Instances of pydantic model that should be extracted
-
-def convert_tool_example_to_messages(example: Example) -> List[BaseMessage]:
-    """Convert an example into a list of messages that can be fed into an LLM.
-
-    This code is an adapter that converts our example to a list of messages
-    that can be fed into a chat model.
-
-    The list of messages per example corresponds to:
-
-    1) HumanMessage: contains the content from which content should be extracted.
-    2) AIMessage: contains the extracted information from the model
-    3) ToolMessage: contains confirmation to the model that the model requested a tool correctly.
-
-    The ToolMessage is required because some of the chat models are hyper-optimized for agents
-    rather than for an extraction use case.
-    """
-    messages: List[BaseMessage] = [HumanMessage(content=example["input"])]
-    tool_calls = []
-    for tool_call in example["tool_calls"]:
-        tool_calls.append(
+def convert_tool_example_to_messages(text: str, tool_call: BaseModel) -> List:
+    tool_call_id = str(uuid.uuid4())
+    return [
+        HumanMessage(content=text),
+        AIMessage(content="", tool_calls=[
             {
-                "id": str(uuid.uuid4()),
-                "args": tool_call.model_dump(),
-                # The name of the function right now corresponds
-                # to the name of the pydantic model
-                # This is implicit in the API right now,
-                # and will be improved over time.
-                "name": tool_call.__class__.__name__,
-            },
-        )
-    messages.append(AIMessage(content="", tool_calls=tool_calls))
-    tool_outputs = example.get("tool_outputs") or [
-        "You have correctly called this tool."
-    ] * len(tool_calls)
-    for output, tool_call in zip(tool_outputs, tool_calls):
-        messages.append(ToolMessage(content=output, tool_call_id=tool_call["id"]))
+                "id": tool_call_id,
+                "name": tool_call.__class__.__name__,  # "Decisao"
+                "args": tool_call.model_dump()
+            }
+        ]),
+        ToolMessage(content="Você chamou corretamente essa ferramenta.", tool_call_id=tool_call_id)
+    ]
 
-    return messages
 
+def get_fewshot_messages(examples: List[Tuple[str, Decisao]]) -> List[List[BaseMessage]]:
+    return [convert_tool_example_to_messages(text, label) for text, label in examples]
+
+
+fewshot_chats = get_fewshot_messages(TOOL_USE_EXAMPLES)
+
+# Flatten all examples em uma lista de mensagens
+fewshot_context = [msg for chat in fewshot_chats for msg in chat]
+
+# Agora adicione sua nova entrada
+def build_fewshot_prompt(novo_texto: str) -> List[BaseMessage]:
+    return fewshot_context + [HumanMessage(content=novo_texto)]
 
 def get_formatted_messages_from_examples(examples: List[Tuple[str, str]]) -> List[Dict[str, BaseMessage]]:
     """Generate a list of formatted messages from a list of examples.
@@ -388,7 +369,7 @@ def get_formatted_messages_from_examples(examples: List[Tuple[str, str]]) -> Lis
     for text_input, tool_call in examples:
         # Convert each example to a list of messages and extend the formatted_messages list
         formatted_messages.extend(
-            convert_tool_example_to_messages({"input": text_input, "tool_calls": [tool_call]})
+            convert_tool_example_to_messages(text_input, tool_call)
         )
     
     return formatted_messages
