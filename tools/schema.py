@@ -6,14 +6,42 @@ from datetime import date
 # Modelos de Entidades Nomeada
 # ====================
 
-class Entidade(BaseModel):
-    start: int = Field(...)
-    end: int = Field(...)
-    text: str = Field(...)
-    label: str = Field(...)
+# Recriar as entidades por label e pegar somente descrição
+# fazer o span depois
 
-class NERResposta(BaseModel):
-    entidades: List[Entidade]
+class NERMultaFixa(BaseModel):
+    descricao_multafixa: str = Field(..., description="Descrição da multa de valor fixa aplicada em decisão do TCE/RN.")
+
+class NERMultaPercentual(BaseModel):
+    descricao_multapercentual: str = Field(..., description="Descrição da multa percentual aplicada sobre o dano.")
+
+class NERObrigacaoMulta(BaseModel):
+    descricao_obrigacaomulta: str = Field(..., description="Descrição da obrigação sujeita à multa cominatória aplicada em decisão do TCE/RN.")
+
+class NERRessarcimento(BaseModel):
+    descricao_ressarcimento: str = Field(..., description="Descrição do dano que gerou o ressarcimento imposto ao responsável.")
+
+class NERObrigacao(BaseModel):
+    descricao_obrigacao: str = Field(..., description="Descrição da obrigação de fazer ou não fazer imposta em decisão do TCE/RN.")
+
+class NERRecomendacao(BaseModel):
+    descricao_recomendacao: str = Field(..., description="Descrição da recomendação proferida em decisão do TCE/RN.")
+
+# ====================
+# Modelo de Entidade Nomeada para decisão
+# ====================
+
+class NERDecisao(BaseModel):
+    """
+    Entidade Nomeada que agrupa todas as entidades extraídas de uma decisão do TCE/RN.
+    Contém listas de entidades nomeadas para cada tipo de informação extraída.
+    """
+    multas_fixas: List[NERMultaFixa] = Field(default_factory=list, description="Lista de multas fixas aplicadas.")
+    multas_percentuais: List[NERMultaPercentual] = Field(default_factory=list, description="Lista de multas percentuais sobre ressarcimento.")
+    obrigacoes_multa: List[NERObrigacaoMulta] = Field(default_factory=list, description="Lista de multas cominatórias aplicadas.")
+    ressarcimentos: List[NERRessarcimento] = Field(default_factory=list, description="Lista de ressarcimentos imputados.")
+    obrigacoes: List[NERObrigacao] = Field(default_factory=list, description="Lista de obrigações de fazer ou não fazer impostas.")
+    recomendacoes: List[NERRecomendacao] = Field(default_factory=list, description="Lista de recomendações proferidas sem força vinculante.")
 
 
 # ====================
@@ -35,11 +63,11 @@ class MultaPercentual(BaseModel):
     """
     descricao_multapercentual: str | None = Field(default=None, description="Descrição da multa percentual aplicada.")
     percentual_multapercentual: float | None = Field(default=None, description="Percentual aplicado sobre o dano.")
-    base_calculo_multapercentual: float | None = Field(default=None, description="Valor base sobre o qual o percentual foi aplicado.")    
+    base_calculo_multapercentual: float | None = Field(default=None, description="Valor base sobre o qual o percentual foi aplicado.")
+    # devedor? melhorar o texto da descrição
     nome_responsavel_multapercentual: str | None = Field(default=None, description="Nome do responsável pela multa.")
     e_multa_solidaria_multapercentual: bool | None = Field(default=False, description="Indica se a multa é solidária.")
     solidarios_multapercentual: list[str] | None = Field(default=None, description="Lista de responsáveis solidários pela multa percentual.")
-
 
 
 class ObrigacaoMulta(BaseModel):
