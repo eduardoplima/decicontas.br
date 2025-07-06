@@ -1,28 +1,28 @@
-# decicontas.br
+# DeciContas.br Named Entity Recognition Pipeline
 
-**decicontas.br** is a curated and structured dataset of rulings, audit outcomes, and related metadata extracted from decisions issued by Brazilian Courts of Accounts (*Tribunais de Contas*). This dataset aims to support research in legal analytics, auditing transparency, and AI-assisted decision analysis in the public sector.
+This repository contains the Python code and configuration for extracting named entities from decisions of the Rio Grande do Norte State Court of Accounts (TCE/RN), focused on auditing information such as fines, obligations, reimbursements, and recommendations. The project is part of the DeciContas.br dataset initiative.
 
-## 📦 Dataset Contents
+The goal is to convert unstructured text in these decisions into structured data that can be monitored and analyzed systematically. The solution leverages Large Language Models (LLMs) deployed through Azure OpenAI, using function calling and few-shot prompting strategies inspired by the LexCare.BR project.
 
-The dataset includes:
+## Project Structure
 
-- **Acórdãos (Decisions):** Extracted titles, summaries, and full texts
-- **Audit Findings:** Classification of irregularities and responsible parties
-- **Sanctions:** Information on fines, reimbursements, and warnings
-- **Metadata:** Dates, decision numbers, case IDs, and involved institutions
+- **tools/dataset.py**: loads the decicontas.br dataset
+- **tools/prompt.py**: builds few-shot NER prompts
+- **tools/schema.py**: defines the Pydantic data schema (Decisao and its components) and NER data schema (NERDecisao)
+- **dataset/labeled_data/**: stores model outputs and annotations
+- **ner.py**: runs the complete NER pipeline
 
-All data is stored in open formats (CSV, JSON) to facilitate reuse and integration.
+## Legal Context
 
-## 📚 Use Cases
+This project is aligned with TCE/RN rules governing:
 
-- Legal and accountability research
-- Transparency initiatives and civic tech
-- Natural Language Processing (NLP) and AI training
-- Oversight and auditing dashboards
+- execution of fines and reimbursements ([Resolução 013/2015](./docs/Resolução_0132015_Dispõe_sobre_a_execução_das_decisões_TCERN__multaressarcimento.pdf))
 
-## 🚀 Getting Started
+It can support future auditing and compliance workflows by generating structured datasets from free-form decisions.
 
-Download the latest version from the `data/` directory or clone the repo:
+## Credits
 
-```bash
-git clone https://github.com/yourusername/decicontas.br.git
+- Inspired by LexCare.BR and its cross-domain NER approach
+- Developed for the DeciContas.br research project
+- Data sources: Tribunal de Contas do Estado do Rio Grande do Norte
+- Developed in Python with langchain, pydantic, and Azure OpenAI
