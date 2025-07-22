@@ -115,6 +115,12 @@ class Obrigacao(BaseModel):
     """
     Representa obrigação imposta em decisão do TCE/RN.
     Pode ter multa cominatória associada.
+
+    Estratégias pra extração:
+    Checar se tem todas as informações na decisão com uma flag
+    Se a flag apontar que precisa de mais informações:
+    função para receber item remissivo
+    novo schema na função (Alinea a item 2.1...)
     """
     descricao: str = Field(..., description="Descrição da obrigação.")
     tipo: Literal["fazer", "não fazer"] | None = Field(default=None, description="Tipo da obrigação (fazer/não fazer).")
