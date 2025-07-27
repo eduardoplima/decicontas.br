@@ -93,7 +93,7 @@ class Multa(BaseModel):
     Representa multa aplicada em decisão do TCE/RN.
     Pode ser de valor fixo ou percentual, indicado pelos campos correspondentes.
     """
-    descricao: str = Field(..., description="Descrição da multa aplicada.")
+    descricao_multa: str = Field(..., description="Descrição da multa aplicada.")
     valor_fixo: float | None = Field(default=None, description="Valor fixo da multa, se aplicável.")
     percentual: float | None = Field(default=None, description="Percentual da multa, se aplicável.")
     base_calculo: float | None = Field(default=None, description="Base de cálculo para percentual.")
@@ -115,22 +115,19 @@ class Obrigacao(BaseModel):
     """
     Representa obrigação imposta em decisão do TCE/RN.
     Pode ter multa cominatória associada.
-
-    Estratégias pra extração:
-    Checar se tem todas as informações na decisão com uma flag
-    Se a flag apontar que precisa de mais informações:
-    função para receber item remissivo
-    novo schema na função (Alinea a item 2.1...)
     """
-    descricao: str = Field(..., description="Descrição da obrigação.")
-    tipo: Literal["fazer", "não fazer"] | None = Field(default=None, description="Tipo da obrigação (fazer/não fazer).")
+    descricao_obrigacao: str = Field(..., description="Descrição da obrigação.")
+    de_fazer: bool | None = Field(default=True, description="Tipo da obrigação. Verdadeiro se for de fazer, falso se for de não fazer.")
     prazo: str | None = Field(default=None, description="Prazo estipulado para cumprimento.")
-    data_cumprimento: date | None = Field(default=None, description="Data de eventual cumprimento.")
-    nome_responsavel: str | None = Field(default=None, description="Nome do responsável pela obrigação.")
+    data_cumprimento: date | None = Field(default=None, description="Data de eventual cumprimento.") #data inicio? 
     orgao_responsavel: str | None = Field(default=None, description="Órgão responsável pela obrigação.")
     tem_multa_cominatoria: bool = Field(default=False, description="Indica se há multa cominatória.")
+    nome_responsavel_multa_cominatoria: str | None = Field(default=None, description="Nome do responsável pela obrigação.")
+    documento_responsavel_multa_cominatoria: str | None = Field(default=None, description="Documento do responsável pela obrigação.") 
     valor_multa_cominatoria: float | None = Field(default=None, description="Valor diário da multa cominatória, se aplicável.")
-    periodo_multa_cominatoria: Literal["diário", "semanal", "mensal"] | None = Field(default=None, description="Periodicidade da multa cominatória.")
+    periodo_multa_cominatoria: Literal["horário", "diário", "semanal", "mensal"] | None = Field(default=None, description="Periodicidade da multa cominatória.")
+    e_multa_cominatoria_solidaria: bool | None = Field(default=False, description="Indica se a multa cominatória é solidária.")
+    solidarios_multa_cominatoria: list[str] | None = Field(default=None, description="Lista de responsáveis solidários da multa cominatória.")
 
 
 class Recomendacao(BaseModel):

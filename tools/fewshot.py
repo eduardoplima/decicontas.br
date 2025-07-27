@@ -12,7 +12,8 @@ from .schema import (
     NERMulta,
     NERObrigacao,
     NERRecomendacao,
-    NERRessarcimento
+    NERRessarcimento,
+    Obrigacao
 )
 
 
@@ -280,6 +281,7 @@ TOOL_USE_EXAMPLES = [
     (exemplo_11, label_11),
     (exemplo_12, label_12)
 ]
+
 
 class Example(TypedDict):
     """A representation of an example consisting of text input and expected tool calls.
