@@ -12,14 +12,6 @@
   <owl:versionInfo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">397</owl:versionInfo>
 </owl:Ontology>
 
-<owl:Ontology rdf:about="http://example.org/tce.owl">
-  <owl:imports rdf:resource="http://www.loa-cnr.it/ontologies/DOLCE-Lite.owl"/>
-</owl:Ontology>
-
-<owl:Ontology rdf:about="http://tce.rn.gov.br/tce.owl">
-  <owl:imports rdf:resource="http://www.loa-cnr.it/ontologies/DOLCE-Lite.owl"/>
-</owl:Ontology>
-
 <owl:ObjectProperty rdf:about="http://www.loa-cnr.it/ontologies/DOLCE-Lite.owl#has-quality">
   <owl:inverseOf rdf:resource="http://www.loa-cnr.it/ontologies/DOLCE-Lite.owl#inherent-in"/>
   <rdfs:domain rdf:resource="http://www.loa-cnr.it/ontologies/DOLCE-Lite.owl#particular"/>

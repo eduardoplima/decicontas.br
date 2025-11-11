@@ -35,3 +35,9 @@ def get_decicontas_df():
     df_more = pd.read_json("dataset/labeled_data/decicontas_more_ressarcimentos.json")
     return pd.concat([df_decicontas[['annotations', 'data']], df_more[['annotations', 'data']]], ignore_index=True)
     
+def get_decicontas_tags_df():
+    """
+    Returns a DataFrame containing the decicontas dataset for document tagging.
+    """
+    
+    return pd.read_json("dataset/labeled_data/decicontas_doc_tags.json")
