@@ -2,7 +2,7 @@ import json
 import random
 from typing import Any, Dict
 
-from .fewshot import TOOL_USE_EXAMPLES, get_formatted_messages_from_examples
+from .fewshot import TOOL_USE_EXAMPLES, get_formatted_messages_from_examples, FEW_SHOTS_DOC_TAGS
 from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
@@ -54,6 +54,42 @@ FEW_SHOT_NER_PROMPT = ChatPromptTemplate.from_messages(
     ]
 )
 
+FEW_SHOT_DOC_PROMPT = ChatPromptTemplate.from_messages(
+    [
+        (
+            "system",
+            "Você é um especialista em categorização de documentos jurídicos. "
+            "Sua tarefa é analisar o texto fornecido e atribuir as tags apropriadas com base nas categorias definidas."
+            "As categorias permitidas são: [\"MULTA\", \"OBRIGACAO\", \"RESSARCIMENTO\", \"RECOMENDACAO\"]"
+            "Se tiver mais de uma categoria aplicável, retorne todas em uma lista ex: ['MULTA', 'OBRIGACAO']."
+            "Se for só uma categoria, retorne em uma lista ex: ['MULTA']."
+            "\n\n1. Leia atentamente o texto do documento."
+            "\n2. Atribua as tags que melhor descrevem o conteúdo e o contexto do documento."
+            "\n3. Se o documento não se encaixar em nenhuma categoria, retorne uma lista vazia."
+            "\n4. Mantenha-se estritamente dentro do escopo das categorias definidas."
+            "\n5. Não infira ou adicione tags que não estejam explicitamente relacionadas ao conteúdo do documento."
+            "\n\nLembre-se: sua precisão e aderência ao conteúdo original são cruciais para o sucesso desta tarefa."
+        ),
+        MessagesPlaceholder('examples'),
+        ("human", "{text}"),
+    ]
+)
+
+def build_fewshot_messages_for_doc_tagging(fewshots, json_assistant=True):
+    """
+    fewshots: lista de dicts {"text": str, "tags": [..]}
+    retorna: [("user", ...), ("assistant", ...), ...]
+    """
+    msgs = []
+    for ex in fewshots:
+        msgs.append(("user", f"TEXTO:\n{ex['text']}"))
+        if json_assistant:
+            msgs.append(("assistant", json.dumps({"tags": ex["tags"]}, ensure_ascii=False)))
+        else:
+            msgs.append(("assistant", {"tags": ex["tags"]}))  # só use se sua versão aceitar dict no content
+    return msgs
+
+
 
 def generate_few_shot_ner_prompts_json_schema(input_text: str, sample_size: int = 1) -> Dict[str, Any]:
     """Generate few-shot NER prompts using a given example text.
@@ -94,3 +130,12 @@ def generate_few_shot_ner_prompts(input_text: str) -> Dict[str, Any]:
     ))
     
     return ner_prompts
+
+def generate_few_shot_doc_tagging_prompts(input_text):
+    # FEW_SHOTS_DOC_TAGS = [{"text": ..., "tags": [...]}, ...]  (do passo anterior)
+    fewshot_msgs = build_fewshot_messages_for_doc_tagging(FEW_SHOTS_DOC_TAGS, json_assistant=True)
+    # Agora sim: o placeholder "examples" recebe uma lista de mensagens válidas
+    return FEW_SHOT_DOC_PROMPT.invoke({
+        "text": input_text,
+        "examples": fewshot_msgs
+    })

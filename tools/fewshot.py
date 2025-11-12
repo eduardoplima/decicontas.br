@@ -332,6 +332,8 @@ def convert_tool_example_to_messages(example: Example) -> List[BaseMessage]:
     return messages
 
 
+# DOCUMENT TAGGING FEW-SHOT CONVERSION UTILITIES
+
 def get_formatted_messages_from_examples(examples: List[Tuple[str, str]]) -> List[Dict[str, BaseMessage]]:
     """Generate a list of formatted messages from a list of examples.
 
@@ -351,3 +353,79 @@ def get_formatted_messages_from_examples(examples: List[Tuple[str, str]]) -> Lis
         )
     
     return formatted_messages
+
+
+# ---- Conversor de NER -> Document Tagging para seus exemplos ----
+from typing import Any, Iterable, List, Dict
+import pandas as pd
+
+ALLOWED = ["MULTA", "OBRIGACAO", "RESSARCIMENTO", "RECOMENDACAO"]
+ORDER_INDEX = {t:i for i,t in enumerate(ALLOWED)}
+
+def _get_field(obj: Any, name: str):
+    """Suporta objetos (atributos) e dicts (chaves)."""
+    if hasattr(obj, name):
+        return getattr(obj, name)
+    if isinstance(obj, dict):
+        return obj.get(name)
+    return None
+
+def _has_any(x: Any) -> bool:
+    """True se lista/iterável não vazio (e não None)."""
+    if x is None:
+        return False
+    if isinstance(x, (list, tuple, set)):
+        return len(x) > 0
+    # fallback: tenta iterar
+    try:
+        return any(True for _ in x)
+    except Exception:
+        return False
+
+def ner_label_to_tags(label_obj: Any) -> List[str]:
+    tags = []
+    if _has_any(_get_field(label_obj, "multas")):
+        tags.append("MULTA")
+    if _has_any(_get_field(label_obj, "obrigacoes")):
+        tags.append("OBRIGACAO")
+    if _has_any(_get_field(label_obj, "ressarcimentos")):
+        tags.append("RESSARCIMENTO")
+    if _has_any(_get_field(label_obj, "recomendacoes")):
+        tags.append("RECOMENDACAO")
+    # ordena de forma canônica e remove duplicatas preservando ordem
+    seen = set()
+    tags_sorted = []
+    for t in sorted(tags, key=lambda z: ORDER_INDEX[z]):
+        if t not in seen:
+            seen.add(t)
+            tags_sorted.append(t)
+    return tags_sorted
+
+def build_fewshot_doc_tags(examples: List[tuple]) -> List[Dict[str, Any]]:
+    """
+    Recebe TOOL_USE_EXAMPLES = [(texto, label_obj), ...]
+    Retorna lista de dicts: {"text": ..., "tags": [...]}
+    """
+    out = []
+    for text, label_obj in examples:
+        out.append({
+            "text": str(text).strip(),
+            "tags": ner_label_to_tags(label_obj)
+        })
+    return out
+
+def fewshots_to_dataframe(fewshots: List[Dict[str, Any]]) -> pd.DataFrame:
+    return pd.DataFrame(fewshots, columns=["text", "tags"])
+
+# ---------------- USO COM SEUS EXEMPLOS ----------------
+# Pressupondo que TOOL_USE_EXAMPLES, exemplo_1..12 e label_1..12 já estão definidos exatamente como você enviou:
+
+FEW_SHOTS_DOC_TAGS = build_fewshot_doc_tags(TOOL_USE_EXAMPLES)
+df_fewshots = fewshots_to_dataframe(FEW_SHOTS_DOC_TAGS)
+
+# Visualização rápida
+# for i, ex in enumerate(FEW_SHOTS_DOC_TAGS, start=1):
+#     print(f"{i:02d} -> tags: {ex['tags']} | text[:90]: {ex['text'][:90]!r}")
+
+# df_fewshots.head()
+
