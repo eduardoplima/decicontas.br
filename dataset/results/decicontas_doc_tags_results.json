@@ -7,7 +7,7 @@
     "hamming_loss":0.0210526316,
     "subset_accuracy":0.9242105263,
     "model":"gpt41_nano",
-    "timestamp":"2025-11-12T00:48:13.716332",
+    "timestamp":"2025-11-12T19:26:37.821693",
     "n_docs":1425
   },
   {
@@ -18,7 +18,7 @@
     "hamming_loss":0.0219298246,
     "subset_accuracy":0.9214035088,
     "model":"gpt41_mini",
-    "timestamp":"2025-11-12T00:48:13.723650",
+    "timestamp":"2025-11-12T19:26:37.829497",
     "n_docs":1425
   },
   {
@@ -29,7 +29,7 @@
     "hamming_loss":0.0214035088,
     "subset_accuracy":0.9221052632,
     "model":"gpt41",
-    "timestamp":"2025-11-12T00:48:13.730516",
+    "timestamp":"2025-11-12T19:26:37.835230",
     "n_docs":1425
   },
   {
@@ -40,7 +40,7 @@
     "hamming_loss":0.0245614035,
     "subset_accuracy":0.9129824561,
     "model":"gpt4o",
-    "timestamp":"2025-11-12T00:48:13.736722",
+    "timestamp":"2025-11-12T19:26:37.840550",
     "n_docs":1425
   },
   {
@@ -51,7 +51,7 @@
     "hamming_loss":0.0201754386,
     "subset_accuracy":0.9270175439,
     "model":"gpt35",
-    "timestamp":"2025-11-12T00:48:13.742472",
+    "timestamp":"2025-11-12T19:26:37.845853",
     "n_docs":1425
   },
   {
@@ -62,7 +62,7 @@
     "hamming_loss":0.0198245614,
     "subset_accuracy":0.9284210526,
     "model":"gpt4turbo",
-    "timestamp":"2025-11-12T00:48:13.748099",
+    "timestamp":"2025-11-12T19:26:37.851362",
     "n_docs":1425
   }
 ]
