@@ -120,9 +120,9 @@ class Obrigacao(BaseModel):
     de_fazer: bool | None = Field(default=True, description="Tipo da obrigação. Verdadeiro se for de fazer, falso se for de não fazer.")
     prazo: str | None = Field(default=None, description="Prazo estipulado para cumprimento.")
     data_cumprimento: date | None = Field(default=None, description="Data de eventual cumprimento.") #data inicio? 
-    orgao_responsavel: str | None = Field(default=None, description="Órgão responsável pela obrigação.")
-    tem_multa_cominatoria: bool = Field(default=False, description="Indica se há multa cominatória.")
-    nome_responsavel_multa_cominatoria: str | None = Field(default=None, description="Nome do responsável pela obrigação.")
+    orgao_responsavel: str | None = Field(default=None, description="Órgão responsável pela obrigação.") # service para pegar o id
+    tem_multa_cominatoria: bool = Field(default=False, description="Indica se há multa cominatória.") 
+    nome_responsavel_multa_cominatoria: str | None = Field(default=None, description="Nome do responsável pela obrigação.") # service para pegar o responsavel pelo órgão naquele momento
     documento_responsavel_multa_cominatoria: str | None = Field(default=None, description="Documento do responsável pela obrigação.") 
     valor_multa_cominatoria: float | None = Field(default=None, description="Valor diário da multa cominatória, se aplicável.")
     periodo_multa_cominatoria: Literal["horário", "diário", "semanal", "mensal"] | None = Field(default=None, description="Periodicidade da multa cominatória.")
