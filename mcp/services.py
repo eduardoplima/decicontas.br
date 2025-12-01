@@ -52,7 +52,7 @@ def find_unit(query: str, limit=5, score_cutoff=70):
     Returns the best matches of NomeUnidade for the string `query`.
     """
     # Ensure a copy to not alter the original
-    df = get_all_units().copy()
+    df = get_all_units()
     
     # Normalized column (can save permanently in the DF if you want)
     df["NomeUnidade_norm"] = df["NomeUnidade"].apply(normalize_text)
