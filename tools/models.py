@@ -7,8 +7,9 @@ from sqlalchemy.dialects.mssql import TIMESTAMP
 
 from sqlalchemy import (
     Column, Integer, String, Numeric, Enum as SAEnum,
-    Date, Text, ForeignKey
+    Date, Text, ForeignKey, DateTime, Text, func
 )
+
 from sqlalchemy.orm import relationship
 
 # enums_beneficio.py
@@ -193,5 +194,92 @@ class BeneficioORM(Base):
     # Memória de cálculo (Manual 3.3)
     MemoriaCalculo = Column(Text, nullable=True)
     DataRegistro = Column(Date, nullable=True)
+
+
+# NERORM
+
+
+
+class NERDecisaoORM(Base):
+    __tablename__ = "NERDecisao"
+
+    IdNerDecisao = Column(Integer, primary_key=True, autoincrement=True)
+    IdProcesso = Column(Integer, nullable=False)
+    IdComposicaoPauta = Column(Integer, nullable=False)
+    IdVotoPauta = Column(Integer, nullable=False)
+
+    Modelo = Column(String(100), nullable=True)
+    PromptVersion = Column(String(50), nullable=True)
+    RunId = Column(String(64), nullable=True)  # se usar MLflow ou algo similar
+
+    RawJson = Column(Text, nullable=False)
+
+    DataExtracao = Column(DateTime, server_default=func.now())
+
+    multas = relationship(
+        "NERMultaORM",
+        back_populates="decisao",
+        cascade="all, delete-orphan",
+    )
+    ressarcimentos = relationship(
+        "NERRessarcimentoORM",
+        back_populates="decisao",
+        cascade="all, delete-orphan",
+    )
+    obrigacoes = relationship(
+        "NERObrigacaoORM",
+        back_populates="decisao",
+        cascade="all, delete-orphan",
+    )
+    recomendacoes = relationship(
+        "NERRecomendacaoORM",
+        back_populates="decisao",
+        cascade="all, delete-orphan",
+    )
+
+
+class NERMultaORM(Base):
+    __tablename__ = "NERMulta"
+
+    IdNerMulta = Column(Integer, primary_key=True, autoincrement=True)
+    IdNerDecisao = Column(Integer, ForeignKey("NERDecisao.IdNerDecisao"), nullable=False)
+    Ordem = Column(Integer, nullable=False)
+    DescricaoMulta = Column(Text, nullable=False)
+
+    decisao = relationship("NERDecisaoORM", back_populates="multas")
+
+
+class NERRessarcimentoORM(Base):
+    __tablename__ = "NERRessarcimento"
+
+    IdNerRessarcimento = Column(Integer, primary_key=True, autoincrement=True)
+    IdNerDecisao = Column(Integer, ForeignKey("NERDecisao.IdNerDecisao"), nullable=False)
+    Ordem = Column(Integer, nullable=False)
+    DescricaoRessarcimento = Column(Text, nullable=False)
+
+    decisao = relationship("NERDecisaoORM", back_populates="ressarcimentos")
+
+
+class NERObrigacaoORM(Base):
+    __tablename__ = "NERObrigacao"
+
+    IdNerObrigacao = Column(Integer, primary_key=True, autoincrement=True)
+    IdNerDecisao = Column(Integer, ForeignKey("NERDecisao.IdNerDecisao"), nullable=False)
+    Ordem = Column(Integer, nullable=False)
+    DescricaoObrigacao = Column(Text, nullable=False)
+
+    decisao = relationship("NERDecisaoORM", back_populates="obrigacoes")
+
+
+class NERRecomendacaoORM(Base):
+    __tablename__ = "NERRecomendacao"
+
+    IdNerRecomendacao = Column(Integer, primary_key=True, autoincrement=True)
+    IdNerDecisao = Column(Integer, ForeignKey("NERDecisao.IdNerDecisao"), nullable=False)
+    Ordem = Column(Integer, nullable=False)
+    DescricaoRecomendacao = Column(Text, nullable=False)
+
+    decisao = relationship("NERDecisaoORM", back_populates="recomendacoes")
+
 
 
