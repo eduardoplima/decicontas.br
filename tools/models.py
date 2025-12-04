@@ -148,17 +148,13 @@ class BeneficioORM(Base):
 
     # Relacionamento com Processo (ajuste o nome/PK da tabela real)
     IdProcesso = Column(Integer, ForeignKey("Processo.IdProcesso"), nullable=False)
-    processo = relationship("Processo", back_populates="beneficios")
 
     # ===== Campos do formulário (Manual, seção 3.2) =====
     IdPFA = Column(Integer, nullable=True)
     NumeroProcesso = Column(String(20), nullable=True)  # 'XXXXXX/XXXX'
-
     DimensaoFiscalizacao = Column(String(50), nullable=True)
     InstrumentoFiscalizacao = Column(String(50), nullable=True)
-
     NumeroAcordao = Column(String(50), nullable=True)
-
     Encaminhamento = Column(Text, nullable=True)
 
     TipoBeneficio = Column(
@@ -169,17 +165,13 @@ class BeneficioORM(Base):
         SAEnum(SubtipoBeneficio, name="subtipo_beneficio", native_enum=False),
         nullable=True,
     )
-
     AreaTematica = Column(String(100), nullable=True)
-
     Estagio = Column(
         SAEnum(EstagioBeneficio, name="estagio_beneficio", native_enum=False),
         nullable=False,
     )
-
     Ocorrencia = Column(String(50), nullable=True)
     # instrução técnica / relatório / decisão / monitoramento / etc.
-
     Caracteristica = Column(
         SAEnum(CaracteristicaBeneficio, name="caracteristica_beneficio", native_enum=False),
         nullable=False,
@@ -197,9 +189,6 @@ class BeneficioORM(Base):
 
 
 # NERORM
-
-
-
 class NERDecisaoORM(Base):
     __tablename__ = "NERDecisao"
 
@@ -209,7 +198,7 @@ class NERDecisaoORM(Base):
     IdVotoPauta = Column(Integer, nullable=False)
 
     Modelo = Column(String(100), nullable=True)
-    PromptVersion = Column(String(50), nullable=True)
+    VersaoPrompt = Column(String(50), nullable=True)
     RunId = Column(String(64), nullable=True)  # se usar MLflow ou algo similar
 
     RawJson = Column(Text, nullable=False)
@@ -282,4 +271,11 @@ class NERRecomendacaoORM(Base):
     decisao = relationship("NERDecisaoORM", back_populates="recomendacoes")
 
 
+class ProcessedDecisionORM(Base):
+    __tablename__ = "DecisaoProcessada"
 
+    IdDecisaoProcessada = Column(Integer, primary_key=True, autoincrement=True)
+    IdNERDecisao = Column(Integer, ForeignKey("NERDecisao.IdNerDecisao"), nullable=False)
+    DataProcessamento = Column(TIMESTAMP, nullable=False)
+
+    ner_decision = relationship("NERDecisaoORM", back_populates="processed_record")
