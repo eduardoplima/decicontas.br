@@ -67,6 +67,6 @@ def find_unit(query: str, limit=5, score_cutoff=70):
     df_result = df_result.sort_values("score", ascending=False)
     return df_result[["IdUnidadeJurisdicionada", "NomeUnidade", "score"]]
 
-def get_responsible_unit(id_unit: int) -> pd.DataFrame:
+def get_responsible_unit(id_unit: int, session_date: str) -> pd.DataFrame:
     sql_resp = open("../sql/responsible_unit.sql").read()
-    return pd.read_sql(sql_resp.format(id_unit=id_unit), get_connection('BdSIAI'))
+    return pd.read_sql(sql_resp.format(id_unit=id_unit, session_date=session_date), get_connection('BdSIAI'))

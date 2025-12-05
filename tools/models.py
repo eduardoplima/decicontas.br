@@ -125,21 +125,6 @@ class RecomendacaoORM(Base):
         return (f"<Recomendacao(IdRecomendacao={self.IdRecomendacao}, "
                 f"IdProcesso={self.IdProcesso})>")
     
-class DecisaoProcessadaORM(Base):
-    __tablename__ = 'DecisaoProcessada'
-
-    IdDecisaoProcessada = Column(Integer, primary_key=True, autoincrement=True)
-    IdProcesso = Column(Integer, nullable=True)
-    IdComposicaoPauta = Column(Integer, nullable=True)
-    IdVotoPauta = Column(Integer, nullable=True)
-
-    # Em SQL Server, TIMESTAMP é um "rowversion" binário, não uma data/hora.
-    # O tipo correto no SQLAlchemy para esse caso é MSSQL TIMESTAMP.
-    DataProcessamento = Column(TIMESTAMP, nullable=True)
-
-    def __repr__(self):
-        return (f"<DecisaoProcessada(IdDecisaoProcessada={self.IdDecisaoProcessada}, "
-                f"IdProcesso={self.IdProcesso})>")
     
 class BeneficioORM(Base):
     __tablename__ = "Beneficio"
@@ -279,3 +264,41 @@ class ProcessedDecisionORM(Base):
     DataProcessamento = Column(TIMESTAMP, nullable=False)
 
     ner_decision = relationship("NERDecisaoORM", back_populates="processed_record")
+
+class ProcessedMultaORM(Base):
+    __tablename__ = "MultaProcessada"
+
+    IdMultaProcessada = Column(Integer, primary_key=True, autoincrement=True)
+    IdNerMulta = Column(Integer, ForeignKey("NERMulta.IdNerMulta"), nullable=False)
+    DataProcessamento = Column(TIMESTAMP, nullable=False)
+
+    ner_multa = relationship("NERMultaORM", back_populates="processed_records")
+
+class ProcessedRessarcimentoORM(Base):
+    __tablename__ = "RessarcimentoProcessado"
+
+    IdRessarcimentoProcessado = Column(Integer, primary_key=True, autoincrement=True)
+    IdNerRessarcimento = Column(Integer, ForeignKey("NERRessarcimento.IdNerRessarcimento"), nullable=False)
+    DataProcessamento = Column(TIMESTAMP, nullable=False)
+
+    ner_ressarcimento = relationship("NERRessarcimentoORM", back_populates="processed_records")
+
+class ProcessedObrigacaoORM(Base):
+    __tablename__ = "ObrigacaoProcessada"
+
+    IdObrigacaoProcessada = Column(Integer, primary_key=True, autoincrement=True)
+    IdNerObrigacao = Column(Integer, ForeignKey("NERObrigacao.IdNerObrigacao"), nullable=False)
+    DataProcessamento = Column(TIMESTAMP, nullable=False)
+
+    ner_obrigacao = relationship("NERObrigacaoORM", back_populates="processed_records")
+
+class ProcessedRecomendacaoORM(Base):
+    __tablename__ = "RecomendacaoProcessada"
+
+    IdRecomendacaoProcessada = Column(Integer, primary_key=True, autoincrement=True)
+    IdNerRecomendacao = Column(Integer, ForeignKey("NERRecomendacao.IdNerRecomendacao"), nullable=False)
+    DataProcessamento = Column(TIMESTAMP, nullable=False)
+
+    ner_recomendacao = relationship("NERRecomendacaoORM", back_populates="processed_records")
+
+
