@@ -11,6 +11,9 @@ from sqlalchemy.engine import Engine
 from rapidfuzz import process, fuzz  # pip install rapidfuzz
 from dotenv import load_dotenv
 
+from fastmcp import FastMCP
+
+mcp = FastMCP("Decisoes")
 
 load_dotenv()
 
@@ -67,6 +70,17 @@ def find_unit(query: str, limit=5, score_cutoff=70):
     df_result = df_result.sort_values("score", ascending=False)
     return df_result[["IdUnidadeJurisdicionada", "NomeUnidade", "score"]]
 
-def get_responsible_unit(id_unit: int, session_date: str) -> pd.DataFrame:
+#####################
+# Exposed MCP tools #
+#####################
+
+@mcp.tool()
+def get_responsible_unit(unit: str, session_date: str) -> pd.DataFrame:
+    id_unit = find_unit(unit, limit=1).iloc[0]["IdUnidadeJurisdicionada"]
     sql_resp = open("../sql/responsible_unit.sql").read()
-    return pd.read_sql(sql_resp.format(id_unit=id_unit, session_date=session_date), get_connection('BdSIAI'))
+    return pd.read_sql(sql_resp.format(id_unit=id_unit, session_date=session_date), get_connection('BdSIAI')).to_dict(orient='records')
+
+@mcp.tool()
+def get_citations(process: str) -> pd.DataFrame:
+    sql_citacoes = open("../sql/citations_by_process.sql").read()
+    return pd.read_sql(sql_citacoes.format(process=process), get_connection('processo')).to_dict(orient='records')
