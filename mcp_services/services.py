@@ -183,8 +183,8 @@ def get_deadline_from_citations(process_number: str, session_date: str, responsi
     chosen = filtered[idx]
 
     # 5. Convert date fields
-    start_date = chosen.get("DataInicioContagem")
-    final_date = chosen.get("DataFinalResposta")
+    start_date = chosen.get("data_inicio_contagem")
+    final_date = chosen.get("data_final_resposta")
 
     # Convert to datetime
     if isinstance(start_date, str):

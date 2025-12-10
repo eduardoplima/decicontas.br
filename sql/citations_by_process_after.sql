@@ -6,4 +6,4 @@ SELECT CONCAT([Numero_Citacao], '/', [Ano_citacao]) as citacao
       ,[DataFinalResposta] as data_final_resposta
   FROM [processo].[dbo].[Cit_Citacoes] cit
   WHERE CONCAT(cit.Numero_Processo, '/', cit.Ano_Processo) = '{process}'
-  AND cit.DataInicioContagem <= '{session_date}';
+  AND cit.DataInicioContagem >= '{session_date}';
