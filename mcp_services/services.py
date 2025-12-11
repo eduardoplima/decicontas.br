@@ -68,11 +68,6 @@ def find_unit(query: str, limit=5, score_cutoff=70):
     df_result = df_result.sort_values("score", ascending=False)
     return df_result[["IdUnidadeJurisdicionada", "NomeUnidade", "score"]]
 
-#####################
-# Exposed MCP tools #
-#####################
-
-@mcp.tool()
 def get_responsible_unit(unit: str, session_date: str) -> pd.DataFrame:
     id_unit = find_unit(unit, limit=1).iloc[0]["IdUnidadeJurisdicionada"]
     sql_resp = open("../sql/responsible_unit.sql").read()
@@ -110,7 +105,6 @@ class CitationChoice(BaseModel):
 
 llm = ChatOpenAI(model="gpt-4.1-mini")
 
-@mcp.tool()
 def get_deadline_from_citations(process_number: str, session_date: str, responsible: str) -> dict:
     """
     Returns:

@@ -1,22 +1,18 @@
 import os
-import json
-import pymssql
-
+import unicodedata
+import asyncio
 import pandas as pd
-import numpy as np
 
-from pprint import pprint
-from datetime import datetime
+from datetime import datetime, date
 from typing import List, Dict, Any, Optional
-from langchain_openai import  AzureChatOpenAI, ChatOpenAI
 from langchain_core.language_models.chat_models import BaseChatModel
-from dotenv import load_dotenv
+from langchain_mcp_adapters.client import MultiServerMCPClient
+from langchain_openai import AzureChatOpenAI
 
 from sqlalchemy import (
-    create_engine, Column, Integer, String, Float, Date, Boolean, Text, JSON
+    create_engine
 )
-from sqlalchemy.orm import declarative_base, sessionmaker, Session
-from sqlalchemy.schema import DDL, CheckConstraint
+from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.engine import Engine
 
 from tools.prompt import generate_few_shot_ner_prompts
@@ -37,8 +33,15 @@ from tools.models import (
 from tools.schema import (
     NERDecisao,
     Obrigacao,
-    Recomendacao
+    Recomendacao,
+    CitationChoice
 )
+
+from rapidfuzz import process, fuzz 
+
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+SQL_DIR = os.path.join(BASE_DIR, "..", "sql")
 
 def safe_int(value):
     if pd.isna(value):
@@ -83,7 +86,7 @@ def get_pessoas_str(pessoas: List[Dict[str, Any]]) -> str:
 
 # Obrigação
 
-def get_prompt_obrigacao(row: Dict[str, Any], obrigacao: Obrigacao) -> str:
+def get_prompt_obrigacao_old(row: Dict[str, Any], obrigacao: Obrigacao) -> str:
     data_sessao = row['data_sessao']
     texto_acordao = row['texto_acordao']
     orgao_responsavel = row['orgao_responsavel']
@@ -117,7 +120,7 @@ def get_prompt_obrigacao(row: Dict[str, Any], obrigacao: Obrigacao) -> str:
     Se o órgão responsável não estiver disponível, preencha o campo orgão_responsavel com "Desconhecido".
     """
 
-def extract_obrigacao(extractor: BaseChatModel, row: Dict[str, Any], obrigacao: Obrigacao) -> Obrigacao:
+def extract_obrigacao_old(extractor: BaseChatModel, row: Dict[str, Any], obrigacao: Obrigacao) -> Obrigacao:
     prompt_obrigacao = get_prompt_obrigacao(row, obrigacao)
     return extractor.invoke(prompt_obrigacao)
 
@@ -144,6 +147,124 @@ def insert_obrigacao(db_session, obrigacao: Obrigacao, row: Dict[str, Any]):
     db_session.add(orm_obj)
     db_session.commit()
     return orm_obj
+
+def get_prompt_obrigacao(
+    row: Dict[str, Any],
+    obrigacao: Obrigacao,
+    deadline_info: Optional[Dict[str, Any]] = None,
+) -> str:
+    data_sessao = row["data_sessao"]      # datetime/date
+    texto_acordao = row["texto_acordao"]
+    orgao_responsavel = row["orgao_responsavel"]
+    pessoas_responsaveis = row["responsaveis"]
+
+    # Informações adicionais de prazo vindas do MCP (se existirem)
+    prazo_extra = ""
+    if deadline_info and deadline_info.get("deadline_text") and deadline_info.get("deadline_date"):
+        prazo_extra = f"""
+    Informações adicionais de prazo (calculadas a partir das citações do processo):
+    - Prazo sugerido: {deadline_info['deadline_text']}
+    - Data de cumprimento sugerida: {deadline_info['deadline_date']}
+        """
+
+    return f"""
+    Você é um Auditor de Controle Externo do TCE/RN. Sua tarefa é analisar o voto e extrair a obrigação imposta, preenchendo os campos do objeto Obrigacao.
+
+    Dados do contexto:
+    - Data da Sessão: {data_sessao.strftime('%d/%m/%Y')}
+    - Obrigação detectada (rascunho): {obrigacao.descricao_obrigacao}
+    - Órgão Responsável (se conhecido): {orgao_responsavel}
+    - Pessoas Responsáveis (se conhecidas): {get_pessoas_str(pessoas_responsaveis)}
+
+    Texto do Acordão:
+    {texto_acordao}
+    {prazo_extra}
+
+    Dado esse contexto, preencha os campos da seguinte forma:
+
+    - descricao_obrigacao: Descrição da obrigação imposta.
+    - de_fazer: Verdadeiro se for uma obrigação de fazer, falso se for de não fazer.
+    - prazo: Prazo estipulado para cumprimento. Priorize o texto do acórdão; se ele for omisso,
+      você pode utilizar como referência o prazo sugerido nas informações adicionais de prazo.
+    - data_cumprimento: Data de cumprimento no formato YYYY-MM-DD. Se o acórdão não trouxer
+      uma data clara, utilize a data de cumprimento sugerida nas informações adicionais.
+    - orgao_responsavel: Órgão responsável pelo cumprimento da obrigação. Pessoa jurídica.
+      Se não for possível identificar, preencha com "Desconhecido".
+    - tem_multa_cominatoria: Indique se há multa cominatória associada à obrigação.
+    - nome_responsavel_multa_cominatoria: Nome do responsável pela obrigação, se houver multa cominatória.
+    - documento_responsavel_multa_cominatoria: Documento do responsável pela obrigação, se houver multa cominatória.
+    - valor_multa_cominatoria: Se houver multa cominatória, preencha o valor.
+    - periodo_multa_cominatoria: Período da multa cominatória, se houver (horário, diário, semanal, mensal).
+    - e_multa_cominatoria_solidaria: Indique se a multa cominatória é solidária.
+    - solidarios_multa_cominatoria: Lista de responsáveis solidários da multa cominatória.
+
+    Use somente as informações do texto do acórdão, dos dados fornecidos e das informações adicionais de prazo.
+    Não inclua suposições.
+    """
+
+def extract_obrigacao(
+    extractor: BaseChatModel,
+    row: Dict[str, Any] | Any,
+    obrigacao_rascunho: Obrigacao,
+) -> Obrigacao:
+
+    if not isinstance(row, dict):
+        row = row.to_dict()
+
+    process_number: str = row["processo"]
+    raw_session_date = row["data_sessao"]
+    if isinstance(raw_session_date, str):
+        try:
+            session_date_dt = datetime.fromisoformat(raw_session_date)
+        except ValueError:
+            session_date_dt = datetime.strptime(raw_session_date, "%Y-%m-%d")
+        session_date: date = session_date_dt.date()
+    elif hasattr(raw_session_date, "date"):
+        session_date = raw_session_date.date()
+    else:
+        session_date = raw_session_date
+
+    session_date_str = session_date.isoformat()
+
+    responsible_unit_records = get_responsible_unit(
+        unit=row.get("orgao_responsavel", ""),
+        session_date=session_date_str,
+    )
+
+    if responsible_unit_records:
+        responsible: str = (
+            responsible_unit_records[0].get("Nome")
+            or responsible_unit_records[0].get("nome")
+            or ""
+        )
+    else:
+        responsible = ""
+
+
+    deadline_info: Dict[str, Any] = get_deadline_from_citations(
+        process_number=process_number,
+        session_date=session_date_str,
+        responsible=responsible,
+    )
+
+    prompt = get_prompt_obrigacao(
+        row=row,
+        obrigacao=obrigacao_rascunho,
+    )
+
+    obrigacao_final: Obrigacao = extractor.invoke(prompt)
+
+    if deadline_info:
+        if deadline_info.get("deadline_text") and not obrigacao_final.prazo:
+            obrigacao_final.prazo = deadline_info["deadline_text"]
+
+        if deadline_info.get("deadline_date") and not obrigacao_final.data_cumprimento:
+            obrigacao_final.data_cumprimento = date.fromisoformat(
+                deadline_info["deadline_date"]
+            )
+
+    return obrigacao_final
+
 
 # Recomendação
 
@@ -197,11 +318,11 @@ def insert_recomendacao(db_session, recomendacao: Recomendacao, row):
 # NER
 
 def get_decisions_by_year_and_months(ano: int, meses: List[int]):
-    sql_dec = open("sql/decisions_by_year_months.sql", "r").read()
+    sql_dec = open(os.path.join(SQL_DIR, "decisions_by_year_months.sql"), "r").read()
     return pd.read_sql_query(sql_dec.format(ano=ano, meses=",".join([str(m) for m in meses])), get_connection(os.getenv("SQL_SERVER_DB_PROCESSOS")))
 
 def get_decisions_by_process(process_list: List[str]):
-    sql_dec = open("sql/decisions_by_processes.sql", "r").read()
+    sql_dec = open(os.path.join(SQL_DIR, "decisions_by_processes.sql"), "r").read()
     return pd.read_sql_query(sql_dec.format(processes=",".join([f"'{m}'" for m in process_list])), get_connection(os.getenv("SQL_SERVER_DB_PROCESSOS")))
 
 def get_ner_decision(extractor: BaseChatModel, texto_acordao: str) -> Dict[str, Any]:
@@ -379,3 +500,178 @@ def run_ner_pipeline_for_dataframe(df, extractor: BaseChatModel, model_name: str
     finally:
         session.close()
 
+
+#####
+# Helper Services
+#####
+
+
+def normalize_text(s: str) -> str:
+    if not isinstance(s, str):
+        s = str(s)
+    s = s.strip().upper()
+    # Remove acentos
+    s = unicodedata.normalize("NFKD", s)
+    s = "".join(ch for ch in s if not unicodedata.combining(ch))
+    return s
+
+def get_all_units() -> pd.DataFrame:
+    sql_unidades = open(os.path.join(SQL_DIR, "units.sql")).read()
+    return pd.read_sql(sql_unidades, get_connection('BdSIAI'))
+
+def find_unit(query: str, limit=5, score_cutoff=70):
+    """
+    Returns the best matches of NomeUnidade for the string `query`.
+    """
+    # Ensure a copy to not alter the original
+    df = get_all_units()
+    # Normalized column (can save permanently in the DF if you want)
+    df["NomeUnidade_norm"] = df["NomeUnidade"].apply(normalize_text)
+    query_norm = normalize_text(query)
+    # Build list of options to compare
+    nomes_norm = df["NomeUnidade_norm"].tolist()
+    # Fuzzy search
+    resultados = process.extract(
+        query_norm,
+        nomes_norm,
+        scorer=fuzz.WRatio,
+        limit=limit,
+        score_cutoff=score_cutoff,
+    )
+    indices = [idx for _, _, idx in resultados]
+    df_result = df.iloc[indices].copy()
+    df_result["score"] = [score for _, score, _ in resultados]
+    df_result = df_result.sort_values("score", ascending=False)
+    return df_result[["IdUnidadeJurisdicionada", "NomeUnidade", "score"]]
+
+def get_responsible_unit(unit: str, session_date: str) -> pd.DataFrame:
+    id_unit = find_unit(unit, limit=1).iloc[0]["IdUnidadeJurisdicionada"]
+    sql_resp = open(os.path.join(SQL_DIR, "responsible_unit.sql")).read()
+    return pd.read_sql(sql_resp.format(id_unit=id_unit, session_date=session_date), get_connection('BdSIAI')).to_dict(orient='records')
+
+def get_citations(process: str) -> pd.DataFrame:
+    sql_citacoes = open(os.path.join(SQL_DIR, "citations_by_process.sql")).read()
+    return pd.read_sql(sql_citacoes.format(process=process), get_connection('processo')).to_dict(orient='records')
+
+def get_citations_after(process: str, session_date: str) -> pd.DataFrame:
+    sql_citacoes = open(os.path.join(SQL_DIR, "citations_by_process_after.sql")).read()
+    return pd.read_sql(sql_citacoes.format(process=process, session_date=session_date), get_connection('processo')).to_dict(orient='records')
+
+
+def filter_by_responsible(records: list[dict], responsible: str, threshold: int = 70) -> list[dict]:
+    """
+    Filters citation records by fuzzy-matching the 'Name' field.
+    Returns only records with match score >= threshold.
+    """
+
+    if not responsible:
+        return records
+
+    results = []
+    for rec in records:
+        name = rec.get("nome", "")
+        score = fuzz.ratio(name.lower(), responsible.lower())
+        if score >= threshold:
+            results.append({**rec, "match_score": score})
+    return results
+
+
+
+
+def get_deadline_from_citations(process_number: str, session_date: str, responsible: str) -> dict:
+    """
+    Returns:
+        - deadline_text: "X days"
+        - deadline_date: "YYYY-MM-DD"
+        - chosen_citation: citation row chosen by the LLM
+        - justification: why that citation was selected
+    """
+
+    llm = AzureChatOpenAI(
+        deployment_name="gpt-4-turbo",
+        model_name="gpt-4",
+    )
+
+
+    # 1. Fetch citation records
+    records = get_citations_after(process_number, session_date)
+
+    if not records:
+        return {
+            "deadline_text": None,
+            "deadline_date": None,
+            "chosen_citation": None,
+            "justification": "No citation records found."
+        }
+
+    # 2. Filter citations by responsible entity/person (fuzzy match)
+    filtered = filter_by_responsible(records, responsible)
+
+    if not filtered:
+        return {
+            "deadline_text": None,
+            "deadline_date": None,
+            "chosen_citation": None,
+            "justification": f"No citation matched responsible '{responsible}'."
+        }
+
+    # 3. Build readable text for the LLM
+    lines = []
+    for i, r in enumerate(filtered):
+        lines.append(
+            f"{i}: CitationNumber={r.get('Numero_Citacao')}/{r.get('Ano_citacao')}, "
+            f"Organ={r.get('Orgao')}, Name={r.get('Nome')}, "
+            f"StartCountDate={r.get('DataInicioContagem')}, "
+            f"FinalResponseDate={r.get('DataFinalResposta')}"
+        )
+
+    citations_text = "\n".join(lines)
+
+    prompt = f"""
+    Você é um auditor que precisa escolher qual citação é a base para o prazo
+    de resposta do processo {process_number}.
+
+    Data da sessão do acórdão: {session_date}.
+
+    Abaixo estão as citações registradas (uma por linha, com um índice):
+
+    {citations_text}
+
+    Regras gerais (simplificadas, ajuste conforme seu critério real):
+    - Prefira citações mais recentes que sejam relevantes para o cumprimento da obrigação
+      discutida na sessão.
+    - Em caso de várias citações parecidas, escolha a que melhor representa o prazo
+      principal dado ao órgão.
+    - Se nenhuma for adequada, escolha a que parecer mais razoável e explique.
+
+    Informe apenas:
+    - o índice da citação escolhida (campo 'indice');
+    - uma justificativa curta (campo 'justificativa').
+
+    Responda em JSON.
+    """
+
+    choice: CitationChoice = llm.with_structured_output(CitationChoice).invoke(prompt)
+    idx = choice.index
+    chosen = filtered[idx]
+
+    # 5. Convert date fields
+    start_date = chosen.get("data_inicio_contagem")
+    final_date = chosen.get("data_final_resposta")
+
+    # Convert to datetime
+    if isinstance(start_date, str):
+        start_date = datetime.fromisoformat(start_date)
+    if isinstance(final_date, str):
+        final_date = datetime.fromisoformat(final_date)
+
+    # 6. Compute deadline
+    days = (final_date.date() - start_date.date()).days
+    deadline_text = f"{days} days"
+
+    return {
+        "deadline_text": deadline_text,
+        "deadline_date": final_date.date().isoformat(),
+        "chosen_citation": chosen,
+        "justification": choice.justification
+    }

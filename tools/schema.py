@@ -159,3 +159,7 @@ class Decisao(BaseModel):
     @field_validator("multas", "obrigacoes", "ressarcimentos", "recomendacoes")
     def convert_none_to_empty_list(cls, v):
         return v or []
+
+class CitationChoice(BaseModel):
+    index: int
+    justification: str
