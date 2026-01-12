@@ -75,7 +75,6 @@ def filter_by_responsible(records: list[dict], responsible: str, threshold: int 
     Filters citation records by fuzzy-matching the 'Name' field.
     Returns only records with match score >= threshold.
     """
-
     if not responsible:
         return records
 

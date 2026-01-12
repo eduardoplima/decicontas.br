@@ -163,3 +163,7 @@ class Decisao(BaseModel):
 class CitationChoice(BaseModel):
     index: int
     justification: str
+
+class ResponsibleChoice(BaseModel):
+    nome_responsavel: str = Field(..., description="Nome do responsável")
+    cargo: str = Field(..., description="Cargo do responsável")

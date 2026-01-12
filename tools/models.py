@@ -125,7 +125,6 @@ class RecomendacaoORM(Base):
         return (f"<Recomendacao(IdRecomendacao={self.IdRecomendacao}, "
                 f"IdProcesso={self.IdProcesso})>")
     
-    
 class BeneficioORM(Base):
     __tablename__ = "Beneficio"
 
@@ -172,7 +171,6 @@ class BeneficioORM(Base):
     MemoriaCalculo = Column(Text, nullable=True)
     DataRegistro = Column(Date, nullable=True)
 
-
 # NERORM
 class NERDecisaoORM(Base):
     __tablename__ = "NERDecisao"
@@ -211,7 +209,6 @@ class NERDecisaoORM(Base):
         cascade="all, delete-orphan",
     )
 
-
 class NERMultaORM(Base):
     __tablename__ = "NERMulta"
 
@@ -221,7 +218,6 @@ class NERMultaORM(Base):
     DescricaoMulta = Column(Text, nullable=False)
 
     decisao = relationship("NERDecisaoORM", back_populates="multas")
-
 
 class NERRessarcimentoORM(Base):
     __tablename__ = "NERRessarcimento"
@@ -233,7 +229,6 @@ class NERRessarcimentoORM(Base):
 
     decisao = relationship("NERDecisaoORM", back_populates="ressarcimentos")
 
-
 class NERObrigacaoORM(Base):
     __tablename__ = "NERObrigacao"
 
@@ -243,7 +238,6 @@ class NERObrigacaoORM(Base):
     DescricaoObrigacao = Column(Text, nullable=False)
 
     decisao = relationship("NERDecisaoORM", back_populates="obrigacoes")
-
 
 class NERRecomendacaoORM(Base):
     __tablename__ = "NERRecomendacao"
@@ -255,50 +249,40 @@ class NERRecomendacaoORM(Base):
 
     decisao = relationship("NERDecisaoORM", back_populates="recomendacoes")
 
-
 class ProcessedDecisionORM(Base):
     __tablename__ = "DecisaoProcessada"
 
     IdDecisaoProcessada = Column(Integer, primary_key=True, autoincrement=True)
     IdNERDecisao = Column(Integer, ForeignKey("NERDecisao.IdNerDecisao"), nullable=False)
-    DataProcessamento = Column(TIMESTAMP, nullable=False)
-
-    ner_decision = relationship("NERDecisaoORM", back_populates="processed_record")
+    DataProcessamento = Column(DateTime, nullable=False)
 
 class ProcessedMultaORM(Base):
     __tablename__ = "MultaProcessada"
 
     IdMultaProcessada = Column(Integer, primary_key=True, autoincrement=True)
     IdNerMulta = Column(Integer, ForeignKey("NERMulta.IdNerMulta"), nullable=False)
-    DataProcessamento = Column(TIMESTAMP, nullable=False)
-
-    ner_multa = relationship("NERMultaORM", back_populates="processed_records")
+    DataProcessamento = Column(DateTime, nullable=False)
 
 class ProcessedRessarcimentoORM(Base):
     __tablename__ = "RessarcimentoProcessado"
 
     IdRessarcimentoProcessado = Column(Integer, primary_key=True, autoincrement=True)
     IdNerRessarcimento = Column(Integer, ForeignKey("NERRessarcimento.IdNerRessarcimento"), nullable=False)
-    DataProcessamento = Column(TIMESTAMP, nullable=False)
-
-    ner_ressarcimento = relationship("NERRessarcimentoORM", back_populates="processed_records")
+    DataProcessamento = Column(DateTime, nullable=False)
 
 class ProcessedObrigacaoORM(Base):
     __tablename__ = "ObrigacaoProcessada"
 
     IdObrigacaoProcessada = Column(Integer, primary_key=True, autoincrement=True)
     IdNerObrigacao = Column(Integer, ForeignKey("NERObrigacao.IdNerObrigacao"), nullable=False)
-    DataProcessamento = Column(TIMESTAMP, nullable=False)
-
-    ner_obrigacao = relationship("NERObrigacaoORM", back_populates="processed_records")
+    IdObrigacao = Column(Integer, ForeignKey("Obrigacao.IdObrigacao"), nullable=False)
+    DataProcessamento = Column(DateTime, nullable=False)
 
 class ProcessedRecomendacaoORM(Base):
     __tablename__ = "RecomendacaoProcessada"
 
     IdRecomendacaoProcessada = Column(Integer, primary_key=True, autoincrement=True)
     IdNerRecomendacao = Column(Integer, ForeignKey("NERRecomendacao.IdNerRecomendacao"), nullable=False)
+    IdRecomendacao = Column(Integer, ForeignKey("Recomendacao.IdRecomendacao"), nullable=False)
     DataProcessamento = Column(TIMESTAMP, nullable=False)
-
-    ner_recomendacao = relationship("NERRecomendacaoORM", back_populates="processed_records")
-
 
