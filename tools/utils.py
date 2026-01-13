@@ -80,7 +80,10 @@ def get_id_pessoa_multa_cominatoria(row, result_obrigacao) -> List[int]:
     Obtém o ID da pessoa responsável pela multa cominatória.
     """
     if result_obrigacao.documento_responsavel_multa_cominatoria:
-        return [p['id_pessoa'] for p in row['responsaveis'] if p['documento_responsavel'] == result_obrigacao.documento_responsavel_multa_cominatoria][0]
+        try:
+            return [p['id_pessoa'] for p in row['responsaveis'] if p['documento_responsavel'] == result_obrigacao.documento_responsavel_multa_cominatoria][0]
+        except:
+            return None
     return None
 
 def get_pessoas_str(pessoas: List[Dict[str, Any]]) -> str:    
@@ -220,7 +223,6 @@ def extract_obrigacao(
     obrigacao_rascunho: Obrigacao,
     
 ) -> Obrigacao:
-
     if not isinstance(row, dict):
         row = row.to_dict()
 
@@ -244,7 +246,6 @@ def extract_obrigacao(
         unit=row.get("orgao_responsavel", ""),
         session_date=session_date_str,
     )
-
 
     citacao: Dict[str, Any] = get_deadline_from_citations(
         process_number=process_number,
