@@ -53,10 +53,38 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 SQL_DIR = os.path.join(BASE_DIR, "..", "sql")
 
 def safe_int(value):
-    if pd.isna(value):
+    if value is None:
         return None
-    return int(value)
+    try:
+        if pd.isna(value):
+            return None
+    except Exception:
+        pass
 
+    # pandas às vezes traz 123.0 (float) e strings "123.0"
+    if isinstance(value, str):
+        v = value.strip()
+        if v == "":
+            return None
+        try:
+            # tenta int direto
+            return int(v)
+        except ValueError:
+            try:
+                return int(float(v))
+            except ValueError:
+                return None
+
+    if isinstance(value, float):
+        if value != value:  # NaN guard
+            return None
+        return int(value)
+
+    try:
+        return int(value)
+    except Exception:
+        return None
+    
 def get_connection(db: str = 'processo') -> Engine:
     server = os.getenv("SQL_SERVER_HOST")
     user = os.getenv("SQL_SERVER_USER")
@@ -102,44 +130,6 @@ def get_pessoas_str(pessoas: List[Dict[str, Any]]) -> str:
 
 # Obrigação
 
-def get_prompt_obrigacao_old(row: Dict[str, Any], obrigacao: Obrigacao) -> str:
-    data_sessao = row['data_sessao']
-    texto_acordao = row['texto_acordao']
-    orgao_responsavel = row['orgao_responsavel']
-    pessoas_responsaveis = row['responsaveis']
-
-
-    return f"""
-    Você é um Auditor de Controle Externo do TCE/RN. Sua tarefa é analisar o voto e extrair a obrigação imposta, preenchendo os campos do objeto Obrigacao.
-
-    Data da Sessão: {data_sessao.strftime('%d/%m/%Y')}
-    Obrigação detectada: {obrigacao.descricao_obrigacao}
-    Texto do Acordão: {texto_acordao}
-    Órgão Responsável: {orgao_responsavel}
-    Pessoas Responsáveis: {get_pessoas_str(pessoas_responsaveis)}
-
-    Dado esse contexto, preencha os campos da seguinte forma:
-    - descricao_obrigacao: Descrição da obrigação imposta.
-    - tipo: Tipo da obrigação (fazer/não fazer).
-    - prazo: Prazo estipulado para cumprimento. Extraia o texto indicando o prazo, se houver. Exemplo: "90 dias".
-    - data_cumprimento: Extraia do prazo do acórdão como data de início e faça o cálculo da data de cumprimento. Exemplo: 2025-09-13
-    - orgao_responsavel: Órgão responsável pelo cumprimento da obrigação. Pessoa jurídica.
-    - tem_multa_cominatoria: Indique se há multa cominatória associada à obrigação.
-    - nome_responsavel_multa_cominatoria: Nome do responsável pela obrigação, se houver multa cominatória. Pessoa física responsável.
-    - documento_responsavel_multa_cominatoria: Documento do responsável pela obrigação, se houver multa cominatória.
-    - valor_multa_cominatoria: Se houver multa cominatória, preencha o valor.
-    - periodo_multa_cominatoria: Período da multa cominatória, se houver.
-    - e_multa_cominatoria_solidaria: Indique se a multa cominatória é solidária.
-    - solidarios_multa_cominatoria: Lista de responsáveis solidários da multa cominatória.
-
-    Use somente as informações do texto do acórdão e dos dados fornecidos. Não inclua informações adicionais ou suposições.
-    Se o órgão responsável não estiver disponível, preencha o campo orgão_responsavel com "Desconhecido".
-    """
-
-def extract_obrigacao_old(extractor: BaseChatModel, row: Dict[str, Any], obrigacao: Obrigacao) -> Obrigacao:
-    prompt_obrigacao = get_prompt_obrigacao(row, obrigacao)
-    return extractor.invoke(prompt_obrigacao)
-
 def insert_obrigacao(db_session, obrigacao: Obrigacao, row: Dict[str, Any]):
     orm_obj = ObrigacaoORM(
         IdProcesso=safe_int(row['id_processo']),
@@ -182,7 +172,7 @@ def get_prompt_obrigacao(
 
     Dados do contexto:
     - Data da Sessão: {data_sessao.strftime('%d/%m/%Y')}
-    - Obrigação detectada (rascunho): {obrigacao.descricao_obrigacao}
+    - Obrigação detectada: {obrigacao.descricao_obrigacao}
     - Órgão Responsável (se conhecido): {orgao_responsavel}
     - Pessoas Responsáveis (se conhecidas): {get_pessoas_str(pessoas_responsaveis)}
 
@@ -221,7 +211,6 @@ def extract_obrigacao(
     extractor_responsible: BaseChatModel,
     row: Dict[str, Any] | Any,
     obrigacao_rascunho: Obrigacao,
-    
 ) -> Obrigacao:
     if not isinstance(row, dict):
         row = row.to_dict()
@@ -324,42 +313,112 @@ def insert_obrigacao(db_session, obrigacao: Obrigacao, row):
 
 # Recomendação
 
-def get_prompt_recomendacao(row, recomendacao):
-    data_sessao = row['datasessao']
-    texto_acordao = row['texto_acordao']
-    orgao_responsavel = row['orgao_responsavel']
-    pessoas_responsaveis = row['responsaveis']
-
+def get_prompt_recomendacao(
+    row: Dict[str, Any],
+    recomendacao: Recomendacao,
+    citacao: dict | None = None,
+    responsavel: ResponsibleChoice | None = None,
+) -> str:
+    data_sessao = row["data_sessao"]  # datetime/date
+    texto_acordao = row["texto_acordao"]
+    orgao_responsavel = row.get("orgao_responsavel", "")
+    pessoas_responsaveis = row.get("responsaveis", [])
 
     return f"""
-    Você é um Auditor de Controle Externo do TCE/RN. Sua tarefa é analisar o voto e extrair a recomendação feita, preenchendo os campos do objeto Recomendacao.
+Você é um Auditor de Controle Externo do TCE/RN. Sua tarefa é analisar o voto e extrair a recomendação feita, preenchendo os campos do objeto Recomendacao.
 
-    Data da Sessão: {data_sessao.strftime('%d/%m/%Y')}
-    Recomendação detectada: {recomendacao}
-    Texto do Acordão: {texto_acordao}
-    Órgão Responsável: {orgao_responsavel}
-    Pessoas Responsáveis: {get_pessoas_str(pessoas_responsaveis)}
+Dados do contexto:
+- Data da Sessão: {data_sessao.strftime('%d/%m/%Y')}
+- Recomendação detectada: {recomendacao.descricao_recomendacao}
+- Órgão Responsável (se conhecido): {orgao_responsavel}
+- Pessoas Responsáveis (se conhecidas): {get_pessoas_str(pessoas_responsaveis)}
 
-    Dado esse contexto, preencha os campos da seguinte forma:
-    - descricao_recomendacao: Descrição da recomendação feita.
-    - prazo_cumprimento_recomendacao: Prazo estipulado para cumprimento. Extraia o texto indicando o prazo, se houver. Exemplo: "90 dias".
-    - data_cumprimento_recomendacao: Extraia do prazo do acórdão como data de início e faça o cálculo da data de cumprimento. Exemplo: 2025-09-13
-    - orgao_responsavel_recomendacao: Órgão responsável pelo cumprimento da recomendação. Pessoa jurídica.
-    - nome_responsavel_recomendacao: Nome do responsável pela recomendação. Pessoa física responsável.
+- Responsável sugerido: {responsavel.nome_responsavel if responsavel else 'N/A'} ({responsavel.cargo if responsavel else 'N/A'})
+- Citação sugerida para prazo: {str(citacao)}
 
-    Use somente as informações do texto do acórdão e dos dados fornecidos. Não inclua informações adicionais ou suposições.
-    Se o órgão responsável não estiver disponível, preencha o campo orgão_responsavel com "Desconhecido".
+Texto do Acordão:
+{texto_acordao}
+
+Dado esse contexto, preencha os campos da seguinte forma:
+
+- descricao_recomendacao: Descrição da recomendação feita.
+- prazo_cumprimento_recomendacao: Prazo estipulado para cumprimento. Priorize o texto do acórdão; se ele for omisso,
+  você pode utilizar como referência o prazo sugerido nas informações adicionais de prazo.
+- data_cumprimento_recomendacao: Data de cumprimento no formato YYYY-MM-DD. Se o acórdão não trouxer
+  uma data clara, utilize a data de cumprimento sugerida nas informações adicionais.
+- orgao_responsavel_recomendacao: Órgão responsável pelo cumprimento da recomendação (pessoa jurídica).
+  Se não for possível identificar, preencha com "Desconhecido".
+- nome_responsavel_recomendacao: Nome do responsável pela recomendação (pessoa física).
+  Se não for possível identificar, preencha com "Desconhecido".
+
+Use somente as informações do texto do acórdão, dos dados fornecidos e das informações adicionais de prazo.
+Não inclua suposições.
+""".strip()
+
+
+def extract_recomendacao(
+    extractor: BaseChatModel,
+    extractor_responsible: BaseChatModel,
+    row: Dict[str, Any] | Any,
+    recomendacao_rascunho: Recomendacao,
+) -> Recomendacao:
     """
+    Espelha extract_obrigacao():
+    - normaliza row (dict)
+    - resolve data_sessao -> session_date_str
+    - obtém responsável sugerido via get_responsible_unit()
+    - obtém prazo/data sugeridos via get_deadline_from_citations()
+    - monta prompt com get_prompt_recomendacao()
+    - invoca LLM e retorna Recomendacao estruturada
+    """
+    if not isinstance(row, dict):
+        row = row.to_dict()
 
-def extract_recomendacao(row, recomendacao, extractor):
-    prompt_recomendacao = get_prompt_recomendacao(row, recomendacao)
-    return extractor.invoke(prompt_recomendacao)
+    process_number: str = row["processo"]
+
+    raw_session_date = row["data_sessao"]
+    if isinstance(raw_session_date, str):
+        try:
+            session_date_dt = datetime.fromisoformat(raw_session_date)
+        except ValueError:
+            session_date_dt = datetime.strptime(raw_session_date, "%Y-%m-%d")
+        session_date: date = session_date_dt.date()
+    elif hasattr(raw_session_date, "date"):
+        session_date = raw_session_date.date()
+    else:
+        session_date = raw_session_date
+
+    session_date_str = session_date.isoformat()
+
+    responsible = get_responsible_unit(
+        extractor_responsible,
+        unit=row.get("orgao_responsavel", ""),
+        session_date=session_date_str,
+    )
+
+    citacao: Dict[str, Any] = get_deadline_from_citations(
+        process_number=process_number,
+        session_date=session_date_str,
+        responsible=responsible.nome_responsavel,
+    )
+
+    prompt = get_prompt_recomendacao(
+        row=row,
+        recomendacao=recomendacao_rascunho,
+        citacao=citacao,
+        responsavel=responsible,
+    )
+
+    recomendacao_final: Recomendacao = extractor.invoke(prompt)
+
+    return recomendacao_final
+
 
 def insert_recomendacao(db_session, recomendacao: Recomendacao, row):
     orm_obj = RecomendacaoORM(
-        IdProcesso=safe_int(row['idprocesso']),
-        IdComposicaoPauta=safe_int(row['idcomposicaopauta']),
-        IdVotoPauta=safe_int(row['idvotopauta']),
+        IdProcesso=safe_int(row['id_processo']),
+        IdComposicaoPauta=safe_int(row['id_composicao_pauta']),
+        IdVotoPauta=safe_int(row['id_voto_pauta']),
         DescricaoRecomendacao=recomendacao.descricao_recomendacao,
         PrazoCumprimentoRecomendacao=recomendacao.prazo_cumprimento_recomendacao,
         DataCumprimentoRecomendacao=recomendacao.data_cumprimento_recomendacao,
@@ -634,14 +693,46 @@ def filter_by_responsible(records: list[dict], responsible: str, threshold: int 
             results.append({**rec, "match_score": score})
     return results
 
+
+def _first_present(d: dict, keys: list[str]):
+    for k in keys:
+        if k in d and d.get(k) is not None:
+            return d.get(k)
+    return None
+
+def _to_datetime_safe(x):
+    """
+    Converte x para datetime (python) ou retorna None se inválido/NaT.
+    Aceita: str, datetime, date, pandas Timestamp.
+    """
+    if x is None:
+        return None
+
+    # pandas NaT
+    try:
+        if pd.isna(x):
+            return None
+    except Exception:
+        pass
+
+    # já é datetime
+    if isinstance(x, datetime):
+        return x
+
+    # pandas Timestamp
+    if isinstance(x, pd.Timestamp):
+        if pd.isna(x):
+            return None
+        return x.to_pydatetime()
+
+    # string/qualquer coisa parseável
+    dt = pd.to_datetime(x, errors="coerce")
+    if pd.isna(dt):
+        return None
+    return dt.to_pydatetime()
+
+
 def get_deadline_from_citations(process_number: str, session_date: str, responsible: str) -> dict:
-    """
-    Returns:
-        - deadline_text: "X days"
-        - deadline_date: "YYYY-MM-DD"
-        - chosen_citation: citation row chosen by the LLM
-        - justification: why that citation was selected
-    """
     llm = AzureChatOpenAI(
         deployment_name="gpt-4-turbo",
         model_name="gpt-4",
@@ -666,57 +757,68 @@ def get_deadline_from_citations(process_number: str, session_date: str, responsi
             "chosen_citation": None,
             "justification": f"No citation matched responsible '{responsible}'."
         }
+
     lines = []
     for i, r in enumerate(filtered):
         lines.append(
             f"{i}: CitationNumber={r.get('Numero_Citacao')}/{r.get('Ano_citacao')}, "
             f"Organ={r.get('Orgao')}, Name={r.get('Nome')}, "
-            f"StartCountDate={r.get('DataInicioContagem')}, "
-            f"FinalResponseDate={r.get('DataFinalResposta')}"
+            f"StartCountDate={r.get('DataInicioContagem') or r.get('data_inicio_contagem')}, "
+            f"FinalResponseDate={r.get('DataFinalResposta') or r.get('data_final_resposta')}"
         )
-
     citations_text = "\n".join(lines)
 
     prompt = f"""
-    Você é um auditor que precisa escolher qual citação é a base para o prazo
-    de resposta do processo {process_number}.
+Você é um auditor que precisa escolher qual citação é a base para o prazo
+de resposta do processo {process_number}.
 
-    Data da sessão do acórdão: {session_date}.
+Data da sessão do acórdão: {session_date}.
 
-    Abaixo estão as citações registradas (uma por linha, com um índice):
+Abaixo estão as citações registradas (uma por linha, com um índice):
 
-    {citations_text}
+{citations_text}
 
-    ESCOLHA SEMPRE A CITAÇÃO MAIS RECENTE!
+ESCOLHA SEMPRE A CITAÇÃO MAIS RECENTE!
 
-    Informe apenas:
-    - o índice da citação escolhida (campo 'indice');
-    - uma justificativa curta (campo 'justificativa').
+Informe apenas:
+- o índice da citação escolhida (campo 'index');
+- uma justificativa curta (campo 'justification').
 
-    Responda em JSON.
-    """
+Responda em JSON.
+""".strip()
 
     choice: CitationChoice = llm.with_structured_output(CitationChoice).invoke(prompt)
     idx = choice.index
     chosen = filtered[idx]
 
-    start_date = chosen.get("data_inicio_contagem")
-    final_date = chosen.get("data_final_resposta")
+    # Tenta várias chaves possíveis (ajuste se seus dicts tiverem outros nomes)
+    start_raw = _first_present(chosen, ["data_inicio_contagem", "DataInicioContagem", "DataInicioContagem".lower()])
+    final_raw = _first_present(chosen, ["data_final_resposta", "DataFinalResposta", "DataFinalResposta".lower()])
 
-    if isinstance(start_date, str):
-        start_date = datetime.fromisoformat(start_date)
-    if isinstance(final_date, str):
-        final_date = datetime.fromisoformat(final_date)
+    start_dt = _to_datetime_safe(start_raw)
+    final_dt = _to_datetime_safe(final_raw)
 
-    days = (final_date.date() - start_date.date()).days
+    if not start_dt or not final_dt:
+        return {
+            "deadline_text": None,
+            "deadline_date": None,
+            "chosen_citation": chosen,
+            "justification": (
+                f"{choice.justification} | Missing/invalid dates in chosen citation. "
+                f"start_raw={start_raw}, final_raw={final_raw}"
+            ),
+        }
+
+    days = (final_dt.date() - start_dt.date()).days
     deadline_text = f"{days} days"
 
     return {
         "deadline_text": deadline_text,
-        "deadline_date": final_date.date().isoformat(),
+        "deadline_date": final_dt.date().isoformat(),
         "chosen_citation": chosen,
         "justification": choice.justification
     }
+
 
 ######################
 # Obrigacao Pipeline #
@@ -845,5 +947,144 @@ def run_obrigacao_pipeline(
 
     return df_aug
 
+#########################
+# Recomendacao Pipeline #
+#########################
+
+def fetch_df_recomendacoes_nao_processadas_raw(conn) -> pd.DataFrame:
+    """
+    Retorna dataframe com recomendações NER ainda não processadas (raw),
+    geralmente vindo do banco de decisões/NER + joins necessários + responsáveis em linhas.
+    """
+    sql_path = os.path.join(SQL_DIR, "recommendations_nonprocessed.sql")
+    sql_rec_processar = open(sql_path, "r").read()
+    return pd.read_sql(sql_rec_processar, conn)
 
 
+def aggregate_responsaveis_recomendacao(df_raw: pd.DataFrame) -> pd.DataFrame:
+    """
+    Mesmo padrão do aggregate_responsaveis() usado em obrigações,
+    mas mantido separado caso você queira customizar depois.
+    """
+    person_cols = ["nome_responsavel", "documento_responsavel", "tipo_responsavel", "id_pessoa"]
+    group_cols = [c for c in df_raw.columns if c not in person_cols]
+
+    df_aug = (
+        df_raw.groupby(group_cols, dropna=False)
+        .apply(
+            lambda x: pd.Series(
+                {
+                    "responsaveis": x[person_cols]
+                    .apply(lambda y: y.dropna().to_dict(), axis=1)
+                    .tolist()
+                }
+            )
+        )
+        .reset_index()
+    )
+    return df_aug
+
+
+def process_recomendacao_row(
+    session: Session,
+    row,
+    extractor_recomendacao: BaseChatModel,
+    extractor_responsible: BaseChatModel,
+    run_id: str | None = None,
+    overwrite: bool = False,
+) -> int | None:
+    """
+    Espelha process_obrigacao_row():
+    - checa ProcessedRecomendacaoORM(IdNerRecomendacao)
+    - se overwrite=True, remove marcação e reprocessa
+    - extrai Recomendacao estruturada e persiste + marca como processada
+
+    Returns:
+        IdRecomendacao (tabela final) ou None se pulou.
+    """
+    id_ner_recomendacao = int(row.id_ner_recomendacao)
+
+    existing = session.execute(
+        select(ProcessedRecomendacaoORM)
+        .where(ProcessedRecomendacaoORM.IdNerRecomendacao == id_ner_recomendacao)
+    ).scalar_one_or_none()
+
+    if existing and not overwrite:
+        logger.info(
+            "Skipping Recomendacao for IdNerRecomendacao=%s because it is already processed (IdRecomendacaoProcessada=%s).",
+            id_ner_recomendacao, existing.IdRecomendacaoProcessada,
+        )
+        return existing.IdRecomendacao
+
+    if existing and overwrite:
+        logger.info(
+            "Overwriting RecomendacaoProcessada=%s for IdNerRecomendacao=%s.",
+            existing.IdRecomendacaoProcessada, id_ner_recomendacao
+        )
+        session.delete(existing)
+        session.commit()
+
+    # rascunho (padrão obrigação)
+    recomendacao_rascunho = Recomendacao(
+        descricao_recomendacao=row.descricao_recomendacao,
+        orgao_responsavel_recomendacao=getattr(row, "orgao_responsavel", None) or "Desconhecido",
+        nome_responsavel_recomendacao="Desconhecido",
+        prazo_cumprimento_recomendacao=None,
+        data_cumprimento_recomendacao=None,
+    )
+
+    result = extract_recomendacao(
+        extractor=extractor_recomendacao,
+        extractor_responsible=extractor_responsible,
+        row=row.to_dict(),
+        recomendacao_rascunho=recomendacao_rascunho,
+    )
+
+    orm_obj = insert_recomendacao(session, result, row.to_dict())
+    if orm_obj is None:
+        logger.info(
+            "insert_recomendacao returned None for IdNerRecomendacao=%s (already processed).",
+            id_ner_recomendacao
+        )
+        return None
+
+    logger.info(
+        "Saved Recomendacao IdRecomendacao=%s for IdNerRecomendacao=%s (processo=%s).",
+        orm_obj.IdRecomendacao, id_ner_recomendacao, getattr(row, "processo", None),
+    )
+    return orm_obj.IdRecomendacao
+
+
+def run_recomendacao_pipeline(
+    extractor_recomendacao: BaseChatModel,
+    extractor_responsible: BaseChatModel,
+    run_id: str | None = None,
+    overwrite: bool = False,
+) -> pd.DataFrame:
+    """
+    - Lê recomendações não processadas (raw)
+    - Agrega responsáveis em lista por recomendação
+    - Processa linha a linha (idempotente)
+    """
+    conn = get_connection("BdDIP")  # ajuste se a view/tabela estiver em outro DB
+    df_raw = fetch_df_recomendacoes_nao_processadas_raw(conn)
+    df_aug = aggregate_responsaveis_recomendacao(df_raw)
+
+    engine = get_connection("BdDIP")
+    SessionLocal = sessionmaker(bind=engine)
+    session = SessionLocal()
+
+    try:
+        for _, row in df_aug.iterrows():
+            process_recomendacao_row(
+                session=session,
+                row=row,
+                extractor_recomendacao=extractor_recomendacao,
+                extractor_responsible=extractor_responsible,
+                run_id=run_id,
+                overwrite=overwrite,
+            )
+    finally:
+        session.close()
+
+    return df_aug

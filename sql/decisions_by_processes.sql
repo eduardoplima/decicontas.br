@@ -1,5 +1,5 @@
 SELECT 
-    p.IdProcesso,
+    p.IdProcesso as id_processo,
     CONCAT(p.Numero_Processo, '/', p.Ano_Processo) AS processo,
     o.Nome AS orgao_responsavel, 
     o.IdOrgao AS id_orgao_responsavel,
@@ -26,7 +26,6 @@ SELECT
     d.[assunto],
     d.[NumeroProcesso] as numero_processo,
     d.[AnoProcesso] as ano_processo,
-    d.[IdProcesso] as id_processo,
     d.[interessado],
     d.[OrgaoOrigem] as orgao_origem,
     d.[isVotoDivergente] as is_voto_divergente,
