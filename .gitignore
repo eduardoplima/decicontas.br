@@ -174,3 +174,7 @@ cython_debug/
 .pypirc
 
 dataset/decisoes_raw_2020_062025.json
+
+
+.wandb/  # diretório de cache do Weights & Biases, pode conter arquivos grandes
+.results*
