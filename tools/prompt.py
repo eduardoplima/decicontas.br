@@ -21,6 +21,7 @@ FEW_SHOT_NER_PROMPT = ChatPromptTemplate.from_messages(
             "\n6. Se houver múltiplas menções da mesma entidade, extraia todas as ocorrências relevantes."
             "\n7. Ignore informações irrelevantes ou fora do contexto das entidades solicitadas."
             "\n\nLembre-se: sua precisão e aderência ao texto original são cruciais para o sucesso desta tarefa."
+            "Responda em formato JSON"
         ),
         # Placeholder para exemplos de referência, se necessário
         MessagesPlaceholder('examples'),
@@ -48,6 +49,7 @@ FEW_SHOT_NER_PROMPT = ChatPromptTemplate.from_messages(
             "Inclua o prazo e as condições diretamente relacionados ao cumprimento da obrigação, "
             "mas não repita a fundamentação ou motivação que antecede a ordem."
             "\n\nLembre-se: sua precisão e aderência ao texto original são cruciais para o sucesso desta tarefa."
+            "Responda em formato JSON"
         ),
         MessagesPlaceholder('examples'),
         ("human", "{text}"),

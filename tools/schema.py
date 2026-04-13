@@ -1,4 +1,4 @@
-from typing import Literal, List
+from typing import Literal, List, Optional
 from pydantic import BaseModel, Field, field_validator
 from datetime import date
 
@@ -50,7 +50,7 @@ class NERDecisao(BaseModel):
     Reúne listas organizadas de entidades relevantes identificadas no texto decisório.
     """
 
-    multas: List[NERMulta] = Field(
+    multas: Optional[List[NERMulta]] = Field(
         default_factory=list,
         description=(
             "Lista de sanções pecuniárias impostas ao responsável, podendo ter valor fixo ou percentual, "
@@ -58,7 +58,7 @@ class NERDecisao(BaseModel):
         )
     )
 
-    ressarcimentos: List[NERRessarcimento] = Field(
+    ressarcimentos: Optional[List[NERRessarcimento]] = Field(
         default_factory=list,
         description=(
             "Lista de condenações que determinam a devolução de valores ao erário, "
@@ -66,7 +66,7 @@ class NERDecisao(BaseModel):
         )
     )
 
-    obrigacoes: List[NERObrigacao] = Field(
+    obrigacoes: Optional[List[NERObrigacao]] = Field(
         default_factory=list,
         description=(
             "Lista de determinações de fazer ou não fazer impostas ao responsável, "
@@ -74,7 +74,7 @@ class NERDecisao(BaseModel):
         )
     )
 
-    recomendacoes: List[NERRecomendacao] = Field(
+    recomendacoes: Optional[List[NERRecomendacao]] = Field(
         default_factory=list,
         description=(
             "Lista de orientações emitidas sem força obrigatória, dirigidas ao jurisdicionado, "

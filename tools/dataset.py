@@ -28,12 +28,14 @@ def get_decicontas_df():
     Returns a DataFrame containing the decicontas dataset.
     """
     
-    df_decicontas = pd.read_json("dataset/labeled_data/decicontas.json")
+    return pd.read_json("dataset/labeled_data/decicontas.json")
 
+    '''
     df_decicontas['annotations'] = df_decicontas['annotations'].apply(translate_golden)
 
     df_more = pd.read_json("dataset/labeled_data/decicontas_more_ressarcimentos.json")
     return pd.concat([df_decicontas[['annotations', 'data']], df_more[['annotations', 'data']]], ignore_index=True)
+    '''
     
 def get_decicontas_tags_df():
     """
