@@ -368,17 +368,30 @@ def insert_recomendacao(db_session, recomendacao: Recomendacao, row):
 ## NER Pipeline ##
 ##################
 
+def _load_decisions_sql(filter_clause: str) -> str:
+    sql = open(os.path.join(SQL_DIR, "decisions_base.sql")).read()
+    return sql.replace("{filter_clause}", filter_clause)
+
 def get_decisions_by_year_and_months(year: int, months: List[int]):
-    sql_dec = open(os.path.join(SQL_DIR, "decisions_by_year_months.sql"), "r").read()
-    return pd.read_sql_query(sql_dec.format(ano=year, meses=",".join([str(m) for m in months])), get_connection(os.getenv("SQL_SERVER_DB_PROCESSOS")))
+    sql = _load_decisions_sql("YEAR(d.DataSessao) = {ano} AND MONTH(d.DataSessao) IN ({meses})")
+    return pd.read_sql_query(
+        sql.format(ano=year, meses=",".join(str(m) for m in months)),
+        get_connection(os.getenv("SQL_SERVER_DB_PROCESSOS")),
+    )
 
 def get_decisions_by_dates(start_date: date, end_date: date):
-    sql_dec = open(os.path.join(SQL_DIR, "decisions_by_dates.sql"), "r").read()
-    return pd.read_sql_query(sql_dec.format(start_date=start_date.isoformat(), end_date=end_date.isoformat()), get_connection(os.getenv("SQL_SERVER_DB_PROCESSOS")))
+    sql = _load_decisions_sql("d.DataSessao BETWEEN '{start_date}' AND '{end_date}'")
+    return pd.read_sql_query(
+        sql.format(start_date=start_date.isoformat(), end_date=end_date.isoformat()),
+        get_connection(os.getenv("SQL_SERVER_DB_PROCESSOS")),
+    )
 
 def get_decisions_by_process(process_list: List[str]):
-    sql_dec = open(os.path.join(SQL_DIR, "decisions_by_processes.sql"), "r").read()
-    return pd.read_sql_query(sql_dec.format(processes=",".join([f"'{m}'" for m in process_list])), get_connection(os.getenv("SQL_SERVER_DB_PROCESSOS")))
+    sql = _load_decisions_sql("CONCAT(p.Numero_Processo, '/', p.Ano_Processo) IN ({processes})")
+    return pd.read_sql_query(
+        sql.format(processes=",".join(f"'{m}'" for m in process_list)),
+        get_connection(os.getenv("SQL_SERVER_DB_PROCESSOS")),
+    )
 
 def get_ner_decision(extractor: BaseChatModel, texto_acordao: str) -> Dict[str, Any]:
     prompt_with_few_shot = generate_few_shot_ner_prompts(texto_acordao)
