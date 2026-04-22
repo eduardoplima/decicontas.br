@@ -95,9 +95,3 @@ There is no test suite yet. When adding tests:
 - Formatter: `ruff format` (line length 100).
 - Linter: `ruff check`.
 - Run both before committing.
-
-## Known technical debt
-
-- SQL files under `sql/` are interpolated with `str.format()` rather than parameter binding. Inputs are currently trusted; revisit if that ever changes.
-- Many notebooks live at the repo root; they should move to `notebooks/` once their relative paths are audited.
-- `services.ipynb` redefines `get_connection` and `get_deadline_from_citations` inline, shadowing the `tools.utils` versions; the notebook copies have diverged and should be deleted.
