@@ -9,7 +9,6 @@ import pandas as pd
 from datetime import datetime, date
 from typing import List, Dict, Any, Optional
 from langchain_core.language_models.chat_models import BaseChatModel
-from langchain_openai import AzureChatOpenAI
 from rapidfuzz import process, fuzz
 
 from sqlalchemy import (
@@ -47,7 +46,6 @@ from tools.schema import (
 from dotenv import load_dotenv
  
 load_dotenv()
-llm = AzureChatOpenAI(model="gpt-4.1-mini")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 SQL_DIR = os.path.join(BASE_DIR, "..", "sql")
@@ -157,6 +155,7 @@ def _prepare_extraction_context(
         process_number=row["processo"],
         session_date=session_date_str,
         responsible=responsible.nome_responsavel,
+        extractor=extractor_responsible,
     )
     return row, responsible, citacao
 
@@ -667,12 +666,12 @@ def _to_datetime_safe(x):
     return dt.to_pydatetime()
 
 
-def get_deadline_from_citations(process_number: str, session_date: str, responsible: str) -> dict:
-    llm = AzureChatOpenAI(
-        deployment_name="gpt-4-turbo",
-        model_name="gpt-4",
-    )
-
+def get_deadline_from_citations(
+    process_number: str,
+    session_date: str,
+    responsible: str,
+    extractor: BaseChatModel,
+) -> dict:
     records = get_citations_after(process_number, session_date)
 
     if not records:
@@ -722,7 +721,7 @@ Informe apenas:
 Responda em JSON.
 """.strip()
 
-    choice: CitationChoice = llm.with_structured_output(CitationChoice).invoke(prompt)
+    choice: CitationChoice = extractor.with_structured_output(CitationChoice).invoke(prompt)
     idx = choice.index
     chosen = filtered[idx]
 
