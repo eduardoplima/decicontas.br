@@ -937,30 +937,6 @@ def fetch_df_recomendacoes_nao_processadas_raw(conn) -> pd.DataFrame:
     return pd.read_sql(sql_rec_processar, conn)
 
 
-def aggregate_responsaveis_recomendacao(df_raw: pd.DataFrame) -> pd.DataFrame:
-    """
-    Mesmo padrão do aggregate_responsaveis() usado em obrigações,
-    mas mantido separado caso você queira customizar depois.
-    """
-    person_cols = ["nome_responsavel", "documento_responsavel", "tipo_responsavel", "id_pessoa"]
-    group_cols = [c for c in df_raw.columns if c not in person_cols]
-
-    df_aug = (
-        df_raw.groupby(group_cols, dropna=False)
-        .apply(
-            lambda x: pd.Series(
-                {
-                    "responsaveis": x[person_cols]
-                    .apply(lambda y: y.dropna().to_dict(), axis=1)
-                    .tolist()
-                }
-            )
-        )
-        .reset_index()
-    )
-    return df_aug
-
-
 def process_recomendacao_row(
     session: Session,
     row,
@@ -1044,7 +1020,7 @@ def run_recomendacao_pipeline(
     """
     conn = get_connection("BdDIP")  # ajuste se a view/tabela estiver em outro DB
     df_raw = fetch_df_recomendacoes_nao_processadas_raw(conn)
-    df_aug = aggregate_responsaveis_recomendacao(df_raw)
+    df_aug = aggregate_responsaveis(df_raw)
 
     engine = get_connection("BdDIP")
     SessionLocal = sessionmaker(bind=engine)
