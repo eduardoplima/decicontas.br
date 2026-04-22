@@ -1,7 +1,7 @@
-SELECT 
+SELECT
     p.IdProcesso as id_processo,
     CONCAT(p.Numero_Processo, '/', p.Ano_Processo) AS processo,
-    o.Nome AS orgao_responsavel, 
+    o.Nome AS orgao_responsavel,
     o.IdOrgao AS id_orgao_responsavel,
     gp.Nome AS nome_responsavel,
     gp.Documento AS documento_responsavel,
@@ -36,15 +36,15 @@ SELECT
     d.[texto_acordao],
     d.[SetorVoto] as setor_voto
     FROM processo.dbo.vw_ia_votos_acordaos_decisoes d
-    INNER JOIN processo.dbo.Processos p 
+    INNER JOIN processo.dbo.Processos p
         ON d.IdProcesso = p.IdProcesso
-    INNER JOIN processo.dbo.Orgaos o 
-        ON p.IdOrgaoEnvolvido = o.IdOrgao 
-    INNER JOIN processo.dbo.Pro_ProcessosResponsavelDespesa pprd 
-        ON pprd.IdProcesso = p.IdProcesso 
-    INNER JOIN processo.dbo.GenPessoa gp 
-        ON gp.IdPessoa = pprd.IdPessoa 
-    WHERE d.DataSessao BETWEEN '{start_date}' AND '{end_date}'
+    INNER JOIN processo.dbo.Orgaos o
+        ON p.IdOrgaoEnvolvido = o.IdOrgao
+    INNER JOIN processo.dbo.Pro_ProcessosResponsavelDespesa pprd
+        ON pprd.IdProcesso = p.IdProcesso
+    INNER JOIN processo.dbo.GenPessoa gp
+        ON gp.IdPessoa = pprd.IdPessoa
+    WHERE {filter_clause}
   AND NOT EXISTS (
         SELECT 1
         FROM BdDIP.dbo.Obrigacao ob

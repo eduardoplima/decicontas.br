@@ -7,9 +7,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Python `>=3.12,<3.13`, dependencies pinned in `pyproject.toml` (Poetry) and mirrored in `requirements.txt`.
 - Install: `poetry install` (preferred) or `pip install -r requirements.txt`.
 - Runtime config comes from `.env` (loaded via `dotenv` in `tools/utils.py`). Required variables:
-  - `AZURE_OPENAI_API_KEY`, `AZURE_OPENAI_ENDPOINT`, `OPENAI_API_VERSION` — langchain `AzureChatOpenAI` is instantiated at import time in `tools/utils.py`, so these must be set before importing anything from `tools`.
+  - `AZURE_OPENAI_API_KEY`, `AZURE_OPENAI_ENDPOINT`, `OPENAI_API_VERSION` — required by notebook cells that construct Azure OpenAI extractors. Importing `tools.utils` no longer needs them.
   - `SQL_SERVER_HOST`, `SQL_SERVER_USER`, `SQL_SERVER_PASS`, `SQL_SERVER_PORT` — MSSQL instance (uses `mssql+pymssql`).
-  - `SQL_SERVER_DB_PROCESSOS` (typically `processo`) and `SQL_SERVER_DB_DECISOES` (typically `BdDIP`) — pipeline helpers read these to pick the target database.
+  - `SQL_SERVER_DB_PROCESSOS` (default `processo`), `SQL_SERVER_DB_DECISOES` (default `BdDIP`), `SQL_SERVER_DB_SIAI` (default `BdSIAI`) — override to point at non-standard DB names; defaults match production and are read into `DB_PROCESSOS` / `DB_DECISOES` / `DB_SIAI` constants in `tools/utils.py`.
 - `.env` is gitignored — never commit it.
 
 ## Running the code
@@ -18,7 +18,7 @@ Most work happens in Jupyter notebooks at the repo root; there is no application
 - Launch kernel: `poetry run python -m ipykernel install --user --name=decicontas-br` (once), then open notebooks in VS Code / Jupyter.
 - Notebooks import from `tools/` using the repo root as CWD. Always run notebooks from the repo root so relative paths (`dataset/...`, `sql/...`) resolve.
 - Key notebooks by purpose:
-  - `ner.ipynb`, `ner_experiments.ipynb`, `ner_openrouter_multi_model.ipynb` — running NER extraction across models / prompting strategies.
+  - `ner.ipynb`, `ner_experiments.ipynb`, `ner_llm.ipynb` — running NER extraction across models / prompting strategies.
   - `ner_bilstm_bert*.ipynb` — supervised NER baselines (BiLSTM-CRF, BERTimbau, Legal-BERTimbau).
   - `document_tagging.ipynb` — multi-label document classification.
   - `error_analysis.ipynb`, `statistical_significance.ipynb`, `ner_results.ipynb` — evaluation and reporting on the JSON/pickle outputs under `dataset/experiments/`.
@@ -41,10 +41,10 @@ The project is a pipeline that converts free-text TCE/RN decisions (`texto_acord
 **`tools/prompt.py` + `tools/fewshot.py` — prompt construction:**
 - `FEW_SHOT_NER_PROMPT` system prompt + `TOOL_USE_EXAMPLES` few-shot pairs (hand-curated `(text, NERDecisao)` tuples in `fewshot.py`) power `generate_few_shot_ner_prompts()`.
 - `FEW_SHOT_DOC_PROMPT` + `FEWSHOTS_DOC_TAGS` handle the document-tagging task (4 labels: MULTA / OBRIGACAO / RESSARCIMENTO / RECOMENDACAO).
-- `prompt_engineering_techniques.py` (top level) holds alternative strategies — CoT, self-consistency, two-stage, dynamic few-shot — used by `ner_experiments.ipynb`.
+- `tools/prompt_engineering.py` holds alternative strategies — CoT, negative examples, role prompting, structured definitions, two-stage, self-refinement, dynamic few-shot, self-consistency — used by `ner_llm.ipynb`.
 
 **`tools/utils.py` — pipelines and DB glue:**
-- `get_connection(db)` / `get_session(db)` — each call opens a fresh MSSQL engine bound to a specific database (`processo`, `BdDIP`, `BdSIAI`). The pipelines are cross-database: decision metadata from `processo`, NER/final tables in `BdDIP`, unit lookups in `BdSIAI`. Never hardcode a DB name — pass it in.
+- `get_connection(db)` / `get_session(db)` — each call opens a fresh MSSQL engine bound to a specific database. The pipelines are cross-database: decision metadata from `DB_PROCESSOS`, NER/final tables in `DB_DECISOES`, unit lookups in `DB_SIAI`. Reference the module-level `DB_*` constants rather than passing literal DB names.
 - `run_ner_pipeline_for_dataframe()` — stage 1 (NERDecisao). Calls `process_decision_row()` per row; `overwrite=False` skips rows that already have a `NERDecisaoORM` for the `(process, composition, vote)` triple.
 - `run_obrigacao_pipeline()` / `run_recomendacao_pipeline()` — stage 2. Read `sql/obligations_nonprocessed.sql` / `sql/recommendations_nonprocessed.sql`, aggregate responsáveis per row, then for each NER span: resolve the unit (`find_unit` → fuzzy match against `sql/units.sql`), pick a deadline (`get_deadline_from_citations` uses `sql/citations_by_process_after.sql` + `CitationChoice` LLM), prompt the extractor with the enriched context, and insert into `Obrigacao`/`Recomendacao` + the matching `Processed*` row in a single transaction.
 - SQL under `sql/` is read from disk and `.format(...)`-ed with query parameters — this is plain string interpolation, not parameter binding. Inputs come from trusted internal lists; keep it that way.
@@ -74,7 +74,15 @@ The project is a pipeline that converts free-text TCE/RN decisions (`texto_acord
 - **After refactoring a module used by a notebook**, re-execute the notebook (`jupyter nbconvert --execute --to notebook --inplace`) to confirm nothing broke. If a cell calls the LLM or the DB and would be expensive, skip it and tell me which.
 - **Don't rewrite `.tex` content** without explicit confirmation — that's citable academic text.
 - **When adding a new module**, default to placing it under `tools/` with a clear name. If the fit is ambiguous, ask.
-- **Don't instantiate LLM clients or open DB connections at import time** in new code — use factory functions so tests can import without side effects. (Note: `tools/utils.py` currently does this; fixing it is on the backlog.)
+- **Don't instantiate LLM clients or open DB connections at import time** in new code — use factory functions so tests can import without side effects.
+
+## Language policy
+
+- Code, comments, docstrings, identifiers, commit messages, branch names, PR titles, and issue descriptions: **English**.
+- Prompts sent to LLMs and few-shot examples: **Portuguese** (the source documents — TCE/RN decisions — are in Portuguese, and the prompts are tuned for that).
+- Dataset labels (`MULTA`, `OBRIGACAO`, `RESSARCIMENTO`, `RECOMENDACAO`): **Portuguese**, because they are domain terms from Brazilian audit law and map to database tables.
+- The dissertation itself (under `docs/dissertacao/`): **Portuguese**.
+- When in doubt: English for anything a non-Portuguese-speaking collaborator would need to read to use or modify the code.
 
 ## Testing
 
@@ -92,7 +100,6 @@ There is no test suite yet. When adding tests:
 
 ## Known technical debt
 
-- `AzureChatOpenAI` is instantiated at module import time in `tools/utils.py` — blocks testability and forces env vars to be set even for offline work.
 - SQL files under `sql/` are interpolated with `str.format()` rather than parameter binding. Inputs are currently trusted; revisit if that ever changes.
-- `prompt_engineering_techniques.py` lives at the repo root but conceptually belongs inside `tools/prompts/` (or similar) alongside `prompt.py` and `fewshot.py`.
 - Many notebooks live at the repo root; they should move to `notebooks/` once their relative paths are audited.
+- `services.ipynb` redefines `get_connection` and `get_deadline_from_citations` inline, shadowing the `tools.utils` versions; the notebook copies have diverged and should be deleted.

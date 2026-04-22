@@ -6,10 +6,10 @@ import logging
 
 import pandas as pd
 
+from dataclasses import dataclass
 from datetime import datetime, date
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Callable
 from langchain_core.language_models.chat_models import BaseChatModel
-from langchain_openai import AzureChatOpenAI
 from rapidfuzz import process, fuzz
 
 from sqlalchemy import (
@@ -47,7 +47,10 @@ from tools.schema import (
 from dotenv import load_dotenv
  
 load_dotenv()
-llm = AzureChatOpenAI(model="gpt-4.1-mini")
+
+DB_PROCESSOS = os.getenv("SQL_SERVER_DB_PROCESSOS", "processo")
+DB_DECISOES = os.getenv("SQL_SERVER_DB_DECISOES", "BdDIP")
+DB_SIAI = os.getenv("SQL_SERVER_DB_SIAI", "BdSIAI")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 SQL_DIR = os.path.join(BASE_DIR, "..", "sql")
@@ -128,31 +131,41 @@ def get_pessoas_str(pessoas: List[Dict[str, Any]]) -> str:
     
     return ", ".join(pessoas_str)
 
-# Obrigação
 
-def insert_obrigacao(db_session, obrigacao: Obrigacao, row: Dict[str, Any]):
-    orm_obj = ObrigacaoORM(
-        IdProcesso=safe_int(row['id_processo']),
-        IdComposicaoPauta=safe_int(row['id_composicao_pauta']),
-        IdVotoPauta=safe_int(row['id_voto_pauta']),
-        DescricaoObrigacao=obrigacao.descricao_obrigacao,
-        DeFazer=obrigacao.de_fazer,
-        Prazo=obrigacao.prazo,
-        DataCumprimento=obrigacao.data_cumprimento,
-        OrgaoResponsavel=obrigacao.orgao_responsavel,
-        IdOrgaoResponsavel=safe_int(row['id_orgao_responsavel']),
-        TemMultaCominatoria=obrigacao.tem_multa_cominatoria,
-        NomeResponsavelMultaCominatoria=obrigacao.nome_responsavel_multa_cominatoria,
-        DocumentoResponsavelMultaCominatoria=obrigacao.documento_responsavel_multa_cominatoria,
-        IdPessoaMultaCominatoria=get_id_pessoa_multa_cominatoria(row, obrigacao),
-        ValorMultaCominatoria=obrigacao.valor_multa_cominatoria,
-        PeriodoMultaCominatoria=obrigacao.periodo_multa_cominatoria,
-        EMultaCominatoriaSolidaria=obrigacao.e_multa_cominatoria_solidaria,
-        SolidariosMultaCominatoria=obrigacao.solidarios_multa_cominatoria
+def _session_date_iso(raw_session_date) -> str:
+    if isinstance(raw_session_date, str):
+        try:
+            dt = datetime.fromisoformat(raw_session_date)
+        except ValueError:
+            dt = datetime.strptime(raw_session_date, "%Y-%m-%d")
+        return dt.date().isoformat()
+    if hasattr(raw_session_date, "date"):
+        return raw_session_date.date().isoformat()
+    return raw_session_date.isoformat()
+
+
+def _prepare_extraction_context(
+    row: Dict[str, Any] | Any,
+    extractor_responsible: BaseChatModel,
+):
+    if not isinstance(row, dict):
+        row = row.to_dict()
+    session_date_str = _session_date_iso(row["data_sessao"])
+    responsible = get_responsible_unit(
+        extractor_responsible,
+        unit=row.get("orgao_responsavel", ""),
+        session_date=session_date_str,
     )
-    db_session.add(orm_obj)
-    db_session.commit()
-    return orm_obj
+    citacao = get_deadline_from_citations(
+        process_number=row["processo"],
+        session_date=session_date_str,
+        responsible=responsible.nome_responsavel,
+        extractor=extractor_responsible,
+    )
+    return row, responsible, citacao
+
+
+# Obrigação
 
 def get_prompt_obrigacao(
     row: Dict[str, Any],
@@ -212,46 +225,14 @@ def extract_obrigacao(
     row: Dict[str, Any] | Any,
     obrigacao_rascunho: Obrigacao,
 ) -> Obrigacao:
-    if not isinstance(row, dict):
-        row = row.to_dict()
-
-    process_number: str = row["processo"]
-    raw_session_date = row["data_sessao"]
-    if isinstance(raw_session_date, str):
-        try:
-            session_date_dt = datetime.fromisoformat(raw_session_date)
-        except ValueError:
-            session_date_dt = datetime.strptime(raw_session_date, "%Y-%m-%d")
-        session_date: date = session_date_dt.date()
-    elif hasattr(raw_session_date, "date"):
-        session_date = raw_session_date.date()
-    else:
-        session_date = raw_session_date
-
-    session_date_str = session_date.isoformat()
-
-    responsible = get_responsible_unit(
-        extractor_responsible,
-        unit=row.get("orgao_responsavel", ""),
-        session_date=session_date_str,
-    )
-
-    citacao: Dict[str, Any] = get_deadline_from_citations(
-        process_number=process_number,
-        session_date=session_date_str,
-        responsible=responsible.nome_responsavel,
-    )
-
+    row, responsible, citacao = _prepare_extraction_context(row, extractor_responsible)
     prompt = get_prompt_obrigacao(
         row=row,
         obrigacao=obrigacao_rascunho,
         citacao=citacao,
         responsavel=responsible,
     )
-
-    obrigacao_final: Obrigacao = extractor.invoke(prompt)
-
-    return obrigacao_final
+    return extractor.invoke(prompt)
 
 
 def insert_obrigacao(db_session, obrigacao: Obrigacao, row):
@@ -362,56 +343,14 @@ def extract_recomendacao(
     row: Dict[str, Any] | Any,
     recomendacao_rascunho: Recomendacao,
 ) -> Recomendacao:
-    """
-    Espelha extract_obrigacao():
-    - normaliza row (dict)
-    - resolve data_sessao -> session_date_str
-    - obtém responsável sugerido via get_responsible_unit()
-    - obtém prazo/data sugeridos via get_deadline_from_citations()
-    - monta prompt com get_prompt_recomendacao()
-    - invoca LLM e retorna Recomendacao estruturada
-    """
-    if not isinstance(row, dict):
-        row = row.to_dict()
-
-    process_number: str = row["processo"]
-
-    raw_session_date = row["data_sessao"]
-    if isinstance(raw_session_date, str):
-        try:
-            session_date_dt = datetime.fromisoformat(raw_session_date)
-        except ValueError:
-            session_date_dt = datetime.strptime(raw_session_date, "%Y-%m-%d")
-        session_date: date = session_date_dt.date()
-    elif hasattr(raw_session_date, "date"):
-        session_date = raw_session_date.date()
-    else:
-        session_date = raw_session_date
-
-    session_date_str = session_date.isoformat()
-
-    responsible = get_responsible_unit(
-        extractor_responsible,
-        unit=row.get("orgao_responsavel", ""),
-        session_date=session_date_str,
-    )
-
-    citacao: Dict[str, Any] = get_deadline_from_citations(
-        process_number=process_number,
-        session_date=session_date_str,
-        responsible=responsible.nome_responsavel,
-    )
-
+    row, responsible, citacao = _prepare_extraction_context(row, extractor_responsible)
     prompt = get_prompt_recomendacao(
         row=row,
         recomendacao=recomendacao_rascunho,
         citacao=citacao,
         responsavel=responsible,
     )
-
-    recomendacao_final: Recomendacao = extractor.invoke(prompt)
-
-    return recomendacao_final
+    return extractor.invoke(prompt)
 
 
 def insert_recomendacao(db_session, recomendacao: Recomendacao, row):
@@ -434,17 +373,30 @@ def insert_recomendacao(db_session, recomendacao: Recomendacao, row):
 ## NER Pipeline ##
 ##################
 
+def _load_decisions_sql(filter_clause: str) -> str:
+    sql = open(os.path.join(SQL_DIR, "decisions_base.sql")).read()
+    return sql.replace("{filter_clause}", filter_clause)
+
 def get_decisions_by_year_and_months(year: int, months: List[int]):
-    sql_dec = open(os.path.join(SQL_DIR, "decisions_by_year_months.sql"), "r").read()
-    return pd.read_sql_query(sql_dec.format(ano=year, meses=",".join([str(m) for m in months])), get_connection(os.getenv("SQL_SERVER_DB_PROCESSOS")))
+    sql = _load_decisions_sql("YEAR(d.DataSessao) = {ano} AND MONTH(d.DataSessao) IN ({meses})")
+    return pd.read_sql_query(
+        sql.format(ano=year, meses=",".join(str(m) for m in months)),
+        get_connection(DB_PROCESSOS),
+    )
 
 def get_decisions_by_dates(start_date: date, end_date: date):
-    sql_dec = open(os.path.join(SQL_DIR, "decisions_by_dates.sql"), "r").read()
-    return pd.read_sql_query(sql_dec.format(start_date=start_date.isoformat(), end_date=end_date.isoformat()), get_connection(os.getenv("SQL_SERVER_DB_PROCESSOS")))
+    sql = _load_decisions_sql("d.DataSessao BETWEEN '{start_date}' AND '{end_date}'")
+    return pd.read_sql_query(
+        sql.format(start_date=start_date.isoformat(), end_date=end_date.isoformat()),
+        get_connection(DB_PROCESSOS),
+    )
 
 def get_decisions_by_process(process_list: List[str]):
-    sql_dec = open(os.path.join(SQL_DIR, "decisions_by_processes.sql"), "r").read()
-    return pd.read_sql_query(sql_dec.format(processes=",".join([f"'{m}'" for m in process_list])), get_connection(os.getenv("SQL_SERVER_DB_PROCESSOS")))
+    sql = _load_decisions_sql("CONCAT(p.Numero_Processo, '/', p.Ano_Processo) IN ({processes})")
+    return pd.read_sql_query(
+        sql.format(processes=",".join(f"'{m}'" for m in process_list)),
+        get_connection(DB_PROCESSOS),
+    )
 
 def get_ner_decision(extractor: BaseChatModel, texto_acordao: str) -> Dict[str, Any]:
     prompt_with_few_shot = generate_few_shot_ner_prompts(texto_acordao)
@@ -598,7 +550,7 @@ def process_decision_row(
     return ner_id
 
 def run_ner_pipeline_for_dataframe(df, extractor: BaseChatModel, model_name: str, prompt_version: str, run_id: str | None = None):
-    engine = get_connection(os.getenv("SQL_SERVER_DB_DECISOES"))
+    engine = get_connection(DB_DECISOES)
     SessionLocal = sessionmaker(bind=engine)
     session = SessionLocal()
     try:
@@ -630,7 +582,7 @@ def normalize_text(s: str) -> str:
 
 def get_all_units() -> pd.DataFrame:
     sql_unidades = open(os.path.join(SQL_DIR, "units.sql")).read()
-    return pd.read_sql(sql_unidades, get_connection('BdSIAI'))
+    return pd.read_sql(sql_unidades, get_connection(DB_SIAI))
 
 def find_unit(query: str, limit=5, score_cutoff=70):
     """
@@ -656,7 +608,7 @@ def find_unit(query: str, limit=5, score_cutoff=70):
 def get_responsible_unit(extractor: BaseChatModel, unit: str, session_date: str) -> pd.DataFrame:
     id_unit = find_unit(unit, limit=1).iloc[0]["IdUnidadeJurisdicionada"]
     sql_resp = open(os.path.join(SQL_DIR, "responsible_unit.sql")).read()
-    resp = pd.read_sql(sql_resp.format(id_unit=id_unit, session_date=session_date), get_connection('BdSIAI')).to_dict(orient='records')
+    resp = pd.read_sql(sql_resp.format(id_unit=id_unit, session_date=session_date), get_connection(DB_SIAI)).to_dict(orient='records')
 
     prompt = f"""
     Você é um analista cuja tarefa é idenficar o responsável por uma unidade administrativa com base no cargo.
@@ -671,11 +623,11 @@ def get_responsible_unit(extractor: BaseChatModel, unit: str, session_date: str)
 
 def get_citations(process: str) -> pd.DataFrame:
     sql_citacoes = open(os.path.join(SQL_DIR, "citations_by_process.sql")).read()
-    return pd.read_sql(sql_citacoes.format(process=process), get_connection('processo')).to_dict(orient='records')
+    return pd.read_sql(sql_citacoes.format(process=process), get_connection(DB_PROCESSOS)).to_dict(orient='records')
 
 def get_citations_after(process: str, session_date: str) -> pd.DataFrame:
     sql_citacoes = open(os.path.join(SQL_DIR, "citations_by_process_after.sql")).read()
-    return pd.read_sql(sql_citacoes.format(process=process, session_date=session_date), get_connection('processo')).to_dict(orient='records')
+    return pd.read_sql(sql_citacoes.format(process=process, session_date=session_date), get_connection(DB_PROCESSOS)).to_dict(orient='records')
 
 def filter_by_responsible(records: list[dict], responsible: str, threshold: int = 70) -> list[dict]:
     """
@@ -732,12 +684,12 @@ def _to_datetime_safe(x):
     return dt.to_pydatetime()
 
 
-def get_deadline_from_citations(process_number: str, session_date: str, responsible: str) -> dict:
-    llm = AzureChatOpenAI(
-        deployment_name="gpt-4-turbo",
-        model_name="gpt-4",
-    )
-
+def get_deadline_from_citations(
+    process_number: str,
+    session_date: str,
+    responsible: str,
+    extractor: BaseChatModel,
+) -> dict:
     records = get_citations_after(process_number, session_date)
 
     if not records:
@@ -787,7 +739,7 @@ Informe apenas:
 Responda em JSON.
 """.strip()
 
-    choice: CitationChoice = llm.with_structured_output(CitationChoice).invoke(prompt)
+    choice: CitationChoice = extractor.with_structured_output(CitationChoice).invoke(prompt)
     idx = choice.index
     chosen = filtered[idx]
 
@@ -820,24 +772,16 @@ Responda em JSON.
     }
 
 
-######################
-# Obrigacao Pipeline #
-######################
+##################################
+# Obrigacao / Recomendacao Pipelines
+##################################
 
-def fetch_df_obrigacoes_nao_processadas_raw(
-    conn
-) -> pd.DataFrame:
-    sql_obrigacao_processar = open(os.path.join(SQL_DIR, "obligations_nonprocessed.sql")).read()
-    return pd.read_sql(
-        sql_obrigacao_processar,
-        conn
-    )
 
 def aggregate_responsaveis(df_raw: pd.DataFrame) -> pd.DataFrame:
     person_cols = ["nome_responsavel", "documento_responsavel", "tipo_responsavel", "id_pessoa"]
     group_cols = [c for c in df_raw.columns if c not in person_cols]
 
-    df_aug = (
+    return (
         df_raw.groupby(group_cols, dropna=False)
         .apply(
             lambda x: pd.Series(
@@ -850,94 +794,139 @@ def aggregate_responsaveis(df_raw: pd.DataFrame) -> pd.DataFrame:
         )
         .reset_index()
     )
-    return df_aug
 
 
-def process_obrigacao_row(
+@dataclass
+class PipelineSpec:
+    """Entity-specific bits that vary between the obrigacao/recomendacao pipelines."""
+    name: str
+    id_ner_attr: str
+    processed_orm: type
+    processed_fk_col: str
+    processed_pk_col: str
+    final_fk_col: str
+    build_draft: Callable[[Any], Any]
+    extract: Callable[[BaseChatModel, BaseChatModel, Dict[str, Any], Any], Any]
+    insert: Callable[[Session, Any, Dict[str, Any]], Any]
+    sql_filename: str
+
+
+OBRIGACAO_SPEC = PipelineSpec(
+    name="Obrigacao",
+    id_ner_attr="id_ner_obrigacao",
+    processed_orm=ProcessedObrigacaoORM,
+    processed_fk_col="IdNerObrigacao",
+    processed_pk_col="IdObrigacaoProcessada",
+    final_fk_col="IdObrigacao",
+    build_draft=lambda row: Obrigacao(
+        descricao_obrigacao=row.descricao_obrigacao,
+        orgao_responsavel=row.orgao_responsavel,
+    ),
+    extract=lambda extractor, extractor_responsible, row, draft: extract_obrigacao(
+        extractor, extractor_responsible, row, obrigacao_rascunho=draft,
+    ),
+    insert=insert_obrigacao,
+    sql_filename="obligations_nonprocessed.sql",
+)
+
+
+RECOMENDACAO_SPEC = PipelineSpec(
+    name="Recomendacao",
+    id_ner_attr="id_ner_recomendacao",
+    processed_orm=ProcessedRecomendacaoORM,
+    processed_fk_col="IdNerRecomendacao",
+    processed_pk_col="IdRecomendacaoProcessada",
+    final_fk_col="IdRecomendacao",
+    build_draft=lambda row: Recomendacao(
+        descricao_recomendacao=row.descricao_recomendacao,
+        orgao_responsavel_recomendacao=getattr(row, "orgao_responsavel", None) or "Desconhecido",
+        nome_responsavel_recomendacao="Desconhecido",
+        prazo_cumprimento_recomendacao=None,
+        data_cumprimento_recomendacao=None,
+    ),
+    extract=lambda extractor, extractor_responsible, row, draft: extract_recomendacao(
+        extractor=extractor,
+        extractor_responsible=extractor_responsible,
+        row=row,
+        recomendacao_rascunho=draft,
+    ),
+    insert=insert_recomendacao,
+    sql_filename="recommendations_nonprocessed.sql",
+)
+
+
+def _process_row(
     session: Session,
     row,
-    extractor_obrigacao,        # seu LLM extractor (ex: extractor_obrigacao_gpt4turbo)
-    extractor_responsible,      # seu extractor de responsáveis (se aplicável)
+    spec: PipelineSpec,
+    *,
+    extractor: BaseChatModel,
+    extractor_responsible: BaseChatModel,
     run_id: str | None = None,
     overwrite: bool = False,
 ) -> int | None:
-    """
-    Processa uma NERObrigacao (row do df_ob_aug):
-    - Se já existe ObrigacaoProcessada(IdNerObrigacao) e overwrite=False, pula.
-    - Se overwrite=True, pode deletar a marcação e recriar (ou lógica equivalente).
-    - Extrai obrigação estruturada via LLM e salva em Obrigacao + ObrigacaoProcessada(IdObrigacao).
-
-    Returns:
-        IdObrigacao (tabela final) ou None se pulou.
-    """
-    id_ner_obrigacao = int(row.id_ner_obrigacao)
+    id_ner = int(getattr(row, spec.id_ner_attr))
+    fk_col, pk_col, final_col = spec.processed_fk_col, spec.processed_pk_col, spec.final_fk_col
 
     existing = session.execute(
-        select(ProcessedObrigacaoORM)
-        .where(ProcessedObrigacaoORM.IdNerObrigacao == id_ner_obrigacao)
+        select(spec.processed_orm).where(
+            getattr(spec.processed_orm, fk_col) == id_ner
+        )
     ).scalar_one_or_none()
 
     if existing and not overwrite:
         logger.info(
-            "Skipping Obrigacao for IdNerObrigacao=%s because it is already processed (IdObrigacaoProcessada=%s).",
-            id_ner_obrigacao, existing.IdObrigacaoProcessada,
+            "Skipping %s for %s=%s (already processed %s=%s).",
+            spec.name, fk_col, id_ner, pk_col, getattr(existing, pk_col),
         )
-        return existing.IdObrigacao  # pode ser None se você marcou antes de vincular
+        return getattr(existing, final_col, None)
 
     if existing and overwrite:
-        logger.info("Overwriting ObrigacaoProcessada=%s for IdNerObrigacao=%s.", existing.IdObrigacaoProcessada, id_ner_obrigacao)
+        logger.info(
+            "Overwriting %s=%s for %s=%s.",
+            pk_col, getattr(existing, pk_col), fk_col, id_ner,
+        )
         session.delete(existing)
         session.commit()
 
-    # rascunho (mesmo padrão que você já usa)
-    obrigacao_rascunho = Obrigacao(
-        descricao_obrigacao=row.descricao_obrigacao,
-        orgao_responsavel=row.orgao_responsavel,
-    )
+    draft = spec.build_draft(row)
+    result = spec.extract(extractor, extractor_responsible, row.to_dict(), draft)
+    orm_obj = spec.insert(session, result, row.to_dict())
 
-    # Extração (usa seu pipeline atual)
-    result = extract_obrigacao(
-        extractor_obrigacao,
-        extractor_responsible,
-        row.to_dict(),
-        obrigacao_rascunho=obrigacao_rascunho,
-    )
-
-    # Persistência: usa sua insert_obrigacao atualizada (que grava IdObrigacao na ObrigacaoProcessada)
-    orm_obj = insert_obrigacao(session, result, row.to_dict())
-
-    # Se insert_obrigacao retornar None quando já processada, trate aqui:
     if orm_obj is None:
-        logger.info("insert_obrigacao returned None for IdNerObrigacao=%s (already processed).", id_ner_obrigacao)
+        logger.info("insert returned None for %s=%s (already processed).", fk_col, id_ner)
         return None
 
+    final_id = getattr(orm_obj, final_col)
     logger.info(
-        "Saved Obrigacao IdObrigacao=%s for IdNerObrigacao=%s (processo=%s).",
-        orm_obj.IdObrigacao, id_ner_obrigacao, getattr(row, "processo", None),
+        "Saved %s %s=%s for %s=%s (processo=%s).",
+        spec.name, final_col, final_id, fk_col, id_ner,
+        getattr(row, "processo", None),
     )
-    return orm_obj.IdObrigacao
+    return final_id
 
 
-def run_obrigacao_pipeline(
-    extractor_obrigacao,
-    extractor_responsible,
+def _run_pipeline(
+    spec: PipelineSpec,
+    extractor: BaseChatModel,
+    extractor_responsible: BaseChatModel,
     run_id: str | None = None,
     overwrite: bool = False,
 ) -> pd.DataFrame:
-    conn_dip = get_connection("BdDIP")
-    df_raw = fetch_df_obrigacoes_nao_processadas_raw(conn_dip)
+    conn = get_connection(DB_DECISOES)
+    sql = open(os.path.join(SQL_DIR, spec.sql_filename)).read()
+    df_raw = pd.read_sql(sql, conn)
     df_aug = aggregate_responsaveis(df_raw)
 
-    engine_bddip = get_connection("BdDIP")
-    SessionLocal = sessionmaker(bind=engine_bddip)
+    SessionLocal = sessionmaker(bind=get_connection(DB_DECISOES))
     session = SessionLocal()
-
     try:
         for _, row in df_aug.iterrows():
-            process_obrigacao_row(
-                session=session,
-                row=row,
-                extractor_obrigacao=extractor_obrigacao,
+            _process_row(
+                session,
+                row,
+                spec,
+                extractor=extractor,
                 extractor_responsible=extractor_responsible,
                 run_id=run_id,
                 overwrite=overwrite,
@@ -947,42 +936,26 @@ def run_obrigacao_pipeline(
 
     return df_aug
 
-#########################
-# Recomendacao Pipeline #
-#########################
 
-def fetch_df_recomendacoes_nao_processadas_raw(conn) -> pd.DataFrame:
-    """
-    Retorna dataframe com recomendações NER ainda não processadas (raw),
-    geralmente vindo do banco de decisões/NER + joins necessários + responsáveis em linhas.
-    """
-    sql_path = os.path.join(SQL_DIR, "recommendations_nonprocessed.sql")
-    sql_rec_processar = open(sql_path, "r").read()
-    return pd.read_sql(sql_rec_processar, conn)
+# Public wrappers — preserve signatures used by etl.ipynb / lab.ipynb.
 
-
-def aggregate_responsaveis_recomendacao(df_raw: pd.DataFrame) -> pd.DataFrame:
-    """
-    Mesmo padrão do aggregate_responsaveis() usado em obrigações,
-    mas mantido separado caso você queira customizar depois.
-    """
-    person_cols = ["nome_responsavel", "documento_responsavel", "tipo_responsavel", "id_pessoa"]
-    group_cols = [c for c in df_raw.columns if c not in person_cols]
-
-    df_aug = (
-        df_raw.groupby(group_cols, dropna=False)
-        .apply(
-            lambda x: pd.Series(
-                {
-                    "responsaveis": x[person_cols]
-                    .apply(lambda y: y.dropna().to_dict(), axis=1)
-                    .tolist()
-                }
-            )
-        )
-        .reset_index()
+def process_obrigacao_row(
+    session: Session,
+    row,
+    extractor_obrigacao: BaseChatModel,
+    extractor_responsible: BaseChatModel,
+    run_id: str | None = None,
+    overwrite: bool = False,
+) -> int | None:
+    return _process_row(
+        session,
+        row,
+        OBRIGACAO_SPEC,
+        extractor=extractor_obrigacao,
+        extractor_responsible=extractor_responsible,
+        run_id=run_id,
+        overwrite=overwrite,
     )
-    return df_aug
 
 
 def process_recomendacao_row(
@@ -993,66 +966,26 @@ def process_recomendacao_row(
     run_id: str | None = None,
     overwrite: bool = False,
 ) -> int | None:
-    """
-    Espelha process_obrigacao_row():
-    - checa ProcessedRecomendacaoORM(IdNerRecomendacao)
-    - se overwrite=True, remove marcação e reprocessa
-    - extrai Recomendacao estruturada e persiste + marca como processada
-
-    Returns:
-        IdRecomendacao (tabela final) ou None se pulou.
-    """
-    id_ner_recomendacao = int(row.id_ner_recomendacao)
-
-    existing = session.execute(
-        select(ProcessedRecomendacaoORM)
-        .where(ProcessedRecomendacaoORM.IdNerRecomendacao == id_ner_recomendacao)
-    ).scalar_one_or_none()
-
-    if existing and not overwrite:
-        logger.info(
-            "Skipping Recomendacao for IdNerRecomendacao=%s because it is already processed (IdRecomendacaoProcessada=%s).",
-            id_ner_recomendacao, existing.IdRecomendacaoProcessada,
-        )
-        return existing.IdRecomendacao
-
-    if existing and overwrite:
-        logger.info(
-            "Overwriting RecomendacaoProcessada=%s for IdNerRecomendacao=%s.",
-            existing.IdRecomendacaoProcessada, id_ner_recomendacao
-        )
-        session.delete(existing)
-        session.commit()
-
-    # rascunho (padrão obrigação)
-    recomendacao_rascunho = Recomendacao(
-        descricao_recomendacao=row.descricao_recomendacao,
-        orgao_responsavel_recomendacao=getattr(row, "orgao_responsavel", None) or "Desconhecido",
-        nome_responsavel_recomendacao="Desconhecido",
-        prazo_cumprimento_recomendacao=None,
-        data_cumprimento_recomendacao=None,
-    )
-
-    result = extract_recomendacao(
+    return _process_row(
+        session,
+        row,
+        RECOMENDACAO_SPEC,
         extractor=extractor_recomendacao,
         extractor_responsible=extractor_responsible,
-        row=row.to_dict(),
-        recomendacao_rascunho=recomendacao_rascunho,
+        run_id=run_id,
+        overwrite=overwrite,
     )
 
-    orm_obj = insert_recomendacao(session, result, row.to_dict())
-    if orm_obj is None:
-        logger.info(
-            "insert_recomendacao returned None for IdNerRecomendacao=%s (already processed).",
-            id_ner_recomendacao
-        )
-        return None
 
-    logger.info(
-        "Saved Recomendacao IdRecomendacao=%s for IdNerRecomendacao=%s (processo=%s).",
-        orm_obj.IdRecomendacao, id_ner_recomendacao, getattr(row, "processo", None),
+def run_obrigacao_pipeline(
+    extractor_obrigacao: BaseChatModel,
+    extractor_responsible: BaseChatModel,
+    run_id: str | None = None,
+    overwrite: bool = False,
+) -> pd.DataFrame:
+    return _run_pipeline(
+        OBRIGACAO_SPEC, extractor_obrigacao, extractor_responsible, run_id, overwrite
     )
-    return orm_obj.IdRecomendacao
 
 
 def run_recomendacao_pipeline(
@@ -1061,30 +994,6 @@ def run_recomendacao_pipeline(
     run_id: str | None = None,
     overwrite: bool = False,
 ) -> pd.DataFrame:
-    """
-    - Lê recomendações não processadas (raw)
-    - Agrega responsáveis em lista por recomendação
-    - Processa linha a linha (idempotente)
-    """
-    conn = get_connection("BdDIP")  # ajuste se a view/tabela estiver em outro DB
-    df_raw = fetch_df_recomendacoes_nao_processadas_raw(conn)
-    df_aug = aggregate_responsaveis_recomendacao(df_raw)
-
-    engine = get_connection("BdDIP")
-    SessionLocal = sessionmaker(bind=engine)
-    session = SessionLocal()
-
-    try:
-        for _, row in df_aug.iterrows():
-            process_recomendacao_row(
-                session=session,
-                row=row,
-                extractor_recomendacao=extractor_recomendacao,
-                extractor_responsible=extractor_responsible,
-                run_id=run_id,
-                overwrite=overwrite,
-            )
-    finally:
-        session.close()
-
-    return df_aug
+    return _run_pipeline(
+        RECOMENDACAO_SPEC, extractor_recomendacao, extractor_responsible, run_id, overwrite
+    )
