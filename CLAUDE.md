@@ -76,6 +76,14 @@ The project is a pipeline that converts free-text TCE/RN decisions (`texto_acord
 - **When adding a new module**, default to placing it under `tools/` with a clear name. If the fit is ambiguous, ask.
 - **Don't instantiate LLM clients or open DB connections at import time** in new code — use factory functions so tests can import without side effects. (Note: `tools/utils.py` currently does this; fixing it is on the backlog.)
 
+## Language policy
+
+- Code, comments, docstrings, identifiers, commit messages, branch names, PR titles, and issue descriptions: **English**.
+- Prompts sent to LLMs and few-shot examples: **Portuguese** (the source documents — TCE/RN decisions — are in Portuguese, and the prompts are tuned for that).
+- Dataset labels (`MULTA`, `OBRIGACAO`, `RESSARCIMENTO`, `RECOMENDACAO`): **Portuguese**, because they are domain terms from Brazilian audit law and map to database tables.
+- The dissertation itself (under `docs/dissertacao/`): **Portuguese**.
+- When in doubt: English for anything a non-Portuguese-speaking collaborator would need to read to use or modify the code.
+
 ## Testing
 
 There is no test suite yet. When adding tests:
