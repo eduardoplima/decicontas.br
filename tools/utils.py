@@ -6,8 +6,9 @@ import logging
 
 import pandas as pd
 
+from dataclasses import dataclass
 from datetime import datetime, date
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Callable
 from langchain_core.language_models.chat_models import BaseChatModel
 from rapidfuzz import process, fuzz
 
@@ -771,24 +772,16 @@ Responda em JSON.
     }
 
 
-######################
-# Obrigacao Pipeline #
-######################
+##################################
+# Obrigacao / Recomendacao Pipelines
+##################################
 
-def fetch_df_obrigacoes_nao_processadas_raw(
-    conn
-) -> pd.DataFrame:
-    sql_obrigacao_processar = open(os.path.join(SQL_DIR, "obligations_nonprocessed.sql")).read()
-    return pd.read_sql(
-        sql_obrigacao_processar,
-        conn
-    )
 
 def aggregate_responsaveis(df_raw: pd.DataFrame) -> pd.DataFrame:
     person_cols = ["nome_responsavel", "documento_responsavel", "tipo_responsavel", "id_pessoa"]
     group_cols = [c for c in df_raw.columns if c not in person_cols]
 
-    df_aug = (
+    return (
         df_raw.groupby(group_cols, dropna=False)
         .apply(
             lambda x: pd.Series(
@@ -801,94 +794,139 @@ def aggregate_responsaveis(df_raw: pd.DataFrame) -> pd.DataFrame:
         )
         .reset_index()
     )
-    return df_aug
 
 
-def process_obrigacao_row(
+@dataclass
+class PipelineSpec:
+    """Entity-specific bits that vary between the obrigacao/recomendacao pipelines."""
+    name: str
+    id_ner_attr: str
+    processed_orm: type
+    processed_fk_col: str
+    processed_pk_col: str
+    final_fk_col: str
+    build_draft: Callable[[Any], Any]
+    extract: Callable[[BaseChatModel, BaseChatModel, Dict[str, Any], Any], Any]
+    insert: Callable[[Session, Any, Dict[str, Any]], Any]
+    sql_filename: str
+
+
+OBRIGACAO_SPEC = PipelineSpec(
+    name="Obrigacao",
+    id_ner_attr="id_ner_obrigacao",
+    processed_orm=ProcessedObrigacaoORM,
+    processed_fk_col="IdNerObrigacao",
+    processed_pk_col="IdObrigacaoProcessada",
+    final_fk_col="IdObrigacao",
+    build_draft=lambda row: Obrigacao(
+        descricao_obrigacao=row.descricao_obrigacao,
+        orgao_responsavel=row.orgao_responsavel,
+    ),
+    extract=lambda extractor, extractor_responsible, row, draft: extract_obrigacao(
+        extractor, extractor_responsible, row, obrigacao_rascunho=draft,
+    ),
+    insert=insert_obrigacao,
+    sql_filename="obligations_nonprocessed.sql",
+)
+
+
+RECOMENDACAO_SPEC = PipelineSpec(
+    name="Recomendacao",
+    id_ner_attr="id_ner_recomendacao",
+    processed_orm=ProcessedRecomendacaoORM,
+    processed_fk_col="IdNerRecomendacao",
+    processed_pk_col="IdRecomendacaoProcessada",
+    final_fk_col="IdRecomendacao",
+    build_draft=lambda row: Recomendacao(
+        descricao_recomendacao=row.descricao_recomendacao,
+        orgao_responsavel_recomendacao=getattr(row, "orgao_responsavel", None) or "Desconhecido",
+        nome_responsavel_recomendacao="Desconhecido",
+        prazo_cumprimento_recomendacao=None,
+        data_cumprimento_recomendacao=None,
+    ),
+    extract=lambda extractor, extractor_responsible, row, draft: extract_recomendacao(
+        extractor=extractor,
+        extractor_responsible=extractor_responsible,
+        row=row,
+        recomendacao_rascunho=draft,
+    ),
+    insert=insert_recomendacao,
+    sql_filename="recommendations_nonprocessed.sql",
+)
+
+
+def _process_row(
     session: Session,
     row,
-    extractor_obrigacao,        # seu LLM extractor (ex: extractor_obrigacao_gpt4turbo)
-    extractor_responsible,      # seu extractor de responsáveis (se aplicável)
+    spec: PipelineSpec,
+    *,
+    extractor: BaseChatModel,
+    extractor_responsible: BaseChatModel,
     run_id: str | None = None,
     overwrite: bool = False,
 ) -> int | None:
-    """
-    Processa uma NERObrigacao (row do df_ob_aug):
-    - Se já existe ObrigacaoProcessada(IdNerObrigacao) e overwrite=False, pula.
-    - Se overwrite=True, pode deletar a marcação e recriar (ou lógica equivalente).
-    - Extrai obrigação estruturada via LLM e salva em Obrigacao + ObrigacaoProcessada(IdObrigacao).
-
-    Returns:
-        IdObrigacao (tabela final) ou None se pulou.
-    """
-    id_ner_obrigacao = int(row.id_ner_obrigacao)
+    id_ner = int(getattr(row, spec.id_ner_attr))
+    fk_col, pk_col, final_col = spec.processed_fk_col, spec.processed_pk_col, spec.final_fk_col
 
     existing = session.execute(
-        select(ProcessedObrigacaoORM)
-        .where(ProcessedObrigacaoORM.IdNerObrigacao == id_ner_obrigacao)
+        select(spec.processed_orm).where(
+            getattr(spec.processed_orm, fk_col) == id_ner
+        )
     ).scalar_one_or_none()
 
     if existing and not overwrite:
         logger.info(
-            "Skipping Obrigacao for IdNerObrigacao=%s because it is already processed (IdObrigacaoProcessada=%s).",
-            id_ner_obrigacao, existing.IdObrigacaoProcessada,
+            "Skipping %s for %s=%s (already processed %s=%s).",
+            spec.name, fk_col, id_ner, pk_col, getattr(existing, pk_col),
         )
-        return existing.IdObrigacao  # pode ser None se você marcou antes de vincular
+        return getattr(existing, final_col, None)
 
     if existing and overwrite:
-        logger.info("Overwriting ObrigacaoProcessada=%s for IdNerObrigacao=%s.", existing.IdObrigacaoProcessada, id_ner_obrigacao)
+        logger.info(
+            "Overwriting %s=%s for %s=%s.",
+            pk_col, getattr(existing, pk_col), fk_col, id_ner,
+        )
         session.delete(existing)
         session.commit()
 
-    # rascunho (mesmo padrão que você já usa)
-    obrigacao_rascunho = Obrigacao(
-        descricao_obrigacao=row.descricao_obrigacao,
-        orgao_responsavel=row.orgao_responsavel,
-    )
+    draft = spec.build_draft(row)
+    result = spec.extract(extractor, extractor_responsible, row.to_dict(), draft)
+    orm_obj = spec.insert(session, result, row.to_dict())
 
-    # Extração (usa seu pipeline atual)
-    result = extract_obrigacao(
-        extractor_obrigacao,
-        extractor_responsible,
-        row.to_dict(),
-        obrigacao_rascunho=obrigacao_rascunho,
-    )
-
-    # Persistência: usa sua insert_obrigacao atualizada (que grava IdObrigacao na ObrigacaoProcessada)
-    orm_obj = insert_obrigacao(session, result, row.to_dict())
-
-    # Se insert_obrigacao retornar None quando já processada, trate aqui:
     if orm_obj is None:
-        logger.info("insert_obrigacao returned None for IdNerObrigacao=%s (already processed).", id_ner_obrigacao)
+        logger.info("insert returned None for %s=%s (already processed).", fk_col, id_ner)
         return None
 
+    final_id = getattr(orm_obj, final_col)
     logger.info(
-        "Saved Obrigacao IdObrigacao=%s for IdNerObrigacao=%s (processo=%s).",
-        orm_obj.IdObrigacao, id_ner_obrigacao, getattr(row, "processo", None),
+        "Saved %s %s=%s for %s=%s (processo=%s).",
+        spec.name, final_col, final_id, fk_col, id_ner,
+        getattr(row, "processo", None),
     )
-    return orm_obj.IdObrigacao
+    return final_id
 
 
-def run_obrigacao_pipeline(
-    extractor_obrigacao,
-    extractor_responsible,
+def _run_pipeline(
+    spec: PipelineSpec,
+    extractor: BaseChatModel,
+    extractor_responsible: BaseChatModel,
     run_id: str | None = None,
     overwrite: bool = False,
 ) -> pd.DataFrame:
-    conn_dip = get_connection(DB_DECISOES)
-    df_raw = fetch_df_obrigacoes_nao_processadas_raw(conn_dip)
+    conn = get_connection(DB_DECISOES)
+    sql = open(os.path.join(SQL_DIR, spec.sql_filename)).read()
+    df_raw = pd.read_sql(sql, conn)
     df_aug = aggregate_responsaveis(df_raw)
 
-    engine_bddip = get_connection(DB_DECISOES)
-    SessionLocal = sessionmaker(bind=engine_bddip)
+    SessionLocal = sessionmaker(bind=get_connection(DB_DECISOES))
     session = SessionLocal()
-
     try:
         for _, row in df_aug.iterrows():
-            process_obrigacao_row(
-                session=session,
-                row=row,
-                extractor_obrigacao=extractor_obrigacao,
+            _process_row(
+                session,
+                row,
+                spec,
+                extractor=extractor,
                 extractor_responsible=extractor_responsible,
                 run_id=run_id,
                 overwrite=overwrite,
@@ -898,18 +936,26 @@ def run_obrigacao_pipeline(
 
     return df_aug
 
-#########################
-# Recomendacao Pipeline #
-#########################
 
-def fetch_df_recomendacoes_nao_processadas_raw(conn) -> pd.DataFrame:
-    """
-    Retorna dataframe com recomendações NER ainda não processadas (raw),
-    geralmente vindo do banco de decisões/NER + joins necessários + responsáveis em linhas.
-    """
-    sql_path = os.path.join(SQL_DIR, "recommendations_nonprocessed.sql")
-    sql_rec_processar = open(sql_path, "r").read()
-    return pd.read_sql(sql_rec_processar, conn)
+# Public wrappers — preserve signatures used by etl.ipynb / lab.ipynb.
+
+def process_obrigacao_row(
+    session: Session,
+    row,
+    extractor_obrigacao: BaseChatModel,
+    extractor_responsible: BaseChatModel,
+    run_id: str | None = None,
+    overwrite: bool = False,
+) -> int | None:
+    return _process_row(
+        session,
+        row,
+        OBRIGACAO_SPEC,
+        extractor=extractor_obrigacao,
+        extractor_responsible=extractor_responsible,
+        run_id=run_id,
+        overwrite=overwrite,
+    )
 
 
 def process_recomendacao_row(
@@ -920,66 +966,26 @@ def process_recomendacao_row(
     run_id: str | None = None,
     overwrite: bool = False,
 ) -> int | None:
-    """
-    Espelha process_obrigacao_row():
-    - checa ProcessedRecomendacaoORM(IdNerRecomendacao)
-    - se overwrite=True, remove marcação e reprocessa
-    - extrai Recomendacao estruturada e persiste + marca como processada
-
-    Returns:
-        IdRecomendacao (tabela final) ou None se pulou.
-    """
-    id_ner_recomendacao = int(row.id_ner_recomendacao)
-
-    existing = session.execute(
-        select(ProcessedRecomendacaoORM)
-        .where(ProcessedRecomendacaoORM.IdNerRecomendacao == id_ner_recomendacao)
-    ).scalar_one_or_none()
-
-    if existing and not overwrite:
-        logger.info(
-            "Skipping Recomendacao for IdNerRecomendacao=%s because it is already processed (IdRecomendacaoProcessada=%s).",
-            id_ner_recomendacao, existing.IdRecomendacaoProcessada,
-        )
-        return existing.IdRecomendacao
-
-    if existing and overwrite:
-        logger.info(
-            "Overwriting RecomendacaoProcessada=%s for IdNerRecomendacao=%s.",
-            existing.IdRecomendacaoProcessada, id_ner_recomendacao
-        )
-        session.delete(existing)
-        session.commit()
-
-    # rascunho (padrão obrigação)
-    recomendacao_rascunho = Recomendacao(
-        descricao_recomendacao=row.descricao_recomendacao,
-        orgao_responsavel_recomendacao=getattr(row, "orgao_responsavel", None) or "Desconhecido",
-        nome_responsavel_recomendacao="Desconhecido",
-        prazo_cumprimento_recomendacao=None,
-        data_cumprimento_recomendacao=None,
-    )
-
-    result = extract_recomendacao(
+    return _process_row(
+        session,
+        row,
+        RECOMENDACAO_SPEC,
         extractor=extractor_recomendacao,
         extractor_responsible=extractor_responsible,
-        row=row.to_dict(),
-        recomendacao_rascunho=recomendacao_rascunho,
+        run_id=run_id,
+        overwrite=overwrite,
     )
 
-    orm_obj = insert_recomendacao(session, result, row.to_dict())
-    if orm_obj is None:
-        logger.info(
-            "insert_recomendacao returned None for IdNerRecomendacao=%s (already processed).",
-            id_ner_recomendacao
-        )
-        return None
 
-    logger.info(
-        "Saved Recomendacao IdRecomendacao=%s for IdNerRecomendacao=%s (processo=%s).",
-        orm_obj.IdRecomendacao, id_ner_recomendacao, getattr(row, "processo", None),
+def run_obrigacao_pipeline(
+    extractor_obrigacao: BaseChatModel,
+    extractor_responsible: BaseChatModel,
+    run_id: str | None = None,
+    overwrite: bool = False,
+) -> pd.DataFrame:
+    return _run_pipeline(
+        OBRIGACAO_SPEC, extractor_obrigacao, extractor_responsible, run_id, overwrite
     )
-    return orm_obj.IdRecomendacao
 
 
 def run_recomendacao_pipeline(
@@ -988,30 +994,6 @@ def run_recomendacao_pipeline(
     run_id: str | None = None,
     overwrite: bool = False,
 ) -> pd.DataFrame:
-    """
-    - Lê recomendações não processadas (raw)
-    - Agrega responsáveis em lista por recomendação
-    - Processa linha a linha (idempotente)
-    """
-    conn = get_connection(DB_DECISOES)  # ajuste se a view/tabela estiver em outro DB
-    df_raw = fetch_df_recomendacoes_nao_processadas_raw(conn)
-    df_aug = aggregate_responsaveis(df_raw)
-
-    engine = get_connection(DB_DECISOES)
-    SessionLocal = sessionmaker(bind=engine)
-    session = SessionLocal()
-
-    try:
-        for _, row in df_aug.iterrows():
-            process_recomendacao_row(
-                session=session,
-                row=row,
-                extractor_recomendacao=extractor_recomendacao,
-                extractor_responsible=extractor_responsible,
-                run_id=run_id,
-                overwrite=overwrite,
-            )
-    finally:
-        session.close()
-
-    return df_aug
+    return _run_pipeline(
+        RECOMENDACAO_SPEC, extractor_recomendacao, extractor_responsible, run_id, overwrite
+    )
