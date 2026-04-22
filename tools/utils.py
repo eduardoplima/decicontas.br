@@ -130,30 +130,6 @@ def get_pessoas_str(pessoas: List[Dict[str, Any]]) -> str:
 
 # Obrigação
 
-def insert_obrigacao(db_session, obrigacao: Obrigacao, row: Dict[str, Any]):
-    orm_obj = ObrigacaoORM(
-        IdProcesso=safe_int(row['id_processo']),
-        IdComposicaoPauta=safe_int(row['id_composicao_pauta']),
-        IdVotoPauta=safe_int(row['id_voto_pauta']),
-        DescricaoObrigacao=obrigacao.descricao_obrigacao,
-        DeFazer=obrigacao.de_fazer,
-        Prazo=obrigacao.prazo,
-        DataCumprimento=obrigacao.data_cumprimento,
-        OrgaoResponsavel=obrigacao.orgao_responsavel,
-        IdOrgaoResponsavel=safe_int(row['id_orgao_responsavel']),
-        TemMultaCominatoria=obrigacao.tem_multa_cominatoria,
-        NomeResponsavelMultaCominatoria=obrigacao.nome_responsavel_multa_cominatoria,
-        DocumentoResponsavelMultaCominatoria=obrigacao.documento_responsavel_multa_cominatoria,
-        IdPessoaMultaCominatoria=get_id_pessoa_multa_cominatoria(row, obrigacao),
-        ValorMultaCominatoria=obrigacao.valor_multa_cominatoria,
-        PeriodoMultaCominatoria=obrigacao.periodo_multa_cominatoria,
-        EMultaCominatoriaSolidaria=obrigacao.e_multa_cominatoria_solidaria,
-        SolidariosMultaCominatoria=obrigacao.solidarios_multa_cominatoria
-    )
-    db_session.add(orm_obj)
-    db_session.commit()
-    return orm_obj
-
 def get_prompt_obrigacao(
     row: Dict[str, Any],
     obrigacao: Obrigacao,
