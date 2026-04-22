@@ -128,6 +128,39 @@ def get_pessoas_str(pessoas: List[Dict[str, Any]]) -> str:
     
     return ", ".join(pessoas_str)
 
+
+def _session_date_iso(raw_session_date) -> str:
+    if isinstance(raw_session_date, str):
+        try:
+            dt = datetime.fromisoformat(raw_session_date)
+        except ValueError:
+            dt = datetime.strptime(raw_session_date, "%Y-%m-%d")
+        return dt.date().isoformat()
+    if hasattr(raw_session_date, "date"):
+        return raw_session_date.date().isoformat()
+    return raw_session_date.isoformat()
+
+
+def _prepare_extraction_context(
+    row: Dict[str, Any] | Any,
+    extractor_responsible: BaseChatModel,
+):
+    if not isinstance(row, dict):
+        row = row.to_dict()
+    session_date_str = _session_date_iso(row["data_sessao"])
+    responsible = get_responsible_unit(
+        extractor_responsible,
+        unit=row.get("orgao_responsavel", ""),
+        session_date=session_date_str,
+    )
+    citacao = get_deadline_from_citations(
+        process_number=row["processo"],
+        session_date=session_date_str,
+        responsible=responsible.nome_responsavel,
+    )
+    return row, responsible, citacao
+
+
 # Obrigação
 
 def get_prompt_obrigacao(
@@ -188,46 +221,14 @@ def extract_obrigacao(
     row: Dict[str, Any] | Any,
     obrigacao_rascunho: Obrigacao,
 ) -> Obrigacao:
-    if not isinstance(row, dict):
-        row = row.to_dict()
-
-    process_number: str = row["processo"]
-    raw_session_date = row["data_sessao"]
-    if isinstance(raw_session_date, str):
-        try:
-            session_date_dt = datetime.fromisoformat(raw_session_date)
-        except ValueError:
-            session_date_dt = datetime.strptime(raw_session_date, "%Y-%m-%d")
-        session_date: date = session_date_dt.date()
-    elif hasattr(raw_session_date, "date"):
-        session_date = raw_session_date.date()
-    else:
-        session_date = raw_session_date
-
-    session_date_str = session_date.isoformat()
-
-    responsible = get_responsible_unit(
-        extractor_responsible,
-        unit=row.get("orgao_responsavel", ""),
-        session_date=session_date_str,
-    )
-
-    citacao: Dict[str, Any] = get_deadline_from_citations(
-        process_number=process_number,
-        session_date=session_date_str,
-        responsible=responsible.nome_responsavel,
-    )
-
+    row, responsible, citacao = _prepare_extraction_context(row, extractor_responsible)
     prompt = get_prompt_obrigacao(
         row=row,
         obrigacao=obrigacao_rascunho,
         citacao=citacao,
         responsavel=responsible,
     )
-
-    obrigacao_final: Obrigacao = extractor.invoke(prompt)
-
-    return obrigacao_final
+    return extractor.invoke(prompt)
 
 
 def insert_obrigacao(db_session, obrigacao: Obrigacao, row):
@@ -338,56 +339,14 @@ def extract_recomendacao(
     row: Dict[str, Any] | Any,
     recomendacao_rascunho: Recomendacao,
 ) -> Recomendacao:
-    """
-    Espelha extract_obrigacao():
-    - normaliza row (dict)
-    - resolve data_sessao -> session_date_str
-    - obtém responsável sugerido via get_responsible_unit()
-    - obtém prazo/data sugeridos via get_deadline_from_citations()
-    - monta prompt com get_prompt_recomendacao()
-    - invoca LLM e retorna Recomendacao estruturada
-    """
-    if not isinstance(row, dict):
-        row = row.to_dict()
-
-    process_number: str = row["processo"]
-
-    raw_session_date = row["data_sessao"]
-    if isinstance(raw_session_date, str):
-        try:
-            session_date_dt = datetime.fromisoformat(raw_session_date)
-        except ValueError:
-            session_date_dt = datetime.strptime(raw_session_date, "%Y-%m-%d")
-        session_date: date = session_date_dt.date()
-    elif hasattr(raw_session_date, "date"):
-        session_date = raw_session_date.date()
-    else:
-        session_date = raw_session_date
-
-    session_date_str = session_date.isoformat()
-
-    responsible = get_responsible_unit(
-        extractor_responsible,
-        unit=row.get("orgao_responsavel", ""),
-        session_date=session_date_str,
-    )
-
-    citacao: Dict[str, Any] = get_deadline_from_citations(
-        process_number=process_number,
-        session_date=session_date_str,
-        responsible=responsible.nome_responsavel,
-    )
-
+    row, responsible, citacao = _prepare_extraction_context(row, extractor_responsible)
     prompt = get_prompt_recomendacao(
         row=row,
         recomendacao=recomendacao_rascunho,
         citacao=citacao,
         responsavel=responsible,
     )
-
-    recomendacao_final: Recomendacao = extractor.invoke(prompt)
-
-    return recomendacao_final
+    return extractor.invoke(prompt)
 
 
 def insert_recomendacao(db_session, recomendacao: Recomendacao, row):
