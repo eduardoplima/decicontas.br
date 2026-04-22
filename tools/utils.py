@@ -47,6 +47,10 @@ from dotenv import load_dotenv
  
 load_dotenv()
 
+DB_PROCESSOS = os.getenv("SQL_SERVER_DB_PROCESSOS", "processo")
+DB_DECISOES = os.getenv("SQL_SERVER_DB_DECISOES", "BdDIP")
+DB_SIAI = os.getenv("SQL_SERVER_DB_SIAI", "BdSIAI")
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 SQL_DIR = os.path.join(BASE_DIR, "..", "sql")
 
@@ -376,21 +380,21 @@ def get_decisions_by_year_and_months(year: int, months: List[int]):
     sql = _load_decisions_sql("YEAR(d.DataSessao) = {ano} AND MONTH(d.DataSessao) IN ({meses})")
     return pd.read_sql_query(
         sql.format(ano=year, meses=",".join(str(m) for m in months)),
-        get_connection(os.getenv("SQL_SERVER_DB_PROCESSOS")),
+        get_connection(DB_PROCESSOS),
     )
 
 def get_decisions_by_dates(start_date: date, end_date: date):
     sql = _load_decisions_sql("d.DataSessao BETWEEN '{start_date}' AND '{end_date}'")
     return pd.read_sql_query(
         sql.format(start_date=start_date.isoformat(), end_date=end_date.isoformat()),
-        get_connection(os.getenv("SQL_SERVER_DB_PROCESSOS")),
+        get_connection(DB_PROCESSOS),
     )
 
 def get_decisions_by_process(process_list: List[str]):
     sql = _load_decisions_sql("CONCAT(p.Numero_Processo, '/', p.Ano_Processo) IN ({processes})")
     return pd.read_sql_query(
         sql.format(processes=",".join(f"'{m}'" for m in process_list)),
-        get_connection(os.getenv("SQL_SERVER_DB_PROCESSOS")),
+        get_connection(DB_PROCESSOS),
     )
 
 def get_ner_decision(extractor: BaseChatModel, texto_acordao: str) -> Dict[str, Any]:
@@ -545,7 +549,7 @@ def process_decision_row(
     return ner_id
 
 def run_ner_pipeline_for_dataframe(df, extractor: BaseChatModel, model_name: str, prompt_version: str, run_id: str | None = None):
-    engine = get_connection(os.getenv("SQL_SERVER_DB_DECISOES"))
+    engine = get_connection(DB_DECISOES)
     SessionLocal = sessionmaker(bind=engine)
     session = SessionLocal()
     try:
@@ -577,7 +581,7 @@ def normalize_text(s: str) -> str:
 
 def get_all_units() -> pd.DataFrame:
     sql_unidades = open(os.path.join(SQL_DIR, "units.sql")).read()
-    return pd.read_sql(sql_unidades, get_connection('BdSIAI'))
+    return pd.read_sql(sql_unidades, get_connection(DB_SIAI))
 
 def find_unit(query: str, limit=5, score_cutoff=70):
     """
@@ -603,7 +607,7 @@ def find_unit(query: str, limit=5, score_cutoff=70):
 def get_responsible_unit(extractor: BaseChatModel, unit: str, session_date: str) -> pd.DataFrame:
     id_unit = find_unit(unit, limit=1).iloc[0]["IdUnidadeJurisdicionada"]
     sql_resp = open(os.path.join(SQL_DIR, "responsible_unit.sql")).read()
-    resp = pd.read_sql(sql_resp.format(id_unit=id_unit, session_date=session_date), get_connection('BdSIAI')).to_dict(orient='records')
+    resp = pd.read_sql(sql_resp.format(id_unit=id_unit, session_date=session_date), get_connection(DB_SIAI)).to_dict(orient='records')
 
     prompt = f"""
     Você é um analista cuja tarefa é idenficar o responsável por uma unidade administrativa com base no cargo.
@@ -618,11 +622,11 @@ def get_responsible_unit(extractor: BaseChatModel, unit: str, session_date: str)
 
 def get_citations(process: str) -> pd.DataFrame:
     sql_citacoes = open(os.path.join(SQL_DIR, "citations_by_process.sql")).read()
-    return pd.read_sql(sql_citacoes.format(process=process), get_connection('processo')).to_dict(orient='records')
+    return pd.read_sql(sql_citacoes.format(process=process), get_connection(DB_PROCESSOS)).to_dict(orient='records')
 
 def get_citations_after(process: str, session_date: str) -> pd.DataFrame:
     sql_citacoes = open(os.path.join(SQL_DIR, "citations_by_process_after.sql")).read()
-    return pd.read_sql(sql_citacoes.format(process=process, session_date=session_date), get_connection('processo')).to_dict(orient='records')
+    return pd.read_sql(sql_citacoes.format(process=process, session_date=session_date), get_connection(DB_PROCESSOS)).to_dict(orient='records')
 
 def filter_by_responsible(records: list[dict], responsible: str, threshold: int = 70) -> list[dict]:
     """
@@ -871,11 +875,11 @@ def run_obrigacao_pipeline(
     run_id: str | None = None,
     overwrite: bool = False,
 ) -> pd.DataFrame:
-    conn_dip = get_connection("BdDIP")
+    conn_dip = get_connection(DB_DECISOES)
     df_raw = fetch_df_obrigacoes_nao_processadas_raw(conn_dip)
     df_aug = aggregate_responsaveis(df_raw)
 
-    engine_bddip = get_connection("BdDIP")
+    engine_bddip = get_connection(DB_DECISOES)
     SessionLocal = sessionmaker(bind=engine_bddip)
     session = SessionLocal()
 
@@ -989,11 +993,11 @@ def run_recomendacao_pipeline(
     - Agrega responsáveis em lista por recomendação
     - Processa linha a linha (idempotente)
     """
-    conn = get_connection("BdDIP")  # ajuste se a view/tabela estiver em outro DB
+    conn = get_connection(DB_DECISOES)  # ajuste se a view/tabela estiver em outro DB
     df_raw = fetch_df_recomendacoes_nao_processadas_raw(conn)
     df_aug = aggregate_responsaveis(df_raw)
 
-    engine = get_connection("BdDIP")
+    engine = get_connection(DB_DECISOES)
     SessionLocal = sessionmaker(bind=engine)
     session = SessionLocal()
 
