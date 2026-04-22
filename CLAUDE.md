@@ -20,7 +20,6 @@ Most work happens in Jupyter notebooks at the repo root; there is no application
 - Key notebooks by purpose:
   - `ner.ipynb`, `ner_experiments.ipynb`, `ner_llm.ipynb` — running NER extraction across models / prompting strategies.
   - `ner_bilstm_bert*.ipynb` — supervised NER baselines (BiLSTM-CRF, BERTimbau, Legal-BERTimbau).
-  - `document_tagging.ipynb` — multi-label document classification.
   - `error_analysis.ipynb`, `statistical_significance.ipynb`, `ner_results.ipynb` — evaluation and reporting on the JSON/pickle outputs under `dataset/experiments/`.
   - `services.ipynb`, `merge_labelstudio.ipynb`, `etl.ipynb` — data ingestion, Label Studio round-trip, and DB-facing glue.
 
@@ -40,7 +39,6 @@ The project is a pipeline that converts free-text TCE/RN decisions (`texto_acord
 
 **`tools/prompt.py` + `tools/fewshot.py` — prompt construction:**
 - `FEW_SHOT_NER_PROMPT` system prompt + `TOOL_USE_EXAMPLES` few-shot pairs (hand-curated `(text, NERDecisao)` tuples in `fewshot.py`) power `generate_few_shot_ner_prompts()`.
-- `FEW_SHOT_DOC_PROMPT` + `FEWSHOTS_DOC_TAGS` handle the document-tagging task (4 labels: MULTA / OBRIGACAO / RESSARCIMENTO / RECOMENDACAO).
 - `tools/prompt_engineering.py` holds alternative strategies — CoT, negative examples, role prompting, structured definitions, two-stage, self-refinement, dynamic few-shot, self-consistency — used by `ner_llm.ipynb`.
 
 **`tools/utils.py` — pipelines and DB glue:**
