@@ -181,3 +181,8 @@ dataset/decisoes_raw_2020_062025.json
 
 # macOS Finder metadata
 .DS_Store
+
+# Frontend (Next.js / pnpm)
+node_modules/
+.next/
+.env.local

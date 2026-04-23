@@ -2,96 +2,61 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Repository layout
+
+Monorepo with three top-level code areas, each with its own `CLAUDE.md`:
+
+- `tools/` — research library (NER pipelines, Pydantic schemas, prompts, fewshot, SQLAlchemy ORMs). Imported by `backend/` and by the notebooks. See `tools/CLAUDE.md`.
+- `backend/` — FastAPI service hosting the review API, authentication, and ETL orchestration. See `backend/CLAUDE.md`.
+- `frontend/` — Next.js 15 App Router app for reviewers. See `frontend/CLAUDE.md`.
+- `notebooks/`, `dataset/`, `sql/` — unchanged from the research setup; see `tools/CLAUDE.md`.
+
+Dependency rule: `backend/` and `notebooks/` may import from `tools/`. `tools/` never imports from `backend/`. `frontend/` only talks to `backend/` over HTTP.
+
+Python layout: uv workspace, members `tools` and `backend`, lock committed at `uv.lock`. Backend declares `tools[llm]` as a workspace dependency; notebooks need `tools[experiments]` for the full supervised/evaluation stack.
+
 ## Environment
 
-- Python `>=3.12,<3.13`, dependencies pinned in `pyproject.toml` (Poetry) and mirrored in `requirements.txt`.
-- Install: `poetry install` (preferred) or `pip install -r requirements.txt`.
-- Runtime config comes from `.env` (loaded via `dotenv` in `tools/utils.py`). Required variables:
-  - `AZURE_OPENAI_API_KEY`, `AZURE_OPENAI_ENDPOINT`, `OPENAI_API_VERSION` — required by notebook cells that construct Azure OpenAI extractors. Importing `tools.utils` no longer needs them.
-  - `SQL_SERVER_HOST`, `SQL_SERVER_USER`, `SQL_SERVER_PASS`, `SQL_SERVER_PORT` — MSSQL instance (uses `mssql+pymssql`).
-  - `SQL_SERVER_DB_PROCESSOS` (default `processo`), `SQL_SERVER_DB_DECISOES` (default `BdDIP`), `SQL_SERVER_DB_SIAI` (default `BdSIAI`) — override to point at non-standard DB names; defaults match production and are read into `DB_PROCESSOS` / `DB_DECISOES` / `DB_SIAI` constants in `tools/utils.py`.
-- `.env` is gitignored — never commit it.
+Runtime config via `.env` at repo root (shared between `tools/` and `backend/`). Existing variables (see `tools/CLAUDE.md`) plus:
+
+- `JWT_SECRET_KEY`, `JWT_ALGORITHM` (default `HS256`), `JWT_ACCESS_TOKEN_EXPIRE_MINUTES` (default `60`), `JWT_REFRESH_TOKEN_EXPIRE_DAYS` (default `7`).
+- `CORS_ALLOWED_ORIGINS` — comma-separated, must include the frontend URL.
+- `REDIS_URL` — required when the ARQ worker is enabled.
+
+Frontend config in `frontend/.env.local`:
+- `NEXT_PUBLIC_API_URL` — backend base URL.
+
+`.env` and `.env.local` are gitignored — never commit them.
 
 ## Running the code
 
-Most work happens in Jupyter notebooks at the repo root; there is no application entry point, CLI, or test suite.
-- Launch kernel: `poetry run python -m ipykernel install --user --name=decicontas-br` (once), then open notebooks in VS Code / Jupyter.
-- Notebooks import from `tools/` using the repo root as CWD. Always run notebooks from the repo root so relative paths (`dataset/...`, `sql/...`) resolve.
-- Key notebooks by purpose:
-  - `ner.ipynb`, `ner_experiments.ipynb`, `ner_llm.ipynb` — running NER extraction across models / prompting strategies.
-  - `ner_bilstm_bert*.ipynb` — supervised NER baselines (BiLSTM-CRF, BERTimbau, Legal-BERTimbau).
-  - `error_analysis.ipynb`, `statistical_significance.ipynb`, `ner_results.ipynb` — evaluation and reporting on the JSON/pickle outputs under `dataset/experiments/`.
-  - `services.ipynb`, `merge_labelstudio.ipynb`, `etl.ipynb` — data ingestion, Label Studio round-trip, and DB-facing glue.
+- Install: `uv sync` at the repo root. Add `--extra experiments` when working on notebooks.
+- Research notebooks: see `tools/CLAUDE.md`.
+- Backend dev server: `cd backend && uv run uvicorn app.main:app --reload --port 8000`.
+- Background worker: `cd backend && uv run arq app.worker.WorkerSettings`.
+- Frontend dev server: `cd frontend && pnpm dev`.
+- Alembic migrations: `cd backend && uv run alembic upgrade head`.
 
-## Architecture
+## Rules for Claude Code — repo-wide
 
-The project is a pipeline that converts free-text TCE/RN decisions (`texto_acordao`) into structured audit data stored in MSSQL, with LLM extraction in between. Four building blocks in `tools/`:
-
-**`tools/schema.py` — three layers of Pydantic models, intentionally distinct:**
-- `NERMulta` / `NERObrigacao` / `NERRessarcimento` / `NERRecomendacao` + `NERDecisao` — raw span-level extractions (each has only a `descricao_*` string). This is what the first LLM pass produces.
-- `Multa` / `Obrigacao` / `Ressarcimento` / `Recomendacao` + `Decisao` — fully structured records with values, dates, responsáveis, multa cominatória fields, etc. A second LLM pass enriches each NER span into one of these.
-- `CitationChoice` / `ResponsibleChoice` — structured outputs for the helper LLMs that pick deadlines and resolve responsáveis.
-
-**`tools/models.py` — SQLAlchemy ORMs mirroring the schema split:**
-- `NERDecisaoORM` (+ `NERMultaORM`, `NERObrigacaoORM`, `NERRessarcimentoORM`, `NERRecomendacaoORM`) — persists raw NER output keyed by `(IdProcesso, IdComposicaoPauta, IdVotoPauta)`.
-- `ObrigacaoORM`, `RecomendacaoORM`, `BeneficioORM` — final structured tables.
-- `Processed*ORM` (`DecisaoProcessada`, `MultaProcessada`, `RessarcimentoProcessado`, `ObrigacaoProcessada`, `RecomendacaoProcessada`) — idempotency bridge tables linking `IdNer*` → final `Id*`. Always check these before inserting; the pipelines rely on them to resume safely.
-
-**`tools/prompt.py` + `tools/fewshot.py` — prompt construction:**
-- `FEW_SHOT_NER_PROMPT` system prompt + `TOOL_USE_EXAMPLES` few-shot pairs (hand-curated `(text, NERDecisao)` tuples in `fewshot.py`) power `generate_few_shot_ner_prompts()`.
-- `tools/prompt_engineering.py` holds alternative strategies — CoT, negative examples, role prompting, structured definitions, two-stage, self-refinement, dynamic few-shot, self-consistency — used by `ner_llm.ipynb`.
-
-**`tools/utils.py` — pipelines and DB glue:**
-- `get_connection(db)` / `get_session(db)` — each call opens a fresh MSSQL engine bound to a specific database. The pipelines are cross-database: decision metadata from `DB_PROCESSOS`, NER/final tables in `DB_DECISOES`, unit lookups in `DB_SIAI`. Reference the module-level `DB_*` constants rather than passing literal DB names.
-- `run_ner_pipeline_for_dataframe()` — stage 1 (NERDecisao). Calls `process_decision_row()` per row; `overwrite=False` skips rows that already have a `NERDecisaoORM` for the `(process, composition, vote)` triple.
-- `run_obrigacao_pipeline()` / `run_recomendacao_pipeline()` — stage 2. Read `sql/obligations_nonprocessed.sql` / `sql/recommendations_nonprocessed.sql`, aggregate responsáveis per row, then for each NER span: resolve the unit (`find_unit` → fuzzy match against `sql/units.sql`), pick a deadline (`get_deadline_from_citations` uses `sql/citations_by_process_after.sql` + `CitationChoice` LLM), prompt the extractor with the enriched context, and insert into `Obrigacao`/`Recomendacao` + the matching `Processed*` row in a single transaction.
-- SQL under `sql/` is read from disk and `.format(...)`-ed with query parameters — this is plain string interpolation, not parameter binding. Inputs come from trusted internal lists; keep it that way.
-
-**`tools/dataset.py`** reads annotated JSON from `dataset/labeled_data/` (Label Studio exports). `translate_golden()` collapses legacy label variants (`MULTA_FIXA`, `MULTA_PERCENTUAL` → `MULTA`; `OBRIGACAO_MULTA` → `OBRIGACAO`) — apply it before comparing against model output.
-
-## Experiments and outputs
-
-- `dataset/experiments/` holds per-model JSON results, organized by technique (`few_shot_and_supervised/`, `function_calling_json_schema/`, `prompt_engineering/`). File naming: `models_results_decicontas_<model>_<technique>.json`.
-- `dataset/results/` holds checkpoints and aggregated outputs consumed by the evaluation notebooks.
-- Supervised models (BiLSTM-CRF, BERTimbau, Legal-BERTimbau) are stored as `.pkl` alongside their JSON metrics.
-
-## Conventions worth knowing
-
-- Decision identity across the system is the triple `(IdProcesso, IdComposicaoPauta, IdVotoPauta)` — always carry all three when joining or inserting.
-- A row may have `id_ner_obrigacao` / `id_ner_recomendacao` under several casings (`IdNerObrigacao`, `idnerobrigacao`); `insert_obrigacao` already handles the variants via `row.get(...)` fallbacks — follow the same pattern rather than assuming a single key.
-- `safe_int()` exists because pandas mixes `NaN`/`float`/`str` representations of ID columns; prefer it over `int(...)` when reading from dataframes.
-
-## Rules for Claude Code in this repo
-
-- **Show diffs before applying** changes that touch more than one file, and wait for confirmation.
-- **Prefer small, atomic commits** in Conventional Commits format (feat, fix, refactor, docs, test, chore).
-- **Use `git mv`** when relocating files — never recreate + delete.
-- **Never commit** `.env`, files under `dataset/labeled_data/` with PII, or DB credentials. Check `git status` before committing.
-- **Before deleting code**, grep the whole repo (including notebooks) for references.
-- **Before editing a notebook**, prefer extracting the logic to `tools/` and calling it from the notebook, rather than editing long cells in place.
-- **After refactoring a module used by a notebook**, re-execute the notebook (`jupyter nbconvert --execute --to notebook --inplace`) to confirm nothing broke. If a cell calls the LLM or the DB and would be expensive, skip it and tell me which.
+- **Show diffs before applying** changes that touch more than one top-level area (`tools/` + `backend/`, `backend/` + `frontend/`, etc.), and wait for confirmation.
+- **Conventional Commits with scope**: `feat(backend): ...`, `fix(frontend): ...`, `chore(tools): ...`, `docs: ...`. Small atomic commits.
+- **`git mv`** when relocating files — never recreate + delete.
+- **Never commit** `.env`, `.env.local`, anything under `dataset/labeled_data/`, or DB credentials. Check `git status` before committing.
 - **Don't rewrite `.tex` content** without explicit confirmation — that's citable academic text.
-- **When adding a new module**, default to placing it under `tools/` with a clear name. If the fit is ambiguous, ask.
-- **Don't instantiate LLM clients or open DB connections at import time** in new code — use factory functions so tests can import without side effects.
+- **Before deleting code**, grep the whole repo (including notebooks, backend, frontend) for references.
+- **When the fit is ambiguous** (module could go in `tools/` or `backend/app/`), ask. Default: if it has no web framework imports and would be useful from a notebook, it goes in `tools/`.
 
 ## Language policy
 
-- Code, comments, docstrings, identifiers, commit messages, branch names, PR titles, and issue descriptions: **English**.
-- Prompts sent to LLMs and few-shot examples: **Portuguese** (the source documents — TCE/RN decisions — are in Portuguese, and the prompts are tuned for that).
-- Dataset labels (`MULTA`, `OBRIGACAO`, `RESSARCIMENTO`, `RECOMENDACAO`): **Portuguese**, because they are domain terms from Brazilian audit law and map to database tables.
-- The dissertation itself (under `docs/dissertacao/`): **Portuguese**.
+- Code, comments, docstrings, identifiers, commit messages, branch names, PR titles, issue descriptions: **English**.
+- Prompts sent to LLMs, few-shot examples, and dataset labels (`MULTA`, `OBRIGACAO`, `RESSARCIMENTO`, `RECOMENDACAO`): **Portuguese** — source documents are Portuguese and prompts are tuned for that.
+- Dissertation (`.tex` under `docs/dissertacao/`): **Portuguese**.
+- Frontend UI strings shown to reviewers (labels, buttons, toasts, error messages): **Portuguese**. Component names, props, zod schema keys, route segments: **English**.
+- OpenAPI descriptions and error `detail` strings returned by the API: **English** (developer-facing). Human-readable validation messages bubbled up to reviewers: **Portuguese**, localized on the frontend from error codes.
 - When in doubt: English for anything a non-Portuguese-speaking collaborator would need to read to use or modify the code.
-
-## Testing
-
-There is no test suite yet. When adding tests:
-- Put them in `tests/`, mirroring the `tools/` layout.
-- Target pure functions first: `translate_golden`, `safe_int`, Pydantic schema validation, prompt builders with deterministic input.
-- Mock `AzureChatOpenAI` and SQLAlchemy sessions — never hit the real API or DB from tests.
-- Run with `poetry run pytest`.
 
 ## Formatting and linting
 
-- Formatter: `ruff format` (line length 100).
-- Linter: `ruff check`.
-- Run both before committing.
+- Python: `ruff format` (line length 100) + `ruff check`. Run both in `tools/` and `backend/` before committing.
+- TypeScript: `pnpm lint` + `pnpm format` (Prettier). Run in `frontend/` before committing.
