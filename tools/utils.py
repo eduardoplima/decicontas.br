@@ -21,18 +21,13 @@ from sqlalchemy.engine import Engine
 
 from tools.prompt import generate_few_shot_ner_prompts
 from tools.models import (
-    ObrigacaoORM, 
-    RecomendacaoORM, 
-    BeneficioORM, 
-    NERDecisaoORM, 
-    NERMultaORM, 
-    NERObrigacaoORM, 
-    NERRecomendacaoORM, 
+    ObrigacaoORM,
+    RecomendacaoORM,
+    NERDecisaoORM,
+    NERMultaORM,
+    NERObrigacaoORM,
+    NERRecomendacaoORM,
     NERRessarcimentoORM,
-    EstagioBeneficio,
-    CaracteristicaBeneficio,
-    TipoBeneficio,
-    SubtipoBeneficio,
     ProcessedObrigacaoORM,
     ProcessedRecomendacaoORM
 )

@@ -32,7 +32,7 @@ Pipeline that converts free-text TCE/RN decisions (`texto_acordao`) into structu
 
 **`tools/models.py` — SQLAlchemy ORMs mirroring the schema split:**
 - `NERDecisaoORM` (+ `NERMultaORM`, `NERObrigacaoORM`, `NERRessarcimentoORM`, `NERRecomendacaoORM`) — raw NER output keyed by `(IdProcesso, IdComposicaoPauta, IdVotoPauta)`.
-- `ObrigacaoORM`, `RecomendacaoORM`, `BeneficioORM` — final structured tables.
+- `ObrigacaoORM`, `RecomendacaoORM` — final structured tables.
 - `Processed*ORM` (`DecisaoProcessada`, `MultaProcessada`, `RessarcimentoProcessado`, `ObrigacaoProcessada`, `RecomendacaoProcessada`) — idempotency bridge tables. Always check before inserting.
 
 **`tools/prompt.py` + `tools/fewshot.py` + `tools/prompt_engineering.py`** — prompt construction and alternative strategies (CoT, negative examples, role, definitions, two-stage, self-refinement, dynamic few-shot, self-consistency).
