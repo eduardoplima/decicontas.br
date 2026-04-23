@@ -34,3 +34,12 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
 packages = ["app"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+markers = [
+    "integration: tests that hit real MSSQL, Redis, or Azure OpenAI (skipped by default)",
+    "slow: tests that take more than a couple of seconds",
+]
+addopts = "-ra --strict-markers --cov=tools --cov=app --cov-report=term-missing -m \"not integration\""

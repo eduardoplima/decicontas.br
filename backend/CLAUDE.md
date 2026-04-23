@@ -91,9 +91,11 @@ ETL endpoints under `/api/v1/etl`, admin-only:
 
 ### Testing
 - Tests in `backend/tests/`, mirroring `backend/app/` and `tools/`. `pytest` + `pytest-asyncio` + `httpx.AsyncClient`.
+- Run with `cd backend && uv run pytest`. Integration tests (real MSSQL / Redis / Azure) are marked `@pytest.mark.integration` and skipped by default — use `uv run pytest -m integration` to include them.
 - In-memory SQLite for unit tests, bound to the same SQLAlchemy metadata.
 - Mark integration tests hitting real MSSQL with `@pytest.mark.integration`; skip by default locally.
 - Mock `AzureChatOpenAI` at the `tools.*` boundary, not inside `backend/`.
+- Shared fixtures (in `backend/tests/conftest.py`): `tmp_env` (autouse, sets dummy env vars), `in_memory_engine`, `db_session`, `mock_llm`, `frozen_time`. Use these instead of reinventing per-test setup.
 - **Mandatory coverage for the approval transaction**: (a) happy path, (b) final-table insert fails after staging flip → full rollback, (c) caller without active claim → 403, (d) stale claim → 409.
 - **Mandatory coverage for auth**: token expiration, invalid signature, role mismatch, refresh rotation.
 

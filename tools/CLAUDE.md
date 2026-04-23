@@ -43,13 +43,6 @@ Pipeline that converts free-text TCE/RN decisions (`texto_acordao`) into structu
 - `run_obrigacao_pipeline()` / `run_recomendacao_pipeline()` — stage 2. Resolve unit (fuzzy match against `sql/units.sql`), pick deadline (`get_deadline_from_citations`), prompt the extractor, and **write to the staging tables** (not directly to `Obrigacao` / `Recomendacao`). The approval transaction in `backend/app/review/service.py` is the only writer to the final tables.
 - SQL under `sql/` is read from disk and `.format(...)`-ed with query parameters. Inputs come from trusted internal lists — keep it that way.
 
-**`tools/etl/` — staging, text alignment, and pipeline orchestration:**
-- `tools/etl/staging.py` — `ObrigacaoStagingORM`, `RecomendacaoStagingORM`, persisted in `DB_DECISOES`. Mirror the fields of the corresponding final ORM plus: `status` (`pending` | `approved` | `rejected`), `reviewer`, `reviewed_at`, `claimed_by`, `claimed_at`, `original_payload` (JSON of raw LLM output, preserved for audit), `review_notes`.
-- `tools/etl/text_alignment.py` — `find_span_in_text(descricao, texto_acordao) -> Optional[str]`. Exact substring first; rapidfuzz fallback only above a high threshold. Below threshold, return `None` and let the reviewer fill it. Never persists offsets.
-- `tools/etl/pipeline.py` — `enqueue_obrigacao_extraction`, `enqueue_recomendacao_extraction`: the functions the ARQ worker calls. Route inserts to staging, attach `original_payload`, set `status='pending'`. No HTTP, no FastAPI.
-
-**`tools/dataset.py`** reads annotated JSON from `dataset/labeled_data/` (Label Studio exports). `translate_golden()` collapses legacy label variants (`MULTA_FIXA`, `MULTA_PERCENTUAL` → `MULTA`; `OBRIGACAO_MULTA` → `OBRIGACAO`) — apply it before comparing against model output.
-
 ## SQL files
 
 - `sql/decisions_full_text.sql` — fetches full decision context (including `texto_acordao`, responsável, órgão, sessão) from `processo.dbo.vw_ia_votos_acordaos_decisoes` joined with `Processos`, `Orgaos`, `Pro_ProcessosResponsavelDespesa`, `GenPessoa`. **Canonical source of `texto_acordao`** for both stage-2 extraction and the review UI — do not reconstruct the text from any other view.
@@ -72,7 +65,6 @@ Pipeline that converts free-text TCE/RN decisions (`texto_acordao`) into structu
 
 - **No web framework imports.** No FastAPI, no Pydantic DTOs specific to HTTP, no route decorators. If you need something from the web layer, the abstraction is wrong — stop and ask.
 - **No LLM clients or DB engines instantiated at import time.** Factory functions only, so tests and the backend can import without side effects.
-- **`tools/etl/pipeline.py` writes to staging, never to final tables.** The approval transaction lives in the backend.
 - **Before editing a notebook**, prefer extracting the logic to `tools/` and calling it from the notebook.
 - **After refactoring a module used by a notebook**, re-execute it (`jupyter nbconvert --execute --to notebook --inplace`). If a cell calls the LLM or the DB and is expensive, skip and flag it.
 - **Don't reintroduce `etl.ipynb`.** Scratch work goes in `notebooks/etl_scratch.ipynb`.
@@ -82,4 +74,5 @@ Pipeline that converts free-text TCE/RN decisions (`texto_acordao`) into structu
 - Put tests in `backend/tests/tools/`, mirroring the `tools/` layout.
 - Target pure functions first: `translate_golden`, `safe_int`, Pydantic schema validation, prompt builders with deterministic input, `find_span_in_text`.
 - Mock `AzureChatOpenAI` and SQLAlchemy sessions. Never hit the real API or DB from unit tests.
-- Run with `cd backend && poetry run pytest tests/tools`.
+- Run with `cd backend && uv run pytest tests/tools`. Integration tests (real MSSQL / Redis / Azure) are marked `@pytest.mark.integration` and skipped by default — run them with `uv run pytest -m integration`.
+- Shared fixtures in `backend/tests/conftest.py`: `tmp_env` (autouse, sets dummy env vars), `in_memory_engine`, `db_session`, `mock_llm`, `frozen_time`. Tools-specific fixtures in `backend/tests/tools/conftest.py`: `sample_texto_acordao`, `sample_ner_decisao`.
