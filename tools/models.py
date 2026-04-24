@@ -1,19 +1,43 @@
+import enum
+
 from sqlalchemy import (
-    create_engine, Column, Integer, String, Float, Date, Boolean, Text, JSON
+    create_engine,
+    Column,
+    Integer,
+    String,
+    Float,
+    Date,
+    Boolean,
+    Text,
+    JSON,
 )
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.schema import DDL, CheckConstraint
 from sqlalchemy.dialects.mssql import TIMESTAMP
 
 from sqlalchemy import (
-    Column, Integer, String,
-    Date, Text, ForeignKey, DateTime, Text, func
+    Column,
+    Integer,
+    String,
+    Enum,
+    Date,
+    Text,
+    ForeignKey,
+    DateTime,
+    Text,
+    func,
 )
 
 from sqlalchemy.orm import relationship
 
 
+class RoleEnum(str, enum.Enum):
+    reviewer = "reviewer"
+    admin = "admin"
+
+
 Base = declarative_base()
+
 
 class ObrigacaoORM(Base):
     __tablename__ = "Obrigacao"
@@ -37,8 +61,9 @@ class ObrigacaoORM(Base):
     EMultaCominatoriaSolidaria = Column(Boolean, default=False)
     SolidariosMultaCominatoria = Column(JSON, nullable=True)
 
+
 class RecomendacaoORM(Base):
-    __tablename__ = 'Recomendacao'
+    __tablename__ = "Recomendacao"
 
     IdRecomendacao = Column(Integer, primary_key=True, autoincrement=True)
     IdProcesso = Column(Integer, nullable=False)
@@ -54,9 +79,12 @@ class RecomendacaoORM(Base):
     Cancelado = Column(Boolean)
 
     def __repr__(self):
-        return (f"<Recomendacao(IdRecomendacao={self.IdRecomendacao}, "
-                f"IdProcesso={self.IdProcesso})>")
-    
+        return (
+            f"<Recomendacao(IdRecomendacao={self.IdRecomendacao}, "
+            f"IdProcesso={self.IdProcesso})>"
+        )
+
+
 # NERORM
 class NERDecisaoORM(Base):
     __tablename__ = "NERDecisao"
@@ -95,52 +123,68 @@ class NERDecisaoORM(Base):
         cascade="all, delete-orphan",
     )
 
+
 class NERMultaORM(Base):
     __tablename__ = "NERMulta"
 
     IdNerMulta = Column(Integer, primary_key=True, autoincrement=True)
-    IdNerDecisao = Column(Integer, ForeignKey("NERDecisao.IdNerDecisao"), nullable=False)
+    IdNerDecisao = Column(
+        Integer, ForeignKey("NERDecisao.IdNerDecisao"), nullable=False
+    )
     Ordem = Column(Integer, nullable=False)
     DescricaoMulta = Column(Text, nullable=False)
 
     decisao = relationship("NERDecisaoORM", back_populates="multas")
 
+
 class NERRessarcimentoORM(Base):
     __tablename__ = "NERRessarcimento"
 
     IdNerRessarcimento = Column(Integer, primary_key=True, autoincrement=True)
-    IdNerDecisao = Column(Integer, ForeignKey("NERDecisao.IdNerDecisao"), nullable=False)
+    IdNerDecisao = Column(
+        Integer, ForeignKey("NERDecisao.IdNerDecisao"), nullable=False
+    )
     Ordem = Column(Integer, nullable=False)
     DescricaoRessarcimento = Column(Text, nullable=False)
 
     decisao = relationship("NERDecisaoORM", back_populates="ressarcimentos")
 
+
 class NERObrigacaoORM(Base):
     __tablename__ = "NERObrigacao"
 
     IdNerObrigacao = Column(Integer, primary_key=True, autoincrement=True)
-    IdNerDecisao = Column(Integer, ForeignKey("NERDecisao.IdNerDecisao"), nullable=False)
+    IdNerDecisao = Column(
+        Integer, ForeignKey("NERDecisao.IdNerDecisao"), nullable=False
+    )
     Ordem = Column(Integer, nullable=False)
     DescricaoObrigacao = Column(Text, nullable=False)
 
     decisao = relationship("NERDecisaoORM", back_populates="obrigacoes")
 
+
 class NERRecomendacaoORM(Base):
     __tablename__ = "NERRecomendacao"
 
     IdNerRecomendacao = Column(Integer, primary_key=True, autoincrement=True)
-    IdNerDecisao = Column(Integer, ForeignKey("NERDecisao.IdNerDecisao"), nullable=False)
+    IdNerDecisao = Column(
+        Integer, ForeignKey("NERDecisao.IdNerDecisao"), nullable=False
+    )
     Ordem = Column(Integer, nullable=False)
     DescricaoRecomendacao = Column(Text, nullable=False)
 
     decisao = relationship("NERDecisaoORM", back_populates="recomendacoes")
 
+
 class ProcessedDecisionORM(Base):
     __tablename__ = "DecisaoProcessada"
 
     IdDecisaoProcessada = Column(Integer, primary_key=True, autoincrement=True)
-    IdNERDecisao = Column(Integer, ForeignKey("NERDecisao.IdNerDecisao"), nullable=False)
+    IdNERDecisao = Column(
+        Integer, ForeignKey("NERDecisao.IdNerDecisao"), nullable=False
+    )
     DataProcessamento = Column(DateTime, nullable=False)
+
 
 class ProcessedMultaORM(Base):
     __tablename__ = "MultaProcessada"
@@ -149,26 +193,81 @@ class ProcessedMultaORM(Base):
     IdNerMulta = Column(Integer, ForeignKey("NERMulta.IdNerMulta"), nullable=False)
     DataProcessamento = Column(DateTime, nullable=False)
 
+
 class ProcessedRessarcimentoORM(Base):
     __tablename__ = "RessarcimentoProcessado"
 
     IdRessarcimentoProcessado = Column(Integer, primary_key=True, autoincrement=True)
-    IdNerRessarcimento = Column(Integer, ForeignKey("NERRessarcimento.IdNerRessarcimento"), nullable=False)
+    IdNerRessarcimento = Column(
+        Integer, ForeignKey("NERRessarcimento.IdNerRessarcimento"), nullable=False
+    )
     DataProcessamento = Column(DateTime, nullable=False)
+
 
 class ProcessedObrigacaoORM(Base):
     __tablename__ = "ObrigacaoProcessada"
 
     IdObrigacaoProcessada = Column(Integer, primary_key=True, autoincrement=True)
-    IdNerObrigacao = Column(Integer, ForeignKey("NERObrigacao.IdNerObrigacao"), nullable=False)
+    IdNerObrigacao = Column(
+        Integer, ForeignKey("NERObrigacao.IdNerObrigacao"), nullable=False
+    )
     IdObrigacao = Column(Integer, ForeignKey("Obrigacao.IdObrigacao"), nullable=False)
     DataProcessamento = Column(DateTime, nullable=False)
+
 
 class ProcessedRecomendacaoORM(Base):
     __tablename__ = "RecomendacaoProcessada"
 
     IdRecomendacaoProcessada = Column(Integer, primary_key=True, autoincrement=True)
-    IdNerRecomendacao = Column(Integer, ForeignKey("NERRecomendacao.IdNerRecomendacao"), nullable=False)
-    IdRecomendacao = Column(Integer, ForeignKey("Recomendacao.IdRecomendacao"), nullable=False)
+    IdNerRecomendacao = Column(
+        Integer, ForeignKey("NERRecomendacao.IdNerRecomendacao"), nullable=False
+    )
+    IdRecomendacao = Column(
+        Integer, ForeignKey("Recomendacao.IdRecomendacao"), nullable=False
+    )
     DataProcessamento = Column(TIMESTAMP, nullable=False)
 
+
+class UserORM(Base):
+    __tablename__ = "Users"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    username = Column(String(150), nullable=False, unique=True, index=True)
+    email = Column(String(255), nullable=False, unique=True, index=True)
+    hashed_password = Column(String(255), nullable=False)
+    role = Column(
+        Enum(
+            RoleEnum,
+            name="user_role",
+            values_callable=lambda e: [member.value for member in e],
+        ),
+        nullable=False,
+        default=RoleEnum.reviewer,
+    )
+    is_active = Column(Boolean, nullable=False, default=True)
+    created_at = Column(DateTime, nullable=False, server_default=func.now())
+    updated_at = Column(
+        DateTime,
+        nullable=False,
+        server_default=func.now(),
+        onupdate=func.now(),
+    )
+
+    refresh_tokens = relationship(
+        "RefreshTokenORM",
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
+
+
+class RefreshTokenORM(Base):
+    __tablename__ = "RefreshTokens"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey("Users.id"), nullable=False, index=True)
+    token_hash = Column(String(255), nullable=False, unique=True, index=True)
+    expires_at = Column(DateTime, nullable=False)
+    revoked_at = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, nullable=False, server_default=func.now())
+
+    user = relationship("UserORM", back_populates="refresh_tokens")

@@ -1,7 +1,8 @@
 from functools import lru_cache
+from typing import Annotated
 
 from pydantic import field_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -11,7 +12,9 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    cors_allowed_origins: list[str] = []
+    # NoDecode: skip pydantic-settings's default JSON-decoding of complex
+    # types; we accept a comma-separated string and split it in the validator.
+    cors_allowed_origins: Annotated[list[str], NoDecode] = []
 
     jwt_secret_key: str
     jwt_algorithm: str = "HS256"
