@@ -55,6 +55,7 @@ Frontend config in `frontend/.env.local`:
 - Frontend UI strings shown to reviewers (labels, buttons, toasts, error messages): **Portuguese**. Component names, props, zod schema keys, route segments: **English**.
 - OpenAPI descriptions and error `detail` strings returned by the API: **English** (developer-facing). Human-readable validation messages bubbled up to reviewers: **Portuguese**, localized on the frontend from error codes.
 - When in doubt: English for anything a non-Portuguese-speaking collaborator would need to read to use or modify the code.
+- use short commit messages, don't mention claude and don't use indicatives like chore or test, just the message
 
 ## Formatting and linting
 
