@@ -19,7 +19,8 @@ This is the framework-agnostic research code: NER pipelines, Pydantic schemas, p
   - `ner_bilstm_bert*.ipynb` — supervised NER baselines.
   - `error_analysis.ipynb`, `statistical_significance.ipynb`, `ner_results.ipynb` — evaluation on outputs under `dataset/experiments/`.
   - `services.ipynb`, `merge_labelstudio.ipynb` — data ingestion and Label Studio round-trip.
-  - `etl_scratch.ipynb` — only for debugging `tools.etl.*`; does not orchestrate production runs. The former `etl.ipynb` has been removed.
+  - `etl_scratch.ipynb` — only for debugging `tools.etl.*`; does not orchestrate production runs.
+  - `etl.ipynb` — kept as an archive of the pre-staging extraction flow (wrote directly to final tables). Read-only; do not edit or re-run. Production orchestration now lives in `tools.etl.pipeline` and is invoked by the ARQ worker.
 
 ## Architecture
 
@@ -67,7 +68,7 @@ Pipeline that converts free-text TCE/RN decisions (`texto_acordao`) into structu
 - **No LLM clients or DB engines instantiated at import time.** Factory functions only, so tests and the backend can import without side effects.
 - **Before editing a notebook**, prefer extracting the logic to `tools/` and calling it from the notebook.
 - **After refactoring a module used by a notebook**, re-execute it (`jupyter nbconvert --execute --to notebook --inplace`). If a cell calls the LLM or the DB and is expensive, skip and flag it.
-- **Don't reintroduce `etl.ipynb`.** Scratch work goes in `notebooks/etl_scratch.ipynb`.
+- **`etl.ipynb` is archive-only.** Don't edit, re-run, or extend it. New scratch work goes in `notebooks/etl_scratch.ipynb`; production orchestration goes in `tools/etl/pipeline.py`.
 
 ## Testing (`tools/`)
 
