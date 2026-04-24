@@ -21,9 +21,13 @@ from sqlalchemy.engine import Engine
 
 @pytest.fixture
 def in_memory_engine() -> Iterator[Engine]:
-    for name in list(sys.modules):
-        if name == "tools.etl.staging" or name == "tools.models":
-            del sys.modules[name]
+    for name in (
+        "tools.etl.pipeline",
+        "tools.etl.staging",
+        "tools.etl",
+        "tools.models",
+    ):
+        sys.modules.pop(name, None)
 
     import tools.models as tools_models
 

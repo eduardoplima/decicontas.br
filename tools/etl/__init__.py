@@ -5,6 +5,12 @@ Kept in ``tools/`` (not ``backend/app/``) because the stage-2 pipelines in
 has no web-framework dependencies.
 """
 
+from tools.etl.pipeline import (
+    ExtractionFilters,
+    ExtractionReport,
+    enqueue_obrigacao_extraction,
+    enqueue_recomendacao_extraction,
+)
 from tools.etl.staging import (
     ObrigacaoStagingORM,
     RecomendacaoStagingORM,
@@ -13,8 +19,12 @@ from tools.etl.staging import (
 from tools.etl.text_alignment import find_span_in_text
 
 __all__ = [
+    "ExtractionFilters",
+    "ExtractionReport",
     "ObrigacaoStagingORM",
     "RecomendacaoStagingORM",
     "ReviewStatus",
+    "enqueue_obrigacao_extraction",
+    "enqueue_recomendacao_extraction",
     "find_span_in_text",
 ]

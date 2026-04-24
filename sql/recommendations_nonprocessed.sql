@@ -59,6 +59,17 @@ INNER JOIN processo.dbo.Pro_ProcessosResponsavelDespesa pprd
     ON pprd.IdProcesso = p.IdProcesso 
 INNER JOIN processo.dbo.GenPessoa gp 
     ON gp.IdPessoa = pprd.IdPessoa 
-LEFT JOIN BdDIP.dbo.RecomendacaoProcessada rp
-    ON rp.IdNerRecomendacao = r.IdNerRecomendacao
-WHERE rp.IdRecomendacaoProcessada IS NULL
+WHERE NOT EXISTS (
+        SELECT 1
+        FROM BdDIP.dbo.RecomendacaoProcessada rp
+        WHERE rp.IdNerRecomendacao = r.IdNerRecomendacao
+    )
+  AND NOT EXISTS (
+        SELECT 1
+        FROM BdDIP.dbo.RecomendacaoStaging rs
+        WHERE rs.IdProcesso            = nd.IdProcesso
+          AND rs.IdComposicaoPauta     = nd.IdComposicaoPauta
+          AND rs.IdVotoPauta           = nd.IdVotoPauta
+          AND rs.DescricaoRecomendacao = r.DescricaoRecomendacao
+          AND rs.status IN ('pending', 'approved')
+    )
