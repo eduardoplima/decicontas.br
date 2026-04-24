@@ -25,6 +25,7 @@ from sqlalchemy import (
     DateTime,
     Enum,
     Float,
+    ForeignKey,
     Integer,
     String,
     Text,
@@ -50,6 +51,13 @@ class ObrigacaoStagingORM(Base):
     __tablename__ = "ObrigacaoStaging"
 
     IdObrigacaoStaging = Column(Integer, primary_key=True, autoincrement=True)
+
+    IdNerObrigacao = Column(
+        Integer,
+        ForeignKey("NERObrigacao.IdNerObrigacao"),
+        nullable=True,
+        index=True,
+    )
 
     IdProcesso = Column(Integer, nullable=False, index=True)
     IdComposicaoPauta = Column(Integer, nullable=False)
@@ -88,6 +96,13 @@ class RecomendacaoStagingORM(Base):
     __tablename__ = "RecomendacaoStaging"
 
     IdRecomendacaoStaging = Column(Integer, primary_key=True, autoincrement=True)
+
+    IdNerRecomendacao = Column(
+        Integer,
+        ForeignKey("NERRecomendacao.IdNerRecomendacao"),
+        nullable=True,
+        index=True,
+    )
 
     IdProcesso = Column(Integer, nullable=False, index=True)
     IdComposicaoPauta = Column(Integer, nullable=False)

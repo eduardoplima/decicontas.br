@@ -16,7 +16,11 @@ from tools.etl.staging import (
     RecomendacaoStagingORM,
     ReviewStatus,
 )
-from tools.etl.text_alignment import find_span_in_text
+from tools.etl.text_alignment import (
+    SpanMatchStatus,
+    find_span_in_text,
+    find_span_with_status,
+)
 
 __all__ = [
     "ExtractionFilters",
@@ -24,7 +28,9 @@ __all__ = [
     "ObrigacaoStagingORM",
     "RecomendacaoStagingORM",
     "ReviewStatus",
+    "SpanMatchStatus",
     "enqueue_obrigacao_extraction",
     "enqueue_recomendacao_extraction",
     "find_span_in_text",
+    "find_span_with_status",
 ]

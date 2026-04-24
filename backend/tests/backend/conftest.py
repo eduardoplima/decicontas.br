@@ -33,6 +33,10 @@ def in_memory_engine() -> Iterator[Engine]:
 
     import tools.models as tools_models
 
+    # Register staging ORMs on the same ``Base`` so their tables are included
+    # in ``create_all`` — review tests need them.
+    import tools.etl.staging  # noqa: F401
+
     # StaticPool keeps a single connection alive for the whole engine — required
     # because ``:memory:`` gives each SQLite connection its own empty database.
     engine = create_engine(
@@ -106,5 +110,128 @@ def make_user(test_session_factory):
             }
         finally:
             session.close()
+
+    return _factory
+
+
+@pytest.fixture
+def authenticated_client(api_client, make_user):
+    """Factory: make_user + /auth/login + return (client, user_dict, headers).
+
+    The returned client reuses ``api_client`` (same DB), but carries a default
+    ``Authorization: Bearer`` header so tests don't have to attach it per call.
+    """
+    import httpx
+
+    def _factory(
+        *,
+        username: str = "reviewer",
+        role: str = "reviewer",
+        password: str = "password123",
+    ):
+        user = make_user(username=username, role=role, password=password)
+        resp = api_client.post(
+            "/api/v1/auth/login",
+            json={"username": username, "password": password},
+        )
+        assert resp.status_code == 200, resp.text
+        token = resp.json()["access_token"]
+        api_client.headers["Authorization"] = f"Bearer {token}"
+        return api_client, user, {"Authorization": f"Bearer {token}"}
+
+    return _factory
+
+
+@pytest.fixture
+def make_staging_obrigacao(test_session_factory):
+    """Factory: insert an ``ObrigacaoStaging`` row with sensible defaults.
+
+    Returns a dict with the PK and the identity triple for easy test asserts.
+    """
+
+    def _factory(
+        *,
+        descricao: str = "adotar providências corretivas no prazo de 90 dias",
+        id_processo: int = 541094,
+        id_composicao_pauta: int = 7001,
+        id_voto_pauta: int = 9001,
+        id_ner_obrigacao: int | None = None,
+        status: str = "pending",
+        claimed_by: str | None = None,
+        claimed_at=None,
+        original_payload: dict | None = None,
+    ) -> dict:
+        from tools.etl.staging import ObrigacaoStagingORM, ReviewStatus
+
+        s = test_session_factory()
+        try:
+            row = ObrigacaoStagingORM(
+                IdNerObrigacao=id_ner_obrigacao,
+                IdProcesso=id_processo,
+                IdComposicaoPauta=id_composicao_pauta,
+                IdVotoPauta=id_voto_pauta,
+                DescricaoObrigacao=descricao,
+                OrgaoResponsavel="PREFEITURA MUNICIPAL DE EXEMPLO",
+                Status=ReviewStatus(status),
+                ReservadoPor=claimed_by,
+                DataReserva=claimed_at,
+                PayloadOriginal=original_payload,
+            )
+            s.add(row)
+            s.commit()
+            s.refresh(row)
+            return {
+                "id": row.IdObrigacaoStaging,
+                "id_processo": row.IdProcesso,
+                "id_composicao_pauta": row.IdComposicaoPauta,
+                "id_voto_pauta": row.IdVotoPauta,
+                "descricao": row.DescricaoObrigacao,
+            }
+        finally:
+            s.close()
+
+    return _factory
+
+
+@pytest.fixture
+def make_staging_recomendacao(test_session_factory):
+    def _factory(
+        *,
+        descricao: str = "aperfeiçoar controles internos",
+        id_processo: int = 541094,
+        id_composicao_pauta: int = 7001,
+        id_voto_pauta: int = 9001,
+        id_ner_recomendacao: int | None = None,
+        status: str = "pending",
+        claimed_by: str | None = None,
+        claimed_at=None,
+    ) -> dict:
+        from tools.etl.staging import RecomendacaoStagingORM, ReviewStatus
+
+        s = test_session_factory()
+        try:
+            row = RecomendacaoStagingORM(
+                IdNerRecomendacao=id_ner_recomendacao,
+                IdProcesso=id_processo,
+                IdComposicaoPauta=id_composicao_pauta,
+                IdVotoPauta=id_voto_pauta,
+                DescricaoRecomendacao=descricao,
+                OrgaoResponsavel="SECRETARIA MUNICIPAL DE EXEMPLO",
+                Status=ReviewStatus(status),
+                ReservadoPor=claimed_by,
+                DataReserva=claimed_at,
+            )
+            s.add(row)
+            s.commit()
+            s.refresh(row)
+            return {
+                "id": row.IdRecomendacaoStaging,
+                "id_processo": row.IdProcesso,
+                "id_composicao_pauta": row.IdComposicaoPauta,
+                "id_voto_pauta": row.IdVotoPauta,
+                "descricao": row.DescricaoRecomendacao,
+            }
+        finally:
+            s.close()
 
     return _factory

@@ -150,6 +150,7 @@ def _build_obrigacao_staging(
 ) -> ObrigacaoStagingORM:
     id_proc, id_comp, id_voto = _identity_triple(row)
     return ObrigacaoStagingORM(
+        IdNerObrigacao=safe_int(row.get("id_ner_obrigacao")),
         IdProcesso=id_proc,
         IdComposicaoPauta=id_comp,
         IdVotoPauta=id_voto,
@@ -267,6 +268,7 @@ def _build_recomendacao_staging(
 ) -> RecomendacaoStagingORM:
     id_proc, id_comp, id_voto = _identity_triple(row)
     return RecomendacaoStagingORM(
+        IdNerRecomendacao=safe_int(row.get("id_ner_recomendacao")),
         IdProcesso=id_proc,
         IdComposicaoPauta=id_comp,
         IdVotoPauta=id_voto,
