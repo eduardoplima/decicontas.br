@@ -32,8 +32,9 @@ Frontend config in `frontend/.env.local`:
 
 - Install: `uv sync` at the repo root. Add `--extra experiments` when working on notebooks.
 - Research notebooks: see `tools/CLAUDE.md`.
+- Local Redis (required by the ARQ worker and by `/api/v1/etl/*`): `docker compose up -d redis`. Then set `REDIS_URL=redis://localhost:6379` in `.env`.
 - Backend dev server: `cd backend && uv run uvicorn app.main:app --reload --port 8000`.
-- Background worker: `cd backend && uv run arq app.worker.WorkerSettings`.
+- Background worker: `cd backend && uv run arq app.worker.WorkerSettings` (needs Redis running; reads the same `.env`).
 - Frontend dev server: `cd frontend && pnpm dev`.
 - Alembic migrations: `cd backend && uv run alembic upgrade head`.
 

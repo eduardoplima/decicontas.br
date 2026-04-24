@@ -11,9 +11,9 @@ The auth layer is pluggable: when we migrate to OIDC against the TCE SSO, only
 
 from __future__ import annotations
 
-from typing import Callable, Iterator
+from typing import TYPE_CHECKING, Callable, Iterator
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError
 from sqlalchemy.orm import Session, sessionmaker
@@ -21,6 +21,9 @@ from sqlalchemy.orm import Session, sessionmaker
 from app.auth.security import decode_token
 from tools.models import RoleEnum, UserORM
 from tools.utils import DB_DECISOES, get_connection
+
+if TYPE_CHECKING:
+    from arq.connections import ArqRedis
 
 
 _bearer = HTTPBearer(auto_error=True)
@@ -59,6 +62,22 @@ def get_current_user(
             detail="user not found or inactive",
         )
     return user
+
+
+async def get_arq_pool(request: Request) -> "ArqRedis":
+    """Yield the ARQ connection pool attached to the app during lifespan.
+
+    Tests override this dependency with an ``AsyncMock`` so no Redis process
+    is required. Production: 503 if the pool never connected (REDIS_URL
+    unset or initial connect failed).
+    """
+    pool = getattr(request.app.state, "arq_pool", None)
+    if pool is None:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="background worker unavailable — REDIS_URL not configured",
+        )
+    return pool
 
 
 def require_role(role: str | RoleEnum) -> Callable[[UserORM], UserORM]:
