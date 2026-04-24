@@ -70,18 +70,18 @@ class ObrigacaoStagingORM(Base):
     EMultaCominatoriaSolidaria = Column(Boolean, default=False)
     SolidariosMultaCominatoria = Column(JSON, nullable=True)
 
-    status = Column(
+    Status = Column(
         _REVIEW_STATUS_ENUM,
         nullable=False,
         default=ReviewStatus.pending,
         index=True,
     )
-    reviewer = Column(String(255), nullable=True)
-    reviewed_at = Column(DateTime, nullable=True)
-    claimed_by = Column(String(255), nullable=True)
-    claimed_at = Column(DateTime, nullable=True)
-    original_payload = Column(JSON, nullable=True)
-    review_notes = Column(Text, nullable=True)
+    Revisor = Column(String(255), nullable=True)
+    DataRevisao = Column(DateTime, nullable=True)
+    ReservadoPor = Column(String(255), nullable=True)
+    DataReserva = Column(DateTime, nullable=True)
+    PayloadOriginal = Column(JSON, nullable=True)
+    ObservacoesRevisao = Column(Text, nullable=True)
 
 
 class RecomendacaoStagingORM(Base):
@@ -102,15 +102,15 @@ class RecomendacaoStagingORM(Base):
     IdOrgaoResponsavel = Column(Integer, nullable=True)
     Cancelado = Column(Boolean, nullable=True)
 
-    status = Column(
+    Status = Column(
         _REVIEW_STATUS_ENUM,
         nullable=False,
         default=ReviewStatus.pending,
         index=True,
     )
-    reviewer = Column(String(255), nullable=True)
-    reviewed_at = Column(DateTime, nullable=True)
-    claimed_by = Column(String(255), nullable=True)
-    claimed_at = Column(DateTime, nullable=True)
-    original_payload = Column(JSON, nullable=True)
-    review_notes = Column(Text, nullable=True)
+    Revisor = Column(String(255), nullable=True)
+    DataRevisao = Column(DateTime, nullable=True)
+    ReservadoPor = Column(String(255), nullable=True)
+    DataReserva = Column(DateTime, nullable=True)
+    PayloadOriginal = Column(JSON, nullable=True)
+    ObservacoesRevisao = Column(Text, nullable=True)

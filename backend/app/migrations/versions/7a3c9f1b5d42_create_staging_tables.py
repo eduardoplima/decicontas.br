@@ -29,13 +29,13 @@ _REVIEW_STATUS = sa.Enum("pending", "approved", "rejected", name="review_status"
 
 def _review_columns() -> list[sa.Column]:
     return [
-        sa.Column("status", _REVIEW_STATUS, nullable=False, server_default="pending"),
-        sa.Column("reviewer", sa.String(length=255), nullable=True),
-        sa.Column("reviewed_at", sa.DateTime(), nullable=True),
-        sa.Column("claimed_by", sa.String(length=255), nullable=True),
-        sa.Column("claimed_at", sa.DateTime(), nullable=True),
-        sa.Column("original_payload", sa.JSON(), nullable=True),
-        sa.Column("review_notes", sa.Text(), nullable=True),
+        sa.Column("Status", _REVIEW_STATUS, nullable=False, server_default="pending"),
+        sa.Column("Revisor", sa.String(length=255), nullable=True),
+        sa.Column("DataRevisao", sa.DateTime(), nullable=True),
+        sa.Column("ReservadoPor", sa.String(length=255), nullable=True),
+        sa.Column("DataReserva", sa.DateTime(), nullable=True),
+        sa.Column("PayloadOriginal", sa.JSON(), nullable=True),
+        sa.Column("ObservacoesRevisao", sa.Text(), nullable=True),
     ]
 
 
@@ -79,7 +79,7 @@ def upgrade() -> None:
         "ObrigacaoStaging",
         ["IdProcesso", "IdComposicaoPauta", "IdVotoPauta"],
     )
-    op.create_index("ix_obrigacao_staging_status", "ObrigacaoStaging", ["status"])
+    op.create_index("ix_obrigacao_staging_status", "ObrigacaoStaging", ["Status"])
 
     op.create_table(
         "RecomendacaoStaging",
@@ -107,7 +107,7 @@ def upgrade() -> None:
         "RecomendacaoStaging",
         ["IdProcesso", "IdComposicaoPauta", "IdVotoPauta"],
     )
-    op.create_index("ix_recomendacao_staging_status", "RecomendacaoStaging", ["status"])
+    op.create_index("ix_recomendacao_staging_status", "RecomendacaoStaging", ["Status"])
 
 
 def downgrade() -> None:

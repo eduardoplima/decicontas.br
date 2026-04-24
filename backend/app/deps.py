@@ -53,7 +53,7 @@ def get_current_user(
         ) from exc
 
     user = session.get(UserORM, int(payload["sub"]))
-    if user is None or not user.is_active:
+    if user is None or not user.Ativo:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="user not found or inactive",
@@ -66,7 +66,7 @@ def require_role(role: str | RoleEnum) -> Callable[[UserORM], UserORM]:
 
     def _dependency(user: UserORM = Depends(get_current_user)) -> UserORM:
         user_role = (
-            user.role.value if isinstance(user.role, RoleEnum) else str(user.role)
+            user.Papel.value if isinstance(user.Papel, RoleEnum) else str(user.Papel)
         )
         if user_role != required:
             raise HTTPException(

@@ -29,23 +29,23 @@ def _role_value(role: RoleEnum | str) -> str:
 
 def authenticate_user(session: Session, username: str, password: str) -> UserORM | None:
     user = session.execute(
-        select(UserORM).where(UserORM.username == username)
+        select(UserORM).where(UserORM.NomeUsuario == username)
     ).scalar_one_or_none()
-    if user is None or not user.is_active:
+    if user is None or not user.Ativo:
         return None
-    if not verify_password(password, user.hashed_password):
+    if not verify_password(password, user.SenhaHash):
         return None
     return user
 
 
 def _mint_tokens(session: Session, user: UserORM) -> tuple[str, str]:
-    access = create_access_token(user_id=user.id, role=_role_value(user.role))
-    refresh, expires_at = create_refresh_token(user_id=user.id)
+    access = create_access_token(user_id=user.IdUsuario, role=_role_value(user.Papel))
+    refresh, expires_at = create_refresh_token(user_id=user.IdUsuario)
     session.add(
         RefreshTokenORM(
-            user_id=user.id,
-            token_hash=hash_refresh_token(refresh),
-            expires_at=expires_at,
+            IdUsuario=user.IdUsuario,
+            HashToken=hash_refresh_token(refresh),
+            DataExpiracao=expires_at,
         )
     )
     return access, refresh
@@ -70,27 +70,27 @@ def rotate_refresh_token(
 
     token_hash = hash_refresh_token(refresh_token)
     row = session.execute(
-        select(RefreshTokenORM).where(RefreshTokenORM.token_hash == token_hash)
+        select(RefreshTokenORM).where(RefreshTokenORM.HashToken == token_hash)
     ).scalar_one_or_none()
-    if row is None or row.revoked_at is not None:
+    if row is None or row.DataRevogacao is not None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="refresh token revoked or not recognized",
         )
-    if row.expires_at <= datetime.utcnow():
+    if row.DataExpiracao <= datetime.utcnow():
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="refresh token expired",
         )
 
     user = session.get(UserORM, int(payload["sub"]))
-    if user is None or not user.is_active:
+    if user is None or not user.Ativo:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="user inactive or not found",
         )
 
-    row.revoked_at = datetime.utcnow()
+    row.DataRevogacao = datetime.utcnow()
     access, new_refresh = _mint_tokens(session, user)
     session.commit()
     return user, access, new_refresh
@@ -104,9 +104,9 @@ def logout(session: Session, refresh_token: str) -> None:
         return
     token_hash = hash_refresh_token(refresh_token)
     row = session.execute(
-        select(RefreshTokenORM).where(RefreshTokenORM.token_hash == token_hash)
+        select(RefreshTokenORM).where(RefreshTokenORM.HashToken == token_hash)
     ).scalar_one_or_none()
-    if row is None or row.revoked_at is not None:
+    if row is None or row.DataRevogacao is not None:
         return
-    row.revoked_at = datetime.utcnow()
+    row.DataRevogacao = datetime.utcnow()
     session.commit()

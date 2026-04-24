@@ -23,13 +23,13 @@ def test_obrigacao_staging_mirrors_final_orm() -> None:
     assert not missing, f"ObrigacaoStaging missing columns: {missing}"
 
     review_cols = {
-        "status",
-        "reviewer",
-        "reviewed_at",
-        "claimed_by",
-        "claimed_at",
-        "original_payload",
-        "review_notes",
+        "Status",
+        "Revisor",
+        "DataRevisao",
+        "ReservadoPor",
+        "DataReserva",
+        "PayloadOriginal",
+        "ObservacoesRevisao",
     }
     assert review_cols.issubset(staging)
     assert "IdObrigacaoStaging" in staging
@@ -45,13 +45,13 @@ def test_recomendacao_staging_mirrors_final_orm() -> None:
     assert not missing, f"RecomendacaoStaging missing columns: {missing}"
 
     review_cols = {
-        "status",
-        "reviewer",
-        "reviewed_at",
-        "claimed_by",
-        "claimed_at",
-        "original_payload",
-        "review_notes",
+        "Status",
+        "Revisor",
+        "DataRevisao",
+        "ReservadoPor",
+        "DataReserva",
+        "PayloadOriginal",
+        "ObservacoesRevisao",
     }
     assert review_cols.issubset(staging)
     assert "IdRecomendacaoStaging" in staging
@@ -73,13 +73,13 @@ def test_obrigacao_staging_roundtrip_defaults(in_memory_engine: Engine) -> None:
 
         fetched = session.get(ObrigacaoStagingORM, row.IdObrigacaoStaging)
         assert fetched is not None
-        assert fetched.status == ReviewStatus.pending
-        assert fetched.reviewer is None
-        assert fetched.reviewed_at is None
-        assert fetched.claimed_by is None
-        assert fetched.claimed_at is None
-        assert fetched.original_payload is None
-        assert fetched.review_notes is None
+        assert fetched.Status == ReviewStatus.pending
+        assert fetched.Revisor is None
+        assert fetched.DataRevisao is None
+        assert fetched.ReservadoPor is None
+        assert fetched.DataReserva is None
+        assert fetched.PayloadOriginal is None
+        assert fetched.ObservacoesRevisao is None
         assert fetched.IdProcesso == 1
         assert fetched.IdComposicaoPauta == 2
         assert fetched.IdVotoPauta == 3
@@ -101,13 +101,13 @@ def test_recomendacao_staging_roundtrip_defaults(in_memory_engine: Engine) -> No
 
         fetched = session.get(RecomendacaoStagingORM, row.IdRecomendacaoStaging)
         assert fetched is not None
-        assert fetched.status == ReviewStatus.pending
-        assert fetched.reviewer is None
-        assert fetched.reviewed_at is None
-        assert fetched.claimed_by is None
-        assert fetched.claimed_at is None
-        assert fetched.original_payload is None
-        assert fetched.review_notes is None
+        assert fetched.Status == ReviewStatus.pending
+        assert fetched.Revisor is None
+        assert fetched.DataRevisao is None
+        assert fetched.ReservadoPor is None
+        assert fetched.DataReserva is None
+        assert fetched.PayloadOriginal is None
+        assert fetched.ObservacoesRevisao is None
         assert fetched.IdProcesso == 10
 
 
@@ -123,13 +123,13 @@ def test_obrigacao_staging_stores_review_layer(in_memory_engine: Engine) -> None
         IdComposicaoPauta=2,
         IdVotoPauta=3,
         DescricaoObrigacao="obrigação teste",
-        status=ReviewStatus.approved,
-        reviewer="auditor.a",
-        reviewed_at=reviewed,
-        claimed_by="auditor.a",
-        claimed_at=claimed,
-        original_payload=payload,
-        review_notes="aprovado sem ressalvas",
+        Status=ReviewStatus.approved,
+        Revisor="auditor.a",
+        DataRevisao=reviewed,
+        ReservadoPor="auditor.a",
+        DataReserva=claimed,
+        PayloadOriginal=payload,
+        ObservacoesRevisao="aprovado sem ressalvas",
     )
     with Session(in_memory_engine) as session:
         session.add(row)
@@ -138,10 +138,10 @@ def test_obrigacao_staging_stores_review_layer(in_memory_engine: Engine) -> None
 
         fetched = session.get(ObrigacaoStagingORM, row.IdObrigacaoStaging)
         assert fetched is not None
-        assert fetched.status == ReviewStatus.approved
-        assert fetched.reviewer == "auditor.a"
-        assert fetched.reviewed_at == reviewed
-        assert fetched.claimed_by == "auditor.a"
-        assert fetched.claimed_at == claimed
-        assert fetched.original_payload == payload
-        assert fetched.review_notes == "aprovado sem ressalvas"
+        assert fetched.Status == ReviewStatus.approved
+        assert fetched.Revisor == "auditor.a"
+        assert fetched.DataRevisao == reviewed
+        assert fetched.ReservadoPor == "auditor.a"
+        assert fetched.DataReserva == claimed
+        assert fetched.PayloadOriginal == payload
+        assert fetched.ObservacoesRevisao == "aprovado sem ressalvas"

@@ -108,16 +108,16 @@ def test_enqueue_obrigacao_writes_one_staging_row(
         assert staged.IdProcesso == 541094
         assert staged.IdComposicaoPauta == 7001
         assert staged.IdVotoPauta == 9001
-        assert staged.status == ReviewStatus.pending
+        assert staged.Status == ReviewStatus.pending
         assert staged.DescricaoObrigacao == fake_result.descricao_obrigacao
         assert staged.Prazo == "90 dias"
         assert staged.ValorMultaCominatoria == 1000.0
-        assert staged.original_payload is not None
+        assert staged.PayloadOriginal is not None
         assert (
-            staged.original_payload["descricao_obrigacao"]
+            staged.PayloadOriginal["descricao_obrigacao"]
             == fake_result.descricao_obrigacao
         )
-        assert staged.original_payload["data_cumprimento"] == "2026-05-15"
+        assert staged.PayloadOriginal["data_cumprimento"] == "2026-05-15"
 
 
 def test_enqueue_obrigacao_dedupes_same_triple(
@@ -195,14 +195,14 @@ def test_enqueue_recomendacao_writes_one_staging_row(
         rows = session.execute(select(RecomendacaoStagingORM)).scalars().all()
         assert len(rows) == 1
         staged = rows[0]
-        assert staged.status == ReviewStatus.pending
+        assert staged.Status == ReviewStatus.pending
         assert staged.DescricaoRecomendacao == fake_result.descricao_recomendacao
         assert staged.OrgaoResponsavel == fake_result.orgao_responsavel_recomendacao
         assert staged.PrazoCumprimentoRecomendacao == "60 dias"
         assert staged.Cancelado is False
-        assert staged.original_payload is not None
+        assert staged.PayloadOriginal is not None
         assert (
-            staged.original_payload["descricao_recomendacao"]
+            staged.PayloadOriginal["descricao_recomendacao"]
             == fake_result.descricao_recomendacao
         )
 

@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 
 from app.auth import schemas, service
 from app.deps import get_current_user, get_db_session
-from tools.models import UserORM
+from tools.models import RoleEnum, UserORM
 
 
 router = APIRouter(prefix="/api/v1/auth", tags=["auth"])
@@ -50,5 +50,11 @@ def logout(
 
 
 @router.get("/me", response_model=schemas.UserOut)
-def me(user: UserORM = Depends(get_current_user)) -> UserORM:
-    return user
+def me(user: UserORM = Depends(get_current_user)) -> schemas.UserOut:
+    return schemas.UserOut(
+        id=user.IdUsuario,
+        username=user.NomeUsuario,
+        email=user.Email,
+        role=user.Papel.value if isinstance(user.Papel, RoleEnum) else str(user.Papel),
+        is_active=user.Ativo,
+    )

@@ -128,7 +128,7 @@ def _already_staged_obrigacao(
             ObrigacaoStagingORM.IdComposicaoPauta == id_comp,
             ObrigacaoStagingORM.IdVotoPauta == id_voto,
             ObrigacaoStagingORM.DescricaoObrigacao == descricao,
-            ObrigacaoStagingORM.status.in_(
+            ObrigacaoStagingORM.Status.in_(
                 [ReviewStatus.pending, ReviewStatus.approved]
             ),
         )
@@ -167,8 +167,8 @@ def _build_obrigacao_staging(
         PeriodoMultaCominatoria=result.periodo_multa_cominatoria,
         EMultaCominatoriaSolidaria=result.e_multa_cominatoria_solidaria,
         SolidariosMultaCominatoria=result.solidarios_multa_cominatoria,
-        status=ReviewStatus.pending,
-        original_payload=result.model_dump(mode="json"),
+        Status=ReviewStatus.pending,
+        PayloadOriginal=result.model_dump(mode="json"),
     )
 
 
@@ -245,7 +245,7 @@ def _already_staged_recomendacao(
             RecomendacaoStagingORM.IdComposicaoPauta == id_comp,
             RecomendacaoStagingORM.IdVotoPauta == id_voto,
             RecomendacaoStagingORM.DescricaoRecomendacao == descricao,
-            RecomendacaoStagingORM.status.in_(
+            RecomendacaoStagingORM.Status.in_(
                 [ReviewStatus.pending, ReviewStatus.approved]
             ),
         )
@@ -278,8 +278,8 @@ def _build_recomendacao_staging(
         OrgaoResponsavel=result.orgao_responsavel_recomendacao,
         IdOrgaoResponsavel=safe_int(row.get("id_orgao_responsavel")),
         Cancelado=False,
-        status=ReviewStatus.pending,
-        original_payload=result.model_dump(mode="json"),
+        Status=ReviewStatus.pending,
+        PayloadOriginal=result.model_dump(mode="json"),
     )
 
 

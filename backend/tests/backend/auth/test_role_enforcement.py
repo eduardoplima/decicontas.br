@@ -17,11 +17,11 @@ def _build_admin_only_app(test_session_factory):
 
     @app.get("/admin-only")
     def admin_only(user=Depends(require_role("admin"))):
-        return {"id": user.id, "role": user.role.value}
+        return {"id": user.IdUsuario, "role": user.Papel.value}
 
     @app.get("/reviewer-only")
     def reviewer_only(user=Depends(require_role("reviewer"))):
-        return {"id": user.id, "role": user.role.value}
+        return {"id": user.IdUsuario, "role": user.Papel.value}
 
     def _override_db():
         s = test_session_factory()

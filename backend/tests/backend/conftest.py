@@ -88,18 +88,18 @@ def make_user(test_session_factory):
         session = test_session_factory()
         try:
             user = UserORM(
-                username=username,
-                email=email or f"{username}@example.com",
-                hashed_password=hash_password(password),
-                role=RoleEnum(role),
-                is_active=is_active,
+                NomeUsuario=username,
+                Email=email or f"{username}@example.com",
+                SenhaHash=hash_password(password),
+                Papel=RoleEnum(role),
+                Ativo=is_active,
             )
             session.add(user)
             session.commit()
             session.refresh(user)
             return {
-                "id": user.id,
-                "username": user.username,
+                "id": user.IdUsuario,
+                "username": user.NomeUsuario,
                 "password": password,
                 "role": role,
                 "is_active": is_active,

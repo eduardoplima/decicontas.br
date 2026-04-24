@@ -229,24 +229,24 @@ class ProcessedRecomendacaoORM(Base):
 
 
 class UserORM(Base):
-    __tablename__ = "Users"
+    __tablename__ = "Usuarios"
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    username = Column(String(150), nullable=False, unique=True, index=True)
-    email = Column(String(255), nullable=False, unique=True, index=True)
-    hashed_password = Column(String(255), nullable=False)
-    role = Column(
+    IdUsuario = Column(Integer, primary_key=True, autoincrement=True)
+    NomeUsuario = Column(String(150), nullable=False, unique=True, index=True)
+    Email = Column(String(255), nullable=False, unique=True, index=True)
+    SenhaHash = Column(String(255), nullable=False)
+    Papel = Column(
         Enum(
             RoleEnum,
-            name="user_role",
+            name="papel_usuario",
             values_callable=lambda e: [member.value for member in e],
         ),
         nullable=False,
         default=RoleEnum.reviewer,
     )
-    is_active = Column(Boolean, nullable=False, default=True)
-    created_at = Column(DateTime, nullable=False, server_default=func.now())
-    updated_at = Column(
+    Ativo = Column(Boolean, nullable=False, default=True)
+    DataCriacao = Column(DateTime, nullable=False, server_default=func.now())
+    DataAtualizacao = Column(
         DateTime,
         nullable=False,
         server_default=func.now(),
@@ -261,13 +261,15 @@ class UserORM(Base):
 
 
 class RefreshTokenORM(Base):
-    __tablename__ = "RefreshTokens"
+    __tablename__ = "TokensRenovacao"
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey("Users.id"), nullable=False, index=True)
-    token_hash = Column(String(255), nullable=False, unique=True, index=True)
-    expires_at = Column(DateTime, nullable=False)
-    revoked_at = Column(DateTime, nullable=True)
-    created_at = Column(DateTime, nullable=False, server_default=func.now())
+    IdTokenRenovacao = Column(Integer, primary_key=True, autoincrement=True)
+    IdUsuario = Column(
+        Integer, ForeignKey("Usuarios.IdUsuario"), nullable=False, index=True
+    )
+    HashToken = Column(String(255), nullable=False, unique=True, index=True)
+    DataExpiracao = Column(DateTime, nullable=False)
+    DataRevogacao = Column(DateTime, nullable=True)
+    DataCriacao = Column(DateTime, nullable=False, server_default=func.now())
 
     user = relationship("UserORM", back_populates="refresh_tokens")
