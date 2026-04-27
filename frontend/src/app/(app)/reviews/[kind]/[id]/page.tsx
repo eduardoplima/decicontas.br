@@ -23,6 +23,7 @@ import {
   useReject,
   useRelease,
   useReview,
+  useReviewTexto,
 } from "@/hooks/use-reviews";
 import { messageForError } from "@/lib/error-messages";
 import {
@@ -30,6 +31,7 @@ import {
   RecomendacaoReview,
   ReviewDetail,
   ReviewKind,
+  ReviewTexto,
   reviewKindSchema,
 } from "@/schemas/review";
 
@@ -57,6 +59,7 @@ function Detail({ kind, id }: { kind: ReviewKind; id: number }) {
   const router = useRouter();
   const { data: me } = useCurrentUser();
   const query = useReview({ kind, id });
+  const textoQuery = useReviewTexto({ kind, id });
   const claim = useClaim({ kind, id });
   const release = useRelease({ kind, id });
   const approve = useApprove({ kind, id });
@@ -65,6 +68,7 @@ function Detail({ kind, id }: { kind: ReviewKind; id: number }) {
   const [rejectOpen, setRejectOpen] = useState(false);
 
   const detail = query.data;
+  const texto = textoQuery.data ?? null;
 
   // Claim on mount, release on unmount + tab close.
   useEffect(() => {
@@ -106,6 +110,8 @@ function Detail({ kind, id }: { kind: ReviewKind; id: number }) {
   return (
     <ReviewBody
       detail={detail}
+      texto={texto}
+      textoLoading={textoQuery.isLoading}
       kind={kind}
       id={id}
       currentUsername={me?.username ?? null}
@@ -149,6 +155,8 @@ function Detail({ kind, id }: { kind: ReviewKind; id: number }) {
 
 type ReviewBodyProps = {
   detail: ReviewDetail;
+  texto: ReviewTexto | null;
+  textoLoading: boolean;
   kind: ReviewKind;
   id: number;
   currentUsername: string | null;
@@ -166,6 +174,8 @@ type ReviewBodyProps = {
 
 function ReviewBody({
   detail,
+  texto,
+  textoLoading,
   kind,
   currentUsername,
   onApprove,
@@ -232,15 +242,25 @@ function ReviewBody({
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <div>
           <h2 className="mb-2 text-sm font-medium">Texto do acórdão</h2>
-          <SpanEditor
-            text={detail.texto_acordao ?? ""}
-            matchedSpan={detail.matched_span ?? null}
-            disabled={formDisabled}
-            onChange={handleSpanChange}
-            emptyState={
-              detail.span_match_status === "not_found" ? NOT_FOUND_HINT : null
-            }
-          />
+          {textoLoading && !texto ? (
+            <div className="rounded-md border bg-muted/30 p-4 text-sm text-muted-foreground">
+              Carregando texto do acórdão...
+            </div>
+          ) : (
+            <SpanEditor
+              text={texto?.texto_acordao ?? ""}
+              matchedSpan={texto?.matched_span ?? null}
+              disabled={formDisabled}
+              onChange={handleSpanChange}
+              emptyState={
+                !texto?.texto_acordao
+                  ? "Texto do acórdão indisponível."
+                  : texto.span_match_status === "not_found"
+                    ? NOT_FOUND_HINT
+                    : null
+              }
+            />
+          )}
         </div>
         <div>
           <h2 className="mb-2 text-sm font-medium">Campos</h2>

@@ -1,8 +1,9 @@
 """ETL trigger and status endpoints. Admin-only.
 
-The POST endpoint enqueues an ARQ job and returns 202 immediately — all heavy
-work happens in ``app.worker``. The GET endpoint is a read-through to ARQ's
-job status so the frontend can poll.
+``POST /etl/run`` enqueues the orchestrator task that runs NER → obrigação →
+recomendação for the given date window. The endpoint creates an ``Extracao``
+row up-front (status=``queued``) and returns ``extracao_id`` so the frontend
+can poll ``GET /etl/extracoes/{id}`` for live progress.
 """
 
 from __future__ import annotations
@@ -12,10 +13,13 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 
 from arq.jobs import Job, JobStatus
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from sqlalchemy import func, select
+from sqlalchemy.orm import Session
 
-from app.deps import get_arq_pool, require_role
+from app.deps import get_arq_pool, get_db_session, require_role
 from app.etl import schemas
+from tools.models import ExtracaoORM
 
 
 if TYPE_CHECKING:
@@ -27,11 +31,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/v1/etl", tags=["etl"])
 
 _QUEUE_NAME = "decicontas:etl"
-
-_TASK_BY_KIND = {
-    "obrigacao": "run_obrigacao_extraction",
-    "recomendacao": "run_recomendacao_extraction",
-}
+_TASK_NAME = "run_full_extraction"
 
 
 _STATUS_MAP = {
@@ -43,6 +43,23 @@ _STATUS_MAP = {
 }
 
 
+def _to_extracao_out(row: ExtracaoORM) -> schemas.ExtracaoOut:
+    return schemas.ExtracaoOut(
+        id=row.IdExtracao,
+        data_inicio=row.DataInicio,
+        data_fim=row.DataFim,
+        data_execucao=row.DataExecucao,
+        status=row.Status,
+        etapa_atual=row.EtapaAtual,
+        decisoes_processadas=row.DecisoesProcessadas,
+        obrigacoes_geradas=row.ObrigacoesGeradas,
+        recomendacoes_geradas=row.RecomendacoesGeradas,
+        erros=row.Erros,
+        mensagem_erro=row.MensagemErro,
+        job_id=row.JobId,
+    )
+
+
 @router.post(
     "/run",
     status_code=status.HTTP_202_ACCEPTED,
@@ -52,23 +69,90 @@ _STATUS_MAP = {
 async def trigger_extraction(
     body: schemas.ExtractionTriggerRequest,
     pool: "ArqRedis" = Depends(get_arq_pool),
+    session: Session = Depends(get_db_session),
 ) -> schemas.ExtractionJobAccepted:
-    task_name = _TASK_BY_KIND[body.kind]
+    enqueued_at = datetime.utcnow()
+
+    extracao = ExtracaoORM(
+        DataInicio=body.filters.start_date,
+        DataFim=body.filters.end_date,
+        DataExecucao=enqueued_at,
+        Status="queued",
+        EtapaAtual="queued",
+    )
+    session.add(extracao)
+    session.commit()
+    session.refresh(extracao)
+
     job = await pool.enqueue_job(
-        task_name,
+        _TASK_NAME,
         body.filters.model_dump(mode="json"),
+        extracao.IdExtracao,
         _queue_name=_QUEUE_NAME,
     )
     if job is None:
+        # Couldn't enqueue: roll back the row so the history isn't polluted
+        # with phantom queued runs.
+        session.delete(extracao)
+        session.commit()
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="failed to enqueue job",
         )
+
+    extracao.JobId = job.job_id
+    session.commit()
+
     return schemas.ExtractionJobAccepted(
+        extracao_id=extracao.IdExtracao,
         job_id=job.job_id,
-        status_url=f"/api/v1/etl/jobs/{job.job_id}",
-        enqueued_at=datetime.utcnow(),
+        status_url=f"/api/v1/etl/extracoes/{extracao.IdExtracao}",
+        enqueued_at=enqueued_at,
     )
+
+
+@router.get(
+    "/extracoes",
+    response_model=schemas.ExtracaoListPage,
+    dependencies=[Depends(require_role("admin"))],
+)
+def list_extracoes(
+    page: int = Query(1, ge=1),
+    page_size: int = Query(20, ge=1, le=100),
+    session: Session = Depends(get_db_session),
+) -> schemas.ExtracaoListPage:
+    base = select(ExtracaoORM).order_by(ExtracaoORM.DataExecucao.desc())
+    total = session.execute(
+        select(func.count()).select_from(ExtracaoORM)
+    ).scalar_one()
+    rows = (
+        session.execute(base.offset((page - 1) * page_size).limit(page_size))
+        .scalars()
+        .all()
+    )
+    return schemas.ExtracaoListPage(
+        items=[_to_extracao_out(r) for r in rows],
+        page=page,
+        page_size=page_size,
+        total=total,
+    )
+
+
+@router.get(
+    "/extracoes/{extracao_id}",
+    response_model=schemas.ExtracaoOut,
+    dependencies=[Depends(require_role("admin"))],
+)
+def get_extracao(
+    extracao_id: int,
+    session: Session = Depends(get_db_session),
+) -> schemas.ExtracaoOut:
+    row = session.get(ExtracaoORM, extracao_id)
+    if row is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="extracao not found"
+        )
+    return _to_extracao_out(row)
 
 
 @router.get(

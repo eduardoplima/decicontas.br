@@ -98,6 +98,9 @@ export const reviewListPageSchema = z.object({
 export type ReviewListPage = z.infer<typeof reviewListPageSchema>;
 
 // Mirrors ReviewDetail in backend/app/review/schemas.py.
+// `texto_acordao` and span-match metadata are fetched separately via
+// reviewTextoSchema below — splitting these makes the form render fast
+// while the (slow) MSSQL text query runs in parallel.
 export const reviewDetailSchema = z.object({
   id: z.number().int(),
   kind: reviewKindSchema,
@@ -115,12 +118,16 @@ export const reviewDetailSchema = z.object({
   reviewer: z.string().nullable().optional(),
   reviewed_at: z.string().datetime({ offset: true }).nullable().optional(),
   review_notes: z.string().nullable().optional(),
+});
+export type ReviewDetail = z.infer<typeof reviewDetailSchema>;
 
+// Mirrors ReviewTexto in backend/app/review/schemas.py.
+export const reviewTextoSchema = z.object({
   texto_acordao: z.string().nullable().optional(),
   matched_span: z.string().nullable().optional(),
   span_match_status: spanMatchStatusSchema,
 });
-export type ReviewDetail = z.infer<typeof reviewDetailSchema>;
+export type ReviewTexto = z.infer<typeof reviewTextoSchema>;
 
 // Mirrors ClaimResponse in backend/app/review/schemas.py.
 export const claimResponseSchema = z.object({

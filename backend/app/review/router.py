@@ -51,6 +51,18 @@ def get_review(
     return service.get_review(session, kind=kind, id=id, current_user=current_user)
 
 
+@router.get("/{kind}/{id}/texto-acordao", response_model=schemas.ReviewTexto)
+def get_review_texto(
+    kind: Literal["obrigacao", "recomendacao"],
+    id: int,
+    session: Session = Depends(get_db_session),
+    current_user: UserORM = Depends(get_current_user),
+) -> schemas.ReviewTexto:
+    return service.get_review_texto(
+        session, kind=kind, id=id, current_user=current_user
+    )
+
+
 @router.post("/{kind}/{id}/claim", response_model=schemas.ClaimResponse)
 def claim_review(
     kind: Literal["obrigacao", "recomendacao"],

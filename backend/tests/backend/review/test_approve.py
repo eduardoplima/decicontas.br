@@ -1,4 +1,4 @@
-"""``POST /api/v1/reviews/{kind}/{id}/approve`` — transaction semantics."""
+"""``POST /api/v1/reviews/{kind}/{id}/approve`` — audit-row insert + claim clear."""
 
 from __future__ import annotations
 
@@ -19,47 +19,14 @@ _PAYLOAD = {
 }
 
 
-def _seed_ner(session_factory, *, id_processo, id_composicao, id_voto) -> int:
-    """Insert a minimal NERDecisao + NERObrigacao so ProcessedObrigacao has a valid FK."""
-    from tools.models import NERDecisaoORM, NERObrigacaoORM
-
-    s = session_factory()
-    try:
-        decisao = NERDecisaoORM(
-            IdProcesso=id_processo,
-            IdComposicaoPauta=id_composicao,
-            IdVotoPauta=id_voto,
-            RawJson="{}",
-        )
-        s.add(decisao)
-        s.flush()
-        ner = NERObrigacaoORM(
-            IdNerDecisao=decisao.IdNerDecisao,
-            Ordem=0,
-            DescricaoObrigacao="ner source",
-        )
-        s.add(ner)
-        s.commit()
-        return ner.IdNerObrigacao
-    finally:
-        s.close()
-
-
-def test_approve_happy_path_writes_final_and_processed(
+def test_approve_happy_path_inserts_audit_and_clears_claim(
     authenticated_client, make_staging_obrigacao, test_session_factory
 ) -> None:
     from tools.etl.staging import ObrigacaoStagingORM, ReviewStatus
-    from tools.models import ObrigacaoORM, ProcessedObrigacaoORM
+    from tools.models import ObrigacaoORM
 
     client, _, _ = authenticated_client(username="alice")
-    id_ner = _seed_ner(
-        test_session_factory,
-        id_processo=541094,
-        id_composicao=7001,
-        id_voto=9001,
-    )
     staged = make_staging_obrigacao(
-        id_ner_obrigacao=id_ner,
         claimed_by="alice",
         claimed_at=datetime.utcnow(),
     )
@@ -71,24 +38,33 @@ def test_approve_happy_path_writes_final_and_processed(
     body = resp.json()
     assert body["status"] == "approved"
     assert body["reviewer"] == "alice"
+    assert body["id"] == staged["id"]
 
     session = test_session_factory()
     try:
-        staging_row = session.get(ObrigacaoStagingORM, staged["id"])
-        assert staging_row.Status == ReviewStatus.approved
-        assert staging_row.Revisor == "alice"
-        assert staging_row.DataRevisao is not None
+        # Audit row exists, status approved, FK to the final row.
+        audit = (
+            session.execute(
+                select(ObrigacaoStagingORM).where(
+                    ObrigacaoStagingORM.IdObrigacao == staged["id"]
+                )
+            )
+            .scalars()
+            .first()
+        )
+        assert audit is not None
+        assert audit.Status == ReviewStatus.approved
+        assert audit.Revisor == "alice"
+        assert audit.DataRevisao is not None
+        assert audit.DescricaoObrigacao == _PAYLOAD["descricao_obrigacao"]
+        assert audit.Prazo == "90 dias"
 
-        finals = session.execute(select(ObrigacaoORM)).scalars().all()
-        assert len(finals) == 1
-        assert finals[0].DescricaoObrigacao == _PAYLOAD["descricao_obrigacao"]
-        assert finals[0].Prazo == "90 dias"
-        assert finals[0].IdProcesso == 541094
-
-        processed = session.execute(select(ProcessedObrigacaoORM)).scalars().all()
-        assert len(processed) == 1
-        assert processed[0].IdObrigacao == finals[0].IdObrigacao
-        assert processed[0].IdNerObrigacao == id_ner
+        # Final row preserved (LLM original) and claim cleared.
+        final = session.get(ObrigacaoORM, staged["id"])
+        assert final is not None
+        assert final.DescricaoObrigacao == staged["descricao"]  # unchanged
+        assert final.ReservadoPor is None
+        assert final.DataReserva is None
     finally:
         session.close()
 
@@ -96,7 +72,7 @@ def test_approve_happy_path_writes_final_and_processed(
 def test_approve_without_claim_returns_403(
     authenticated_client, make_staging_obrigacao, test_session_factory
 ) -> None:
-    from tools.etl.staging import ObrigacaoStagingORM, ReviewStatus
+    from tools.etl.staging import ObrigacaoStagingORM
     from tools.models import ObrigacaoORM
 
     client, _, _ = authenticated_client(username="alice")
@@ -107,19 +83,22 @@ def test_approve_without_claim_returns_403(
     )
     assert resp.status_code == 403
 
-    # Staging must not have flipped.
+    # No audit row created; final row still pristine.
     session = test_session_factory()
     try:
-        row = session.get(ObrigacaoStagingORM, staged["id"])
-        assert row.Status == ReviewStatus.pending
-        assert session.execute(select(ObrigacaoORM)).scalars().all() == []
+        audits = session.execute(select(ObrigacaoStagingORM)).scalars().all()
+        assert audits == []
+        final = session.get(ObrigacaoORM, staged["id"])
+        assert final.ReservadoPor is None
     finally:
         session.close()
 
 
 def test_approve_claim_by_other_user_returns_403(
-    authenticated_client, make_staging_obrigacao
+    authenticated_client, make_staging_obrigacao, test_session_factory
 ) -> None:
+    from tools.etl.staging import ObrigacaoStagingORM
+
     client, _, _ = authenticated_client(username="alice")
     staged = make_staging_obrigacao(claimed_by="bob", claimed_at=datetime.utcnow())
     resp = client.post(
@@ -127,32 +106,50 @@ def test_approve_claim_by_other_user_returns_403(
     )
     assert resp.status_code == 403
 
+    session = test_session_factory()
+    try:
+        assert session.execute(select(ObrigacaoStagingORM)).scalars().all() == []
+    finally:
+        session.close()
 
-def test_approve_rolls_back_when_final_insert_fails(
-    authenticated_client, make_staging_obrigacao, test_session_factory, mocker
+
+def test_approve_when_already_reviewed_returns_409(
+    authenticated_client, make_staging_obrigacao
 ) -> None:
-    """Mid-transaction failure during the final-table insert must roll back
-    staging (still pending) and leave no Processed row."""
-    from tools.etl.staging import ObrigacaoStagingORM, ReviewStatus
-    from tools.models import ObrigacaoORM, ProcessedObrigacaoORM
-
+    """A second approve on the same final row must conflict — exactly one
+    audit row per final row is the model invariant.
+    """
     client, _, _ = authenticated_client(username="alice")
-    id_ner = _seed_ner(
-        test_session_factory,
-        id_processo=541094,
-        id_composicao=7001,
-        id_voto=9001,
-    )
     staged = make_staging_obrigacao(
-        id_ner_obrigacao=id_ner,
+        status="approved",
         claimed_by="alice",
         claimed_at=datetime.utcnow(),
+        reviewer="alice",
     )
 
-    def _boom(*args, **kwargs):
+    resp = client.post(
+        f"/api/v1/reviews/obrigacao/{staged['id']}/approve", json=_PAYLOAD
+    )
+    assert resp.status_code == 409
+
+
+def test_approve_rolls_back_when_clear_claim_fails(
+    authenticated_client, make_staging_obrigacao, test_session_factory, mocker
+) -> None:
+    """Mid-transaction failure (here: clear-claim UPDATE) must roll back
+    cleanly so the audit row is not persisted and the claim survives,
+    letting the reviewer retry.
+    """
+    from tools.etl.staging import ObrigacaoStagingORM
+    from tools.models import ObrigacaoORM
+
+    client, _, _ = authenticated_client(username="alice")
+    staged = make_staging_obrigacao(claimed_by="alice", claimed_at=datetime.utcnow())
+
+    def _boom(*_args, **_kwargs):
         raise IntegrityError("simulated", None, Exception("boom"))
 
-    mocker.patch("app.review.service.ObrigacaoORM", side_effect=_boom)
+    mocker.patch("app.review.service._clear_claim", side_effect=_boom)
 
     resp = client.post(
         f"/api/v1/reviews/obrigacao/{staged['id']}/approve", json=_PAYLOAD
@@ -161,11 +158,12 @@ def test_approve_rolls_back_when_final_insert_fails(
 
     session = test_session_factory()
     try:
-        row = session.get(ObrigacaoStagingORM, staged["id"])
-        assert row.Status == ReviewStatus.pending
-        assert row.Revisor is None
-        assert row.DataRevisao is None
-        assert session.execute(select(ObrigacaoORM)).scalars().all() == []
-        assert session.execute(select(ProcessedObrigacaoORM)).scalars().all() == []
+        # No audit row inserted (rollback dropped the queued INSERT).
+        audits = session.execute(select(ObrigacaoStagingORM)).scalars().all()
+        assert audits == []
+        # Claim survived the failed transaction so the reviewer can retry.
+        final = session.get(ObrigacaoORM, staged["id"])
+        assert final.ReservadoPor == "alice"
+        assert final.DataReserva is not None
     finally:
         session.close()

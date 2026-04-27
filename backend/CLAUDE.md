@@ -28,8 +28,8 @@ backend/
     │   └── schemas.py       # LoginRequest, TokenPair, UserOut
     ├── review/
     │   ├── router.py        # review endpoints
-    │   ├── service.py       # business logic: claim/release, approval transaction
-    │   └── schemas.py       # Pydantic DTOs mirroring staging ORMs
+    │   ├── service.py       # business logic: claim/release, approve/reject (audit insert)
+    │   └── schemas.py       # Pydantic DTOs mirroring final ORMs
     ├── etl/
     │   ├── router.py        # POST /etl/run (admin only, enqueues extraction)
     │   └── tasks.py         # ARQ tasks wrapping tools.etl.pipeline.*
@@ -52,25 +52,29 @@ backend/
 
 ## Review API contract
 
-All endpoints under `/api/v1/reviews`, JWT-authenticated, JSON in/out, errors follow RFC 7807.
+All endpoints under `/api/v1/reviews`, JWT-authenticated, JSON in/out, errors follow RFC 7807. The `id` in every path is `IdObrigacao` / `IdRecomendacao` (final table id), never the staging id.
 
-- `GET /reviews?kind=obrigacao|recomendacao&status=pending&page=1&page_size=20` — paginated list. Excludes rows with an active claim by another reviewer.
-- `GET /reviews/{kind}/{id}` — full staging row + full `texto_acordao` + matched span (or `null` with `span_match_status: "exact" | "fuzzy" | "not_found"`). Span matching via `tools.etl.text_alignment.find_span_in_text` on every request — not cached.
-- `POST /reviews/{kind}/{id}/claim` — atomic. 409 if claimed by another reviewer with non-expired claim. Sets `claimed_by = current_user` and `claimed_at = now()`. Claims expire after **15 minutes** of inactivity.
-- `POST /reviews/{kind}/{id}/release` — explicit release (frontend also calls this on browser unload).
-- `POST /reviews/{kind}/{id}/approve` — body is the edited record, validated against the same Pydantic schema as `ObrigacaoORM` / `RecomendacaoORM`. Runs the approval transaction: insert into final table + flip staging to `approved` + insert into `Processed*`. Requires active claim by caller.
-- `POST /reviews/{kind}/{id}/reject` — body requires `review_notes` (min 10 chars). Flips staging to `rejected`. Requires active claim.
+- `GET /reviews?kind=obrigacao|recomendacao&status=pending&page=1&page_size=20` — paginated list. **Pendente** = `Obrigacao` / `Recomendacao` without a corresponding `*Staging` audit row (LEFT JOIN + `IS NULL`). Excludes rows with an active claim by another reviewer.
+- `GET /reviews/{kind}/{id}` — final row + edited fields if reviewed + claim state. **Does not** carry `texto_acordao` (split below for fast page render).
+- `GET /reviews/{kind}/{id}/texto-acordao` — full `texto_acordao` + matched span (or `null` with `span_match_status: "exact" | "fuzzy" | "not_found"`). Hits MSSQL `decisions_full_text.sql` and can be slow, so it's split from the detail endpoint — the form can render before this resolves.
+- `POST /reviews/{kind}/{id}/claim` — atomic. 409 if a staging row already exists (already reviewed) or another reviewer holds a non-expired claim. Writes `ReservadoPor` / `DataReserva` on the **final** row. Claims expire after **15 minutes** of inactivity.
+- `POST /reviews/{kind}/{id}/release` — explicit release (frontend also calls this on browser unload). Clears `ReservadoPor` / `DataReserva` on the final row.
+- `POST /reviews/{kind}/{id}/approve` — body is the edited record, validated against the same Pydantic schema as `ObrigacaoORM` / `RecomendacaoORM`. **INSERTs an `ObrigacaoStaging` / `RecomendacaoStaging` audit row** with `Status=approved`, the edited fields, the `IdObrigacao` / `IdRecomendacao` FK, `Revisor`, `DataRevisao`. Clears the claim on the final row. Does **not** modify the final row — the LLM original is preserved. Requires active claim by caller.
+- `POST /reviews/{kind}/{id}/reject` — body requires `review_notes` (min 10 chars). INSERTs an audit row with `Status=rejected` and the notes. Clears the claim. Requires active claim.
 
 ETL endpoints under `/api/v1/etl`, admin-only:
-- `POST /etl/run` — body specifies `kind` and a date range. Enqueues an ARQ job that calls `tools.etl.pipeline.*`. Returns 202 with the job id.
-- `GET /etl/jobs/{job_id}` — poll job status.
+- `POST /etl/run` — body is `{ filters: { start_date, end_date } }`. INSERTs one `Extracao` row (status=`queued`) and enqueues a single orchestrator task `run_full_extraction` that walks three stages back-to-back: **decisões** (NER) → **obrigações** → **recomendações**. Returns 202 with `{ extracao_id, job_id, status_url }`. The `Extracao` row is the durable record of which session windows were scanned (independent of the per-job ARQ result, which has bounded retention).
+- `GET /etl/extracoes` — paginated list of past runs, most recent first.
+- `GET /etl/extracoes/{id}` — live status of one run: `Status` (`queued | running | done | error`), `EtapaAtual` (`queued | decisoes | obrigacoes | recomendacoes | done`), counters (`DecisoesProcessadas`, `ObrigacoesGeradas`, `RecomendacoesGeradas`, `Erros`), and `MensagemErro` if it failed. The frontend polls this every 3s while the run is queued or running.
+- `GET /etl/jobs/{job_id}` — passthrough to ARQ's job status (rarely needed; prefer the `Extracao` row).
 
 ## Rules for Claude Code in `backend/`
 
 ### Architecture
 - **No LLM calls in HTTP request handlers.** Anything that talks to Azure OpenAI goes through the ARQ worker. Endpoints enqueue and return 202.
-- **The approval transaction is the only writer to `ObrigacaoORM` / `RecomendacaoORM`.** Lives in `review/service.py`. Must be wrapped in a single SQLAlchemy transaction: final table insert, staging flip, `Processed*` insert — all or nothing.
-- **The claim/release lock is enforced in the service layer** as the first check of `approve` / `reject`. Never trust the frontend on this.
+- **Stage-2 ETL writes the final tables (`ObrigacaoORM` / `RecomendacaoORM`) and the `Processed*` bridge.** The review service writes only `ObrigacaoStaging` / `RecomendacaoStaging` — those rows are the **review audit trail** (one row per approve/reject), not a working buffer for the pipeline.
+- **The approve/reject transaction must be atomic**: audit-row INSERT + claim-clear UPDATE on the final row, in a single SQLAlchemy transaction.
+- **The claim/release lock is enforced in the service layer** as the first check of `approve` / `reject`. Never trust the frontend on this. Claim state lives on the final row (`ReservadoPor` / `DataReserva`).
 - **DI for DB sessions** via `deps.get_db_session`. No module-level engine instantiation. `tools.utils.get_session` is still the underlying factory.
 - **Settings via pydantic-settings**, loaded once at startup. Don't read `os.environ` scattered across modules.
 
@@ -81,13 +85,16 @@ ETL endpoints under `/api/v1/etl`, admin-only:
 - **Store only bcrypt hashes.** Never log tokens or raw passwords. Refresh token rotation required on every refresh.
 
 ### Data integrity
-- **Staging is the source of truth during review.** Never bypass it by writing to `ObrigacaoORM` / `RecomendacaoORM` directly from anywhere in `backend/`.
+- **Final tables hold the LLM extraction; the audit row holds the reviewer's verdict.** ETL writes the final row; approve/reject creates exactly one staging audit row keyed to that final row by FK (`IdObrigacao` / `IdRecomendacao`). The final row is **not** updated by approve — the LLM original stays intact; the audit row carries the reviewer's edited values for downstream consumers that want the post-review version.
+- **Pendente = no audit row.** A final row with no `*Staging` row is awaiting review; one with an audit row is approved or rejected (read `Status` on the audit row).
 - **Span matching is recomputed on every GET**, never persisted. Offsets are a display concern, not stored data.
 - **Review DTOs must match the final ORM fields exactly.** Any field present on `ObrigacaoORM` that reviewers can edit must be on `ObrigacaoReview` DTO and vice versa. Mismatches cause silent data loss on approve — guard with a schema-parity test.
 
 ### Workers
-- **ARQ tasks wrap `tools.etl.pipeline`**, never duplicate LLM logic. The task is a thin adapter that instantiates clients via factory functions and calls the pipeline.
-- **Tasks are idempotent by the `(IdProcesso, IdComposicaoPauta, IdVotoPauta)` triple.** A re-run must not create duplicate staging rows.
+- **One orchestrator task per /etl/run.** `run_full_extraction` runs NER (via `tools.utils.run_ner_pipeline_for_dataframe`) then obrigação (via `tools.etl.pipeline.enqueue_obrigacao_extraction`) then recomendação (via `tools.etl.pipeline.enqueue_recomendacao_extraction`), updating the `ExtracaoORM` row after each stage so the polling endpoint sees live progress.
+- **No per-kind tasks.** The single-kind `run_obrigacao_extraction` / `run_recomendacao_extraction` tasks were removed when the orchestrator landed — the user-facing flow is "extract decisions" not "extract obligations vs recommendations".
+- **ARQ tasks are thin adapters**, never duplicate LLM logic. They build clients via factory functions and call `tools.*`.
+- **NER stage is idempotent by `(IdProcesso, IdComposicaoPauta, IdVotoPauta)`** (see `tools.utils.process_decision_row`); stage-2 stages are idempotent via the `Processed*` bridge — re-runs skip NER rows that already have a `ProcessedObrigacao` / `ProcessedRecomendacao` entry, so they never create duplicate `Obrigacao` / `Recomendacao` rows.
 
 ### Testing
 - Tests in `backend/tests/`, mirroring `backend/app/` and `tools/`. `pytest` + `pytest-asyncio` + `httpx.AsyncClient`.
@@ -96,7 +103,7 @@ ETL endpoints under `/api/v1/etl`, admin-only:
 - Mark integration tests hitting real MSSQL with `@pytest.mark.integration`; skip by default locally.
 - Mock `AzureChatOpenAI` at the `tools.*` boundary, not inside `backend/`.
 - Shared fixtures (in `backend/tests/conftest.py`): `tmp_env` (autouse, sets dummy env vars), `in_memory_engine`, `db_session`, `mock_llm`, `frozen_time`. Use these instead of reinventing per-test setup.
-- **Mandatory coverage for the approval transaction**: (a) happy path, (b) final-table insert fails after staging flip → full rollback, (c) caller without active claim → 403, (d) stale claim → 409.
+- **Mandatory coverage for the approve/reject transaction**: (a) approve happy path inserts staging audit row + clears claim on final, (b) audit insert fails → claim still cleared? no — full rollback, claim preserved, (c) caller without active claim → 403, (d) stale claim → 409, (e) approve when an audit row already exists → 409, (f) reject inserts audit row with `Status=rejected` and notes.
 - **Mandatory coverage for auth**: token expiration, invalid signature, role mismatch, refresh rotation.
 
 ### Formatting

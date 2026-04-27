@@ -144,9 +144,16 @@ def authenticated_client(api_client, make_user):
 
 @pytest.fixture
 def make_staging_obrigacao(test_session_factory):
-    """Factory: insert an ``ObrigacaoStaging`` row with sensible defaults.
+    """Factory: insert an ``Obrigacao`` final row (and optionally an
+    ``ObrigacaoStaging`` audit row) with sensible defaults.
 
-    Returns a dict with the PK and the identity triple for easy test asserts.
+    Under the inverted-semantics model, the *pending* item under review is the
+    final-table row; the staging table is the audit trail. Default status is
+    ``"pending"`` → no audit row is created. ``"approved"`` / ``"rejected"``
+    → also creates a linked audit row.
+
+    Returns a dict where ``id`` is ``IdObrigacao`` (the final-table id) — that's
+    the id every review endpoint accepts.
     """
 
     def _factory(
@@ -159,33 +166,51 @@ def make_staging_obrigacao(test_session_factory):
         status: str = "pending",
         claimed_by: str | None = None,
         claimed_at=None,
-        original_payload: dict | None = None,
+        reviewer: str | None = None,
+        review_notes: str | None = None,
     ) -> dict:
         from tools.etl.staging import ObrigacaoStagingORM, ReviewStatus
+        from tools.models import ObrigacaoORM
 
         s = test_session_factory()
         try:
-            row = ObrigacaoStagingORM(
-                IdNerObrigacao=id_ner_obrigacao,
+            final = ObrigacaoORM(
                 IdProcesso=id_processo,
                 IdComposicaoPauta=id_composicao_pauta,
                 IdVotoPauta=id_voto_pauta,
                 DescricaoObrigacao=descricao,
                 OrgaoResponsavel="PREFEITURA MUNICIPAL DE EXEMPLO",
-                Status=ReviewStatus(status),
                 ReservadoPor=claimed_by,
                 DataReserva=claimed_at,
-                PayloadOriginal=original_payload,
             )
-            s.add(row)
+            s.add(final)
+            s.flush()
+
+            review_status = ReviewStatus(status)
+            if review_status != ReviewStatus.pending:
+                from datetime import datetime as _dt
+
+                audit = ObrigacaoStagingORM(
+                    IdObrigacao=final.IdObrigacao,
+                    IdNerObrigacao=id_ner_obrigacao,
+                    IdProcesso=id_processo,
+                    IdComposicaoPauta=id_composicao_pauta,
+                    IdVotoPauta=id_voto_pauta,
+                    DescricaoObrigacao=descricao,
+                    Status=review_status,
+                    Revisor=reviewer,
+                    DataRevisao=_dt.utcnow() if reviewer else None,
+                    ObservacoesRevisao=review_notes,
+                )
+                s.add(audit)
             s.commit()
-            s.refresh(row)
+            s.refresh(final)
             return {
-                "id": row.IdObrigacaoStaging,
-                "id_processo": row.IdProcesso,
-                "id_composicao_pauta": row.IdComposicaoPauta,
-                "id_voto_pauta": row.IdVotoPauta,
-                "descricao": row.DescricaoObrigacao,
+                "id": final.IdObrigacao,
+                "id_processo": final.IdProcesso,
+                "id_composicao_pauta": final.IdComposicaoPauta,
+                "id_voto_pauta": final.IdVotoPauta,
+                "descricao": final.DescricaoObrigacao,
             }
         finally:
             s.close()
@@ -205,31 +230,51 @@ def make_staging_recomendacao(test_session_factory):
         status: str = "pending",
         claimed_by: str | None = None,
         claimed_at=None,
+        reviewer: str | None = None,
+        review_notes: str | None = None,
     ) -> dict:
         from tools.etl.staging import RecomendacaoStagingORM, ReviewStatus
+        from tools.models import RecomendacaoORM
 
         s = test_session_factory()
         try:
-            row = RecomendacaoStagingORM(
-                IdNerRecomendacao=id_ner_recomendacao,
+            final = RecomendacaoORM(
                 IdProcesso=id_processo,
                 IdComposicaoPauta=id_composicao_pauta,
                 IdVotoPauta=id_voto_pauta,
                 DescricaoRecomendacao=descricao,
                 OrgaoResponsavel="SECRETARIA MUNICIPAL DE EXEMPLO",
-                Status=ReviewStatus(status),
                 ReservadoPor=claimed_by,
                 DataReserva=claimed_at,
             )
-            s.add(row)
+            s.add(final)
+            s.flush()
+
+            review_status = ReviewStatus(status)
+            if review_status != ReviewStatus.pending:
+                from datetime import datetime as _dt
+
+                audit = RecomendacaoStagingORM(
+                    IdRecomendacao=final.IdRecomendacao,
+                    IdNerRecomendacao=id_ner_recomendacao,
+                    IdProcesso=id_processo,
+                    IdComposicaoPauta=id_composicao_pauta,
+                    IdVotoPauta=id_voto_pauta,
+                    DescricaoRecomendacao=descricao,
+                    Status=review_status,
+                    Revisor=reviewer,
+                    DataRevisao=_dt.utcnow() if reviewer else None,
+                    ObservacoesRevisao=review_notes,
+                )
+                s.add(audit)
             s.commit()
-            s.refresh(row)
+            s.refresh(final)
             return {
-                "id": row.IdRecomendacaoStaging,
-                "id_processo": row.IdProcesso,
-                "id_composicao_pauta": row.IdComposicaoPauta,
-                "id_voto_pauta": row.IdVotoPauta,
-                "descricao": row.DescricaoRecomendacao,
+                "id": final.IdRecomendacao,
+                "id_processo": final.IdProcesso,
+                "id_composicao_pauta": final.IdComposicaoPauta,
+                "id_voto_pauta": final.IdVotoPauta,
+                "descricao": final.DescricaoRecomendacao,
             }
         finally:
             s.close()

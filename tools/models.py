@@ -61,6 +61,9 @@ class ObrigacaoORM(Base):
     EMultaCominatoriaSolidaria = Column(Boolean, default=False)
     SolidariosMultaCominatoria = Column(JSON, nullable=True)
 
+    ReservadoPor = Column(String(255), nullable=True)
+    DataReserva = Column(DateTime, nullable=True)
+
 
 class RecomendacaoORM(Base):
     __tablename__ = "Recomendacao"
@@ -77,6 +80,9 @@ class RecomendacaoORM(Base):
     OrgaoResponsavel = Column(String)
     IdOrgaoResponsavel = Column(Integer)
     Cancelado = Column(Boolean)
+
+    ReservadoPor = Column(String(255), nullable=True)
+    DataReserva = Column(DateTime, nullable=True)
 
     def __repr__(self):
         return (
@@ -225,7 +231,42 @@ class ProcessedRecomendacaoORM(Base):
     IdRecomendacao = Column(
         Integer, ForeignKey("Recomendacao.IdRecomendacao"), nullable=False
     )
-    DataProcessamento = Column(TIMESTAMP, nullable=False)
+    DataProcessamento = Column(DateTime, nullable=False)
+
+
+class ExtracaoORM(Base):
+    """One row per extraction run.
+
+    TCE/RN sessions happen on Tuesdays and Thursdays, so ``[DataInicio, DataFim]``
+    typically covers a window of a few weeks of session decisions.
+    ``DataExecucao`` records when the run was triggered.
+
+    A run progresses through three pipeline stages:
+
+      1. ``decisoes`` — NER on raw decision texts (``run_ner_pipeline_for_dataframe``).
+      2. ``obrigacoes`` — stage-2 obrigação extraction.
+      3. ``recomendacoes`` — stage-2 recomendação extraction.
+
+    The orchestrator task in ``app.worker`` updates ``Status`` / ``EtapaAtual``
+    / counters as it progresses, so the frontend can poll for live status.
+    """
+
+    __tablename__ = "Extracao"
+
+    IdExtracao = Column(Integer, primary_key=True, autoincrement=True)
+    DataInicio = Column(Date, nullable=False)
+    DataFim = Column(Date, nullable=False)
+    DataExecucao = Column(DateTime, nullable=False, server_default=func.now())
+
+    # Live job state. Defaults assume the orchestrator hasn't started yet.
+    Status = Column(String(20), nullable=False, default="queued")
+    EtapaAtual = Column(String(30), nullable=False, default="queued")
+    DecisoesProcessadas = Column(Integer, nullable=False, default=0)
+    ObrigacoesGeradas = Column(Integer, nullable=False, default=0)
+    RecomendacoesGeradas = Column(Integer, nullable=False, default=0)
+    Erros = Column(Integer, nullable=False, default=0)
+    MensagemErro = Column(Text, nullable=True)
+    JobId = Column(String(64), nullable=True)
 
 
 class UserORM(Base):

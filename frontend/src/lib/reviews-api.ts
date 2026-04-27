@@ -10,6 +10,8 @@ import {
   ReviewListPage,
   reviewListPageSchema,
   ReviewStatus,
+  ReviewTexto,
+  reviewTextoSchema,
 } from "@/schemas/review";
 
 type ListArgs = {
@@ -36,6 +38,16 @@ type IdArgs = { kind: ReviewKind; id: number };
 export async function getReview({ kind, id }: IdArgs): Promise<ReviewDetail> {
   const response = await apiClient.get(`/api/v1/reviews/${kind}/${id}`);
   return reviewDetailSchema.parse(response.data);
+}
+
+export async function getReviewTexto({
+  kind,
+  id,
+}: IdArgs): Promise<ReviewTexto> {
+  const response = await apiClient.get(
+    `/api/v1/reviews/${kind}/${id}/texto-acordao`,
+  );
+  return reviewTextoSchema.parse(response.data);
 }
 
 export async function claimReview({

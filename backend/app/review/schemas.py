@@ -30,8 +30,9 @@ SpanMatchStatusStr = Literal["exact", "fuzzy", "not_found"]
 class ObrigacaoReview(BaseModel):
     """Reviewer-editable fields, one-to-one with ``ObrigacaoORM`` (minus the
     auto-assigned ``IdObrigacao`` PK). The identity triple is accepted for
-    round-trip convenience but is ignored by the service — the staging row's
-    triple is authoritative.
+    round-trip convenience but is ignored by the service — the final row's
+    triple is authoritative. Edited values land on the ``ObrigacaoStaging``
+    audit row, never on the final ``Obrigacao`` row.
     """
 
     id_processo: Optional[int] = None
@@ -99,7 +100,7 @@ class ReviewListPage(BaseModel):
 
 
 class ReviewDetail(BaseModel):
-    id: int
+    id: int  # IdObrigacao / IdRecomendacao (final-table id)
     kind: Kind
     status: ReviewStatusStr
 
@@ -107,7 +108,11 @@ class ReviewDetail(BaseModel):
     id_composicao_pauta: int
     id_voto_pauta: int
 
-    staged: dict[str, Any]  # all mirrored fields as-is (snake_case)
+    # Currently displayed values: pending → final-row fields; approved/rejected
+    # → audit-row (reviewer-edited) fields.
+    staged: dict[str, Any]
+    # When status != pending, holds the immutable LLM extraction from the final
+    # row so reviewers can compare what they edited against the original.
     original_payload: Optional[dict[str, Any]] = None
 
     claimed_by: Optional[str] = None
@@ -115,6 +120,12 @@ class ReviewDetail(BaseModel):
     reviewer: Optional[str] = None
     reviewed_at: Optional[datetime] = None
     review_notes: Optional[str] = None
+
+
+class ReviewTexto(BaseModel):
+    """Full ``texto_acordao`` plus span-match metadata, fetched separately so
+    the detail form can render before the (slow) MSSQL text query returns.
+    """
 
     texto_acordao: Optional[str] = None
     matched_span: Optional[str] = None

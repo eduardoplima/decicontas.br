@@ -17,9 +17,10 @@ def _pascal_to_snake(name: str) -> str:
     return "".join(out)
 
 
-# Columns the DTO is not expected to carry: the auto-assigned PK.
-_OBRIGACAO_ALLOWLIST = {"IdObrigacao"}
-_RECOMENDACAO_ALLOWLIST = {"IdRecomendacao"}
+# Columns the DTO is not expected to carry: the auto-assigned PK and the
+# claim state (managed by claim/release endpoints, not by approve payloads).
+_OBRIGACAO_ALLOWLIST = {"IdObrigacao", "ReservadoPor", "DataReserva"}
+_RECOMENDACAO_ALLOWLIST = {"IdRecomendacao", "ReservadoPor", "DataReserva"}
 
 
 def test_obrigacao_review_dto_matches_orm_columns() -> None:

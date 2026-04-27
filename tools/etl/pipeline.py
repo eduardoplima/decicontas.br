@@ -1,14 +1,15 @@
-"""Stage-2 extraction orchestration that writes to the review staging tables.
+"""Stage-2 extraction orchestration that writes to the final review tables.
 
 Ports the logic previously invoked from ``notebooks/etl.ipynb`` via
-``tools.utils.run_obrigacao_pipeline`` / ``run_recomendacao_pipeline``. Unlike
-those helpers, this module writes to ``ObrigacaoStaging`` / ``RecomendacaoStaging``
-(status ``pending``) — the final tables are written only by the approval
-transaction in ``backend/app/review/service.py``.
+``tools.utils.run_obrigacao_pipeline`` / ``run_recomendacao_pipeline``. Writes
+directly to ``Obrigacao`` / ``Recomendacao`` plus the ``Processed*`` bridge
+for idempotency. Reviewers later approve/reject by inserting an audit row
+into ``ObrigacaoStaging`` / ``RecomendacaoStaging`` — see
+``backend/app/review/service.py``.
 
 Factory-only: no LLM client or DB engine is constructed at import time.
-Extractors and the staging ``Session`` are injected by the caller (ARQ worker
-in production, mocks in tests).
+Extractors and the ``Session`` are injected by the caller (ARQ worker in
+production, mocks in tests).
 """
 
 from __future__ import annotations
@@ -16,20 +17,20 @@ from __future__ import annotations
 import logging
 import os
 from dataclasses import dataclass, field
-from datetime import date
+from datetime import date, datetime
 from typing import Any, Iterable, Mapping, Sequence
 
 import pandas as pd
 from langchain_core.language_models.chat_models import BaseChatModel
-from sqlalchemy import and_, select
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from tools.etl.staging import (
-    ObrigacaoStagingORM,
-    RecomendacaoStagingORM,
-    ReviewStatus,
+from tools.models import (
+    ObrigacaoORM,
+    ProcessedObrigacaoORM,
+    ProcessedRecomendacaoORM,
+    RecomendacaoORM,
 )
-from tools.models import ProcessedObrigacaoORM, ProcessedRecomendacaoORM
 from tools.schema import Obrigacao, Recomendacao
 from tools.utils import (
     DB_DECISOES,
@@ -49,8 +50,8 @@ logger = logging.getLogger(__name__)
 class ExtractionFilters:
     """Scope of a single extraction run. All fields optional; empty = everything pending.
 
-    ``overwrite`` forces re-extraction even if a staging row already exists with
-    status ``pending`` or ``approved`` (rejected rows are always re-extractable).
+    ``overwrite`` forces re-extraction even if the NER row already has a
+    ``Processed*`` bridge entry (which would normally cause it to be skipped).
     """
 
     start_date: date | None = None
@@ -116,26 +117,6 @@ def _identity_triple(
 # ---- Obrigação -----------------------------------------------------------
 
 
-def _already_staged_obrigacao(
-    session: Session,
-    triple: tuple[int | None, int | None, int | None],
-    descricao: str,
-) -> bool:
-    id_proc, id_comp, id_voto = triple
-    stmt = select(ObrigacaoStagingORM.IdObrigacaoStaging).where(
-        and_(
-            ObrigacaoStagingORM.IdProcesso == id_proc,
-            ObrigacaoStagingORM.IdComposicaoPauta == id_comp,
-            ObrigacaoStagingORM.IdVotoPauta == id_voto,
-            ObrigacaoStagingORM.DescricaoObrigacao == descricao,
-            ObrigacaoStagingORM.Status.in_(
-                [ReviewStatus.pending, ReviewStatus.approved]
-            ),
-        )
-    )
-    return session.execute(stmt).first() is not None
-
-
 def _already_processed_obrigacao(session: Session, id_ner: int | None) -> bool:
     if id_ner is None:
         return False
@@ -145,12 +126,9 @@ def _already_processed_obrigacao(session: Session, id_ner: int | None) -> bool:
     return session.execute(stmt).first() is not None
 
 
-def _build_obrigacao_staging(
-    row: Mapping[str, Any], result: Obrigacao
-) -> ObrigacaoStagingORM:
+def _build_obrigacao_final(row: Mapping[str, Any], result: Obrigacao) -> ObrigacaoORM:
     id_proc, id_comp, id_voto = _identity_triple(row)
-    return ObrigacaoStagingORM(
-        IdNerObrigacao=safe_int(row.get("id_ner_obrigacao")),
+    return ObrigacaoORM(
         IdProcesso=id_proc,
         IdComposicaoPauta=id_comp,
         IdVotoPauta=id_voto,
@@ -168,8 +146,6 @@ def _build_obrigacao_staging(
         PeriodoMultaCominatoria=result.periodo_multa_cominatoria,
         EMultaCominatoriaSolidaria=result.e_multa_cominatoria_solidaria,
         SolidariosMultaCominatoria=result.solidarios_multa_cominatoria,
-        Status=ReviewStatus.pending,
-        PayloadOriginal=result.model_dump(mode="json"),
     )
 
 
@@ -181,7 +157,10 @@ def enqueue_obrigacao_extraction(
     session: Session,
     rows: Iterable[Mapping[str, Any]] | None = None,
 ) -> ExtractionReport:
-    """Run stage-2 obrigação extraction and write results to ``ObrigacaoStaging``.
+    """Run stage-2 obrigação extraction and write results to ``Obrigacao``.
+
+    Each new ``Obrigacao`` row is paired with a ``ProcessedObrigacao`` bridge
+    entry keyed by ``IdNerObrigacao`` so the next run skips it.
 
     ``rows`` is a test-only escape hatch; when omitted, the SQL driver runs
     against MSSQL via ``get_connection(DB_DECISOES)``.
@@ -205,10 +184,7 @@ def enqueue_obrigacao_extraction(
         triple = _identity_triple(row)
         id_ner = safe_int(row.get("id_ner_obrigacao"))
 
-        if not filters.overwrite and (
-            _already_processed_obrigacao(session, id_ner)
-            or _already_staged_obrigacao(session, triple, descricao)
-        ):
+        if not filters.overwrite and _already_processed_obrigacao(session, id_ner):
             report.skipped += 1
             continue
 
@@ -224,7 +200,17 @@ def enqueue_obrigacao_extraction(
             logger.exception("Obrigacao extraction failed for %s", triple)
             continue
 
-        session.add(_build_obrigacao_staging(row, result))
+        final = _build_obrigacao_final(row, result)
+        session.add(final)
+        session.flush()
+        if id_ner is not None:
+            session.add(
+                ProcessedObrigacaoORM(
+                    IdNerObrigacao=id_ner,
+                    IdObrigacao=final.IdObrigacao,
+                    DataProcessamento=datetime.utcnow(),
+                )
+            )
         session.commit()
         report.enqueued += 1
 
@@ -232,26 +218,6 @@ def enqueue_obrigacao_extraction(
 
 
 # ---- Recomendação --------------------------------------------------------
-
-
-def _already_staged_recomendacao(
-    session: Session,
-    triple: tuple[int | None, int | None, int | None],
-    descricao: str,
-) -> bool:
-    id_proc, id_comp, id_voto = triple
-    stmt = select(RecomendacaoStagingORM.IdRecomendacaoStaging).where(
-        and_(
-            RecomendacaoStagingORM.IdProcesso == id_proc,
-            RecomendacaoStagingORM.IdComposicaoPauta == id_comp,
-            RecomendacaoStagingORM.IdVotoPauta == id_voto,
-            RecomendacaoStagingORM.DescricaoRecomendacao == descricao,
-            RecomendacaoStagingORM.Status.in_(
-                [ReviewStatus.pending, ReviewStatus.approved]
-            ),
-        )
-    )
-    return session.execute(stmt).first() is not None
 
 
 def _already_processed_recomendacao(session: Session, id_ner: int | None) -> bool:
@@ -263,12 +229,11 @@ def _already_processed_recomendacao(session: Session, id_ner: int | None) -> boo
     return session.execute(stmt).first() is not None
 
 
-def _build_recomendacao_staging(
+def _build_recomendacao_final(
     row: Mapping[str, Any], result: Recomendacao
-) -> RecomendacaoStagingORM:
+) -> RecomendacaoORM:
     id_proc, id_comp, id_voto = _identity_triple(row)
-    return RecomendacaoStagingORM(
-        IdNerRecomendacao=safe_int(row.get("id_ner_recomendacao")),
+    return RecomendacaoORM(
         IdProcesso=id_proc,
         IdComposicaoPauta=id_comp,
         IdVotoPauta=id_voto,
@@ -280,8 +245,6 @@ def _build_recomendacao_staging(
         OrgaoResponsavel=result.orgao_responsavel_recomendacao,
         IdOrgaoResponsavel=safe_int(row.get("id_orgao_responsavel")),
         Cancelado=False,
-        Status=ReviewStatus.pending,
-        PayloadOriginal=result.model_dump(mode="json"),
     )
 
 
@@ -293,7 +256,11 @@ def enqueue_recomendacao_extraction(
     session: Session,
     rows: Iterable[Mapping[str, Any]] | None = None,
 ) -> ExtractionReport:
-    """Run stage-2 recomendação extraction and write results to ``RecomendacaoStaging``."""
+    """Run stage-2 recomendação extraction and write results to ``Recomendacao``.
+
+    Each new ``Recomendacao`` row is paired with a ``ProcessedRecomendacao``
+    bridge entry keyed by ``IdNerRecomendacao``.
+    """
     report = ExtractionReport()
     iterable = (
         _fetch_driver_rows("recommendations_nonprocessed.sql", filters)
@@ -313,10 +280,7 @@ def enqueue_recomendacao_extraction(
         triple = _identity_triple(row)
         id_ner = safe_int(row.get("id_ner_recomendacao"))
 
-        if not filters.overwrite and (
-            _already_processed_recomendacao(session, id_ner)
-            or _already_staged_recomendacao(session, triple, descricao)
-        ):
+        if not filters.overwrite and _already_processed_recomendacao(session, id_ner):
             report.skipped += 1
             continue
 
@@ -334,7 +298,17 @@ def enqueue_recomendacao_extraction(
             logger.exception("Recomendacao extraction failed for %s", triple)
             continue
 
-        session.add(_build_recomendacao_staging(row, result))
+        final = _build_recomendacao_final(row, result)
+        session.add(final)
+        session.flush()
+        if id_ner is not None:
+            session.add(
+                ProcessedRecomendacaoORM(
+                    IdNerRecomendacao=id_ner,
+                    IdRecomendacao=final.IdRecomendacao,
+                    DataProcessamento=datetime.utcnow(),
+                )
+            )
         session.commit()
         report.enqueued += 1
 

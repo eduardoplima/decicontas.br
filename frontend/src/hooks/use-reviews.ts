@@ -7,6 +7,7 @@ import {
   approveRecomendacao,
   claimReview,
   getReview,
+  getReviewTexto,
   listReviews,
   rejectReview,
   releaseReview,
@@ -31,6 +32,8 @@ export const reviewKeys = {
   }) => ["reviews", "list", args] as const,
   detail: (kind: ReviewKind, id: number) =>
     ["reviews", "detail", kind, id] as const,
+  texto: (kind: ReviewKind, id: number) =>
+    ["reviews", "texto", kind, id] as const,
 };
 
 type ListArgs = {
@@ -58,6 +61,17 @@ export function useReview({ kind, id }: IdArgs) {
   return useQuery({
     queryKey: reviewKeys.detail(kind, id),
     queryFn: () => getReview({ kind, id }),
+  });
+}
+
+export function useReviewTexto({ kind, id }: IdArgs) {
+  return useQuery({
+    queryKey: reviewKeys.texto(kind, id),
+    queryFn: () => getReviewTexto({ kind, id }),
+    // Texto can be slow (MSSQL); don't refetch automatically.
+    staleTime: 5 * 60_000,
+    gcTime: 10 * 60_000,
+    retry: 1,
   });
 }
 

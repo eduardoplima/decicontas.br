@@ -41,13 +41,13 @@ Pipeline that converts free-text TCE/RN decisions (`texto_acordao`) into structu
 **`tools/utils.py` — pipelines and DB glue:**
 - `get_connection(db)` / `get_session(db)` — fresh MSSQL engine per DB. Pipelines are cross-database: metadata from `DB_PROCESSOS`, NER/final/staging tables in `DB_DECISOES`, unit lookups in `DB_SIAI`.
 - `run_ner_pipeline_for_dataframe()` — stage 1. `overwrite=False` skips rows with an existing `NERDecisaoORM` for the `(process, composition, vote)` triple.
-- `run_obrigacao_pipeline()` / `run_recomendacao_pipeline()` — stage 2. Resolve unit (fuzzy match against `sql/units.sql`), pick deadline (`get_deadline_from_citations`), prompt the extractor, and **write to the staging tables** (not directly to `Obrigacao` / `Recomendacao`). The approval transaction in `backend/app/review/service.py` is the only writer to the final tables.
+- `run_obrigacao_pipeline()` / `run_recomendacao_pipeline()` — stage 2. Resolve unit (fuzzy match against `sql/units.sql`), pick deadline (`get_deadline_from_citations`), prompt the extractor, and **write to the final tables** (`Obrigacao` / `Recomendacao`) plus the `Processed*` bridge for idempotency. The review service in `backend/app/review/service.py` writes only the `*Staging` audit rows on approve/reject; it never modifies the final rows.
 - SQL under `sql/` is read from disk and `.format(...)`-ed with query parameters. Inputs come from trusted internal lists — keep it that way.
 
 ## SQL files
 
 - `sql/decisions_full_text.sql` — fetches full decision context (including `texto_acordao`, responsável, órgão, sessão) from `processo.dbo.vw_ia_votos_acordaos_decisoes` joined with `Processos`, `Orgaos`, `Pro_ProcessosResponsavelDespesa`, `GenPessoa`. **Canonical source of `texto_acordao`** for both stage-2 extraction and the review UI — do not reconstruct the text from any other view.
-- `sql/obligations_nonprocessed.sql` / `sql/recommendations_nonprocessed.sql` — driver queries for the stage-2 pipelines. Their `NOT EXISTS` clauses must exclude rows already in `ObrigacaoStaging` / `RecomendacaoStaging` with status in (`pending`, `approved`), otherwise the pipeline re-queues mid-review rows.
+- `sql/obligations_nonprocessed.sql` / `sql/recommendations_nonprocessed.sql` — driver queries for the stage-2 pipelines. Their `NOT EXISTS` clauses must exclude rows already linked via `ProcessedObrigacao` / `ProcessedRecomendacao` (the idempotency bridge), otherwise the pipeline re-extracts decisions that already produced final rows.
 - Other SQL files (`decisions_base.sql`, `citations_by_process*.sql`, `responsible_unit.sql`, `units.sql`, `augmented_decisions.sql`) are unchanged.
 
 ## Experiments and outputs
