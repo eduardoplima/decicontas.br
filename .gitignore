@@ -188,3 +188,7 @@ dataset/decisoes_raw_2020_062025.json
 node_modules/
 .next/
 .env.local
+
+# Data files
+*.xlsx
+*.csv
