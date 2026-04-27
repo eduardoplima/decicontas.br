@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(uv run *)",
+      "Bash(git push *)",
+      "Bash(npx --no -p typescript tsc --noEmit)"
+    ]
+  }
+}
