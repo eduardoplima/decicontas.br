@@ -1,0 +1,8 @@
+metric,value
+groups_total,794
+groups_decided_>=0.95,567
+groups_below_threshold,227
+token_changes,4199
+decision_accept,183
+decision_reject,3238
+decision_custom,778

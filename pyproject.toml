@@ -1,0 +1,54 @@
+[project]
+name = "decicontas-br"
+version = "1.0.0"
+description = "DeciContas.br — Brazilian audit-court NER dataset and dissertation companion (research code, notebooks, and experiment artefacts)."
+requires-python = ">=3.12,<3.13"
+readme = "README.md"
+dependencies = [
+    # Core
+    "pydantic>=2.11",
+    "python-dotenv>=1.0",
+    "rapidfuzz>=3.13",
+    "pandas>=2.2",
+    "numpy>=1.26",
+    "scikit-learn>=1.6",
+    # NER / supervised
+    "torch>=2.2",
+    "transformers>=4.40",
+    "seqeval>=1.2",
+    "spacy>=3.8",
+    "cleanlab>=2.7",
+    "datasets>=2.20",
+    # Plotting + reports
+    "matplotlib>=3.10",
+    "seaborn>=0.13",
+    "tabulate>=0.9",
+    # Notebooks
+    "jupyter>=1.0",
+    "ipykernel>=6.29",
+    "tqdm>=4.66",
+    # LLM evaluation (optional but used by ner_llm.ipynb)
+    "langchain-core>=0.3",
+    "langchain>=0.3",
+    "langchain-openai>=0.3",
+    "openai>=1.91",
+    # Stats / significance
+    "scipy>=1.13",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.7",
+    "pytest>=8.0",
+    "pytest-mock>=3.12",
+]
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["research", "research.release", "research.kfold"]
+
+[tool.ruff]
+line-length = 100

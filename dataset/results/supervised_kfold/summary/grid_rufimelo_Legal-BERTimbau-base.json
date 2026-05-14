@@ -1,0 +1,96 @@
+{
+  "model": "rufimelo/Legal-BERTimbau-base",
+  "rows": [
+    {
+      "config_id": "lr=5e-05_model_name=rufimelo-Legal-BERTimbau-base_warmup_ratio=0",
+      "config": {
+        "model_name": "rufimelo/Legal-BERTimbau-base",
+        "lr": 5e-05,
+        "warmup_ratio": 0.0
+      },
+      "span_f1": 0.6762589928057553,
+      "span_precision": 0.8703703703703703,
+      "span_recall": 0.5529411764705883,
+      "token_f1": 0.7117659265407761,
+      "elapsed_seconds": 709.5235369205475
+    },
+    {
+      "config_id": "lr=3e-05_model_name=rufimelo-Legal-BERTimbau-base_warmup_ratio=0",
+      "config": {
+        "model_name": "rufimelo/Legal-BERTimbau-base",
+        "lr": 3e-05,
+        "warmup_ratio": 0.0
+      },
+      "span_f1": 0.3461538461538461,
+      "span_precision": 0.9473684210526315,
+      "span_recall": 0.21176470588235294,
+      "token_f1": 0.4250926416093171,
+      "elapsed_seconds": 709.1616339683533
+    },
+    {
+      "config_id": "lr=2e-05_model_name=rufimelo-Legal-BERTimbau-base_warmup_ratio=0",
+      "config": {
+        "model_name": "rufimelo/Legal-BERTimbau-base",
+        "lr": 2e-05,
+        "warmup_ratio": 0.0
+      },
+      "span_f1": 0.24742268041237114,
+      "span_precision": 1.0,
+      "span_recall": 0.1411764705882353,
+      "token_f1": 0.3358992302309307,
+      "elapsed_seconds": 764.6888089179993
+    },
+    {
+      "config_id": "lr=2e-05_model_name=rufimelo-Legal-BERTimbau-base_warmup_ratio=0.1",
+      "config": {
+        "model_name": "rufimelo/Legal-BERTimbau-base",
+        "lr": 2e-05,
+        "warmup_ratio": 0.1
+      },
+      "span_f1": 0.0,
+      "span_precision": 0.0,
+      "span_recall": 0.0,
+      "token_f1": 0.0,
+      "elapsed_seconds": 698.5463538169861
+    },
+    {
+      "config_id": "lr=3e-05_model_name=rufimelo-Legal-BERTimbau-base_warmup_ratio=0.1",
+      "config": {
+        "model_name": "rufimelo/Legal-BERTimbau-base",
+        "lr": 3e-05,
+        "warmup_ratio": 0.1
+      },
+      "span_f1": 0.0,
+      "span_precision": 0.0,
+      "span_recall": 0.0,
+      "token_f1": 0.0,
+      "elapsed_seconds": 709.6943249702454
+    },
+    {
+      "config_id": "lr=5e-05_model_name=rufimelo-Legal-BERTimbau-base_warmup_ratio=0.1",
+      "config": {
+        "model_name": "rufimelo/Legal-BERTimbau-base",
+        "lr": 5e-05,
+        "warmup_ratio": 0.1
+      },
+      "span_f1": 0.0,
+      "span_precision": 0.0,
+      "span_recall": 0.0,
+      "token_f1": 0.0,
+      "elapsed_seconds": 718.7327978610992
+    }
+  ],
+  "best": {
+    "config_id": "lr=5e-05_model_name=rufimelo-Legal-BERTimbau-base_warmup_ratio=0",
+    "config": {
+      "model_name": "rufimelo/Legal-BERTimbau-base",
+      "lr": 5e-05,
+      "warmup_ratio": 0.0
+    },
+    "span_f1": 0.6762589928057553,
+    "span_precision": 0.8703703703703703,
+    "span_recall": 0.5529411764705883,
+    "token_f1": 0.7117659265407761,
+    "elapsed_seconds": 709.5235369205475
+  }
+}

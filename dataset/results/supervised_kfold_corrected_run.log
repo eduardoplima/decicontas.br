@@ -1,0 +1,116 @@
+
+=== Grid search: bilstm-crf (8 configs) ===
+  [grid] dropout=0.3_hidden_dim=128_lr=0.001
+          dev span F1 = 0.6197  (346s)
+  [grid] dropout=0.3_hidden_dim=128_lr=0.003
+          dev span F1 = 0.5652  (407s)
+  [grid] dropout=0.5_hidden_dim=128_lr=0.001
+          dev span F1 = 0.6933  (472s)
+  [grid] dropout=0.5_hidden_dim=128_lr=0.003
+          dev span F1 = 0.7006  (386s)
+  [grid] dropout=0.3_hidden_dim=256_lr=0.001
+          dev span F1 = 0.6232  (327s)
+  [grid] dropout=0.3_hidden_dim=256_lr=0.003
+          dev span F1 = 0.7134  (346s)
+  [grid] dropout=0.5_hidden_dim=256_lr=0.001
+          dev span F1 = 0.7000  (450s)
+  [grid] dropout=0.5_hidden_dim=256_lr=0.003
+          dev span F1 = 0.6914  (491s)
+  best: dropout=0.3_hidden_dim=256_lr=0.003  dev span F1 = 0.7134
+
+=== 5-fold CV: bilstm-crf with dropout=0.3_hidden_dim=256_lr=0.003 ===
+  [cv] fold 1/5
+        fold 1 span F1 = 0.5690  (404s)
+  [cv] fold 2/5
+        fold 2 span F1 = 0.6023  (467s)
+  [cv] fold 3/5
+        fold 3 span F1 = 0.5622  (632s)
+  [cv] fold 4/5
+        fold 4 span F1 = 0.6761  (406s)
+  [cv] fold 5/5
+        fold 5 span F1 = 0.5455  (338s)
+  CV span F1 = 0.5910 ± 0.0518
+
+=== Grid search: neuralmind/bert-base-portuguese-cased (6 configs) ===
+  [grid] lr=2e-05_model_name=neuralmind-bert-base-portuguese-cased_warmup_ratio=0
+          dev span F1 = 0.2828  (823s)
+  [grid] lr=2e-05_model_name=neuralmind-bert-base-portuguese-cased_warmup_ratio=0.1
+          dev span F1 = 0.2292  (925s)
+  [grid] lr=3e-05_model_name=neuralmind-bert-base-portuguese-cased_warmup_ratio=0
+          dev span F1 = 0.7050  (777s)
+  [grid] lr=3e-05_model_name=neuralmind-bert-base-portuguese-cased_warmup_ratio=0.1
+          dev span F1 = 0.7286  (791s)
+  [grid] lr=5e-05_model_name=neuralmind-bert-base-portuguese-cased_warmup_ratio=0
+          dev span F1 = 0.7273  (798s)
+  [grid] lr=5e-05_model_name=neuralmind-bert-base-portuguese-cased_warmup_ratio=0.1
+          dev span F1 = 0.7808  (747s)
+  best: lr=5e-05_model_name=neuralmind-bert-base-portuguese-cased_warmup_ratio=0.1  dev span F1 = 0.7808
+
+=== 5-fold CV: neuralmind/bert-base-portuguese-cased with lr=5e-05_model_name=neuralmind-bert-base-portuguese-cased_warmup_ratio=0.1 ===
+  [cv] fold 1/5
+        fold 1 span F1 = 0.6984  (739s)
+  [cv] fold 2/5
+        fold 2 span F1 = 0.7035  (829s)
+  [cv] fold 3/5
+        fold 3 span F1 = 0.6456  (718s)
+  [cv] fold 4/5
+        fold 4 span F1 = 0.6071  (825s)
+  [cv] fold 5/5
+        fold 5 span F1 = 0.7218  (810s)
+  CV span F1 = 0.6753 ± 0.0475
+
+=== Grid search: neuralmind/bert-large-portuguese-cased (6 configs) ===
+  [grid] lr=2e-05_model_name=neuralmind-bert-large-portuguese-cased_warmup_ratio=0
+          dev span F1 = 0.7600  (2588s)
+  [grid] lr=2e-05_model_name=neuralmind-bert-large-portuguese-cased_warmup_ratio=0.1
+          dev span F1 = 0.7838  (2536s)
+  [grid] lr=3e-05_model_name=neuralmind-bert-large-portuguese-cased_warmup_ratio=0
+          dev span F1 = 0.7296  (2580s)
+  [grid] lr=3e-05_model_name=neuralmind-bert-large-portuguese-cased_warmup_ratio=0.1
+          dev span F1 = 0.7485  (2382s)
+  [grid] lr=5e-05_model_name=neuralmind-bert-large-portuguese-cased_warmup_ratio=0
+          dev span F1 = 0.6946  (2359s)
+  [grid] lr=5e-05_model_name=neuralmind-bert-large-portuguese-cased_warmup_ratio=0.1
+          dev span F1 = 0.6977  (2242s)
+  best: lr=2e-05_model_name=neuralmind-bert-large-portuguese-cased_warmup_ratio=0.1  dev span F1 = 0.7838
+
+=== 5-fold CV: neuralmind/bert-large-portuguese-cased with lr=2e-05_model_name=neuralmind-bert-large-portuguese-cased_warmup_ratio=0.1 ===
+  [cv] fold 1/5
+        fold 1 span F1 = 0.2857  (2377s)
+  [cv] fold 2/5
+        fold 2 span F1 = 0.7191  (2152s)
+  [cv] fold 3/5
+        fold 3 span F1 = 0.5652  (2214s)
+  [cv] fold 4/5
+        fold 4 span F1 = 0.6387  (2244s)
+  [cv] fold 5/5
+        fold 5 span F1 = 0.6475  (2141s)
+  CV span F1 = 0.5712 ± 0.1687
+
+=== Grid search: rufimelo/Legal-BERTimbau-base (6 configs) ===
+  [grid] lr=2e-05_model_name=rufimelo-Legal-BERTimbau-base_warmup_ratio=0
+          dev span F1 = 0.0233  (782s)
+  [grid] lr=2e-05_model_name=rufimelo-Legal-BERTimbau-base_warmup_ratio=0.1
+          dev span F1 = 0.0000  (816s)
+  [grid] lr=3e-05_model_name=rufimelo-Legal-BERTimbau-base_warmup_ratio=0
+          dev span F1 = 0.0460  (744s)
+  [grid] lr=3e-05_model_name=rufimelo-Legal-BERTimbau-base_warmup_ratio=0.1
+          dev span F1 = 0.3810  (838s)
+  [grid] lr=5e-05_model_name=rufimelo-Legal-BERTimbau-base_warmup_ratio=0
+          dev span F1 = 0.3889  (743s)
+  [grid] lr=5e-05_model_name=rufimelo-Legal-BERTimbau-base_warmup_ratio=0.1
+          dev span F1 = 0.6522  (736s)
+  best: lr=5e-05_model_name=rufimelo-Legal-BERTimbau-base_warmup_ratio=0.1  dev span F1 = 0.6522
+
+=== 5-fold CV: rufimelo/Legal-BERTimbau-base with lr=5e-05_model_name=rufimelo-Legal-BERTimbau-base_warmup_ratio=0.1 ===
+  [cv] fold 1/5
+        fold 1 span F1 = 0.3564  (734s)
+  [cv] fold 2/5
+        fold 2 span F1 = 0.6744  (855s)
+  [cv] fold 3/5
+        fold 3 span F1 = 0.5634  (760s)
+  [cv] fold 4/5
+        fold 4 span F1 = 0.6984  (796s)
+  [cv] fold 5/5
+        fold 5 span F1 = 0.6500  (900s)
+  CV span F1 = 0.5885 ± 0.1394
