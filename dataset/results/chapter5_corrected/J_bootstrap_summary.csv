@@ -1,0 +1,5 @@
+metric,value
+n_total_pairs,91
+n_significant_5pct,54
+smallest_significant_abs_diff,0.03636858879090947
+smallest_significant_pair,GPT-5.4-nano vs Gemini-2.5-flash

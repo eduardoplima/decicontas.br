@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+build/
+dist/
+.eggs/
+
+# venv / uv
+.venv/
+venv/
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*~
+
+# Local config
+.env
+.env.local
+
+# wandb (regenerable; off by default)
+wandb/
+
+# transient release artefacts that bloat git status
+dataset/release/decicontas-861/brat/
+dataset/release/decicontas-861-corrected/brat/
+
+# transient training artefacts
+ner_fold_*/

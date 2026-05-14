@@ -1,0 +1,6 @@
+|   Falso positivo (entidade inexistente) |   Falso negativo (entidade não detectada) |   Fronteira incorreta (span parcial) |   Tipo errado (confusão entre categorias) |   Outro |   Total |
+|----------------------------------------:|------------------------------------------:|-------------------------------------:|------------------------------------------:|--------:|--------:|
+|                                      34 |                                        14 |                                  168 |                                         6 |       2 |     224 |
+|                                      59 |                                        19 |                                   94 |                                         0 |       0 |     172 |
+|                                      35 |                                         3 |                                   28 |                                         0 |       0 |      66 |
+|                                      19 |                                         1 |                                   53 |                                         0 |       0 |      73 |
