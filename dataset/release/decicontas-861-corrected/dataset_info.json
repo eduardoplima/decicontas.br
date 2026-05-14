@@ -1,0 +1,88 @@
+{
+  "description": "DeciContas — Brazilian legal NER dataset of audit-court rulings (TCE/RN). Four entity classes: MULTA (fines), OBRIGACAO (obligations), RESSARCIMENTO (refunds), RECOMENDACAO (recommendations). 861 documents (after filtering 5 few-shot leakage cases from the original 866-doc Label Studio export).",
+  "license": "see dataset/release/README.md",
+  "features": {
+    "id": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "tokens": {
+      "feature": {
+        "dtype": "string",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "ner_tags": {
+      "feature": {
+        "dtype": "string",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "ner_tag_ids": {
+      "feature": {
+        "names": [
+          "O",
+          "B-MULTA",
+          "I-MULTA",
+          "B-OBRIGACAO",
+          "I-OBRIGACAO",
+          "B-RESSARCIMENTO",
+          "I-RESSARCIMENTO",
+          "B-RECOMENDACAO",
+          "I-RECOMENDACAO"
+        ],
+        "_type": "ClassLabel"
+      },
+      "_type": "Sequence"
+    },
+    "token_offsets": {
+      "feature": {
+        "feature": {
+          "dtype": "int32",
+          "_type": "Value"
+        },
+        "_type": "Sequence"
+      },
+      "_type": "Sequence"
+    },
+    "text": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "spans": [
+      {
+        "start_char": {
+          "dtype": "int32",
+          "_type": "Value"
+        },
+        "end_char": {
+          "dtype": "int32",
+          "_type": "Value"
+        },
+        "label": {
+          "dtype": "string",
+          "_type": "Value"
+        }
+      }
+    ]
+  },
+  "label_names": [
+    "O",
+    "B-MULTA",
+    "I-MULTA",
+    "B-OBRIGACAO",
+    "I-OBRIGACAO",
+    "B-RESSARCIMENTO",
+    "I-RESSARCIMENTO",
+    "B-RECOMENDACAO",
+    "I-RECOMENDACAO"
+  ],
+  "entity_types": [
+    "MULTA",
+    "OBRIGACAO",
+    "RESSARCIMENTO",
+    "RECOMENDACAO"
+  ]
+}

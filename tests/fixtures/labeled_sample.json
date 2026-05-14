@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "data": {
+      "text": "Acórdão nº 0001/2024 - TCE/RN. ACORDAM os Conselheiros aplicar MULTA no valor de R$ 500,00 (quinhentos reais) ao Sr. FULANO DE TAL, CPF 000.000.000-00, nos termos do art. 107, II, da LCE nº 464/2012."
+    },
+    "annotations": [
+      {
+        "id": 10,
+        "result": [
+          {
+            "value": {
+              "start": 63,
+              "end": 120,
+              "text": "MULTA no valor de R$ 500,00 (quinhentos reais) ao Sr. FULANO DE TAL",
+              "labels": ["MULTA_FIXA"]
+            },
+            "from_name": "label",
+            "to_name": "text",
+            "type": "labels"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "data": {
+      "text": "Acórdão nº 0002/2024 - TCE/RN. Determinar ao IPERN que adote as correções necessárias no prazo de 60 (sessenta) dias, sob pena de multa cominatória diária."
+    },
+    "annotations": [
+      {
+        "id": 20,
+        "result": [
+          {
+            "value": {
+              "start": 31,
+              "end": 150,
+              "text": "Determinar ao IPERN que adote as correções necessárias no prazo de 60 (sessenta) dias, sob pena de multa cominatória diária.",
+              "labels": ["OBRIGACAO_MULTA"]
+            },
+            "from_name": "label",
+            "to_name": "text",
+            "type": "labels"
+          }
+        ]
+      }
+    ]
+  }
+]

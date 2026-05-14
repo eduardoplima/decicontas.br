@@ -1,0 +1,26 @@
+\begin{table}[ht]
+    \centering
+    \caption{95\% confidence intervals via \textit{bootstrap} for the Span F1 of every evaluated model (10,000 document-level resamples, IoU $\geq$ 0.5).}
+    \label{tab:bootstrap_ic}
+    \small
+    \begin{tabular}{lcc}
+        \hline
+        \textbf{Model} & \textbf{Span F1} & \textbf{95\% CI} \\
+        \hline
+        GPT-4 Turbo                         & 0.7341 & [0.690;\ 0.776] \\
+        GPT-5.4-mini                        & 0.7310 & [0.685;\ 0.776] \\
+        GPT-5.4-nano                        & 0.7289 & [0.686;\ 0.771] \\
+        GPT-4o                              & 0.7237 & [0.679;\ 0.767] \\
+        GPT-4.1-mini                        & 0.7108 & [0.667;\ 0.755] \\
+        GPT-3.5                             & 0.7104 & [0.664;\ 0.757] \\
+        GPT-4.1                             & 0.7052 & [0.663;\ 0.747] \\
+        BERTimbau-base                      & 0.6896 & [0.639;\ 0.738] \\
+        Gemini-2.5-flash                    & 0.6867 & [0.644;\ 0.728] \\
+        DeepSeek-V3                         & 0.6459 & [0.600;\ 0.690] \\
+        Legal-BERTimbau-base                & 0.6051 & [0.545;\ 0.661] \\
+        BERTimbau-large                     & 0.6049 & [0.542;\ 0.663] \\
+        BiLSTM-CRF                          & 0.5926 & [0.528;\ 0.656] \\
+        GPT-4.1-nano                        & 0.4172 & [0.374;\ 0.460] \\
+        \hline
+    \end{tabular}
+\end{table}

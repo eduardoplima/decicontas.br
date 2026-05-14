@@ -1,0 +1,96 @@
+{
+  "model": "neuralmind/bert-large-portuguese-cased",
+  "rows": [
+    {
+      "config_id": "lr=2e-05_model_name=neuralmind-bert-large-portuguese-cased_warmup_ratio=0.1",
+      "config": {
+        "model_name": "neuralmind/bert-large-portuguese-cased",
+        "lr": 2e-05,
+        "warmup_ratio": 0.1
+      },
+      "span_f1": 0.7837837837837838,
+      "span_precision": 0.9206349206349206,
+      "span_recall": 0.6823529411764706,
+      "token_f1": 0.7933632115953084,
+      "elapsed_seconds": 2535.61363363266
+    },
+    {
+      "config_id": "lr=2e-05_model_name=neuralmind-bert-large-portuguese-cased_warmup_ratio=0",
+      "config": {
+        "model_name": "neuralmind/bert-large-portuguese-cased",
+        "lr": 2e-05,
+        "warmup_ratio": 0.0
+      },
+      "span_f1": 0.76,
+      "span_precision": 0.8769230769230769,
+      "span_recall": 0.6705882352941176,
+      "token_f1": 0.784575239199768,
+      "elapsed_seconds": 2588.318293094635
+    },
+    {
+      "config_id": "lr=3e-05_model_name=neuralmind-bert-large-portuguese-cased_warmup_ratio=0.1",
+      "config": {
+        "model_name": "neuralmind/bert-large-portuguese-cased",
+        "lr": 3e-05,
+        "warmup_ratio": 0.1
+      },
+      "span_f1": 0.7484662576687117,
+      "span_precision": 0.782051282051282,
+      "span_recall": 0.7176470588235294,
+      "token_f1": 0.8124713434204494,
+      "elapsed_seconds": 2382.3838319778442
+    },
+    {
+      "config_id": "lr=3e-05_model_name=neuralmind-bert-large-portuguese-cased_warmup_ratio=0",
+      "config": {
+        "model_name": "neuralmind/bert-large-portuguese-cased",
+        "lr": 3e-05,
+        "warmup_ratio": 0.0
+      },
+      "span_f1": 0.7295597484276729,
+      "span_precision": 0.7837837837837838,
+      "span_recall": 0.6823529411764706,
+      "token_f1": 0.7942691263226894,
+      "elapsed_seconds": 2580.260960817337
+    },
+    {
+      "config_id": "lr=5e-05_model_name=neuralmind-bert-large-portuguese-cased_warmup_ratio=0.1",
+      "config": {
+        "model_name": "neuralmind/bert-large-portuguese-cased",
+        "lr": 5e-05,
+        "warmup_ratio": 0.1
+      },
+      "span_f1": 0.6976744186046512,
+      "span_precision": 0.6896551724137931,
+      "span_recall": 0.7058823529411765,
+      "token_f1": 0.8047698280643372,
+      "elapsed_seconds": 2242.2117381095886
+    },
+    {
+      "config_id": "lr=5e-05_model_name=neuralmind-bert-large-portuguese-cased_warmup_ratio=0",
+      "config": {
+        "model_name": "neuralmind/bert-large-portuguese-cased",
+        "lr": 5e-05,
+        "warmup_ratio": 0.0
+      },
+      "span_f1": 0.6946107784431137,
+      "span_precision": 0.7073170731707317,
+      "span_recall": 0.6823529411764706,
+      "token_f1": 0.7947105603846866,
+      "elapsed_seconds": 2358.693348169327
+    }
+  ],
+  "best": {
+    "config_id": "lr=2e-05_model_name=neuralmind-bert-large-portuguese-cased_warmup_ratio=0.1",
+    "config": {
+      "model_name": "neuralmind/bert-large-portuguese-cased",
+      "lr": 2e-05,
+      "warmup_ratio": 0.1
+    },
+    "span_f1": 0.7837837837837838,
+    "span_precision": 0.9206349206349206,
+    "span_recall": 0.6823529411764706,
+    "token_f1": 0.7933632115953084,
+    "elapsed_seconds": 2535.61363363266
+  }
+}
