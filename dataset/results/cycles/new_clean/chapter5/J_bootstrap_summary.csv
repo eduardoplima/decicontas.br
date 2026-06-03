@@ -1,0 +1,11 @@
+metric,value
+resampling_unit,document
+n_docs_resampled,861
+n_total_pairs,78
+n_significant_5pct_uncorrected,56
+highlighted_family_size,12
+highlighted_n_sig_uncorrected,9
+highlighted_n_sig_holm,9
+highlighted_n_sig_bonferroni,9
+smallest_significant_abs_diff,0.030599881277950196
+smallest_significant_pair,GPT-4.1 vs GPT-5.1

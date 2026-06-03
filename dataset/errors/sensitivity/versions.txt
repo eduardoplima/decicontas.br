@@ -1,0 +1,8 @@
+python=3.12.12
+platform=macOS-15.5-arm64-arm-64bit
+seed=43
+numpy=2.4.4
+sklearn=1.8.0
+torch=2.12.0
+transformers=5.8.1
+cleanlab=2.9.0

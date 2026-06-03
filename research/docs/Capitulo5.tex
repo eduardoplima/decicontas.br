@@ -1,0 +1,297 @@
+\chapter{Resultados Preliminares}
+\label{cap:cap5}
+
+Este capítulo apresenta os resultados obtidos para a etapa de Reconhecimento de Entidades Nomeadas sobre o \textit{dataset} \texttt{decicontas.br}, primeira fase do \textit{pipeline} descrito no Capítulo~\ref{cap:cap4}. Os experimentos foram conduzidos conforme o protocolo descrito naquele capítulo e organizam-se em três eixos. O primeiro, apresentado na Seção~\ref{sec:llm_vs_supervisionados}, compara modelos de linguagem de grande porte (LLMs) avaliados em regime \textit{few-shot} a \textit{baselines} supervisionados ajustados ao domínio (associado à \textbf{QP3} da revisão sistemática). O segundo, na Seção~\ref{sec:variaveis_implementacao}, examina o impacto de variáveis de implementação tipicamente subexploradas na literatura --- método de saída estruturada e técnica de \textit{prompting}. O terceiro, na Seção~\ref{sec:analise_erros}, caracteriza qualitativamente os erros remanescentes do melhor modelo. A Seção~\ref{sec:limitacoes_resultados} consolida as limitações da avaliação. O código-fonte utilizado em todos os experimentos está disponível publicamente em \url{https://github.com/eduardoplima/decicontas.br}.
+
+Para todas as comparações foi adotado um teste de \textit{bootstrap} pareado no nível do documento ($B = 10\,000$ reamostragens). Quando uma diferença é apresentada como ``significativa'', o critério é o intervalo de confiança bilateral de 95\% para o $\Delta$ não cruzar zero (equivalente a $p < 0{,}05$).
+
+% ============================================================
+\section{LLMs \textit{few-shot} versus modelos supervisionados ajustados ao domínio}
+\label{sec:llm_vs_supervisionados}
+% ============================================================
+
+Esta seção apresenta a comparação central da etapa de REN: nove LLMs avaliados em regime \textit{few-shot} contra quatro \textit{baselines} supervisionados treinados sobre o \texttt{decicontas.br}. Foram avaliados seis modelos da OpenAI (\texttt{gpt-4.1}, \texttt{gpt-4.1-mini}, \texttt{gpt-4.1-nano}, \texttt{gpt-5-mini}, \texttt{gpt-5.1} e \texttt{gpt-5.2}) e três modelos de pesos abertos --- o \texttt{deepseek-v4-flash} da DeepSeek, o \texttt{llama-3.3-70b} da Meta e o \texttt{qwen2.5-72b} da Alibaba. Como \textit{baselines}, foram incluídos três modelos BERT (\texttt{legal-bertimbau-base}, \texttt{bertimbau-base} e \texttt{bertimbau-large}) e um modelo \texttt{bilstm-crf}. A estratégia \textit{few-shot} consistiu na inclusão de exemplos curados de decisões reais do TCE/RN diretamente no \textit{prompt}, combinada com saída estruturada via \textit{function calling}. Os modelos supervisionados foram avaliados sob validação cruzada estratificada de 5 partições, com predições \textit{out-of-fold} consolidadas em um único conjunto de avaliação equivalente ao corpus completo. Em linha com a recomendação de privilegiar soluções auditáveis, a discussão a seguir toma como referência o modelo de melhor desempenho, que é de pesos abertos, tratando os modelos proprietários como termo de comparação.
+
+\subsection{Desempenho agregado}
+\label{subsec:desempenho_agregado}
+
+A Tabela~\ref{tab:resultados_gerais} apresenta os resultados consolidados. No paradigma \textit{few-shot}, o \texttt{deepseek-v4-flash} --- modelo de pesos abertos --- alcançou o melhor \textit{span} F1 (0,724) e também o melhor \textit{span} F1 macro (0,701), seguido de perto pelo \texttt{gpt-4.1} (\textit{span} F1 = 0,715; macro = 0,694). A diferença entre os dois primeiros colocados é de apenas 0,009 ponto e não é estatisticamente significativa (Seção~\ref{subsec:significancia}): os dois modelos de melhor desempenho são, portanto, estatisticamente indistinguíveis, e não se pode afirmar uma ordem entre eles. O \texttt{gpt-4.1} lidera o nível de \textit{token} (F1 = 0,800), o que reflete maior cobertura literal token a token. Logo atrás compõem o grupo de cabeça o \texttt{gpt-4.1-mini} (\textit{span} F1 = 0,698) e o \texttt{gpt-5.1} (0,685). Cabe registrar um padrão chamativo na precisão: enquanto a maioria dos LLMs opera em regime de alta revocação e precisão moderada, o \texttt{deepseek-v4-flash} apresenta precisão e revocação equilibradas (0,734 e 0,715), perfil mais próximo de um extrator calibrado do que de um anotador agressivo.
+
+\begin{table}[ht]
+    \centering
+    \caption{Resultados gerais dos modelos avaliados (\textit{few-shot} e supervisionados): Token-level F1 e Span-level F1 (micro e macro) com IoU $\geq 0{,}5$. Para os supervisionados, valores consolidados a partir das predições \textit{out-of-fold}. Em negrito, o melhor valor por coluna.}
+    \label{tab:resultados_gerais}
+    \footnotesize
+    \setlength{\tabcolsep}{4pt}
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{llccccc}
+        \hline
+        \textbf{Paradigma} & \textbf{Modelo} & \textbf{Token F1} & \textbf{\textit{Span} F1} & \textbf{\textit{Span} F1$_{\text{macro}}$} & \textbf{\textit{Span} Prec.} & \textbf{\textit{Span} Rev.} \\
+        \hline
+        \multirow{9}{*}{\textit{Few-shot}}
+        & \texttt{deepseek-v4-flash}    & 0,767 & \textbf{0,724} & \textbf{0,701} & 0,734 & 0,715 \\
+        & \texttt{gpt-4.1}              & \textbf{0,800} & 0,715 & 0,694 & 0,651 & 0,793 \\
+        & \texttt{gpt-4.1-mini}         & 0,784 & 0,698 & 0,678 & 0,618 & \textbf{0,802} \\
+        & \texttt{gpt-5.1}              & 0,770 & 0,685 & 0,675 & 0,614 & 0,773 \\
+        & \texttt{qwen2.5-72b}          & 0,702 & 0,613 & 0,578 & 0,549 & 0,695 \\
+        & \texttt{gpt-5.2}              & 0,742 & 0,607 & 0,585 & 0,503 & 0,765 \\
+        & \texttt{gpt-5-mini}           & 0,572 & 0,410 & 0,524 & 0,276 & 0,791 \\
+        & \texttt{gpt-4.1-nano}         & 0,564 & 0,401 & 0,365 & 0,346 & 0,477 \\
+        & \texttt{llama-3.3-70b}        & 0,402 & 0,340 & 0,273 & 0,596 & 0,237 \\
+        \hline
+        \multirow{4}{*}{Superv.}
+        & \texttt{bertimbau-base}        & 0,768 & 0,679 & 0,580 & 0,799 & 0,589 \\
+        & \texttt{legal-bertimbau-base}  & 0,686 & 0,602 & 0,406 & 0,822 & 0,475 \\
+        & \texttt{bertimbau-large}       & 0,682 & 0,602 & 0,478 & \textbf{0,828} & 0,473 \\
+        & \texttt{bilstm-crf}            & 0,731 & 0,593 & 0,500 & 0,774 & 0,480 \\
+        \hline
+    \end{tabular}%
+    }
+\end{table}
+
+Na cauda inferior, três modelos apresentaram desempenho substancialmente inferior: \texttt{gpt-5-mini} (\textit{span} F1 = 0,410), \texttt{gpt-4.1-nano} (0,401) e \texttt{llama-3.3-70b} (0,340). Os dois primeiros são modelos de capacidade reduzida, inadequados para a tarefa de REN em textos jurídicos complexos. O caso do \texttt{llama-3.3-70b} é qualitativamente distinto: sua precisão é razoável (0,596), mas a revocação é muito baixa (0,237) --- o modelo extrai pouquíssimas entidades, comportando-se de forma conservadora em excesso. Comparando os paradigmas, o melhor modelo supervisionado --- \texttt{bertimbau-base}, com \textit{span} F1 = 0,679 --- posicionou-se em quinto lugar geral, à frente de cinco dos nove LLMs. Os dois melhores LLMs (\texttt{deepseek-v4-flash} e \texttt{gpt-4.1}) superam o \texttt{bertimbau-base} no \textit{span} F1 micro, mas por margens modestas ($+0{,}046$ e $+0{,}037$) que \emph{não} atingem significância estatística (Seção~\ref{subsec:significancia}); no \textit{span} F1 macro, contudo, a vantagem é ampla (0,701 e 0,694 contra 0,580), revelando que o ganho dos LLMs concentra-se nas classes minoritárias (Seção~\ref{subsec:por_entidade}). Mantém-se o achado contraintuitivo do \texttt{legal-bertimbau-base}: apesar de ser o único modelo BERT que recebeu adaptação ao domínio jurídico, seu desempenho (0,602) ficou abaixo do \texttt{bertimbau-base} genérico (0,679), com diferença estatisticamente significativa ($\Delta = -0{,}077$, $p < 0{,}001$). Esse resultado sugere que o DAPT realizado sobre peças judiciais genéricas não transferiu benefícios para o domínio de Tribunais de Contas --- uma observação que, por se basear em um único par de modelos ($n = 1$), deve ser lida como indício e não como conclusão geral sobre adaptação de domínio.
+
+\subsection{Significância estatística}
+\label{subsec:significancia}
+
+Para quantificar quais diferenças entre modelos resistem à variação amostral, foi conduzido um teste de \textit{bootstrap} não paramétrico no nível do documento, com $B = 10\,000$ reamostragens com reposição, seguindo a metodologia estabelecida por \citeonline{Efron1993} e a sua aplicação a tarefas de processamento de linguagem natural discutida por \citeonline{BergKirkpatrick2012}. 
+
+O \textit{bootstrap} é preferível aos testes paramétricos clássicos no presente contexto porque (i)~não assume distribuição específica para os dados, requisito que a métrica F1 tipicamente viola; (ii)~reamostra documentos inteiros como unidade mínima, preservando a correlação entre os \textit{spans} de uma mesma decisão; e (iii)~funciona com qualquer métrica agregada, incluindo o \textit{span} F1 com limiar de IoU. Para as comparações entre modelos, aplicou-se o \textit{bootstrap} pareado, em que a mesma amostra de documentos é utilizada para avaliar os dois modelos do par simultaneamente.
+
+Como são muitas as comparações possíveis (78 pares entre os treze modelos), reportam-se nesta seção doze comparações de interesse e aplica-se a elas a correção de \citeonline{Holm1979} para múltiplas comparações, controlando a taxa de erro familiar. Das doze, nove são significativas a 5\% sem correção, e \emph{todas as nove permanecem significativas} após a correção de Holm (e mesmo sob a correção, mais conservadora, de Bonferroni), de modo que as conclusões substantivas não dependem do problema de comparações múltiplas. No conjunto completo de 78 pares, 56 são significativos sem correção.
+
+A Tabela~\ref{tab:bootstrap_paired} organiza essas comparações em três faixas. Na faixa superior estão as grandes diferenças: os melhores modelos superam o \texttt{llama-3.3-70b} (o LLM mais fraco) por margens de $0{,}27$ a $0{,}38$ ponto de \textit{span} F1, e o \texttt{gpt-4.1} supera o \texttt{gpt-5.2} em $0{,}109$ ($p < 0{,}001$) --- evidência de que, nesta tarefa, modelos de geração mais recente otimizados para raciocínio não são necessariamente superiores. Na faixa intermediária, o \texttt{bertimbau-base} supera o \texttt{bilstm-crf} ($\Delta = +0{,}086$) e, notavelmente, supera o \texttt{gpt-5.2} ($\Delta = +0{,}071$, $p = 0{,}004$): um \textit{baseline} supervisionado bate um LLM proprietário recente. Na faixa inferior estão as diferenças que \emph{não} resistem à variação amostral: o melhor LLM (\texttt{deepseek-v4-flash}) sobre o melhor supervisionado (\texttt{bertimbau-base}) fica em $+0{,}046$ com intervalo que cruza o zero ($p = 0{,}126$), assim como \texttt{gpt-4.1} sobre \texttt{gpt-4.1-mini} ($+0{,}017$); são diferenças abaixo do piso de detecção e, portanto, não testáveis com o tamanho de amostra disponível.
+
+\begin{table}[ht]
+    \centering
+    \caption{Comparações pareadas selecionadas via \textit{bootstrap} ($B = 10\,000$, reamostragem por documento). Um $\Delta$ positivo indica que o primeiro modelo supera o segundo. A coluna $p_{\text{Holm}}$ traz o $p$-valor após correção de Holm sobre a família de doze comparações; ``Sig.'' refere-se à significância a 5\% \emph{após} essa correção.}
+    \label{tab:bootstrap_paired}
+    \footnotesize
+    \setlength{\tabcolsep}{4pt}
+    \begin{tabular}{llccccc}
+        \hline
+        \textbf{Modelo A} & \textbf{Modelo B} & $\mathbf{\Delta}$ \textbf{F1} & \textbf{IC 95\%} & $\mathbf{p}$ & $\mathbf{p_{\text{Holm}}}$ & \textbf{Sig.} \\
+        \hline
+        \texttt{deepseek-v4-flash}     & \texttt{llama-3.3-70b}         & +0,385 & [+0,317;\ +0,452] & $< 0{,}001$ & $< 0{,}001$ & Sim \\
+        \texttt{gpt-4.1-mini}          & \texttt{gpt-4.1-nano}          & +0,297 & [+0,251;\ +0,343] & $< 0{,}001$ & $< 0{,}001$ & Sim \\
+        \texttt{gpt-5.2}               & \texttt{llama-3.3-70b}         & +0,267 & [+0,197;\ +0,336] & $< 0{,}001$ & $< 0{,}001$ & Sim \\
+        \texttt{llama-3.3-70b}         & \texttt{qwen2.5-72b}           & $-$0,274 & [$-$0,341;\ $-$0,205] & $< 0{,}001$ & $< 0{,}001$ & Sim \\
+        \texttt{gpt-5.2}               & \texttt{deepseek-v4-flash}     & $-$0,118 & [$-$0,168;\ $-$0,066] & $< 0{,}001$ & $0{,}002$ & Sim \\
+        \texttt{gpt-4.1}               & \texttt{gpt-5.2}               & +0,109 & [+0,077;\ +0,142] & $< 0{,}001$ & $< 0{,}001$ & Sim \\
+        \texttt{gpt-5.1}               & \texttt{gpt-5.2}               & +0,078 & [+0,046;\ +0,110] & $< 0{,}001$ & $< 0{,}001$ & Sim \\
+        \texttt{bertimbau-base}        & \texttt{bilstm-crf}            & +0,086 & [+0,030;\ +0,144] & $0{,}002$   & $0{,}010$ & Sim \\
+        \texttt{gpt-5.2}               & \texttt{bertimbau-base}        & $-$0,071 & [$-$0,117;\ $-$0,024] & $0{,}004$   & $0{,}014$ & Sim \\
+        \texttt{deepseek-v4-flash}     & \texttt{bertimbau-base}        & +0,046 & [$-$0,013;\ +0,103] & $0{,}126$   & $0{,}379$ & Não \\
+        \texttt{gpt-4.1}               & \texttt{gpt-4.1-mini}          & +0,017 & [$-$0,007;\ +0,040] & $0{,}163$   & $0{,}379$ & Não \\
+        \texttt{gpt-5.2}               & \texttt{qwen2.5-72b}           & $-$0,007 & [$-$0,048;\ +0,034] & $0{,}731$   & $0{,}731$ & Não \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Quatro achados são particularmente relevantes. (i)~\textbf{Saturação no topo do \textit{ranking}}: os dois modelos de melhor desempenho --- \texttt{deepseek-v4-flash} e \texttt{gpt-4.1} --- diferem em apenas $\Delta = -0{,}009$ ($p = 0{,}724$, no conjunto completo de pares), sendo estatisticamente indistinguíveis; o menor $\Delta$ significativo observado em toda a análise foi de $0{,}031$ (\texttt{gpt-4.1} sobre \texttt{gpt-5.1}), o que estabelece um piso de detecção de aproximadamente $0{,}03$ ponto de \textit{span} F1 para o tamanho de amostra disponível --- diferenças menores que esse limiar não devem ser interpretadas como ordenação real. (ii)~\textbf{LLMs \textit{vs.} supervisionados, com ressalva}: o melhor LLM supera o melhor supervisionado (\texttt{bertimbau-base}) por apenas $+0{,}046$, diferença que \emph{não} atinge significância ($p = 0{,}126$); no micro \textit{span} F1, portanto, o melhor \textit{baseline} supervisionado é \emph{competitivo} com os melhores LLMs. A superioridade dos LLMs torna-se inequívoca contra os supervisionados mais fracos e, sobretudo, no macro \textit{span} F1 e nas classes minoritárias (Seção~\ref{subsec:por_entidade}). (iii)~\textbf{DAPT genérico foi prejudicial}: o \texttt{bertimbau-base} supera o \texttt{legal-bertimbau-base} em $\Delta = +0{,}077$ ($p < 0{,}001$). (iv)~\textbf{Geração mais recente $\neq$ melhor desempenho}: o \texttt{gpt-5.2}, modelo de raciocínio mais novo, fica \emph{abaixo} do \texttt{bertimbau-base} ($\Delta = -0{,}071$, $p = 0{,}004$) e bem abaixo do \texttt{gpt-4.1} ($\Delta = -0{,}109$), contrariando a expectativa de progresso monotônico entre gerações.
+
+\subsection{Perfil de precisão e revocação}
+\label{subsec:perfil_pr}
+
+A Figura~\ref{fig:scatter_precision_recall} ilustra uma separação em geral nítida entre os dois paradigmas. A maioria dos modelos \textit{few-shot} forma um agrupamento na região de alta revocação (frequentemente acima de 0,77, chegando a 0,80) e precisão moderada (entre 0,50 e 0,65), enquanto os modelos supervisionados situam-se na região de alta precisão (entre 0,77 e 0,83) e revocação baixa (entre 0,47 e 0,59). Esse padrão sugere que os LLMs em regime \textit{few-shot} tendem a ser mais ``agressivos'' na identificação de entidades, recuperando uma proporção maior de \textit{spans} verdadeiros, mas gerando mais falsos positivos. O \textit{trade-off} é coerente com a natureza do treinamento: modelos BERT aprendem a só rotular um \textit{token} como pertencente a uma entidade quando há forte evidência local; LLMs em regime \textit{few-shot} raciocinam sobre o documento como um todo e tendem a propor extensões de \textit{spans} mesmo em casos ambíguos. O \texttt{deepseek-v4-flash} é a exceção instrutiva a esse padrão: com precisão (0,734) e revocação (0,715) equilibradas, ele ocupa uma posição intermediária, combinando a cobertura dos LLMs a uma precisão próxima da dos supervisionados --- o que explica sua liderança no \textit{span} F1. Para fins de pré-anotação assistida, em que a recuperação de candidatos para revisão humana é mais valiosa do que a sua precisão imediata, o perfil dos LLMs é, de toda forma, vantajoso.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{Imagens/exp1_precision_recall.png}
+    \caption{Precisão \textit{vs.} revocação (\textit{Span-level}, IoU $\geq 0{,}5$) por modelo. Modelos \textit{few-shot} (azul) concentram-se na região de alta revocação e precisão moderada, enquanto os modelos supervisionados (verde) ocupam a região de alta precisão e revocação mais baixa.}
+    \label{fig:scatter_precision_recall}
+\end{figure}
+
+\subsection{Desempenho por tipo de entidade}
+\label{subsec:por_entidade}
+
+A Tabela~\ref{tab:f1_entidade} detalha o desempenho por tipo de entidade e ajuda a explicar a diferença entre as agregações micro e macro discutida na Seção~\ref{subsec:desempenho_agregado}. A categoria \textsc{Multa} é consistentemente a mais bem reconhecida pelos modelos competitivos (\textit{span} F1 entre 0,653 e 0,786), o que se explica por sua maior frequência no corpus (212 ocorrências) e por padrões textuais regulares acompanhados de valores monetários e fundamentação legal explícita.
+
+\begin{table}[ht]
+    \centering
+    \caption{\textit{Span} F1 por tipo de entidade e modelo. Em negrito, melhor valor por coluna.}
+    \label{tab:f1_entidade}
+    \small
+    \begin{tabular}{lcccc}
+        \hline
+        \textbf{Modelo} & \textbf{Multa} & \textbf{Obrigação} & \textbf{Recomend.} & \textbf{Ressarc.} \\
+        \hline
+        \texttt{deepseek-v4-flash}     & 0,774 & \textbf{0,708} & 0,621 & 0,700 \\
+        \texttt{gpt-4.1}               & \textbf{0,786} & 0,650 & 0,593 & \textbf{0,746} \\
+        \texttt{gpt-4.1-mini}          & 0,783 & 0,611 & 0,599 & 0,719 \\
+        \texttt{gpt-5.1}               & 0,760 & 0,583 & \textbf{0,638} & 0,716 \\
+        \texttt{qwen2.5-72b}           & 0,753 & 0,512 & 0,370 & 0,676 \\
+        \texttt{gpt-5.2}               & 0,737 & 0,474 & 0,526 & 0,604 \\
+        \texttt{gpt-5-mini}            & 0,682 & 0,223 & 0,586 & 0,606 \\
+        \texttt{gpt-4.1-nano}          & 0,662 & 0,225 & 0,085 & 0,489 \\
+        \texttt{llama-3.3-70b}         & 0,401 & 0,369 & 0,293 & 0,031 \\
+        \texttt{bertimbau-base}        & 0,784 & 0,674 & 0,323 & 0,541 \\
+        \texttt{legal-bertimbau-base}  & 0,755 & 0,624 & 0,073 & 0,171 \\
+        \texttt{bertimbau-large}       & 0,718 & 0,645 & 0,203 & 0,345 \\
+        \texttt{bilstm-crf}            & 0,653 & 0,689 & 0,247 & 0,413 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+As classes \textsc{Recomendação} e \textsc{Ressarcimento} concentram a maior diferença entre paradigmas e são a origem do contraste micro \textit{vs.} macro. Em \textsc{Recomendação}, os melhores modelos \textit{few-shot} (\texttt{gpt-5.1} com 0,638 e \texttt{deepseek-v4-flash} com 0,621) superam o melhor supervisionado (\texttt{bertimbau-base}, com 0,323) por um fator próximo de dois. Em \textsc{Ressarcimento}, o \texttt{gpt-4.1} (0,746) supera o \texttt{bertimbau-base} (0,541) em mais de 20 pontos. Esse padrão é compatível com a hipótese de que classes minoritárias são insuficientemente representadas no treino dos modelos supervisionados, ao passo que os LLMs --- que recebem exemplos curados de cada classe no \textit{prompt} --- não dependem da estatística de ocorrência da classe no corpus para reconhecê-la. Como o macro \textit{span} F1 pondera igualmente as quatro classes, é exatamente esse colapso dos supervisionados nas categorias raras que derruba seu macro (0,580 do \texttt{bertimbau-base} contra 0,701 do \texttt{deepseek-v4-flash}), ainda que no micro F1 eles se mantenham competitivos. O caso do \texttt{legal-bertimbau-base} é especialmente revelador: em \textsc{Recomendação} seu \textit{span} F1 é de apenas 0,073, e em \textsc{Ressarcimento} de 0,171 --- quedas de magnitude muito superior à observada em \textsc{Multa} ($-0{,}029$ vs.\ \texttt{bertimbau-base}) e \textsc{Obrigação} ($-0{,}050$). O DAPT realizado sobre peças judiciais genéricas parece ter deslocado as representações internas do modelo na direção das classes mais frequentes nesse contexto, ao custo da capacidade de reconhecer figuras processuais próprias do controle externo. A classe \textsc{Obrigação} é aquela em que os supervisionados são mais competitivos --- o \texttt{bilstm-crf} (0,689) supera os modelos BERT e fica logo atrás do líder \texttt{deepseek-v4-flash} (0,708) ---, refletindo a natureza mais sintática e local desse tipo de comando.
+
+\subsection{Análises de robustez}
+\label{subsec:robustez}
+
+Três análises complementares verificam se as conclusões anteriores são artefatos de escolhas metodológicas específicas.
+
+\textbf{Sensibilidade ao limiar de IoU.} Recomputando o \textit{span} F1 sob limiares de $0{,}3$, $0{,}5$ e $0{,}7$, o ordenamento dos modelos mantém-se praticamente inalterado --- a correlação de Spearman do \textit{ranking} contra o de referência ($\mathrm{IoU} = 0{,}5$) é de $0{,}96$ para $0{,}3$ e $0{,}93$ para $0{,}7$ ---, indicando que a liderança do \texttt{deepseek-v4-flash} e a competitividade do \texttt{bertimbau-base} não dependem do limiar escolhido. A exceção é a correspondência \emph{exata} de \textit{offsets}, em que a correlação cai para $0{,}23$: sob \textit{exact match}, o \textit{span} F1 dos LLMs desaba (\texttt{deepseek-v4-flash} cai para $0{,}073$ e \texttt{gpt-4.1} para $0{,}122$), ao passo que os supervisionados, que operam sobre a mesma tokenização do \textit{gold}, sofrem muito menos (\texttt{bertimbau-base} mantém $0{,}596$). Isso confirma que a correspondência exata penaliza desproporcionalmente modelos que parafraseiam fronteiras, e que o critério IoU $\geq 0{,}5$ é o mais adequado para uma comparação justa entre paradigmas.
+
+\textbf{Subconjunto informativo.} Restringindo a avaliação aos 232 documentos que contêm ao menos uma entidade, o \textit{span} F1 de todos os modelos aumenta, mas de forma desigual: o ganho dos LLMs competitivos é expressivo (\texttt{gpt-4.1}: $+0{,}060$; \texttt{deepseek-v4-flash}: $+0{,}037$), enquanto o dos supervisionados é marginal (\texttt{bertimbau-base}: $+0{,}010$). A diferença decorre de que parte dos falsos positivos dos LLMs ocorre nos 629 documentos vazios, penalizando-os na métrica global; nos documentos informativos --- aqueles que realmente importam para a alimentação dos cadastros --- a vantagem dos LLMs sobre os supervisionados amplia-se.
+
+\textbf{Fidelidade literal das extrações.} Como os LLMs produzem \textit{strings}, e não \textit{offsets}, a localização de cada \textit{span} no texto pode falhar quando o modelo parafraseia ou normaliza a pontuação. A taxa de falha de alinhamento é desprezível para a maioria dos modelos ($< 1\%$), mas alcança $14{,}4\%$ no \texttt{deepseek-v4-flash} (75 de 522 \textit{strings} extraídas). Essas extrações não localizáveis são contabilizadas como falsos negativos --- isto é, o líder do experimento atinge $0{,}724$ de \textit{span} F1 \emph{apesar} de descartar uma em cada sete extrações por infidelidade literal. Trata-se do reverso da sua precisão elevada: o modelo abstrai mais o texto, o que melhora a precisão mas custa revocação, e explica o perfil de erros analisado na Seção~\ref{sec:analise_erros}.
+
+\subsection{Síntese da comparação entre paradigmas}
+\label{subsec:sintese_llm_vs_sup}
+
+Os resultados desta seção sustentam quatro conclusões principais. Primeiro, no topo do \textit{ranking}, um modelo de \textbf{pesos abertos} --- o \texttt{deepseek-v4-flash} --- lidera o desempenho absoluto em nível de \textit{span} (F1 = 0,724), de forma estatisticamente indistinguível do \texttt{gpt-4.1} proprietário (F1 = 0,715): no patamar de capacidade atual, soluções auditáveis e auto-hospedáveis são competitivas com as melhores APIs fechadas nesta tarefa. Segundo, a vantagem dos melhores LLMs sobre o melhor \textit{baseline} supervisionado (\texttt{bertimbau-base}, F1 = 0,679) \textbf{não é estatisticamente significativa no micro F1} ($\Delta = +0{,}046$, $p = 0{,}126$); a superioridade dos LLMs manifesta-se de forma inequívoca no \textbf{macro F1 e nas classes minoritárias} (\textsc{Recomendação} e \textsc{Ressarcimento}), onde os supervisionados colapsam, e contra os supervisionados mais fracos. Terceiro, a adaptação ao domínio jurídico genérico, na forma em que está disponível no \texttt{legal-bertimbau-base}, foi prejudicial ao desempenho na tarefa do \texttt{decicontas.br} ($n = 1$), sugerindo que o DAPT, para ser benéfico, precisa ser conduzido sobre dados próximos do domínio-alvo. Quarto, modelos de geração mais recente otimizados para raciocínio (\texttt{gpt-5.2}) não superaram modelos anteriores (\texttt{gpt-4.1}) nesta tarefa de extração, sinalizando que ganhos em \textit{benchmarks} de raciocínio não se traduzem automaticamente em REN jurídico.
+
+% ============================================================
+\section{Variáveis de implementação}
+\label{sec:variaveis_implementacao}
+% ============================================================
+
+A escolha do modelo, embora central, não é o único fator determinante. Esta seção examina dois eixos de implementação tipicamente subexplorados na literatura: o método de saída estruturada e a técnica de \textit{prompting}.
+
+\subsection{Impacto do método de saída estruturada}
+\label{subsec:saida_estruturada}
+
+O esquema de saída --- definido como um objeto \texttt{NERDecisao} via \texttt{Pydantic} --- foi mantido idêntico em todos os experimentos; o que variou foi o método utilizado para instruir o modelo a aderir a esse esquema. Foram comparados dois mecanismos: \texttt{function\_calling} (FC) e \texttt{json\_schema} (JS, \textit{Structured Outputs} estrito). A comparação foi conduzida sobre os dois modelos de melhor desempenho do experimento principal --- \texttt{deepseek-v4-flash} e \texttt{gpt-4.1} --- em uma execução controlada e independente: o mesmo \textit{prompt} e o mesmo esquema \texttt{NERDecisao} foram usados nas duas condições, de modo que a única diferença entre elas é o mecanismo de decodificação. O FC instrui o modelo a invocar uma função fictícia cujos parâmetros correspondem ao esquema; o JS impõe restrições gramaticais no nível da decodificação, forçando o modelo a gerar JSON válido que obedeça estritamente ao esquema fornecido.
+
+Um ponto metodológico é central para a interpretação desta seção. Para que a comparação seja justa, os dois mecanismos precisam receber um esquema com \emph{exatamente} os mesmos campos obrigatórios. Em uma versão anterior do esquema, as quatro listas de \texttt{NERDecisao} eram declaradas como opcionais (\texttt{Optional[List[\ldots]]}); sob a decodificação restrita do \texttt{json\_schema}, essa opcionalidade enviesava o modelo a emitir listas vazias, produzindo uma queda artificial e drástica de revocação atribuída erroneamente ao método. Corrigido o esquema para listas não opcionais com \textit{default} vazio (Capítulo~\ref{cap:cap4}, Seção~\ref{sec:saida_estruturada}), a comparação a seguir mede o efeito \emph{real} do mecanismo de decodificação, e não um artefato de declaração de tipos.
+
+\begin{table}[ht]
+    \centering
+    \caption{Comparação de desempenho entre \texttt{function\_calling} (FC) e \texttt{json\_schema} (JS) estrito, sob esquema \texttt{NERDecisao} com campos idênticos. $\Delta$ indica a diferença absoluta FC $-$ JS. Execução controlada independente; valores absolutos podem diferir ligeiramente da Tabela~\ref{tab:resultados_gerais} por estocasticidade da API (apenas a diferença FC $-$ JS é interpretável aqui).}
+    \label{tab:saida_estruturada}
+    \footnotesize
+    \setlength{\tabcolsep}{5pt}
+    \begin{tabular}{llcccc}
+        \hline
+        \textbf{Modelo} & \textbf{Método} & \textbf{Token F1} & \textbf{\textit{Span} F1} & \textbf{\textit{Span} Prec.} & \textbf{\textit{Span} Rev.} \\
+        \hline
+        \multirow{3}{*}{\texttt{deepseek-v4-flash}}
+        & FC       & 0,779 & 0,723 & 0,721 & 0,725 \\
+        & JS       & 0,784 & 0,693 & 0,654 & 0,736 \\
+        & $\Delta$ & $-$0,005 & \textbf{+0,031} & +0,067 & $-$0,011 \\
+        \hline
+        \multirow{3}{*}{\texttt{gpt-4.1}}
+        & FC       & 0,774 & 0,674 & 0,596 & 0,776 \\
+        & JS       & 0,780 & 0,688 & 0,632 & 0,756 \\
+        & $\Delta$ & $-$0,007 & \textbf{$-$0,014} & $-$0,036 & +0,020 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+A Tabela~\ref{tab:saida_estruturada} apresenta os resultados. Uma vez equiparados os campos do esquema entre os dois métodos, a grande vantagem do \texttt{function\_calling} observada em experimentos preliminares \emph{desaparece}. Para o \texttt{deepseek-v4-flash}, o FC mantém uma pequena vantagem de \textit{span} F1 ($+0{,}031$), inteiramente dentro do piso de detecção de aproximadamente $0{,}03$ (Seção~\ref{subsec:significancia}) e concentrada na precisão ($+0{,}067$); para o \texttt{gpt-4.1}, o \texttt{json\_schema} é inclusive marginalmente \emph{superior} em \textit{span} F1 ($-0{,}014$), e ambos os modelos obtêm \textit{token} F1 ligeiramente melhor sob JS. Em nenhum dos dois casos observa-se a degradação acentuada de revocação que caracterizava o método em execuções anteriores.
+
+Esse resultado tem uma implicação metodológica importante. Em uma rodada preliminar de experimentos, o \texttt{json\_schema} produzia quedas de revocação de até 25\% em alguns modelos, o que sugeria que a decodificação restrita seria intrinsecamente prejudicial à tarefa. A investigação da causa revelou, porém, que o efeito era um \textbf{artefato de declaração do esquema}, e não uma propriedade do método: com as listas do \texttt{NERDecisao} declaradas como opcionais, a gramática imposta pelo \textit{Structured Outputs} admitia como válido o caminho trivial de retornar todas as listas vazias, e os modelos sob decodificação restrita exploravam esse atalho com frequência, abstendo-se de extrair. Tornadas as listas obrigatórias com \textit{default} vazio --- preservando a semântica (ausência $=$ lista vazia), mas removendo a opcionalidade da gramática ---, a diferença entre os mecanismos torna-se de segunda ordem. A conclusão para a prática é, assim, oposta à da rodada preliminar: para a tarefa de REN jurídico com o esquema \texttt{NERDecisao}, a escolha entre \texttt{function\_calling} e \texttt{json\_schema} estrito é pouco relevante, \emph{desde que} o esquema seja declarado com campos obrigatórios. O cuidado determinante está no \emph{desenho do esquema}, e não no mecanismo de decodificação --- uma lição que generaliza para outras aplicações de extração com saída estruturada.
+
+\subsection{Comparação de técnicas de \textit{prompting}}
+\label{subsec:tecnicas_prompting}
+
+Comparam-se aqui três técnicas de \textit{prompting} aplicadas sobre cinco modelos --- \texttt{deepseek-v4-flash}, \texttt{gpt-4.1}, \texttt{gpt-5.2}, \texttt{qwen2.5-72b} e \texttt{llama-3.3-70b}: (i)~\textit{few-shot} estático com doze exemplos curados; (ii)~\textit{Chain-of-Thought} (CoT) \cite{wei2022chainofthought}; e (iii)~\textit{two-stage}, com decomposição da tarefa em classificação prévia e extração restrita. A variante de \textit{few-shot} dinâmico foi deliberadamente excluída desta comparação, por uma limitação de desenho ($k = 5$ contra $k = 12$ do \textit{baseline}) detalhada na Seção~\ref{sec:limitacoes_resultados}.
+
+\begin{table}[ht]
+    \centering
+    \caption{\textit{Span} F1 por modelo e técnica de \textit{prompting}. Em negrito, melhor valor por linha.}
+    \label{tab:tecnicas_prompting}
+    \small
+    \begin{tabular}{lccc}
+        \hline
+        \textbf{Modelo} & \textbf{\textit{Few-shot}} & \textbf{CoT} & \textbf{\textit{Two-stage}} \\
+        \hline
+        \texttt{deepseek-v4-flash}     & \textbf{0,724} & 0,691 & 0,673 \\
+        \texttt{gpt-4.1}               & \textbf{0,715} & 0,692 & 0,692 \\
+        \texttt{gpt-5.2}               & 0,607 & \textbf{0,676} & 0,657 \\
+        \texttt{qwen2.5-72b}           & 0,613 & \textbf{0,635} & 0,626 \\
+        \texttt{llama-3.3-70b}         & \textbf{0,340} & 0,253 & 0,123 \\
+        \hline
+        \textit{Média}        & \textit{\textbf{0,600}} & \textit{0,589} & \textit{0,554} \\
+        \textit{Desvio-padrão} & \textit{\textbf{0,155}} & \textit{0,190} & \textit{0,242} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+A Tabela~\ref{tab:tecnicas_prompting} apresenta os resultados. O achado central replica o de experimentos anteriores: \textbf{nenhuma técnica superou o \textit{few-shot} estático em todos os modelos}. O \textit{few-shot} obteve a maior média de \textit{span} F1 (0,600) e o \emph{menor} desvio-padrão (0,155), posicionando-se como a abordagem mais robusta entre as três. Diferentemente do que se observou em rodadas anteriores, nenhuma combinação de técnica e modelo ultrapassou o melhor resultado do \textit{few-shot}: o maior valor individual de toda a comparação é justamente o \texttt{deepseek-v4-flash} com \textit{few-shot} (0,724), que coincide com o líder do experimento principal (Seção~\ref{subsec:desempenho_agregado}). Para os dois modelos de melhor desempenho --- \texttt{deepseek-v4-flash} e \texttt{gpt-4.1} ---, o \textit{few-shot} simples é a melhor técnica, e qualquer elaboração adicional do \textit{prompt} apenas reduz o desempenho.
+
+O CoT exibe um efeito \emph{dual}, dependente da capacidade do modelo. Para os dois melhores modelos, o CoT é prejudicial (\texttt{deepseek-v4-flash}: $-0{,}033$; \texttt{gpt-4.1}: $-0{,}023$). Para modelos de desempenho intermediário, contudo, o CoT é a melhor técnica: beneficia o \texttt{gpt-5.2} (de 0,607 para 0,676; $\Delta = +0{,}069$) e o \texttt{qwen2.5-72b} (de 0,613 para 0,635). Para o \texttt{llama-3.3-70b}, já fraco no \textit{baseline}, o CoT agrava o quadro ($-0{,}087$). A alta variância do CoT entre modelos (DP = 0,190) reflete essa dualidade: o raciocínio explícito ajuda quando o modelo ainda tem margem para corrigir extrações, mas, em modelos já calibrados, induz revisões que descartam candidatos válidos --- fenômeno de deliberação excessiva descrito por \citeonline{sprague2025cot}, no qual a reanálise de candidatos em zonas de fronteira leva à sua omissão, reduzindo a revocação.
+
+A técnica \textit{two-stage} apresentou o menor desempenho médio (0,554) e a maior variância (DP = 0,242). Sua instabilidade é dominada pelo colapso no \texttt{llama-3.3-70b} (\textit{span} F1 = 0,123): como esse modelo já opera com revocação muito baixa, o estágio de classificação prévia --- que zera as listas das classes julgadas ausentes --- amplifica o problema, descartando entidades que o extrator teria recuperado. Para os demais modelos, o \textit{two-stage} produz resultados próximos aos do \textit{few-shot}, mas sem superá-lo, possivelmente porque a etapa adicional de classificação introduz uma fonte extra de erro de propagação. Em síntese, para os modelos de melhor desempenho nesta tarefa, o \textit{few-shot} estático permanece a escolha mais eficaz e mais estável; as técnicas mais elaboradas só compensam em modelos de capacidade intermediária, que dispõem de margem para que o raciocínio adicional corrija --- em vez de degradar --- as extrações.
+
+% ============================================================
+\section{Análise qualitativa de erros do melhor modelo}
+\label{sec:analise_erros}
+% ============================================================
+
+Para compreender o comportamento do modelo de melhor desempenho (\texttt{deepseek-v4-flash}, \textit{span} F1 = 0,724), foi realizada uma análise sistemática dos erros produzidos no nível de \textit{span} sobre o corpus de avaliação. Cada discrepância foi classificada em uma das categorias apresentadas na Tabela~\ref{tab:taxonomia_erros}: falso positivo (entidade extraída inexistente no \textit{gold}), falso negativo (entidade do \textit{gold} não detectada), fronteira incorreta (sobreposição com rótulo correto, mas $\text{IoU} < 0{,}5$) e tipo errado (sobreposição $\geq 0{,}5$ com rótulo diferente).
+
+\begin{table}[ht]
+    \centering
+    \caption{Taxonomia de erros do \texttt{deepseek-v4-flash} (corpus completo). Predições corretas (\textit{exact}) reportadas para referência.}
+    \label{tab:taxonomia_erros}
+    \small
+    \begin{tabular}{lcc}
+        \hline
+        \textbf{Tipo} & \textbf{Frequência} & \textbf{\% dos erros} \\
+        \hline
+        \textit{Exact match} (acerto)        & 338 & --- \\
+        \hline
+        Falso negativo                       & 103 & 48,6\% \\
+        Falso positivo                       &  61 & 28,8\% \\
+        Fronteira incorreta                  &  44 & 20,8\% \\
+        Tipo errado                          &   4 &  1,9\% \\
+        \hline
+        \textbf{Total de erros}              & \textbf{212} & \textbf{100,0\%} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Diferentemente do que se observaria em um LLM de alta revocação, no \texttt{deepseek-v4-flash} os \emph{falsos negativos} dominam (48,6\% dos erros), seguidos por falsos positivos (28,8\%) e erros de fronteira (20,8\%). Esse padrão é coerente com seu perfil global de precisão e revocação equilibradas (0,734 e 0,715) e, em particular, com sua taxa de falha de alinhamento de 14,4\% (Seção~\ref{subsec:robustez}): parte expressiva dos falsos negativos resulta de extrações corretas em conteúdo, mas parafraseadas a ponto de não serem localizáveis literalmente no texto, sendo então contabilizadas como entidades não detectadas. A Tabela~\ref{tab:cross_erros} desagrega os erros por rótulo do \textit{gold standard}.
+
+\begin{table}[ht]
+    \centering
+    \caption{Distribuição de erros por rótulo \textit{gold} e tipo de erro (\texttt{deepseek-v4-flash}).}
+    \label{tab:cross_erros}
+    \small
+    \begin{tabular}{lccccc}
+        \hline
+        \textbf{Rótulo} & \textbf{FP} & \textbf{FN} & \textbf{Front.} & \textbf{Tipo} & \textbf{Total} \\
+        \hline
+        \textsc{Multa}         &  5 & 43 & 14 & 2 &  64 \\
+        \textsc{Obrigação}     & 20 & 41 &  7 & 0 &  68 \\
+        \textsc{Recomendação}  & 33 & 10 &  2 & 0 &  45 \\
+        \textsc{Ressarcimento} &  3 &  9 & 21 & 2 &  35 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Quatro padrões merecem destaque. Primeiro, a classe \textsc{Obrigação} concentra o maior volume absoluto de erros (68), distribuídos sobretudo entre falsos negativos (41) e falsos positivos (20), refletindo a complexidade linguística das obrigações --- formuladas de maneiras variadas e frequentemente confundidas com trechos de fundamentação jurídica. Segundo, a classe \textsc{Multa}, embora seja a mais bem reconhecida em termos relativos (167 acertos exatos), tem seus erros dominados por falsos negativos (43 de 64): o modelo deixa de recuperar algumas multas, em boa parte por reformulação do trecho que inviabiliza o alinhamento literal. Terceiro, a classe \textsc{Recomendação} apresenta padrão fortemente assimétrico, no sentido oposto: 33 falsos positivos contra apenas 10 falsos negativos. O modelo reconhece marcadores discursivos de recomendação --- ``recomenda-se que'', ``deve-se observar'' --- e os generaliza com excesso para contextos onde a recomendação não consta do dispositivo da decisão. Quarto, \textsc{Ressarcimento} apresenta perfil distinto: poucos falsos positivos (3) e poucos falsos negativos (9), mas concentração de erros de fronteira (21 dos 35 erros, ou 60\%). A confusão entre categorias é rara (apenas 4 ocorrências, 1,9\% dos erros), indicando que o modelo distingue bem as quatro categorias quando reconhece a presença de uma entidade.
+
+Esses achados têm implicações diretas para a operacionalização do \textit{pipeline} descrita na Seção~\ref{sec:integracao}: a fase de revisão humana no piloto deverá concentrar-se nas categorias \textsc{Obrigação} (alto volume de erros mistos) e \textsc{Recomendação} (alta taxa de falsos positivos). A predominância de erros de fronteira em \textsc{Ressarcimento} sugere que uma camada de pós-processamento dedicada ao refinamento de fronteiras pode ser particularmente eficaz para essa classe. Já a fração de falsos negativos atribuível à infidelidade literal (extrações corretas em conteúdo, mas não localizáveis no texto) é, em princípio, recuperável por uma etapa de \textit{fuzzy matching} que alinhe \textit{spans} parafraseados ao trecho original --- um ganho potencial específico do \texttt{deepseek-v4-flash}, dada sua maior taxa de reformulação.
+
+% ============================================================
+\section{Limitações dos resultados}
+\label{sec:limitacoes_resultados}
+% ============================================================
+
+Os resultados apresentados neste capítulo devem ser interpretados à luz de algumas limitações relevantes.
+
+\textbf{Tamanho e procedência do corpus.} O \texttt{decicontas.br} contém 861 documentos, dos quais 232 contêm pelo menos uma entidade anotada e 459 entidades no total. Esse tamanho é suficientemente pequeno para que diferenças observadas em \textit{span} F1 possam ser atribuíveis à variação amostral, conforme quantificado pelo \textit{bootstrap}: o piso de detecção é de aproximadamente 0,03 pontos de F1. Além disso, o corpus é construído a partir de decisões de um único tribunal (TCE/RN), e a generalização para outros tribunais de contas brasileiros depende de validação adicional.
+
+\textbf{Anotação por anotador único.} As anotações foram conduzidas por um único anotador especialista, sem replicação independente. Embora o passo de auditoria via \textit{ensemble} (Cleanlab) tenha permitido identificar e corrigir inconsistências sistemáticas, não há medida de concordância inter-anotador que possa servir de teto para o desempenho dos modelos.
+
+\textbf{\textit{Snapshots} e parâmetros de chamada.} Os modelos da OpenAI e o \texttt{deepseek-v4-flash} foram acessados via Azure AI Foundry, o que permitiu fixar o \textit{snapshot} datado de cada um (por exemplo, \texttt{gpt-4.1-2025-04-14} e \texttt{gpt-5.2-2025-12-11}; ver Tabela~\ref{tab:reprodutibilidade_modelos} no Capítulo~\ref{cap:cap4}). Persistem, contudo, duas lacunas de reprodutibilidade: o \texttt{llama-3.3-70b} e o \texttt{qwen2.5-72b} foram servidos via OpenRouter, cujo \textit{snapshot} efetivamente roteado não foi registrado; e os parâmetros de amostragem (\texttt{temperature}, \texttt{top\_p}, \texttt{seed}) usaram os \textit{defaults} dos respectivos SDKs, não tendo sido fixados explicitamente. Os \textit{checkpoints} dos modelos supervisionados, por serem fixados por nome no Hugging Face, são integralmente reproduzíveis.
+
+\textbf{Contaminação de \textit{prompt} identificada e removida.} Uma versão preliminar do \textit{system prompt} continha uma instrução específica para a entidade \textsc{Obrigação} que havia sido ajustada a partir da inspeção das saídas dos modelos sobre o próprio corpus de avaliação, configurando vazamento do conjunto de teste para o projeto do \textit{prompt} (Capítulo~\ref{cap:cap4}, Seção~\ref{sec:fewshot_baseline}). Todos os resultados deste capítulo foram produzidos com o \textit{prompt} canônico, já sem essa instrução; ainda assim, registra-se a limitação de que o desenho do \textit{prompt} e a seleção dos doze exemplares \textit{few-shot}, embora extraídos de decisões fora do \texttt{decicontas.br}, envolveram julgamento do autor sobre o domínio.
+
+\textbf{Superioridade como eficiência amostral.} A vantagem dos LLMs nas classes minoritárias deve ser lida como \textbf{eficiência amostral} em regime de baixo volume: os modelos \textit{few-shot} recebem alguns exemplos curados de cada classe e não dependem da frequência da classe no corpus, ao passo que os supervisionados precisam estimar parâmetros a partir de pouquíssimas ocorrências de \textsc{Recomendação} e \textsc{Ressarcimento}. Não se trata, portanto, de evidência de superioridade intrínseca dos LLMs em cenários com dados anotados abundantes, situação não testada neste trabalho.
+
+\textbf{Few-shot dinâmico fora do escopo reportado.} A variante de \textit{few-shot} dinâmico foi projetada mas deliberadamente excluída da comparação de técnicas de \textit{prompting} reportada na Seção~\ref{subsec:tecnicas_prompting}, por uma limitação de desenho: ela utilizaria $k = 5$ exemplos selecionados por similaridade contra os $k = 12$ do \textit{baseline} estático, de modo que qualquer diferença confundiria seleção adaptativa e número de exemplos. Um experimento que mantenha $k$ constante entre as condições é necessário para conclusão definitiva e está incluído no cronograma do Capítulo~\ref{cap:cap6}.
+
+\textbf{Escopo restrito à etapa de REN.} Os resultados apresentados cobrem exclusivamente a primeira fase do \textit{pipeline} (Reconhecimento de Entidades Nomeadas). A segunda fase --- extração estruturada de atributos e persistência em SQL Server, descrita na Seção~\ref{sec:integracao} --- está em fase de implementação e será avaliada na versão final desta dissertação. As demais limitações específicas dessa etapa subsequente são discutidas no Capítulo~\ref{cap:cap6}.
