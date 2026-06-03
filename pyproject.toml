@@ -34,6 +34,7 @@ dependencies = [
     "openai>=1.91",
     # Stats / significance
     "scipy>=1.13",
+    "accelerate>=1.1.0",
 ]
 
 [dependency-groups]

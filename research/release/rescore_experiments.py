@@ -26,24 +26,24 @@ import argparse
 import json
 import logging
 import pickle
-import shutil
 from pathlib import Path
 from typing import Any
 
 import pandas as pd
 
+from research.fewshot import FEWSHOT_RESULT_POSITIONS
 from research.ner_metrics import evaluate_bio_results, evaluate_llm_results
 
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
+from research.release import paths
 
-EXPERIMENTS_SRC = REPO_ROOT / "dataset" / "experiments"
-EXPERIMENTS_DST = REPO_ROOT / "dataset" / "experiments_corrected"
-SUMMARY_DST = REPO_ROOT / "dataset" / "results" / "experiments_corrected"
-CORRECTED_JSON = (
-    REPO_ROOT / "dataset" / "release" / "decicontas-861-corrected" / "decicontas.json"
-)
-KFOLD_CORRECTED = REPO_ROOT / "dataset" / "results" / "supervised_kfold_corrected"
+REPO_ROOT = paths.REPO_ROOT
+
+EXPERIMENTS_SRC = paths.RAW_EXPERIMENTS_DIR  # cycle-specific
+EXPERIMENTS_DST = paths.CORRECTED_EXPERIMENTS_DIR  # cycle-specific
+SUMMARY_DST = paths.EXPERIMENTS_SUMMARY_DIR  # cycle-specific
+CORRECTED_JSON = paths.CORRECTED_GOLD_JSON  # shared corrected gold
+KFOLD_CORRECTED = paths.KFOLD_CORRECTED  # shared
 
 SUBDIRS = ("few_shot_and_supervised", "function_calling_json_schema", "prompt_engineering")
 
@@ -116,8 +116,8 @@ _SUPERVISED_MAP = {
 # Few-shot positions to pad. The supervised k-fold runs on 861 docs (post
 # fewshot filter); we pad with empty sequences at the leaked positions
 # to keep the 866-document positional alignment shared with the LLM
-# prediction files (which carry all 866 docs).
-from research.fewshot import FEWSHOT_RESULT_POSITIONS
+# prediction files (which carry all 866 docs). FEWSHOT_RESULT_POSITIONS is
+# imported at module top.
 
 
 def _expand_to_866(values: list[list[str]]) -> list[list[str]]:
@@ -255,82 +255,68 @@ def run() -> None:
 
     lookup = _load_gold_lookup(CORRECTED_JSON)
 
-    # ---------- Experiment 1: few-shot vs supervised ----------
-    logger.info("loading %s", EXPERIMENTS_SRC / "few_shot_and_supervised")
+    # Each experiment subdir is optional per cycle (the new_clean cycle only has
+    # prompt_engineering; few_shot_and_supervised / function_calling_json_schema
+    # are old-cycle, archived in old_leakage). Skip summaries for absent dirs.
+
+    # ---------- Experiment 1: few-shot vs supervised (optional) ----------
     results_fewshot = _load_dir(EXPERIMENTS_SRC / "few_shot_and_supervised", lookup)
-    df_fewshot = _results_to_dataframe(results_fewshot)
-    df_fewshot["paradigm"] = df_fewshot["strategy"].apply(
-        lambda s: "supervised" if s == "supervised" else "few-shot"
-    )
-    df_fewshot.to_markdown(SUMMARY_DST / "fewshot_results.md", index=True)
-    logger.info("wrote %s", SUMMARY_DST / "fewshot_results.md")
-
-    # ---------- Experiment 2: function calling vs JSON schema ----------
-    logger.info("loading %s", EXPERIMENTS_SRC / "function_calling_json_schema")
-    results_fcjs = _load_dir(EXPERIMENTS_SRC / "function_calling_json_schema", lookup)
-    df_fcjs = _results_to_dataframe(results_fcjs, parse_model_strategy=False)
-    df_fcjs["method"] = df_fcjs.index.map(
-        lambda x: "function_calling" if x.endswith("_fc") else "json_schema"
-    )
-    df_fcjs["model_clean"] = df_fcjs.index.map(
-        lambda x: x.replace("_fc", "").replace("_json", "").replace("_few_shot", "")
-    )
-    df_method_cmp = (
-        df_fcjs.sort_values(["model_clean", "method"]).reset_index(drop=True)
-    )
-    df_method_cmp.to_markdown(SUMMARY_DST / "fc_vs_json_schema.md", index=False)
-    logger.info("wrote %s", SUMMARY_DST / "fc_vs_json_schema.md")
-
-    # ---------- Experiment 3: prompt engineering techniques ----------
-    logger.info("loading %s", EXPERIMENTS_SRC / "prompt_engineering")
-    results_prompt = _load_dir(EXPERIMENTS_SRC / "prompt_engineering", lookup)
-    df_prompt = _results_to_dataframe(results_prompt, parse_model_strategy=False)
-    parsed = df_prompt.index.map(_parse_technique)
-    df_prompt["model"] = [p[0] for p in parsed]
-    df_prompt["technique"] = [p[1] for p in parsed]
-    df_prompt.to_markdown(
-        SUMMARY_DST / "prompt_engineering_results.md", index=True
-    )
-    logger.info("wrote %s", SUMMARY_DST / "prompt_engineering_results.md")
-
-    strategy_summary = (
-        df_prompt.groupby("technique")[["token_f1", "span_f1"]].agg(
-            ["mean", "std", "max"]
+    df_fewshot = _results_to_dataframe(results_fewshot) if results_fewshot else pd.DataFrame()
+    if not df_fewshot.empty:
+        df_fewshot["paradigm"] = df_fewshot["strategy"].apply(
+            lambda s: "supervised" if s == "supervised" else "few-shot"
         )
-    )
-    strategy_summary.to_markdown(SUMMARY_DST / "strategy_summary.md", index=True)
-    logger.info("wrote %s", SUMMARY_DST / "strategy_summary.md")
-
-    paradigm_summary = (
+        df_fewshot.to_markdown(SUMMARY_DST / "fewshot_results.md", index=True)
         df_fewshot.groupby("paradigm")[["token_f1", "span_f1"]].agg(
             ["mean", "std", "max"]
-        )
-    )
-    paradigm_summary.to_markdown(SUMMARY_DST / "paradigm_summary.md", index=True)
-    logger.info("wrote %s", SUMMARY_DST / "paradigm_summary.md")
+        ).to_markdown(SUMMARY_DST / "paradigm_summary.md", index=True)
 
-    # ---------- Console leaderboard ----------
-    print("\n=== Experiment 1 — Few-shot vs Supervised (corrected) ===")
-    print(
-        df_fewshot[["model", "strategy", "paradigm", "token_f1", "span_f1"]]
-        .head(15)
-        .round(4)
-        .to_string()
+    # ---------- Experiment 2: function calling vs JSON schema (optional) ----------
+    results_fcjs = _load_dir(EXPERIMENTS_SRC / "function_calling_json_schema", lookup)
+    df_method_cmp = pd.DataFrame()
+    if results_fcjs:
+        df_fcjs = _results_to_dataframe(results_fcjs, parse_model_strategy=False)
+        df_fcjs["method"] = df_fcjs.index.map(
+            lambda x: "function_calling" if x.endswith("_fc") else "json_schema"
+        )
+        df_fcjs["model_clean"] = df_fcjs.index.map(
+            lambda x: x.replace("_fc", "").replace("_json", "").replace("_few_shot", "")
+        )
+        df_method_cmp = df_fcjs.sort_values(["model_clean", "method"]).reset_index(drop=True)
+        df_method_cmp.to_markdown(SUMMARY_DST / "fc_vs_json_schema.md", index=False)
+
+    # ---------- Experiment 3: prompt engineering techniques ----------
+    results_prompt = _load_dir(EXPERIMENTS_SRC / "prompt_engineering", lookup)
+    df_prompt = (
+        _results_to_dataframe(results_prompt, parse_model_strategy=False)
+        if results_prompt else pd.DataFrame()
     )
-    print("\n=== Experiment 2 — FC vs JSON Schema (corrected) ===")
-    print(
-        df_method_cmp[["model_clean", "method", "token_f1", "span_f1"]]
-        .round(4)
-        .to_string(index=False)
-    )
-    print("\n=== Experiment 3 — Prompt techniques (corrected) ===")
-    print(
-        df_prompt[["model", "technique", "token_f1", "span_f1"]]
-        .round(4)
-        .to_string()
-    )
-    print("\n=== Strategy summary ===")
-    print(strategy_summary.round(4))
+    strategy_summary = pd.DataFrame()
+    if not df_prompt.empty:
+        parsed = df_prompt.index.map(_parse_technique)
+        df_prompt["model"] = [p[0] for p in parsed]
+        df_prompt["technique"] = [p[1] for p in parsed]
+        df_prompt.to_markdown(SUMMARY_DST / "prompt_engineering_results.md", index=True)
+        strategy_summary = df_prompt.groupby("technique")[["token_f1", "span_f1"]].agg(
+            ["mean", "std", "max"]
+        )
+        strategy_summary.to_markdown(SUMMARY_DST / "strategy_summary.md", index=True)
+
+    # ---------- Console leaderboard (skip empty blocks) ----------
+    if not df_fewshot.empty:
+        print("\n=== Experiment 1 — Few-shot vs Supervised (corrected) ===")
+        print(df_fewshot[["model", "strategy", "paradigm", "token_f1", "span_f1"]]
+              .head(15).round(4).to_string())
+    if not df_method_cmp.empty:
+        print("\n=== Experiment 2 — FC vs JSON Schema (corrected) ===")
+        print(df_method_cmp[["model_clean", "method", "token_f1", "span_f1"]]
+              .round(4).to_string(index=False))
+    if not df_prompt.empty:
+        print("\n=== Experiment 3 — Prompt techniques (corrected) ===")
+        print(df_prompt[["model", "technique", "token_f1", "span_f1"]].round(4).to_string())
+    if not strategy_summary.empty:
+        print("\n=== Strategy summary ===")
+        print(strategy_summary.round(4))
 
 
 def main() -> None:

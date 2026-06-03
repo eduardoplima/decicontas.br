@@ -1,0 +1,11 @@
+model,display,n_pred_strings,n_aligned,n_failed,failure_rate
+gpt-41-nano,GPT-4.1-nano,753,721,32,0.0425
+gpt-41-mini,GPT-4.1-mini,562,554,8,0.0142
+gpt-4o,GPT-4o,554,547,7,0.0126
+gpt-5.4-nano_few_shot,GPT-5.4-nano,539,537,2,0.0037
+gpt-4-turbo,GPT-4 Turbo,551,549,2,0.0036
+gpt-5.4-mini_few_shot,GPT-5.4-mini,527,526,1,0.0019
+deepseek-v3_few_shot,DeepSeek-V3,601,600,1,0.0017
+gpt-35,GPT-3.5,546,546,0,0.0
+gpt-41,GPT-4.1,579,579,0,0.0
+gemini-2.5-flash_few_shot,Gemini-2.5-flash,572,572,0,0.0

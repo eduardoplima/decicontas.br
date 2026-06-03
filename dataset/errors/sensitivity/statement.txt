@@ -1,0 +1,4 @@
+min(ctrl_decided_pct) entre alternativos = 34.6%
+grupos decididos cobertos em ambos (controlado) = 61.0%
+alterados retidos em ambos = 4/22
+ATENÇÃO: mesmo controlando o tamanho do corte, a sobreposição NÃO é alta — a sinalização é SENSÍVEL aos pesos. Reportar como achado; NÃO afirmar robustez.

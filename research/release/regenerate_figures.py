@@ -36,10 +36,12 @@ import seaborn as sns
 from matplotlib.patches import Patch
 
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
-NUMS = REPO_ROOT / "dataset" / "results" / "chapter5_corrected"
-FIG_DIR = REPO_ROOT / "figures"
-SUFFIX = ""  # overwrite originals; corrected dataset is now canonical
+from research.release import paths
+
+REPO_ROOT = paths.REPO_ROOT
+NUMS = paths.CHAPTER5_DIR  # cycle-specific
+FIG_DIR = paths.FIGURES_DIR  # cycle-specific
+SUFFIX = ""  # figures are isolated per cycle dir, no suffix needed
 ENTITY_LABELS = ["MULTA", "OBRIGACAO", "RECOMENDACAO", "RESSARCIMENTO"]
 
 logger = logging.getLogger("research.release.regenerate_figures")
@@ -104,7 +106,7 @@ def fig_overall_f1_comparison(df: pd.DataFrame) -> None:
 
 
 def fig_entity_f1_heatmap(df: pd.DataFrame) -> None:
-    f1_cols = [f"f1_{l}" for l in ENTITY_LABELS]
+    f1_cols = [f"f1_{lab}" for lab in ENTITY_LABELS]
     df_entity = df[f1_cols].copy()
     df_entity.columns = [c.replace("f1_", "") for c in df_entity.columns]
     fig, ax = plt.subplots(figsize=(10, max(5, len(df_entity) * 0.45)))
@@ -194,7 +196,7 @@ def fig_exp1_overall_f1(df: pd.DataFrame) -> None:
 
 
 def fig_exp1_entity_heatmap(df: pd.DataFrame) -> None:
-    f1_cols = [f"f1_{l}" for l in ENTITY_LABELS]
+    f1_cols = [f"f1_{lab}" for lab in ENTITY_LABELS]
     df_entity = df[f1_cols].copy()
     df_entity.columns = [c.replace("f1_", "") for c in df_entity.columns]
     df_entity.index = df["model"]
@@ -421,14 +423,17 @@ def run() -> None:
     fig_exp1_entity_heatmap(df_exp1)
     fig_exp1_precision_recall(df_exp1)
 
-    fcjs_overall, fcjs_per = _exp2_dataframe()
-    fig_exp2_method_comparison(fcjs_overall)
-    fig_exp2_delta_per_entity(fcjs_per)
+    # FC-vs-JSON (exp2) only exists in cycles that ran that experiment.
+    if (NUMS / "F_fc_vs_json_overall.csv").exists():
+        fcjs_overall, fcjs_per = _exp2_dataframe()
+        fig_exp2_method_comparison(fcjs_overall)
+        fig_exp2_delta_per_entity(fcjs_per)
 
-    pe_overall, pe_per = _exp3_dataframes()
-    fig_exp3_technique_heatmap(pe_overall)
-    fig_exp3_strategy_dots(pe_overall)
-    fig_exp3_best_per_technique_entity(pe_overall, pe_per)
+    if (NUMS / "H_prompting_overall.csv").exists():
+        pe_overall, pe_per = _exp3_dataframes()
+        fig_exp3_technique_heatmap(pe_overall)
+        fig_exp3_strategy_dots(pe_overall)
+        fig_exp3_best_per_technique_entity(pe_overall, pe_per)
 
 
 def main() -> None:

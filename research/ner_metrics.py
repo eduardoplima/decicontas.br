@@ -359,6 +359,99 @@ def calculate_metrics(
     return raw
 
 
+def span_metrics_multi_iou(
+    df: pd.DataFrame,
+    thresholds: list[float],
+) -> dict[float, dict[str, Any]]:
+    """Span-level (P/R/F1) at several IoU thresholds in a single pass.
+
+    Span IoU is computed over the character-offset intervals carried in
+    ``golden`` / ``pred_as_golden`` — it does **not** need spaCy (the
+    tokenizer is only used by :func:`calculate_metrics` for token-level
+    metrics). Extracting the spans once and re-running
+    :func:`bipartite_greedy_match` per threshold makes the IoU-sensitivity
+    sweep (p43a) cheap. A threshold of ``1.0`` is exact-span matching.
+
+    Returns ``{threshold: flatten_metrics-style dict}`` (with ``span_*`` and
+    per-label keys; token fields are zero since they are not recomputed here).
+    """
+    per_threshold_labels: dict[float, dict[str, dict[str, int]]] = {
+        t: defaultdict(lambda: {"total_gold": 0, "total_pred": 0, "matched": 0})
+        for t in thresholds
+    }
+    for _, row in df.iterrows():
+        gold_spans = [(a["start"], a["end"], a["labels"][0]) for a in row.get("golden", [])]
+        pred_spans = [
+            (a["start"], a["end"], a["labels"][0]) for a in row.get("pred_as_golden", [])
+        ]
+        for t in thresholds:
+            lm = per_threshold_labels[t]
+            for _, _, lab in gold_spans:
+                lm[lab]["total_gold"] += 1
+            for _, _, lab in pred_spans:
+                lm[lab]["total_pred"] += 1
+            for pi, _ in bipartite_greedy_match(pred_spans, gold_spans, iou_threshold=t):
+                lm[pred_spans[pi][2]]["matched"] += 1
+
+    out: dict[float, dict[str, Any]] = {}
+    for t in thresholds:
+        iou_p, iou_r, iou_f1, per_label = _span_metric_totals(per_threshold_labels[t])
+        raw = {
+            "token_flat": {"precision": 0.0, "recall": 0.0, "f1": 0.0},
+            "iou_agg": {"precision": iou_p, "recall": iou_r, "f1": iou_f1},
+            "iou_per_label": per_label,
+        }
+        out[t] = flatten_metrics(raw)
+    return out
+
+
+def count_alignment_failures(
+    row: pd.Series | dict[str, Any],
+    window_size: int = 500,
+    step_size: int = 100,
+    min_score: int = 80,
+) -> tuple[int, int, int]:
+    """Count how many predicted span strings fail to align to the source text.
+
+    Mirrors the fuzzy-matching logic of :func:`convert_pred_to_golden_format`
+    (``rapidfuzz.fuzz.partial_ratio`` over a sliding window, ``min_score``
+    gate) but, instead of silently dropping unlocatable strings, returns
+    ``(n_total, n_aligned, n_failed)`` so the alignment failure rate can be
+    reported per model (p34). A "failure" is a non-empty predicted
+    ``descricao_*`` string that no window matches at or above ``min_score``.
+    """
+    text = row["text"]
+    pred = row["pred"]
+    n_total = n_aligned = 0
+    if not isinstance(pred, dict):
+        return 0, 0, 0
+    for _label_type, spans in pred.items():
+        for span in spans or []:
+            if not isinstance(span, dict):
+                continue
+            span_text = (
+                span.get("descricao_multa")
+                or span.get("descricao_obrigacao")
+                or span.get("descricao_ressarcimento")
+                or span.get("descricao_recomendacao")
+            )
+            if not span_text:
+                continue
+            n_total += 1
+            best_score, best_pos = 0, -1
+            for start in range(0, len(text), step_size):
+                window = text[start : start + window_size]
+                score = fuzz.partial_ratio(span_text, window)
+                if score > best_score and score >= min_score:
+                    best_score = score
+                    best_pos = (
+                        start + window.find(span_text.split()[0]) if span_text.split() else start
+                    )
+            if best_score >= min_score and best_pos >= 0:
+                n_aligned += 1
+    return n_total, n_aligned, n_total - n_aligned
+
+
 def flatten_metrics(raw: dict[str, Any]) -> dict[str, float]:
     """Collapse the nested result from :func:`calculate_metrics` into a flat dict.
 
@@ -378,6 +471,23 @@ def flatten_metrics(raw: dict[str, Any]) -> dict[str, float]:
         metrics[f"f1_{label}"] = float(vals["f1"])
         metrics[f"precision_{label}"] = float(vals["precision"])
         metrics[f"recall_{label}"] = float(vals["recall"])
+
+    # Macro averages over the four evaluation labels (each absent class counts
+    # as 0). The aggregate span_f1 above is micro and is dominated by MULTA
+    # (~46% of gold entities); the macro variant gives every class equal weight
+    # so minority labels (RECOMENDACAO/RESSARCIMENTO) are not masked.
+    span_macro = [
+        float(raw["iou_per_label"].get(lab, {}).get("f1", 0.0)) for lab in ENTITY_LABELS
+    ]
+    metrics["span_f1_macro"] = sum(span_macro) / len(ENTITY_LABELS)
+    # Token macro-F1 only when per-label token scores are available (the
+    # ``calculate_metrics`` path); ``evaluate_bio_results`` omits them.
+    token_per_label = raw["token_flat"].get("per_label")
+    if token_per_label:
+        token_macro = [
+            float(token_per_label.get(lab, {}).get("f1", 0.0)) for lab in ENTITY_LABELS
+        ]
+        metrics["token_f1_macro"] = sum(token_macro) / len(ENTITY_LABELS)
     return metrics
 
 
@@ -402,7 +512,9 @@ def evaluate_results(df_results: pd.DataFrame, return_raw: bool = False):
 evaluate_llm_results = evaluate_results
 
 
-def evaluate_bio_results(data: dict[str, list[list[str]]]) -> dict[str, float]:
+def evaluate_bio_results(
+    data: dict[str, list[list[str]]], iou_threshold: float = 0.5
+) -> dict[str, float]:
     """Flat metrics from paired BIO sequences (`true_labels`, `pred_labels`)."""
     gold_seqs = data["true_labels"]
     pred_seqs = data["pred_labels"]
@@ -430,7 +542,7 @@ def evaluate_bio_results(data: dict[str, list[list[str]]]) -> dict[str, float]:
             label_metrics[lab]["total_gold"] += 1
         for _, _, lab in p_spans:
             label_metrics[lab]["total_pred"] += 1
-        for pi, gi in bipartite_greedy_match(p_spans, g_spans, iou_threshold=0.5):
+        for pi, gi in bipartite_greedy_match(p_spans, g_spans, iou_threshold=iou_threshold):
             label_metrics[p_spans[pi][2]]["matched"] += 1
 
     labels_sorted = sorted({lab for lab in flat_true + flat_pred if lab != "O"})
@@ -459,6 +571,7 @@ def full_evaluation(
     oof_true: list[list[str]],
     oof_pred: list[list[str]],
     model_name: str = "Model",
+    iou_threshold: float = 0.5,
 ) -> dict[str, Any]:
     """Run the spaCy metric pipeline on out-of-fold BIO predictions.
 
@@ -480,7 +593,7 @@ def full_evaluation(
         )
 
     df = pd.DataFrame(rows)
-    raw = calculate_metrics(df, iou_threshold=0.5)
+    raw = calculate_metrics(df, iou_threshold=iou_threshold)
 
     print(f"\n{'=' * 60}")
     print(f"  {model_name} (avaliação via spaCy)")

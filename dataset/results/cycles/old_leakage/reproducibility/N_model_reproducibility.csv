@@ -1,0 +1,18 @@
+modelo,chave_resultado,paradigma,id_roteado,acesso,saida_estruturada,max_tokens,context_window,snapshot_datado,temperature,top_p,seed,data_acesso
+GPT-4 Turbo,gpt-4-turbo,LLM few-shot,openai/gpt-4-turbo,OpenRouter,function_calling,4096,128K,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO
+GPT-4o,gpt-4o,LLM few-shot,openai/gpt-4o,Azure (deployment gpt-4o),function_calling,4096,128K,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO
+GPT-3.5,gpt-35,LLM few-shot,openai/gpt-3.5-turbo,Azure (deployment gpt-35-turbo),json_mode,4096,16K,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO
+GPT-4.1,gpt-41,LLM few-shot,openai/gpt-4.1,OpenRouter,function_calling,4096,1M,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO
+GPT-4.1-mini,gpt-41-mini,LLM few-shot,openai/gpt-4.1-mini,OpenRouter,function_calling,4096,1M,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO
+GPT-4.1-nano,gpt-41-nano,LLM few-shot,openai/gpt-4.1-nano,OpenRouter,function_calling,4096,1M,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO
+GPT-5.4-mini,gpt-5.4-mini_few_shot,LLM few-shot,openai/gpt-5.4-mini,Azure (deployment gpt-5.4-mini),function_calling,4096,—,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO
+GPT-5.4-nano,gpt-5.4-nano_few_shot,LLM few-shot,openai/gpt-5.4-nano,Azure (deployment gpt-5.4-nano),function_calling,4096,—,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO
+Gemini-2.5-flash,gemini-2.5-flash_few_shot,LLM few-shot,google/gemini-2.5-flash,OpenRouter,function_calling,4096,1M,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO
+DeepSeek-V3,deepseek-v3_few_shot,LLM few-shot,deepseek/deepseek-chat-v3-0324,OpenRouter (provider pinned: DeepSeek),function_calling,4096,128K,deepseek-chat-v3-0324 (pino datado no código),NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO
+Llama-3.3-70B,llama-3.3-70b_few_shot,LLM few-shot,meta-llama/llama-3.3-70b-instruct,OpenRouter (provider: Fireworks/Together/DeepInfra),function_calling,4096,131K,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO
+Qwen2.5-72B,qwen2.5-72b_few_shot,LLM few-shot,qwen/qwen-2.5-72b-instruct,OpenRouter,function_calling,4096,32K,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO
+GPT-OSS-120B,gpt-oss-120b_few_shot,LLM few-shot,openai/gpt-oss-120b,OpenRouter,json_mode,4096,131K,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO
+BERTimbau-base,neuralmind_bert-base-portuguese-cased__supervised,supervisionado,neuralmind/bert-base-portuguese-cased,treino local (k-fold),BIO token-classification,—,—,nome HF (pino),—,—,ver cv_*.json (config),—
+BERTimbau-large,neuralmind_bert-large-portuguese-cased__supervised,supervisionado,neuralmind/bert-large-portuguese-cased,treino local (k-fold),BIO token-classification,—,—,nome HF (pino),—,—,ver cv_*.json (config),—
+Legal-BERTimbau-base,rufimelo_Legal-BERTimbau-base__supervised,supervisionado,rufimelo/Legal-BERTimbau-base,treino local (k-fold),BIO token-classification,—,—,nome HF (pino),—,—,ver cv_*.json (config),—
+BiLSTM-CRF,bilstm-crf__supervised,supervisionado,arquitetura local (BiLSTM-CRF),treino local (k-fold),BIO token-classification,—,—,código local,—,—,ver cv_*.json (config),—

@@ -38,3 +38,10 @@ dataset/release/decicontas-861-corrected/brat/
 
 # transient training artefacts
 ner_fold_*/
+dataset/results/ner_fold_*/
+
+# regenerable OOF probability cache (cleanlab weight-sensitivity analysis)
+dataset/errors/oof_cache/
+
+/*.md
+!/README.md
