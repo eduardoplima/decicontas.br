@@ -35,20 +35,25 @@ from typing import Any
 
 import numpy as np
 import pandas as pd
+from sklearn.metrics import precision_recall_fscore_support
 
 from research.fewshot import FEWSHOT_RESULT_POSITIONS
 from research.ner_metrics import (
     ENTITY_LABELS,
+    _span_metric_totals,
+    _strip_bio,
     bio_to_char_spans,
+    bipartite_greedy_match,
     calculate_metrics,
     convert_pred_to_golden_format,
+    count_alignment_failures,
     flatten_metrics,
+    span_metrics_multi_iou,
 )
 from research.release.bootstrap_significance import (
     DISPLAY_NAMES,
     HIGHLIGHTED_PAIRS,
     MODELS,
-    bio_to_spans,
     bootstrap_ci_f1,
     compute_doc_level_counts,
     f1_from_sums,
@@ -56,15 +61,17 @@ from research.release.bootstrap_significance import (
 )
 
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
-OUTPUT_ROOT = REPO_ROOT / "dataset" / "results" / "chapter5_corrected"
-RELEASE_DIR = REPO_ROOT / "dataset" / "release" / "decicontas-861-corrected"
-RELEASE_PRE_DIR = REPO_ROOT / "dataset" / "release" / "decicontas-861"
-CORRECTIONS_JSON = REPO_ROOT / "dataset" / "errors" / "dataset-corrections.json"
+from research.release import paths
 
-CORRECTED_OUTPUT_DIR = REPO_ROOT / "dataset" / "results" / "output_corrected"
-EXPERIMENTS_DIR = REPO_ROOT / "dataset" / "experiments_corrected"
-KFOLD_CORRECTED = REPO_ROOT / "dataset" / "results" / "supervised_kfold_corrected"
+REPO_ROOT = paths.REPO_ROOT
+OUTPUT_ROOT = paths.CHAPTER5_DIR  # cycle-specific
+RELEASE_DIR = paths.RELEASE_DIR  # shared
+RELEASE_PRE_DIR = paths.RELEASE_PRE_DIR  # shared
+CORRECTIONS_JSON = paths.CORRECTIONS_JSON  # shared
+
+CORRECTED_OUTPUT_DIR = paths.OUTPUT_CORRECTED_DIR  # cycle-specific
+EXPERIMENTS_DIR = paths.CORRECTED_EXPERIMENTS_DIR  # cycle-specific
+KFOLD_CORRECTED = paths.KFOLD_CORRECTED  # shared
 
 logger = logging.getLogger("research.release.chapter5_numbers")
 
@@ -110,23 +117,46 @@ def block_a_corpus(out_dir: Path) -> dict[str, Any]:
 def block_b_cleanlab(out_dir: Path) -> dict[str, Any]:
     payload = json.loads(CORRECTIONS_JSON.read_text(encoding="utf-8"))
     summary = payload.get("summary") or {}
-    transitions: Counter[tuple[str, str]] = Counter()
     decisions = Counter()
     label_final_counts = Counter()
     for change in payload.get("token_changes", []):
         decisions[change["decision"]] += 1
         label_final_counts[change["label_final"]] += 1
+    # Group-level decisions are the unit the reviewer acted on (one decision per
+    # flagged entity group), recorded in the corrections file's ``summary``.
+    # These answer p57: of the 567 inspected groups, how many were actually
+    # altered vs. left at gold. They are distinct from the per-token tallies
+    # below (one flagged group spans many tokens).
+    g_accept = summary.get("accept") or 0
+    g_reject = summary.get("reject") or 0
+    g_custom = summary.get("custom") or 0
+    g_decided = summary.get("groups_decided") or 0
+    g_altered = g_accept + g_custom
     rows_summary = [
         {"metric": "groups_total", "value": summary.get("groups_total")},
-        {"metric": "groups_decided_>=0.95", "value": summary.get("groups_decided")},
+        {"metric": "groups_decided_>=0.95", "value": g_decided},
         {
             "metric": "groups_below_threshold",
-            "value": (summary.get("groups_total") or 0) - (summary.get("groups_decided") or 0),
+            "value": (summary.get("groups_total") or 0) - g_decided,
         },
+        # --- group-level decisions (p57: intervention volume) ---
+        {"metric": "groups_accept", "value": g_accept},
+        {"metric": "groups_custom", "value": g_custom},
+        {"metric": "groups_reject", "value": g_reject},
+        {"metric": "groups_altered (accept+custom)", "value": g_altered},
+        {
+            "metric": "groups_acceptance_rate",
+            "value": round(g_altered / g_decided, 4) if g_decided else None,
+        },
+        {
+            "metric": "groups_rejection_rate",
+            "value": round(g_reject / g_decided, 4) if g_decided else None,
+        },
+        # --- token-level tallies (every token inside the decided groups) ---
         {"metric": "token_changes", "value": summary.get("token_changes")},
-        {"metric": "decision_accept", "value": decisions.get("accept", 0)},
-        {"metric": "decision_reject", "value": decisions.get("reject", 0)},
-        {"metric": "decision_custom", "value": decisions.get("custom", 0)},
+        {"metric": "token_decision_accept", "value": decisions.get("accept", 0)},
+        {"metric": "token_decision_reject", "value": decisions.get("reject", 0)},
+        {"metric": "token_decision_custom", "value": decisions.get("custom", 0)},
     ]
     pd.DataFrame(rows_summary).to_csv(out_dir / "B_cleanlab_summary.csv", index=False)
     logger.info("wrote %s", out_dir / "B_cleanlab_summary.csv")
@@ -291,22 +321,14 @@ def _per_entity_metrics_bio(df: pd.DataFrame) -> dict[str, Any]:
             if tl != "O" or pl != "O":
                 flat_true.append(tl)
                 flat_pred.append(pl)
-        # Span-level IoU at token-index granularity
+        # Span-level IoU at token-index granularity, using the shared bipartite
+        # matcher (each pred matches at most one gold and vice-versa).
         for _, _, lab in gold_spans:
             label_metrics[lab]["total_gold"] += 1
         for _, _, lab in pred_spans:
             label_metrics[lab]["total_pred"] += 1
-        matched: set[tuple[int, int]] = set()
-        for pi, p in enumerate(pred_spans):
-            for gi, g in enumerate(gold_spans):
-                if (pi, gi) in matched:
-                    continue
-                if compute_iou_score(
-                    (p[0], p[1]), (g[0], g[1]), p[2], g[2], threshold=0.5
-                ) > 0:
-                    label_metrics[p[2]]["matched"] += 1
-                    matched.add((pi, gi))
-                    break
+        for pi, _ in bipartite_greedy_match(pred_spans, gold_spans, iou_threshold=0.5):
+            label_metrics[pred_spans[pi][2]]["matched"] += 1
 
     labels_sorted = sorted({lab for lab in flat_true + flat_pred if lab != "O"})
     if labels_sorted:
@@ -368,9 +390,11 @@ def block_cd_main_results(model_dfs: dict[str, pd.DataFrame], out_dir: Path) -> 
                 "model": m,
                 "display": DISPLAY_NAMES.get(m, m),
                 "token_f1": flat["token_f1"],
+                "token_f1_macro": flat.get("token_f1_macro", float("nan")),
                 "token_precision": flat["token_precision"],
                 "token_recall": flat["token_recall"],
                 "span_f1": flat["span_f1"],
+                "span_f1_macro": flat["span_f1_macro"],
                 "span_precision": flat["span_precision"],
                 "span_recall": flat["span_recall"],
             }
@@ -469,9 +493,8 @@ def block_fg_structured(out_dir: Path) -> None:
                 "model": model_clean,
                 "method": method,
                 "token_f1": flat["token_f1"],
-                "token_precision": flat["token_precision"],
-                "token_recall": flat["token_recall"],
                 "span_f1": flat["span_f1"],
+                "span_f1_macro": flat["span_f1_macro"],
                 "span_precision": flat["span_precision"],
                 "span_recall": flat["span_recall"],
             }
@@ -546,9 +569,8 @@ def block_h_prompting(out_dir: Path) -> None:
                 "model": model,
                 "technique": technique,
                 "token_f1": flat["token_f1"],
-                "token_precision": flat["token_precision"],
-                "token_recall": flat["token_recall"],
                 "span_f1": flat["span_f1"],
+                "span_f1_macro": flat["span_f1_macro"],
                 "span_precision": flat["span_precision"],
                 "span_recall": flat["span_recall"],
             }
@@ -676,6 +698,28 @@ def block_i_errors(model_dfs: dict[str, pd.DataFrame], best_model: str, out_dir:
 # ----- Block J: bootstrap CIs + paired comparisons ------------------------
 
 
+def _holm_bonferroni(pvals: list[float]) -> tuple[list[float], list[float]]:
+    """Return (Holm-adjusted, Bonferroni-adjusted) p-values for a family.
+
+    Holm is the step-down method (uniformly more powerful than Bonferroni
+    while controlling the same family-wise error rate). Both are computed
+    here without a statsmodels dependency. The family is the set of
+    comparisons passed in (see :func:`block_j_significance`, where it is the
+    reported highlighted pairs).
+    """
+    m = len(pvals)
+    if m == 0:
+        return [], []
+    bonf = [min(1.0, p * m) for p in pvals]
+    order = sorted(range(m), key=lambda i: pvals[i])
+    holm = [0.0] * m
+    running = 0.0
+    for rank, idx in enumerate(order):
+        running = max(running, (m - rank) * pvals[idx])
+        holm[idx] = min(1.0, running)
+    return holm, bonf
+
+
 def block_j_significance(model_dfs: dict[str, pd.DataFrame], out_dir: Path) -> dict[str, Any]:
     model_counts: dict[str, dict] = {}
     for m, df in model_dfs.items():
@@ -738,6 +782,18 @@ def block_j_significance(model_dfs: dict[str, pd.DataFrame], out_dir: Path) -> d
         axis=1,
     )
     df_highlighted = df_pairs[mask].copy().reset_index(drop=True)
+    # Multiple-comparison correction (p48a). The reported family is the set of
+    # highlighted pairs (the comparisons the chapter actually discusses); we
+    # adjust the per-comparison p-values with Holm and Bonferroni so the "Sig."
+    # column in Table 13 reflects family-wise error control instead of 12
+    # uncorrected tests. Marginal differences (e.g. GPT-4 Turbo vs GPT-4.1)
+    # are expected not to survive — reinforcing the saturation reading.
+    holm, bonf = _holm_bonferroni(df_highlighted["p_value"].tolist())
+    df_highlighted["p_holm"] = holm
+    df_highlighted["p_bonferroni"] = bonf
+    df_highlighted["sig_holm_5pct"] = [p < 0.05 for p in holm]
+    df_highlighted["sig_bonferroni_5pct"] = [p < 0.05 for p in bonf]
+    df_highlighted["family_size"] = len(df_highlighted)
     df_highlighted.to_csv(out_dir / "J_bootstrap_paired_highlighted.csv", index=False)
 
     # Smallest significant diff
@@ -746,10 +802,32 @@ def block_j_significance(model_dfs: dict[str, pd.DataFrame], out_dir: Path) -> d
     smallest = sig.nsmallest(1, "abs_diff").iloc[0].to_dict() if not sig.empty else None
     n_sig = int(df_pairs["significant_95"].sum())
     n_total = len(df_pairs)
+    # Resampling unit (p32): the bootstrap resamples whole documents — each row
+    # of the per-model DataFrame is one document (the unit of analysis). Expose
+    # n so the text can state it explicitly.
+    n_docs = len(next(iter(model_dfs.values()))) if model_dfs else 0
 
     summary_rows = [
+        {"metric": "resampling_unit", "value": "document"},
+        {"metric": "n_docs_resampled", "value": n_docs},
         {"metric": "n_total_pairs", "value": n_total},
-        {"metric": "n_significant_5pct", "value": n_sig},
+        {"metric": "n_significant_5pct_uncorrected", "value": n_sig},
+        {
+            "metric": "highlighted_family_size",
+            "value": int(len(df_highlighted)),
+        },
+        {
+            "metric": "highlighted_n_sig_uncorrected",
+            "value": int(df_highlighted["significant_95"].sum()),
+        },
+        {
+            "metric": "highlighted_n_sig_holm",
+            "value": int(df_highlighted["sig_holm_5pct"].sum()),
+        },
+        {
+            "metric": "highlighted_n_sig_bonferroni",
+            "value": int(df_highlighted["sig_bonferroni_5pct"].sum()),
+        },
         {
             "metric": "smallest_significant_abs_diff",
             "value": float(smallest["abs_diff"]) if smallest else None,
@@ -770,6 +848,153 @@ def block_j_significance(model_dfs: dict[str, pd.DataFrame], out_dir: Path) -> d
         smallest["abs_diff"] if smallest else "—",
     )
     return {"df_ci": df_ci, "df_pairs": df_pairs, "summary_rows": summary_rows}
+
+
+# ----- Block K: IoU threshold sensitivity ---------------------------------
+
+
+# Sweep of IoU thresholds; 1.0 == exact-span match.
+IOU_SWEEP = [0.3, 0.5, 0.7, 1.0]
+_IOU_LABEL = {0.3: "0.3", 0.5: "0.5", 0.7: "0.7", 1.0: "exact"}
+
+
+def block_k_iou_sensitivity(model_dfs: dict[str, pd.DataFrame], out_dir: Path) -> None:
+    """Span F1 of every model at IoU ∈ {0.3, 0.5, 0.7} and exact match (p43a).
+
+    Because entities are long, the canonical IoU ≥ 0.5 is permissive; this
+    block shows whether the model ranking is stable as the threshold tightens.
+    Span IoU is computed over character offsets, so no re-tokenisation is
+    needed (see :func:`research.ner_metrics.span_metrics_multi_iou`).
+    """
+    rows: list[dict] = []
+    for m, df in model_dfs.items():
+        per_t = span_metrics_multi_iou(df, IOU_SWEEP)
+        for t in IOU_SWEEP:
+            flat = per_t[t]
+            rows.append(
+                {
+                    "model": m,
+                    "display": DISPLAY_NAMES.get(m, m),
+                    "iou_threshold": _IOU_LABEL[t],
+                    "span_f1": flat["span_f1"],
+                    "span_f1_macro": flat["span_f1_macro"],
+                    "span_precision": flat["span_precision"],
+                    "span_recall": flat["span_recall"],
+                }
+            )
+    df_long = pd.DataFrame(rows)
+    df_long.to_csv(out_dir / "K_iou_sensitivity.csv", index=False)
+    logger.info("wrote %s", out_dir / "K_iou_sensitivity.csv")
+
+    # Wide pivot (model × threshold) on span F1 for quick reading.
+    wide = df_long.pivot(index="display", columns="iou_threshold", values="span_f1")[
+        [_IOU_LABEL[t] for t in IOU_SWEEP]
+    ]
+    wide.to_csv(out_dir / "K_iou_sensitivity_wide.csv")
+
+    # Ranking stability: Spearman correlation of the per-threshold model
+    # ranking against the canonical IoU=0.5 ranking.
+    rank_corr_rows = []
+    base = wide["0.5"]
+    for t in IOU_SWEEP:
+        col = _IOU_LABEL[t]
+        rho = wide[col].corr(base, method="spearman")
+        rank_corr_rows.append(
+            {"iou_threshold": col, "spearman_vs_0.5": round(float(rho), 4)}
+        )
+    pd.DataFrame(rank_corr_rows).to_csv(
+        out_dir / "K_iou_ranking_stability.csv", index=False
+    )
+    logger.info("wrote %s", out_dir / "K_iou_ranking_stability.csv")
+
+
+# ----- Block L: metrics restricted to informative documents ---------------
+
+
+def _keep_informative_only(df: pd.DataFrame) -> pd.DataFrame:
+    """Keep only documents carrying at least one gold entity (drops the 629
+    empty documents that can only contribute false positives)."""
+    return df[df["golden"].apply(len) > 0].reset_index(drop=True)
+
+
+def block_l_informative_subset(model_dfs: dict[str, pd.DataFrame], out_dir: Path) -> None:
+    """Re-score every model on the 232 informative documents only (p41b).
+
+    Of the 861 documents, 629 carry no gold entity and contribute only false
+    positives. Restricting to the 232 documents with ≥ 1 gold entity shows how
+    much of each model's precision came from the volume of easy negatives
+    rather than from accurate span delimitation.
+    """
+    rows: list[dict] = []
+    for m, df in model_dfs.items():
+        sub = _keep_informative_only(df)
+        full = span_metrics_multi_iou(df, [0.5])[0.5]
+        info = span_metrics_multi_iou(sub, [0.5])[0.5]
+        rows.append(
+            {
+                "model": m,
+                "display": DISPLAY_NAMES.get(m, m),
+                "n_docs_full": len(df),
+                "n_docs_informative": len(sub),
+                "span_f1_full": full["span_f1"],
+                "span_f1_informative": info["span_f1"],
+                "delta_span_f1": info["span_f1"] - full["span_f1"],
+                "span_precision_full": full["span_precision"],
+                "span_precision_informative": info["span_precision"],
+                "delta_span_precision": info["span_precision"] - full["span_precision"],
+                "span_recall_full": full["span_recall"],
+                "span_recall_informative": info["span_recall"],
+            }
+        )
+    df_out = (
+        pd.DataFrame(rows).sort_values("span_f1_informative", ascending=False).reset_index(drop=True)
+    )
+    df_out.to_csv(out_dir / "L_informative_subset.csv", index=False)
+    logger.info("wrote %s", out_dir / "L_informative_subset.csv")
+
+
+# ----- Block M: string->offset alignment failure rate ---------------------
+
+
+def block_m_alignment_failures(model_dfs: dict[str, pd.DataFrame], out_dir: Path) -> None:
+    """Per-model rate at which predicted span strings fail to align (p34).
+
+    The LLM pipeline returns textual descriptions, not character offsets; they
+    are located in the source by fuzzy matching (rapidfuzz partial_ratio,
+    window 500 / step 100 / min_score 80). Strings that no window matches at
+    that floor are silently dropped during scoring — so any non-trivial failure
+    rate means real predictions never reach the metric. This block surfaces it.
+    Only LLM result frames carry the raw ``pred``/``text``; supervised BIO
+    frames are skipped.
+    """
+    rows: list[dict] = []
+    for m, df in model_dfs.items():
+        if "pred" not in df.columns or "text" not in df.columns:
+            continue
+        n_total = n_aligned = n_failed = 0
+        for _, row in df.iterrows():
+            t, a, f = count_alignment_failures(row)
+            n_total += t
+            n_aligned += a
+            n_failed += f
+        rows.append(
+            {
+                "model": m,
+                "display": DISPLAY_NAMES.get(m, m),
+                "n_pred_strings": n_total,
+                "n_aligned": n_aligned,
+                "n_failed": n_failed,
+                "failure_rate": round(n_failed / n_total, 4) if n_total else 0.0,
+            }
+        )
+    if not rows:
+        logger.warning("no LLM frames with raw 'pred' for alignment audit")
+        return
+    df_out = (
+        pd.DataFrame(rows).sort_values("failure_rate", ascending=False).reset_index(drop=True)
+    )
+    df_out.to_csv(out_dir / "M_alignment_failures.csv", index=False)
+    logger.info("wrote %s", out_dir / "M_alignment_failures.csv")
 
 
 # ----- Block E: cost-benefit (data unavailable) ---------------------------
@@ -937,7 +1162,9 @@ def write_report(out_dir: Path, j_summary: list[dict[str, Any]]) -> None:
     )
     j_summary_df = pd.DataFrame(j_summary)
     n_sig_now = int(
-        j_summary_df.loc[j_summary_df["metric"] == "n_significant_5pct", "value"].iloc[0]
+        j_summary_df.loc[
+            j_summary_df["metric"] == "n_significant_5pct_uncorrected", "value"
+        ].iloc[0]
     )
     smallest_now = float(
         j_summary_df.loc[
@@ -968,27 +1195,29 @@ def write_report(out_dir: Path, j_summary: list[dict[str, Any]]) -> None:
         ("gpt-5.4-nano", "function_calling"): 0.7482,
         ("gpt-5.4-nano", "json_schema"): 0.7087,
     }
-    df_fcjs_now = pd.read_csv(out_dir / "F_fc_vs_json_overall.csv")
-    fcjs_rows = []
-    for _, r in df_fcjs_now.iterrows():
-        key = (r["model"], r["method"])
-        if key not in pre_fcjs_span_f1:
-            continue
-        fcjs_rows.append(
-            {
-                "model": r["model"],
-                "method": r["method"],
-                "span F1 antes": pre_fcjs_span_f1[key],
-                "span F1 depois": float(r["span_f1"]),
-                "Δ span F1": float(r["span_f1"]) - pre_fcjs_span_f1[key],
-            }
+    # FC-vs-JSON only exists in cycles that ran that experiment (old_leakage).
+    if (out_dir / "F_fc_vs_json_overall.csv").exists():
+        df_fcjs_now = pd.read_csv(out_dir / "F_fc_vs_json_overall.csv")
+        fcjs_rows = []
+        for _, r in df_fcjs_now.iterrows():
+            key = (r["model"], r["method"])
+            if key not in pre_fcjs_span_f1:
+                continue
+            fcjs_rows.append(
+                {
+                    "model": r["model"],
+                    "method": r["method"],
+                    "span F1 antes": pre_fcjs_span_f1[key],
+                    "span F1 depois": float(r["span_f1"]),
+                    "Δ span F1": float(r["span_f1"]) - pre_fcjs_span_f1[key],
+                }
+            )
+        parts.append(
+            "### Comparativo antes × depois — FC vs JSON Schema (8 experimentos)\n"
         )
-    parts.append(
-        "### Comparativo antes × depois — FC vs JSON Schema (8 experimentos)\n"
-    )
-    parts.append(
-        pd.DataFrame(fcjs_rows).to_markdown(index=False, floatfmt=".4f") + "\n"
-    )
+        parts.append(
+            pd.DataFrame(fcjs_rows).to_markdown(index=False, floatfmt=".4f") + "\n"
+        )
 
     # Prompting techniques: span F1 antes/depois por (modelo, técnica)
     pre_prompt_span_f1 = {
@@ -1038,7 +1267,14 @@ def write_report(out_dir: Path, j_summary: list[dict[str, Any]]) -> None:
 
     # ----- B. Cleanlab -----------------------------------------------------
     parts.append("## B. Auditoria Cleanlab\n")
-    parts.append("**Resumo das decisões e contagens de tokens:**\n")
+    parts.append(
+        "Dos **567** grupos com confiança ≥ 0,95 inspecionados (anotador único), "
+        "apenas os marcados como `accept`/`custom` resultaram em alteração; os "
+        "`reject` permaneceram no gold. As contagens de grupo abaixo respondem ao "
+        "volume de intervenção (aceitos × rejeitados); as contagens de token são a "
+        "granularidade fina dentro dos grupos decididos.\n"
+    )
+    parts.append("**Resumo das decisões (grupo) e contagens de tokens:**\n")
     parts.append(_md_table(pd.read_csv(out_dir / "B_cleanlab_summary.csv")) + "\n")
     parts.append("**Distribuição de `label_final` (rótulos para os quais os tokens foram migrados):**\n")
     parts.append(_md_table(pd.read_csv(out_dir / "B_label_final_counts.csv")) + "\n")
@@ -1083,28 +1319,22 @@ def write_report(out_dir: Path, j_summary: list[dict[str, Any]]) -> None:
     )
     parts.append(_md_table(pd.read_csv(out_dir / "E_cost_template.csv")) + "\n")
 
-    # ----- F. FC vs JSON --------------------------------------------------
-    parts.append("## F. Function calling vs JSON schema\n")
-    parts.append("**Métricas overall:**\n")
-    parts.append(_md_table(pd.read_csv(out_dir / "F_fc_vs_json_overall.csv")) + "\n")
-    parts.append("**Δ por modelo (FC − JS):**\n")
-    parts.append(_md_table(pd.read_csv(out_dir / "F_fc_vs_json_delta.csv")) + "\n")
-
-    # ----- G. FC vs JSON per entity ---------------------------------------
-    parts.append("## G. FC vs JSON Schema por entidade\n")
-    fcjs_per = pd.read_csv(out_dir / "G_fc_vs_json_per_entity.csv")
-    parts.append("**Span F1 (modelo+método × entidade) — pivotado:**\n")
-    parts.append(
-        _pivot_md(fcjs_per, ["model", "method"], "label", "f1") + "\n"
-    )
-    parts.append("**Span Precision (modelo+método × entidade):**\n")
-    parts.append(
-        _pivot_md(fcjs_per, ["model", "method"], "label", "precision") + "\n"
-    )
-    parts.append("**Span Recall (modelo+método × entidade):**\n")
-    parts.append(
-        _pivot_md(fcjs_per, ["model", "method"], "label", "recall") + "\n"
-    )
+    # ----- F + G. FC vs JSON (only if this cycle ran that experiment) ------
+    if (out_dir / "F_fc_vs_json_overall.csv").exists():
+        parts.append("## F. Function calling vs JSON schema\n")
+        parts.append("**Métricas overall:**\n")
+        parts.append(_md_table(pd.read_csv(out_dir / "F_fc_vs_json_overall.csv")) + "\n")
+        parts.append("**Δ por modelo (FC − JS):**\n")
+        parts.append(_md_table(pd.read_csv(out_dir / "F_fc_vs_json_delta.csv")) + "\n")
+    if (out_dir / "G_fc_vs_json_per_entity.csv").exists():
+        parts.append("## G. FC vs JSON Schema por entidade\n")
+        fcjs_per = pd.read_csv(out_dir / "G_fc_vs_json_per_entity.csv")
+        parts.append("**Span F1 (modelo+método × entidade) — pivotado:**\n")
+        parts.append(_pivot_md(fcjs_per, ["model", "method"], "label", "f1") + "\n")
+        parts.append("**Span Precision (modelo+método × entidade):**\n")
+        parts.append(_pivot_md(fcjs_per, ["model", "method"], "label", "precision") + "\n")
+        parts.append("**Span Recall (modelo+método × entidade):**\n")
+        parts.append(_pivot_md(fcjs_per, ["model", "method"], "label", "recall") + "\n")
 
     # ----- H. Prompting ---------------------------------------------------
     parts.append("## H. Técnicas de prompting\n")
@@ -1166,11 +1396,56 @@ def write_report(out_dir: Path, j_summary: list[dict[str, Any]]) -> None:
     )
     parts.append("**Itens 47–48 — Resumo:**\n")
     parts.append(_md_table(pd.DataFrame(j_summary)) + "\n")
+    parts.append(
+        "**p48a — Correção para múltiplas comparações.** A família reportada são "
+        "os pares destacados acima; `p_holm`/`p_bonferroni` controlam o erro "
+        "familiar (FWER) e `sig_holm_5pct` substitui a coluna 'Sig.' não corrigida "
+        "da Tabela 13. Diferenças marginais tendem a não sobreviver, reforçando a "
+        "leitura de saturação.\n"
+    )
     parts.append("**Tabela completa dos 91 pares (ordenada por |Δ|):**\n")
     parts.append(_md_table(pd.read_csv(out_dir / "J_bootstrap_paired_all.csv")) + "\n")
 
-    # ----- K. Canonical token F1 ------------------------------------------
-    parts.append("## K. Token F1 do GPT-4-turbo (canônico)\n")
+    # ----- K. IoU sensitivity ---------------------------------------------
+    parts.append("## K. Sensibilidade ao limiar de IoU (p43a)\n")
+    parts.append(
+        "Como as entidades são longas, IoU ≥ 0,5 é permissivo. Span F1 por modelo "
+        "para IoU ∈ {0,3, 0,5, 0,7} e correspondência exata (1,0):\n"
+    )
+    parts.append(_md_table(pd.read_csv(out_dir / "K_iou_sensitivity_wide.csv")) + "\n")
+    parts.append(
+        "**Estabilidade do ranking** (Spearman do ranking de cada limiar vs. "
+        "IoU = 0,5):\n"
+    )
+    parts.append(
+        _md_table(pd.read_csv(out_dir / "K_iou_ranking_stability.csv")) + "\n"
+    )
+
+    # ----- L. Informative subset ------------------------------------------
+    parts.append("## L. Métrica restrita aos documentos informativos (p41b)\n")
+    parts.append(
+        "Dos 861 documentos, 629 não têm entidade gold e só contribuem com falsos "
+        "positivos. Restringindo aos 232 documentos com ≥ 1 entidade, vê-se quanto "
+        "da precisão vinha do volume de negativos (queda de precisão = inflada "
+        "pelos vazios):\n"
+    )
+    parts.append(_md_table(pd.read_csv(out_dir / "L_informative_subset.csv")) + "\n")
+
+    # ----- M. Alignment failures ------------------------------------------
+    m_path = out_dir / "M_alignment_failures.csv"
+    if m_path.exists():
+        parts.append("## M. Taxa de falha de alinhamento string→offset (p34)\n")
+        parts.append(
+            "As predições dos LLMs são strings (não offsets); são localizadas no "
+            "texto-fonte por correspondência difusa (rapidfuzz `partial_ratio`, "
+            "janela 500 / passo 100 / `min_score` 80). Strings que nenhuma janela "
+            "casa nesse piso são descartadas silenciosamente na pontuação — a taxa "
+            "de falha abaixo quantifica quantas predições nunca chegam à métrica:\n"
+        )
+        parts.append(_md_table(pd.read_csv(m_path)) + "\n")
+
+    # ----- Nota: Canonical token F1 ---------------------------------------
+    parts.append("## Nota — Token F1 do GPT-4-turbo (canônico)\n")
     row = df_main[df_main["model"] == "gpt-4-turbo"]
     if not row.empty:
         token_f1 = row.iloc[0]["token_f1"]
@@ -1205,6 +1480,9 @@ def run() -> None:
     block_i_errors(model_dfs, best, OUTPUT_ROOT)
 
     j = block_j_significance(model_dfs, OUTPUT_ROOT)
+    block_k_iou_sensitivity(model_dfs, OUTPUT_ROOT)
+    block_l_informative_subset(model_dfs, OUTPUT_ROOT)
+    block_m_alignment_failures(model_dfs, OUTPUT_ROOT)
     block_e_cost(model_dfs, OUTPUT_ROOT)
 
     write_report(OUTPUT_ROOT, j["summary_rows"])

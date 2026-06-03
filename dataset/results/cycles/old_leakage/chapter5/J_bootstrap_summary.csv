@@ -1,0 +1,11 @@
+metric,value
+resampling_unit,document
+n_docs_resampled,861
+n_total_pairs,91
+n_significant_5pct_uncorrected,54
+highlighted_family_size,12
+highlighted_n_sig_uncorrected,9
+highlighted_n_sig_holm,8
+highlighted_n_sig_bonferroni,7
+smallest_significant_abs_diff,0.03636858879090947
+smallest_significant_pair,GPT-5.4-nano vs Gemini-2.5-flash

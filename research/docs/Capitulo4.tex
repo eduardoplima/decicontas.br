@@ -1,0 +1,409 @@
+\chapter{Reconhecimento de Entidades Nomeadas em Decisões do TCE/RN}
+\label{cap:cap4}
+
+Este capítulo descreve o desenho experimental adotado para avaliar a extração de entidades nomeadas em decisões do TCE/RN. As Seções~\ref{sec:dataset_decicontas} e~\ref{sec:esquema_anotacao} apresentam o conjunto de dados \texttt{decicontas.br} e seu esquema de anotação. A Seção~\ref{sec:cleanlab} descreve o procedimento de detecção de erros de anotação com a biblioteca Cleanlab. A Seção~\ref{sec:prompting} detalha a estratégia de \textit{prompting} adotada como linha de base e suas variantes. A Seção~\ref{sec:modelos} apresenta os modelos avaliados, organizados em duas famílias --- modelos supervisionados (BiLSTM-CRF e modelos baseados em BERT) e modelos de linguagem de grande porte. A Seção~\ref{sec:protocolo} descreve o protocolo experimental, incluindo métricas, validação cruzada e infraestrutura. A Seção~\ref{sec:integracao} apresenta a etapa subsequente do \textit{pipeline} --- extração estruturada de atributos e persistência em banco relacional ---, atualmente em fase de implementação, com cronograma detalhado no Capítulo~\ref{cap:cap6}. Os resultados obtidos para a etapa de REN são reportados no Capítulo~\ref{cap:cap5}.
+
+% ============================================================
+\section{O conjunto de dados \texttt{decicontas.br}}
+\label{sec:dataset_decicontas}
+% ============================================================
+
+A construção de conjuntos de dados anotados constitui etapa fundamental para o avanço de tarefas de Processamento de Linguagem Natural, especialmente no Reconhecimento de Entidades Nomeadas. Conforme \citeonline{hovy2010towards}, o processo de anotação de \textit{corpora} deve ser tratado com rigor metodológico, seguindo um \textit{pipeline} iterativo de refinamento do esquema e do manual de anotação. \citeonline{gebru2021datasheets}, por sua vez, propõem os \textit{datasheets for datasets}: um conjunto estruturado de perguntas que orientam a documentação de aspectos como motivação, composição, coleta, pré-processamento, usos pretendidos, distribuição e manutenção do conjunto de dados.
+
+O \textit{dataset} \texttt{decicontas.br} foi construído a partir dessas diretrizes. Trata-se de um conjunto de dados anotado para Reconhecimento de Entidades Nomeadas composto por decisões de prestação e tomada de contas proferidas pelo Tribunal de Contas do Estado do Rio Grande do Norte (TCE/RN). O \textit{corpus} compreende 861 documentos --- cada decisão é uma instância textual e constitui a unidade de análise adotada de forma consistente em todo o trabalho, inclusive como unidade de reamostragem do \textit{bootstrap} (Seção~\ref{sec:metricas}) ---, dos quais 232 possuem ao menos uma entidade anotada, distribuídas em quatro categorias: \textsc{Multa}, \textsc{Obrigação}, \textsc{Recomendação} e \textsc{Ressarcimento}.
+
+O desenho dessas categorias é derivado do Cadastro Geral de Acompanhamento de Decisões (CGAD), previsto no art.~431, inciso IV, do Regimento Interno do TCE/RN \cite{tcern_regimento}. O CGAD subdivide-se em: Cadastro Geral de Multas (CGM), para acompanhamento de sanções pecuniárias; Cadastro Geral de Devoluções (CGD), para condenações de devolução de valores ao erário; e Cadastro Geral de Recomendações (CGR), para obrigações de fazer ou não fazer e recomendações sem caráter monetário. Assim, o \texttt{decicontas.br} é peça fundamental na solução que viabilizará a alimentação automatizada desses cadastros, substituindo o trabalho manual de leitura e classificação.
+
+O \textit{dataset} se insere na tradição de construção de \textit{corpora} jurídicos anotados para REN em língua portuguesa. O LeNER-Br \cite{Araujo2018}, pioneiro nesse domínio, adota categorias clássicas --- pessoa, organização, local, data --- acrescidas de categorias específicas como \textit{Legislação} e \textit{Jurisprudência}. O UlyssesNER-Br \cite{albuquerque2023ulyssesner}, voltado ao domínio legislativo, organiza as entidades em sete categorias semânticas e dezoito subtipos. O \texttt{decicontas.br} compartilha com ambos a definição de esquemas específicos do domínio jurídico, mas não anota entidades genéricas, concentrando-se exclusivamente nos efeitos práticos das decisões de um colegiado de contas. Isso lhe confere um caráter orientado ao controle externo exercido pelos Tribunais de Contas.
+
+% ============================================================
+\section{Esquema de Anotação}
+\label{sec:esquema_anotacao}
+% ============================================================
+
+O esquema de anotação define quatro tipos de entidades, correspondentes aos subcadastros do CGAD descritos na seção anterior. Cada entidade representa um trecho textual (\textit{span}) do dispositivo da decisão que materializa uma modalidade de comando do Tribunal. O esquema adotado é do tipo \emph{flat}, isto é, cada entidade é representada por um único \textit{span} contíguo, sem aninhamento nem sobreposição entre entidades. Essa opção é deliberada e adequada ao domínio: as quatro categorias correspondem a comandos decisórios distintos, materializados em trechos do dispositivo que, na prática, não se encaixam uns dentro dos outros --- uma multa, uma obrigação, um ressarcimento ou uma recomendação ocupam segmentos próprios do texto. Um esquema aninhado (\textit{nested NER}), além de não refletir essa estrutura, introduziria ambiguidade de fronteiras e complicaria tanto a anotação quanto a avaliação, sem ganho informativo para o objetivo de alimentar os subcadastros do CGAD. A Tabela~\ref{tab:resumo_entidades} sintetiza as categorias, e a lista a seguir detalha as diretrizes de delimitação do \textit{span} com exemplos inspirados em registros reais do \textit{dataset}.
+
+\begin{itemize}
+    \item \textsc{Multa} --- sanção pecuniária por infração administrativa ou fiscal (LCE n.º 464/2012, art.~107; Resolução n.º 013/2015-TCE). O \textit{span} deve incluir o valor ou percentual da penalidade, a identificação do responsável, o fundamento legal e, quando presente, a indicação de solidariedade. Trechos de fundamentação que antecedem a aplicação da multa não integram o \textit{span}.
+
+    \textit{Exemplo}: ``\textit{multa ao Sr.\ Fulano da Silva [\ldots] na quantia de R\$\,4.172,49 (quatro mil, cento e setenta e dois reais e quarenta e nove centavos)}''.
+
+    \item \textsc{Obrigação} --- determinação de fazer ou não fazer, com caráter vinculante e prazo de cumprimento (art.~431, IV, ``c'', do Regimento Interno). O \textit{span} deve abranger a conduta exigida, o prazo e, quando presente, a previsão de multa cominatória. Fundamentação jurídica e considerandos motivadores ficam excluídos.
+
+    \textit{Exemplo}: ``\textit{determinação à Secretaria X [\ldots] para que, no prazo de 60 (sessenta) dias, após o trânsito em julgado desta decisão, adote as correções necessárias [\ldots] sem prejuízo da multa cominatória desde já fixada no valor de R\$\,50,00 (cinquenta reais) por dia}''.
+
+    \item \textsc{Ressarcimento} --- condenação à devolução de valores ao erário por dano comprovado (art.~431, IV, ``b'', do Regimento Interno). O \textit{span} deve incluir a identificação do responsável, o valor do dano, a indicação de solidariedade (quando houver) e a forma de atualização monetária.
+
+    \textit{Exemplo}: ``\textit{condenação do gestor responsável, Senhor Fulano da Silva, ao ressarcimento da quantia R\$\,6.583,99 [\ldots] referente ao pagamento de encargos moratórios gerados por juros e multa do FGTS e INSS}''.
+
+    \item \textsc{Recomendação} --- orientação não vinculante, sem sanção por descumprimento. O \textit{span} deve conter a providência sugerida e, quando presente, o órgão destinatário.
+
+    \textit{Exemplo}: ``\textit{RECOMENDAÇÃO ao Poder Executivo e Legislativo do Município de Algum Lugar/RN [\ldots] para que da edição de nova lei municipal que aborde aumento de despesa com pessoal seja precedida de estudo de impacto financeiro e orçamentário}''.
+\end{itemize}
+
+\begin{table}[htbp]
+\centering
+\caption{Resumo das entidades do esquema de anotação.}
+\label{tab:resumo_entidades}
+\small
+\begin{tabular}{p{3.8cm}p{4.5cm}p{5.2cm}}
+\toprule
+\textbf{Entidade} & \textbf{Definição} & \textbf{Elementos do \textit{span}} \\
+\midrule
+\textsc{Multa} & Sanção pecuniária por infração & Valor/percentual, responsável, fundamento legal \\
+\textsc{Obrigação} & Determinação de fazer ou não fazer & Conduta, prazo, multa cominatória \\
+\textsc{Ressarcimento} & Devolução de valores ao erário & Responsável, valor do dano, solidariedade \\
+\textsc{Recomendação} & Orientação não vinculante & Providência sugerida, órgão destinatário \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Esquema de rotulagem}
+\label{sec:bio_scheme}
+
+Adotou-se o esquema BIO neste trabalho, com nuances que merecem detalhamento. Para os modelos supervisionados (BiLSTM-CRF e BERT), BIO é o formato \emph{nativo} de treinamento e inferência: cada \textit{token} recebe um rótulo. Para os LLMs, a inferência ocorre em modo \emph{span-based} via esquema Pydantic (Seção~\ref{sec:saida_estruturada}), e os \textit{spans} extraídos são posteriormente reprojetados para BIO sobre uma tokenização comum (Seção~\ref{sec:metricas}) apenas para fins de avaliação \textit{token-level}. Com quatro tipos de entidades, o esquema resulta em nove classes: \texttt{B-\textsc{Multa}}, \texttt{I-\textsc{Multa}}, \texttt{B-\textsc{Obrigação}}, \texttt{I-\textsc{Obrigação}}, \texttt{B-\textsc{Ressarcimento}}, \texttt{I-\textsc{Ressarcimento}}, \texttt{B-\textsc{Recomendação}}, \texttt{I-\textsc{Recomendação}} e \texttt{O}.
+
+A opção pelo esquema BIO, em detrimento de variantes mais expressivas como BIOES ou BILOU, justifica-se porque as entidades do domínio são predominantemente longas --- \textit{spans} de várias dezenas ou centenas de \textit{tokens} ---, o que torna pouco informativa a distinção entre \textit{tokens} finais ou unitários. Além disso, o esquema BIO é o mais compatível com os \textit{benchmarks} e ferramentas de avaliação utilizados (como a biblioteca \texttt{seqeval}) e é adotado pelos principais \textit{datasets} de REN jurídico em português \cite{Araujo2018,albuquerque2023ulyssesner}, atribuindo paridade metodológica com a literatura.
+
+\subsection{Saída estruturada via \textit{function calling}}
+\label{sec:saida_estruturada}
+
+Para a extração via LLMs, a saída esperada é formalizada por um esquema Pydantic, denominado \texttt{NERDecisao}, que cumpre dupla função: é passado ao mecanismo de \textit{function calling} como especificação do formato de resposta e atua como contrato de validação automática em tempo de execução, rejeitando respostas que não respeitem a estrutura definida.
+
+A integração ao modelo é feita com o método \texttt{with\_structured\_output} da biblioteca LangChain, que vincula a classe \texttt{NERDecisao} à instância do LLM. \texttt{NERDecisao} agrega quatro listas --- uma por tipo de entidade: \textsc{Multa}, \textsc{Obrigação}, \textsc{Ressarcimento} e \textsc{Recomendação} --- cada qual com \textit{default} de lista vazia. As listas são declaradas como \texttt{List[\ldots]} (e não \texttt{Optional[List[\ldots]]}): a ausência de uma entidade é representada por lista vazia, nunca por \texttt{null}. Essa escolha garante que os diferentes mecanismos de saída estruturada (Seção~\ref{sec:variacoes_prompt} e Capítulo~\ref{cap:cap5}) recebam exatamente os mesmos campos obrigatórios, evitando que a opcionalidade do campo influencie a decodificação. A Figura~\ref{fig:pydantic_ner} apresenta o código das classes.
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}{0.95\linewidth}
+\begin{footnotesize}
+\begin{verbatim}
+class NERMulta(BaseModel):
+    descricao_multa: str = Field(..., description="Descreve a multa")
+
+class NERObrigacao(BaseModel):
+    descricao_obrigacao: str = Field(..., description="Descreve a obrigacao")
+
+class NERRessarcimento(BaseModel):
+    descricao_ressarcimento: str = Field(..., description="Descreve o ressarcimento")
+
+class NERRecomendacao(BaseModel):
+    descricao_recomendacao: str = Field(..., description="Descreve a recomendacao")
+
+class NERDecisao(BaseModel):
+    multas:         List[NERMulta]         = Field(default_factory=list)
+    obrigacoes:     List[NERObrigacao]     = Field(default_factory=list)
+    ressarcimentos: List[NERRessarcimento] = Field(default_factory=list)
+    recomendacoes:  List[NERRecomendacao]  = Field(default_factory=list)
+\end{verbatim}
+\end{footnotesize}
+\end{minipage}
+\caption{Esquema Pydantic \texttt{NERDecisao} utilizado para a saída estruturada dos LLMs na etapa de REN.}
+\label{fig:pydantic_ner}
+\end{figure}
+
+\subsection{Anotação com Label Studio}
+
+A anotação das entidades foi realizada manualmente pelo autor deste trabalho por meio do Label Studio, ferramenta de código aberto amplamente adotada para a construção de \textit{corpora}. Cada decisão foi anotada no nível de \textit{span}, com registro dos limites de início e fim, o que permite a recuperação exata dos segmentos de texto associados a cada entidade. A Figura~\ref{fig:exemplo-decisao} ilustra uma decisão do TCE/RN anotada na ferramenta.
+
+A anotação por um único anotador é uma limitação reconhecida deste trabalho e impede o cálculo direto de medidas de concordância entre anotadores, como o $\kappa$ de Cohen. Três fatores mitigam esse risco. Primeiro, o esquema é estreito e ancorado em definições normativas objetivas (os subcadastros do CGAD, Seção~\ref{sec:dataset_decicontas}): as quatro categorias correspondem a institutos jurídicos formalmente distintos --- multa, obrigação, ressarcimento e recomendação ---, o que reduz a margem de interpretação subjetiva frente a esquemas de entidades genéricas. Segundo, o anotador possui conhecimento do domínio de controle externo, condição apontada por \citeonline{Costa2024} como decisiva para a qualidade de anotações jurídicas. Terceiro, e principal, a auditoria automatizada de erros de anotação descrita na Seção~\ref{sec:cleanlab} funciona como uma forma de revisão sistemática independente do julgamento original: ao confrontar cada rótulo com as predições fora da amostra de um \textit{ensemble} de modelos, o procedimento sinaliza precisamente as anotações inconsistentes que uma segunda passagem humana buscaria, atenuando o efeito de vieses idiossincráticos do anotador único.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Imagens/exemplo_label_studio.png}
+    \caption{Exemplo de decisão do TCE/RN anotada no Label Studio.}
+    \label{fig:exemplo-decisao}
+\end{figure}
+
+A Tabela~\ref{tab:distribuicao_entidades} apresenta a distribuição final dos rótulos no \textit{corpus}, \emph{após} as correções decorrentes da auditoria via \textit{confident learning} descrita na Seção~\ref{sec:cleanlab}. Observa-se um desbalanceamento significativo entre as classes, com predominância de \textsc{Multa}, o que reflete a frequência com que sanções pecuniárias são aplicadas nas deliberações do TCE/RN.
+
+\begin{table}[H]
+\caption{Distribuição final dos rótulos de entidade no \texttt{decicontas.br} (após auditoria via Cleanlab).}
+\centering
+\begin{tabular}{lc}
+\toprule
+\textbf{Rótulo} & \textbf{Quantidade} \\
+\midrule
+\textsc{Multa} & 212 \\
+\textsc{Obrigação} & 131 \\
+\textsc{Ressarcimento} & 63 \\
+\textsc{Recomendação} & 53 \\
+\midrule
+\textbf{Total} & 459 \\
+\bottomrule
+\end{tabular}
+\label{tab:distribuicao_entidades}
+\end{table}
+
+% ============================================================
+\section{Detecção de erros de anotação com Cleanlab}
+\label{sec:cleanlab}
+% ============================================================
+
+A importância de conjuntos de dados confiáveis é amplamente discutida: \citeonline{Borin2022} critica falhas comuns em processos de anotação, como discordância entre anotadores e diretrizes insuficientes, que comprometem a avaliação de modelos. De forma análoga, \citeonline{Costa2024} demonstram a importância de revisão de anotações por especialistas jurídicos em \textit{pipelines} para decisões judiciais brasileiras. Como medida de mitigação dessas fragilidades, foi empregada a biblioteca Cleanlab como mecanismo de detecção de erros de anotação (\textit{Annotation Error Detection} --- AED) no \texttt{decicontas.br}. A Cleanlab implementa o \textit{confident learning} (CL) proposto por \citeonline{Northcutt2022}, que estima a distribuição conjunta entre os rótulos observados (potencialmente ruidosos) e os rótulos latentes verdadeiros a partir de probabilidades preditas fora da amostra.
+
+\subsection{\textit{Ensemble} de classificadores}
+
+O procedimento empregou uma estratégia de \textit{ensemble} com dois modelos complementares, seguindo o princípio de que o CL é agnóstico ao modelo subjacente. O primeiro modelo consistiu em um classificador linear (\texttt{SGDClassifier} com perda logística) treinado sobre \textit{embeddings} extraídos do BERTimbau Large \cite{Souza2020}. O segundo modelo realizou \textit{fine-tuning} completo do BERTimbau Base para classificação de \textit{tokens} no esquema BIO. Ambos geraram probabilidades fora da partição de treino por meio de validação cruzada estratificada com 5 partições, garantindo que as predições utilizadas pelo CL nunca tenham sido feitas por um modelo que viu o rótulo daquele \textit{token} em treino. As probabilidades finais foram obtidas por média ponderada das saídas dos dois modelos, com pesos $w_{\text{linear}} = 0{,}3$ e $w_{\text{transformer}} = 0{,}7$, refletindo a maior confiabilidade esperada do modelo \textit{fine-tuned} ponta-a-ponta. Esses pesos foram fixados heuristicamente, e não otimizados sobre o \textit{corpus}, justamente para preservar o caráter exploratório da auditoria: o \textit{ensemble} serve apenas para \emph{sinalizar} candidatos a erro, que são em seguida submetidos a revisão humana (Seção~\ref{sec:cleanlab}), de modo que a decisão final de correção não depende da calibração exata dos pesos. A natureza agnóstica ao modelo do \textit{confident learning} reforça essa robustez: combinar um classificador linear sobre \textit{embeddings} estáticos com um modelo \textit{fine-tuned} ponta-a-ponta diversifica as fontes de erro, reduzindo o risco de que vieses de um único modelo determinem as sinalizações. Para verificar empiricamente que o resultado da auditoria não depende do valor escolhido para os pesos, a sinalização foi recomputada sob pesos iguais ($w_{\text{linear}} = w_{\text{transformer}} = 0{,}5$), controlando o tamanho do conjunto sinalizado para isolar o efeito da ponderação. A reponderação deixa $97{,}0\%$ dos \textit{tokens} mais suspeitos coincidentes com os do esquema de referência ($0{,}3/0{,}7$) e cobre as sinalizações de alta confiança ($\textit{score} \geq 0{,}95$) inspecionadas tão bem quanto o próprio esquema de referência ($83{,}0\%$ contra $83{,}2\%$), confirmando que o conjunto auditado é estável frente à escolha específica de $0{,}3/0{,}7$.
+
+\subsection{Sinalização e revisão filtrada}
+
+A detecção foi realizada pela função \texttt{find\_label\_issues} do Cleanlab, que aplica o critério de autoconfiança para elencar as instâncias mais prováveis de conterem rótulos incorretos. O \textit{ensemble} sinalizou 794 grupos contíguos de \textit{tokens} potencialmente incorretos. Adotou-se um procedimento de revisão filtrada por confiança: foi inspecionado o subconjunto dos 567 grupos com \textit{score} de confiança $\geq 0{,}95$, dos quais foram aplicadas as correções julgadas pertinentes pelo autor; os 227 grupos restantes, abaixo desse limiar, foram mantidos com a anotação original, sob a premissa de que sinalizações de baixa confiança apresentam taxa elevada de falsos positivos.
+
+A análise das predições revelou dois padrões distintos: \textit{tokens} cujo rótulo de entidade o modelo sugeriu trocar por outra classe (incluindo \texttt{O}); e \textit{tokens} anotados como \texttt{O} sugeridos como pertencentes a alguma classe de entidade. A matriz de transições estimada pelo \textit{ensemble} mostrou padrões coerentes de proximidade semântica entre as categorias do domínio: confusões entre \texttt{I-\textsc{Multa}} e \texttt{I-\textsc{Obrigação}} (307 ocorrências), bem como entre classes de \textsc{Obrigação} e \textsc{Recomendação}, refletem a sobreposição conceitual dessas categorias.
+
+\subsection{Efeito da auditoria nos erros de anotação}
+
+A Tabela~\ref{tab:dataset-corrections} sintetiza o efeito da auditoria sobre a distribuição de entidades. O processo resultou no aumento líquido de 20 entidades anotadas (de 439 para 459), com ganhos especialmente em \textsc{Multa} ($+10$) e \textsc{Obrigação} ($+12$), consistentes com a hipótese de subdetecção observada na matriz de transições. \textsc{Recomendação} foi a única classe a sofrer redução líquida ($-3$), refletindo casos de reclassificação em que trechos anteriormente rotulados como recomendação foram reinterpretados como obrigação.
+
+\begin{table}[ht]
+  \centering\small
+  \caption{Distribuição de entidades no \texttt{decicontas.br} antes e depois da revisão Cleanlab.}
+  \label{tab:dataset-corrections}
+  \begin{tabular}{lrrr}
+    \toprule
+    \textbf{Classe} & \textbf{Antes} & \textbf{Depois} & \textbf{$\Delta$} \\
+    \midrule
+    \textsc{Multa}          &  202 &  212 &   $+10$ \\
+    \textsc{Obrigação}      &  119 &  131 &   $+12$ \\
+    \textsc{Ressarcimento}  &   62 &   63 &    $+1$ \\
+    \textsc{Recomendação}   &   56 &   53 &    $-3$ \\
+    \midrule
+    \textbf{Total}          &  439 &  459 &   $+20$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% ============================================================
+\section{Engenharia de \textit{prompt}}
+\label{sec:prompting}
+% ============================================================
+
+Conforme discutido no Capítulo~\ref{cap:cap2}, a engenharia de \textit{prompt} desempenha papel central no desempenho de LLMs aplicados a tarefas de extração de informação. As evidências reunidas no mapeamento sistemático (Capítulo~\ref{cap:cap3}) reforçam a escolha do \textit{few-shot prompting} como linha de base: em cenários jurídicos, nos quais as fronteiras das entidades tendem a ser longas, difusas e dependentes de contexto, a presença de exemplos anotados no \textit{prompt} permite ao modelo calibrar tanto o tipo quanto a extensão dos \textit{spans} a serem extraídos \cite{Tang2024,schulhoff2025promptreport}.
+
+\subsection{Linha de base: \textit{few-shot} estático}
+\label{sec:fewshot_baseline}
+
+O \textit{prompt} foi projetado seguindo a arquitetura de três blocos descrita por \citeonline{schulhoff2025promptreport}: \textit{system prompt}, exemplos \textit{few-shot} e texto-alvo. A montagem é orquestrada pela biblioteca LangChain, por meio da classe \texttt{ChatPromptTemplate}. O \textit{prompt} foi redigido em português, alinhado ao idioma do \textit{corpus}.
+
+O bloco de sistema define o papel do modelo e estabelece sete diretrizes principais, idênticas para as quatro classes de entidade: extrair informações exatamente como aparecem no texto, retornar campo vazio para informações ausentes ou ambíguas, manter-se dentro do escopo do esquema fornecido, preservar a ortografia e a formatação originais, não inferir informações ausentes, extrair todas as ocorrências relevantes de uma mesma entidade e ignorar informações fora do contexto solicitado. A Figura~\ref{quad:system_prompt} apresenta o texto integral do \textit{system prompt} utilizado.
+
+Cabe registrar uma decisão metodológica relativa a esse bloco. Uma versão preliminar do \textit{system prompt} continha uma diretriz adicional específica para a entidade \textsc{Obrigação}, instruindo o modelo a considerar apenas o dispositivo da decisão que determina o ato a ser cumprido, desprezando justificativas e fundamentações legais extensas. Como essa diretriz havia sido formulada após inspeção qualitativa das saídas dos modelos sobre o próprio \textit{corpus} de avaliação, ela configurava uma forma de vazamento do conjunto de teste para o projeto do \textit{prompt}: o ajuste de instrução fora derivado da observação do comportamento dos modelos nos mesmos documentos posteriormente usados para medir desempenho. Por essa razão, a orientação foi removida, e todos os resultados reportados no Capítulo~\ref{cap:cap5} utilizam o \textit{prompt} canônico aqui descrito, sem qualquer instrução privilegiando uma classe sobre as demais.
+
+\begin{figure}
+\centering
+\fbox{\parbox{0.92\linewidth}{\small
+\textit{``Você é um especialista em extração de entidades nomeadas com precisão excepcional. Sua tarefa é identificar e extrair informações específicas do texto fornecido, seguindo estas diretrizes:}\\[4pt]
+\textit{1. Extraia as informações exatamente como aparecem no texto, sem interpretações ou alterações.}\\
+\textit{2. Se uma informação solicitada não estiver presente ou for ambígua, retorne null para esse campo.}\\
+\textit{3. Mantenha-se estritamente dentro do escopo das entidades e atributos definidos no esquema fornecido.}\\
+\textit{4. Preste atenção especial para manter a mesma ortografia, pontuação e formatação das informações extraídas.}\\
+\textit{5. Não infira ou adicione informações que não estejam explicitamente presentes no texto.}\\
+\textit{6. Se houver múltiplas menções da mesma entidade, extraia todas as ocorrências relevantes.}\\
+\textit{7. Ignore informações irrelevantes ou fora do contexto das entidades solicitadas.}\\[4pt]
+\textit{Lembre-se: sua precisão e aderência ao texto original são cruciais para o sucesso desta tarefa.''}
+}}
+\caption{Texto do \textit{system prompt} utilizado na tarefa de Reconhecimento de Entidades Nomeadas.}
+\label{quad:system_prompt}
+\end{figure}
+
+Foram selecionados 12 exemplos reais de trechos decisórios do TCE/RN, cada um acompanhado de sua respectiva anotação de referência no formato do esquema \texttt{NERDecisao}. Para evitar vazamento entre os exemplos do \textit{prompt} e o conjunto de avaliação, esses 12 exemplos foram extraídos de decisões adicionais do TCE/RN, fora do \textit{corpus} \texttt{decicontas.br}. Os critérios de seleção atenderam a três requisitos: (i)~cobertura das quatro entidades, com pelo menos uma ocorrência de cada tipo; (ii)~diversidade de complexidade, com decisões curtas e acórdãos extensos; e (iii)~quatro casos negativos deliberados (exemplos 9 a 12), em que decisões dão provimento a recurso ou reconhecem prescrição, sem entidades a extrair. A inclusão de casos negativos é fundamental para reduzir a taxa de falsos positivos. Cada exemplo é convertido em um par de mensagens no formato de \textit{chat}: uma mensagem \texttt{HumanMessage} contendo o texto da decisão e uma mensagem \texttt{AIMessage} contendo a chamada de ferramenta com a anotação estruturada correspondente.
+
+\subsection{Variações avaliadas}
+\label{sec:variacoes_prompt}
+
+Além da abordagem \textit{few-shot} estática, que constitui a linha de base deste estudo, foram efetivamente avaliadas duas técnicas adicionais de engenharia de \textit{prompt} --- \textit{Chain-of-Thought} e \textit{pipeline} em dois estágios ---, selecionadas a partir dos grupos metodológicos apresentados na revisão. Uma terceira variante, o \textit{few-shot} dinâmico, foi projetada mas teve sua avaliação controlada adiada para trabalho futuro, pelas razões detalhadas a seguir.
+
+\textbf{\textit{Chain-of-Thought} (CoT)} \cite{wei2022chainofthought}: o \textit{system prompt} instrui o modelo a raciocinar passo a passo antes de produzir a extração final. São definidas quatro etapas explícitas: (i)~localizar as partes do texto que efetivamente contêm dispositivos decisórios; (ii)~classificar cada trecho candidato segundo critérios discriminativos; (iii)~extrair o texto exatamente como aparece no documento; e (iv)~iniciar cada \textit{span} a partir do verbo ou substantivo que abre o dispositivo e finalizar na última sentença que compõe o comando extraído.
+
+\textbf{\textit{Few-shot} dinâmico}: em vez de utilizar um conjunto fixo de exemplares, esta técnica seleciona dinamicamente os exemplos mais similares ao texto de entrada por meio de \textit{embeddings} (obtidos via modelo \texttt{text-embedding-3-small} da OpenAI). Os $k = 5$ exemplos mais próximos são selecionados a partir do mesmo conjunto auxiliar usado no \textit{baseline}. Cabe registrar uma limitação metodológica que condiciona toda a interpretação desta variante: o \textit{baseline} estático utiliza $k = 12$ exemplos, enquanto o dinâmico utiliza $k = 5$. A diferença observada nos resultados, portanto, confunde dois efeitos --- a seleção dinâmica em si e a redução do número de exemplares ---, que não podem ser separados neste desenho experimental. Por essa razão, os resultados desta comparação não autorizam concluir que o \textit{few-shot} estático seja superior ao dinâmico: a desvantagem de exemplares imposta ao dinâmico é, por si só, uma explicação suficiente para qualquer diferença a favor do estático. Uma conclusão definitiva sobre o mérito relativo das duas técnicas depende de um experimento com $k$ mantido constante entre as condições, previsto no cronograma do Capítulo~\ref{cap:cap6}.
+
+\textbf{\textit{Pipeline} em dois estágios}: decompõe a tarefa em duas chamadas sequenciais ao modelo. Na primeira, um modelo classificador recebe o texto e retorna um objeto com quatro campos booleanos indicando a presença de cada tipo de entidade. Na segunda, o modelo extrator processa o texto completo e produz as entidades estruturadas; em seguida, as listas de entidades cujos tipos foram classificados como ausentes pelo primeiro estágio são configuradas como vazias, filtrando potenciais falsos positivos.
+
+% ============================================================
+\section{Modelos avaliados}
+\label{sec:modelos}
+% ============================================================
+
+Os experimentos foram organizados em duas famílias de modelos, selecionadas a partir das conclusões do mapeamento sistemático (Capítulo~\ref{cap:cap3}) e dos fundamentos teóricos apresentados no Capítulo~\ref{cap:cap2}: modelos supervisionados (redes neurais BiLSTM-CRF e modelos baseados em BERT) e Modelos de Linguagem de Grande Porte.
+
+\subsection{Modelos supervisionados como linha de base}
+\label{sec:baseline_supervisionado}
+
+A inclusão de modelos supervisionados como linha de base cumpre uma função metodológica central neste trabalho: permitir que o desempenho dos LLMs em regime \textit{few-shot} seja interpretado em relação a abordagens que efetivamente consomem dados anotados durante o treinamento. A arquitetura BiLSTM-CRF de \citeonline{huang2015bilstmcrf} é utilizada como linha de base de rede neural não baseada em \textit{Transformers}, à semelhança do que é feito em diversos trabalhos comparáveis na literatura de REN jurídico em português \cite{Araujo2018,albuquerque2023ulyssesner}. Para a família BERT, foram selecionados o BERTimbau (\textit{base} e \textit{large}) \cite{Souza2020} --- pré-treinado especificamente para o português brasileiro a partir do \textit{corpus} brWaC --- e o Legal-BERTimbau \cite{melo2022legalbertimbau}, versão do BERTimbau \textit{base} que recebeu pré-treinamento adicional sobre textos jurídicos brasileiros (\textit{Domain-Adaptive Pretraining}). A inclusão das versões \textit{base} e \textit{large} permite avaliar o impacto da escala, e a inclusão do Legal-BERTimbau permite avaliar empiricamente o ganho atribuível à adaptação de domínio.
+
+\subsection{Modelos de Linguagem de Grande Porte}
+\label{sec:llm_models}
+
+Foram avaliados nove LLMs de quatro provedores --- OpenAI, DeepSeek, Meta e Alibaba ---, sendo três deles de pesos abertos (DeepSeek-V4-Flash, Llama-3.3-70B e Qwen2.5-72B), em regime \textit{few-shot} com saída estruturada. Os sete modelos da OpenAI e o DeepSeek-V4-Flash foram acessados pelo Azure AI Foundry, em recurso provisionado na região Brasil Sul; o Llama-3.3-70B e o Qwen2.5-72B foram acessados pela plataforma OpenRouter. A Tabela~\ref{tab:llms_avaliados} sintetiza os modelos e suas características principais. A inclusão de três modelos de pesos abertos --- ao lado dos modelos proprietários da OpenAI --- responde ao objetivo de aferir em que medida soluções auditáveis e auto-hospedáveis são competitivas com as APIs fechadas nesta tarefa.
+
+\begin{table}[ht]
+\centering
+\caption{Modelos de Linguagem de Grande Porte avaliados.}
+\label{tab:llms_avaliados}
+\small
+\begin{tabular}{p{3.4cm}p{2.2cm}p{7.1cm}}
+\toprule
+\textbf{Modelo} & \textbf{Provedor} & \textbf{Característica principal} \\
+\midrule
+GPT-4.1, mini, nano \cite{openai2025gpt41} & OpenAI & Família com foco em seguimento de instruções e contextos longos (janela de 1M \textit{tokens}) \\
+GPT-5-mini, GPT-5.1, GPT-5.2 \cite{openai2025gpt5} & OpenAI & Geração mais recente, com raciocínio explícito (\textit{reasoning}) antes da resposta \\
+DeepSeek-V4-Flash \cite{deepseekai2025deepseekv4} & DeepSeek & \textit{Mixture-of-Experts} de pesos abertos (licença MIT), variante otimizada para latência \\
+Llama-3.3-70B \cite{meta2024llama33} & Meta & Modelo denso de pesos abertos, 70B parâmetros \\
+Qwen2.5-72B \cite{qwen2024qwen25} & Alibaba & Modelo denso de pesos abertos, 72B parâmetros \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ============================================================
+\section{Protocolo experimental}
+\label{sec:protocolo}
+% ============================================================
+
+Para garantir a comparabilidade entre os paradigmas, todos os modelos foram avaliados sobre o mesmo conjunto de 861 documentos do \texttt{decicontas.br}. Os documentos sem anotação recebem rótulos \texttt{O} em todas as posições; caso um modelo indique entidades nesses documentos, as predições são contabilizadas como falsos positivos. A semente aleatória adotada em todos os procedimentos foi $\textsc{seed} = 1007$. Todas as execuções foram rastreadas na plataforma \emph{Weights \& Biases}, com registro de hiperparâmetros, métricas por época e predições por documento.
+
+\subsection{Protocolo para modelos supervisionados}
+\label{sec:protocolo_supervisionado}
+
+A escolha de hiperparâmetros para os modelos supervisionados seguiu um protocolo
+em duas etapas, de modo a dissociar a seleção de configurações da estimativa
+final de desempenho. 
+
+Na primeira etapa, cada modelo foi treinado em todas as configurações de uma grade pré-definida de hiperparâmetros sobre um divisão em estratos de $80\%/20\%$ do \textit{dataset}. Elegeu-se como vencedora a configuração que maximizou o $F_1$ de \textit{span} com IoU $\geq 0{,}5$ na partição de desenvolvimento (172 documentos). Ressalta-se que, nessa etapa, alguns hiperparâmetros foram mantidos fixos (Tabela~\ref{tab:hp-fixos}). As configurações selecionadas nesta fase aparecem na  Tabela~\ref{tab:hp-vencedores} com sua parametrização otimizada.
+
+Na segunda etapa, fixados os hiperparâmetros vencedores, cada modelo foi reestimado por validação cruzada estratificada de cinco partições (\textit{5-fold
+cross-validation}) sobre o conjunto completo de 861 documentos. O procedimento foi realizado para tornar as métricas resultantes diretamente comparáveis às do paradigma \textit{few-shot}, avaliadas sobre o mesmo \textit{corpus}.
+
+\begin{table}[ht]
+  \centering
+  \small
+  \caption{Hiperparâmetros mantidos fixos em todos os modelos supervisionados.}
+  \label{tab:hp-fixos}
+  \begin{tabular}{lll}
+    \toprule
+    \textbf{Hiperparâmetro} & \textbf{Valor} & \textbf{Referência} \\
+    \midrule
+    Otimizador & AdamW & \citeonline{loshchilov2019adamw} \\
+    \textit{Weight decay} & 0{,}01 & \textit{default} HuggingFace/BERT \\
+    \textit{Scheduler} (BERT) & linear com \textit{warmup} & \citeonline{devlin2019bert} \\
+    \textit{Scheduler} (BiLSTM) & ReduceLROnPlateau ($\gamma = 0{,}5$, $p = 3$) & \citeonline{lample2016neural} \\
+    \textit{Random seed} & 1007 & --- \\
+    Métrica de seleção & $F_1$ de \textit{span}, IoU $\geq 0{,}5$ & \citeonline{lample2016neural} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[ht]
+  \centering
+  \small
+  \caption{Configurações vencedoras na primeira etapa do protocolo supervisionado.}
+  \label{tab:hp-vencedores}
+  \begin{tabular}{lp{8cm}}
+    \toprule
+    \textbf{Modelo} & \textbf{Configuração vencedora} \\
+    \midrule
+    BiLSTM-CRF & \texttt{hidden\_dim=256}, \texttt{dropout=0,3}, $\textit{lr} = 3 \times 10^{-3}$ \\
+    BERTimbau-base & \textit{lr} $= 5 \times 10^{-5}$, \textit{warmup ratio} $= 0{,}1$ \\
+    BERTimbau-large & \textit{lr} $= 2 \times 10^{-5}$, \textit{warmup ratio} $= 0{,}1$ \\
+    Legal-BERTimbau-base & \textit{lr} $= 5 \times 10^{-5}$, \textit{warmup ratio} $= 0{,}1$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Optou-se por inicializar a camada de \textit{embedding} do BiLSTM-CRF com os vetores estáticos de 300 dimensões do modelo \texttt{pt\_core\_news\_lg} \cite{honnibal2020spacy}, mantidos congelados durante o treino --- apenas as camadas LSTM, a projeção linear e a CRF recebem gradiente. A inicialização com \textit{word embeddings} pré-treinados é a instanciação canônica do paradigma desde \citeonline{huang2015bilstmcrf} e \citeonline{lample2016neural}: embeddings aleatórios produziriam uma versão artificialmente enfraquecida da arquitetura, e \texttt{pt\_core\_news\_lg} oferece uma configuração robusta de vetores estáticos para o português brasileiro.
+
+\begin{table}[ht]
+  \centering
+  \small
+  \caption{Pré-treino externo associado a cada modelo avaliado.}
+  \label{tab:pretrain-corpora}
+  \begin{tabular}{
+    >{\raggedright\arraybackslash}p{4cm}
+    >{\raggedright\arraybackslash}p{5.8cm}
+    >{\raggedright\arraybackslash}p{3.6cm}
+  }
+    \toprule
+    \textbf{Modelo} & \textbf{\textit{Corpus} de pré-treino} & \textbf{Ordem de grandeza} \\
+    \midrule
+    LLMs (GPT/DeepSeek/Llama/Qwen) & \textit{web} em larga escala (multilíngue) & $10^{12}$ \textit{tokens} \\
+    BERTimbau (\textit{base}/\textit{large}) & brWaC + Wikipédia PT & $\sim$\,17~GB de texto \cite{Souza2020} \\
+    Legal-BERTimbau-base & BERTimbau + \textit{corpus} jurídico PT & + \textit{corpus} jurídico \\
+    BiLSTM-CRF & vetores spaCy \texttt{pt\_core\_news\_lg} (notícias PT) & $\sim$\,500~mil vetores \cite{honnibal2020spacy} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+
+
+\subsection{Métricas de avaliação}
+\label{sec:metricas}
+
+A avaliação opera em dois níveis complementares --- \textit{span-level} (primário) e \textit{token-level} (auxiliar) ---, ambos calculados pelo mesmo \textit{pipeline} sobre todos os modelos. Os dois níveis respondem a perguntas distintas: o \textit{span-level} mede se o modelo identifica corretamente \emph{quais trechos} do texto correspondem a entidades; o \textit{token-level} mede a corretude rótulo a rótulo, no espírito da literatura clássica de NER.
+
+Cada entidade é representada por seus \textit{offsets} de caractere no texto original, e a correspondência entre uma predição $\hat{s}$ e uma referência $s^{*}$ é avaliada pela métrica \textit{Intersection over Union} (IoU). Considera-se que uma predição \emph{casa} com uma referência se, e somente se, ambas têm o mesmo rótulo de entidade e $\mathrm{IoU} \geq 0{,}5$. O pareamento é feito em correspondência um-para-um, consumindo gulosamente os pares de maior IoU para evitar dupla contagem de uma mesma referência. A partir dos pares formados, contam-se verdadeiros positivos (TP), falsos positivos (FP) e falsos negativos (FN), de onde se derivam precisão, revocação e $F_1$. Reportam-se três formas de agregação: o \emph{micro-$F_1$}, obtido pela soma de TP, FP e FN sobre todas as classes; o \emph{macro-$F_1$}, média aritmética simples dos $F_1$ por classe; e o $F_1$ \emph{por categoria} (\textsc{Multa}, \textsc{Obrigação}, \textsc{Ressarcimento} e \textsc{Recomendação}). A distinção entre micro e macro é particularmente relevante dada a forte assimetria de suporte do \texttt{decicontas.br} (Tabela~\ref{tab:distribuicao_entidades}): o micro-$F_1$ é dominado pela classe majoritária (\textsc{Multa}), ao passo que o macro-$F_1$ atribui peso igual às quatro categorias, penalizando modelos que negligenciam as classes minoritárias (\textsc{Ressarcimento} e \textsc{Recomendação}). Ambas as agregações são reportadas no Capítulo~\ref{cap:cap5}.
+
+\paragraph{Sensibilidade ao limiar de IoU.} A escolha de $\mathrm{IoU} \geq 0{,}5$ como critério de casamento é convencional, mas arbitrária. Para verificar que as conclusões não dependem desse valor específico, reporta-se uma análise de sensibilidade na qual o \textit{span-$F_1$} é recomputado sob limiares mais brando ($0{,}3$) e mais estrito ($0{,}7$), além do caso de correspondência exata de \textit{offsets} (\textit{exact match}). A estabilidade do ordenamento dos modelos entre esses regimes é examinada no Capítulo~\ref{cap:cap5}.
+
+\paragraph{Subconjunto informativo.} Como apenas 232 dos 861 documentos contêm ao menos uma entidade anotada, o micro-$F_1$ sobre o \textit{corpus} completo mistura dois comportamentos distintos: a capacidade de \emph{extrair} entidades nos documentos informativos e a de \emph{abster-se} (não gerar falsos positivos) nos 629 documentos vazios. Para isolar o primeiro, reporta-se também o \textit{span-$F_1$} restrito ao subconjunto dos documentos informativos, complementando a métrica global.
+
+\paragraph{Taxa de falha de alinhamento.} A ponte entre as saídas dos LLMs (\textit{strings} literais) e os \textit{offsets} de caractere exige localizar cada \textit{span} extraído no texto original. Quando o modelo parafraseia, normaliza pontuação ou altera espaçamento, a busca pela \textit{substring} pode falhar, e a entidade não é alinhável a uma posição. Essas falhas são contabilizadas explicitamente como uma \emph{taxa de falha de alinhamento} por modelo --- e tratadas como falsos negativos na avaliação \textit{span-level} ---, de modo que a fidelidade literal exigida pela tarefa seja parte do que se mede, e não um detalhe silenciosamente descartado.
+
+Como medida secundária, calculam-se precisão, revocação e $F_1$ \textit{micro} no nível de \textit{token}, considerando apenas os \textit{tokens} pertencentes a alguma entidade. 
+
+A dificuldade é que cada paradigma utiliza uma tokenização nativa distinta. A solução adotada é uma etapa de pós-processamento que \emph{reprojeta} todos os \textit{spans} extraídos sobre uma sequência de \textit{tokens} produzida pelo tokenizador do spaCy (\texttt{pt\_core\_news\_sm}). Para cada \textit{token} dessa sequência, atribui-se o rótulo BIO segundo o \textit{span} que o cobre, garantindo uma base de \textit{tokens} comum sobre a qual a comparação rótulo a rótulo passa a ser bem definida. As métricas \textit{span-level}, por dispensarem qualquer alinhamento, são reportadas como primárias.
+
+\subsubsection{Quantificação da incerteza}
+
+Em um \textit{corpus} do tamanho do \texttt{decicontas.br}, com 232 documentos rotulados, ignorar a variabilidade da estimativa pode levar a conclusões espúrias. Para tornar as comparações interpretáveis, a variabilidade é quantificada por dois mecanismos complementares: (i)~a sensibilidade do modelo à composição do conjunto de treino, caracterizada pela média e pelo desvio-padrão do $F_1$ entre os cinco \textit{folds} da validação cruzada (apenas para os paradigmas que treinam); e (ii)~a sensibilidade da estimativa à amostra de documentos, capturada por intervalos de confiança de 95\% computados por \emph{bootstrap pareado de documento} com $B = 10\,000$ reamostragens. O mesmo procedimento é aplicado às diferenças entre pares de modelos, produzindo intervalos de confiança e p-valores. A escolha do \textit{bootstrap} pareado --- em vez de testes paramétricos --- justifica-se pela ausência de hipóteses distribucionais sobre o $F_1$ por documento e pela presença de fortes correlações entre modelos (todos avaliados sobre os mesmos documentos).
+
+\subsection{Reprodutibilidade}
+\label{sec:reprodutibilidade}
+
+Toda a aleatoriedade do experimento é semeada em $\textsc{seed} = 1007$. Cada par \textit{(modelo, configuração, fold)} é treinado em um subprocesso isolado, o que libera completamente a memória da GPU MPS entre treinos e salva o resultado em \textit{cache}, permitindo retomar a execução em caso de falha. As versões dos pacotes principais utilizados foram: PyTorch 2.11, \texttt{transformers} 5.6, \textit{scikit-learn} 1.8, \texttt{langchain} 1.2, \texttt{cleanlab} 2.9, \texttt{seqeval} 1.2 e spaCy 3.8. Todos os experimentos foram executados em Python 3.12.3. O código completo, os artefatos de execução e o \textit{dataset} \texttt{decicontas.br} estão disponíveis publicamente em \url{https://github.com/eduardoplima/decicontas.br/}.
+
+Para os LLMs, a identificação dos modelos e a configuração de chamada são detalhadas na Tabela~\ref{tab:reprodutibilidade_modelos}. Os sete modelos da OpenAI e o DeepSeek-V4-Flash foram servidos por \textit{deployments} do Azure AI Foundry (recurso na região Brasil Sul), o que fixa o \textit{snapshot} datado de cada modelo: \texttt{gpt-4.1-2025-04-14} (e respectivos \textit{mini}/\textit{nano}), \texttt{gpt-5-mini-2025-08-07}, \texttt{gpt-5.1-2025-11-13} e \texttt{gpt-5.2-2025-12-11}. Llama-3.3-70B e Qwen2.5-72B foram acessados via OpenRouter (com ordem de provedores explicitada para o Llama). Em todos os casos a saída estruturada foi obtida por \textit{function calling} com \texttt{max\_tokens}~$=4096$. Por transparência, registra-se uma lacuna de reprodutibilidade: as respostas cruas das APIs não foram persistidas (os arquivos de predição guardam apenas a saída estruturada já validada) e os parâmetros de amostragem \texttt{temperature}, \texttt{top\_p} e \texttt{seed} usaram os \textit{defaults} dos respectivos SDKs, não tendo sido fixados explicitamente; esses itens, bem como o \textit{snapshot} servido pelo OpenRouter, não são reconstrutíveis a partir dos artefatos e aparecem assinalados na Tabela~\ref{tab:reprodutibilidade_modelos}. Os \textit{baselines} supervisionados, por sua vez, são integralmente reproduzíveis: o ``\textit{snapshot}'' é o nome fixado do modelo no Hugging Face e os hiperparâmetros de treino constam dos artefatos de validação cruzada.
+
+\begin{table}[ht]
+    \centering
+    \caption{Identificadores e configuração de chamada dos modelos avaliados. Itens marcados ``não persistido'' não constam dos artefatos de execução.}
+    \label{tab:reprodutibilidade_modelos}
+    \scriptsize
+    \setlength{\tabcolsep}{4pt}
+    \begin{tabular}{
+        >{\raggedright\arraybackslash}p{2.3cm}
+        >{\raggedright\arraybackslash}p{3.0cm}
+        >{\raggedright\arraybackslash}p{3.0cm}
+        >{\raggedright\arraybackslash}p{1.6cm}
+        >{\raggedright\arraybackslash}p{2.6cm}
+    }
+        \toprule
+        \textbf{Modelo} & \textbf{ID roteado} & \textbf{Acesso} & \textbf{Saída} & \textbf{\textit{Snapshot}} \\
+        \midrule
+        GPT-4.1 & \textit{deployment} gpt-4.1 & Azure AI Foundry (Brasil) & \textit{function calling} & gpt-4.1-2025-04-14 \\
+        GPT-4.1-mini & \textit{deployment} gpt-4.1-mini & Azure AI Foundry (Brasil) & \textit{function calling} & gpt-4.1-mini-2025-04-14 \\
+        GPT-4.1-nano & \textit{deployment} gpt-4.1-nano & Azure AI Foundry (Brasil) & \textit{function calling} & gpt-4.1-nano-2025-04-14 \\
+        GPT-5-mini & \textit{deployment} gpt-5-mini & Azure AI Foundry (Brasil; \textit{reasoning}) & \textit{function calling} & gpt-5-mini-2025-08-07 \\
+        GPT-5.1 & \textit{deployment} gpt-5.1 & Azure AI Foundry (Brasil; \textit{reasoning}) & \textit{function calling} & gpt-5.1-2025-11-13 \\
+        GPT-5.2 & \textit{deployment} gpt-5.2 & Azure AI Foundry (Brasil; \textit{reasoning}) & \textit{function calling} & gpt-5.2-2025-12-11 \\
+        DeepSeek-V4-Flash & \textit{deployment} DeepSeek-V4-Flash & Azure AI Foundry (Brasil) & \textit{function calling} & pesos abertos (MIT) \\
+        Llama-3.3-70B & meta-llama/ llama-3.3-70b-instruct & OpenRouter (Fireworks/ Together/ DeepInfra) & \textit{function calling} & não persistido \\
+        Qwen2.5-72B & qwen/qwen-2.5-72b-instruct & OpenRouter & \textit{function calling} & não persistido \\
+        BERTimbau-base & neuralmind/ bert-base-portuguese-cased & treino local (k-fold) & BIO \textit{token} & nome HF (pino) \\
+        BERTimbau-large & neuralmind/ bert-large-portuguese-cased & treino local (k-fold) & BIO \textit{token} & nome HF (pino) \\
+        Legal-BERTimbau-base & rufimelo/ Legal-BERTimbau-base & treino local (k-fold) & BIO \textit{token} & nome HF (pino) \\
+        BiLSTM-CRF & arquitetura local & treino local (k-fold) & BIO \textit{token} & código local \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+% ============================================================
+\section{Etapa subsequente: extração estruturada de atributos}
+\label{sec:integracao}
+% ============================================================
+
+A extração de entidades descrita neste capítulo constitui a primeira etapa de um \textit{pipeline} de duas fases concebido para alimentar automaticamente os subcadastros do CGAD a partir do texto das decisões. Esta seção descreve, em tempo futuro, as duas frentes de implementação que compõem a etapa subsequente, atualmente em desenvolvimento. O cronograma detalhado dessas atividades é apresentado no Capítulo~\ref{cap:cap6}.
+
+O esquema \texttt{NERDecisao} avaliado neste capítulo (Figura~\ref{fig:pydantic_ner}) carrega apenas o \textit{span} textual de cada entidade. Para alimentar as tabelas de destino do CGAD, será definido um esquema estendido, denominado \texttt{Decisao}, que substituirá os submodelos atuais por classes Pydantic com os atributos exigidos pela respectiva tabela: \texttt{Multa} (com campos para valor, percentual, responsável, fundamento legal e indicação de solidariedade); \texttt{Obrigacao} (com conduta, prazo, destinatário e multa cominatória, quando houver); \texttt{Ressarcimento} (com responsável, valor, solidariedade e forma de atualização monetária); e \texttt{Recomendacao} (com providência sugerida e órgão destinatário).
+
+A extração será conduzida em duas chamadas sequenciais ao LLM. A primeira corresponde ao componente de REN avaliado neste capítulo, que produz os \textit{spans} brutos. A segunda receberá cada \textit{span} reconhecido, juntamente com o contexto da decisão (relatório, voto e dispositivo) e metadados do processo (data da sessão, órgão jurisdicionado, conselheiro relator), e produzirá o objeto Pydantic estruturado correspondente.
+
+A última frente compreende a persistência estruturada e a validação do \textit{pipeline} completo no ambiente real do TCE/RN. Os módulos de coleta automatizada das decisões, pré-processamento textual, extração via LLM em duas fases (REN e extração estruturada de atributos) e gravação em banco \texttt{SQL Server} serão articulados via orquestrador de tarefas a ser definido, com a interação com os modelos mediada pela biblioteca \texttt{Langchain}.

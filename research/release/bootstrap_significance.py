@@ -36,12 +36,12 @@ from research.fewshot import FEWSHOT_RESULT_POSITIONS
 from research.ner_metrics import bipartite_greedy_match
 
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_INPUT_DIR = REPO_ROOT / "dataset" / "results" / "output_corrected"
-DEFAULT_OUTPUT_DIR = (
-    REPO_ROOT / "dataset" / "experiments" / "significance_outputs_corrected"
-)
-DEFAULT_FIG_DIR = REPO_ROOT / "figures"
+from research.release import paths
+
+REPO_ROOT = paths.REPO_ROOT
+DEFAULT_INPUT_DIR = paths.OUTPUT_CORRECTED_DIR  # cycle-specific
+DEFAULT_OUTPUT_DIR = paths.SIGNIFICANCE_DIR  # cycle-specific
+DEFAULT_FIG_DIR = paths.FIGURES_DIR  # cycle-specific
 
 N_BOOTSTRAP = 10_000
 SEED = 42
@@ -52,57 +52,63 @@ ALPHA = 0.05
 logger = logging.getLogger("research.release.bootstrap_significance")
 
 
+# NEW-CYCLE (new_clean) leaderboard: 9 LLMs (clean prompt, Brazil Azure + open
+# weights) + 4 shared supervised baselines.
 MODELS = [
-    "gpt-4-turbo",
-    "gpt-5.4-mini_few_shot",
-    "gpt-4o",
-    "gpt-5.4-nano_few_shot",
+    # LLMs — Azure AI Foundry (Brazil)
+    "gpt-4.1_few_shot",
+    "gpt-4.1-mini_few_shot",
+    "gpt-4.1-nano_few_shot",
+    "gpt-5-mini_few_shot",
+    "gpt-5.1_few_shot",
+    "gpt-5.2_few_shot",
+    "deepseek-v4-flash_few_shot",
+    # LLMs — open weights (OpenRouter)
+    "llama-3.3-70b_few_shot",
+    "qwen2.5-72b_few_shot",
+    # Supervised baselines (shared, prompt-independent)
     "rufimelo_Legal-BERTimbau-base__supervised",
-    "gpt-41-mini",
     "neuralmind_bert-base-portuguese-cased__supervised",
-    "gpt-35",
-    "gpt-41",
     "neuralmind_bert-large-portuguese-cased__supervised",
-    "gemini-2.5-flash_few_shot",
-    "deepseek-v3_few_shot",
     "bilstm-crf__supervised",
-    "gpt-41-nano",
 ]
 
 DISPLAY_NAMES = {
-    "gpt-4-turbo": "GPT-4 Turbo",
-    "gpt-5.4-mini_few_shot": "GPT-5.4-mini",
-    "gpt-4o": "GPT-4o",
-    "gpt-5.4-nano_few_shot": "GPT-5.4-nano",
+    "gpt-4.1_few_shot": "GPT-4.1",
+    "gpt-4.1-mini_few_shot": "GPT-4.1-mini",
+    "gpt-4.1-nano_few_shot": "GPT-4.1-nano",
+    "gpt-5-mini_few_shot": "GPT-5-mini",
+    "gpt-5.1_few_shot": "GPT-5.1",
+    "gpt-5.2_few_shot": "GPT-5.2",
+    "deepseek-v4-flash_few_shot": "DeepSeek-V4-Flash",
+    "llama-3.3-70b_few_shot": "Llama-3.3-70B",
+    "qwen2.5-72b_few_shot": "Qwen2.5-72B",
     "rufimelo_Legal-BERTimbau-base__supervised": "Legal-BERTimbau-base",
-    "gpt-41-mini": "GPT-4.1-mini",
     "neuralmind_bert-base-portuguese-cased__supervised": "BERTimbau-base",
-    "gpt-35": "GPT-3.5",
-    "gpt-41": "GPT-4.1",
     "neuralmind_bert-large-portuguese-cased__supervised": "BERTimbau-large",
-    "gemini-2.5-flash_few_shot": "Gemini-2.5-flash",
-    "deepseek-v3_few_shot": "DeepSeek-V3",
     "bilstm-crf__supervised": "BiLSTM-CRF",
-    "gpt-41-nano": "GPT-4.1-nano",
 }
 
+# Highlighted pairs for Table 13 (Holm/Bonferroni family). Frontier comparisons +
+# the open-vs-closed narrative (p55c). "Best closed" is assumed GPT-5.2 a priori;
+# the all-91-pairs table + smallest-significant analysis cover the rest.
 HIGHLIGHTED_PAIRS = [
-    ("gpt-4-turbo", "gpt-5.4-mini_few_shot"),
-    ("gpt-4-turbo", "gpt-4o"),
-    ("gpt-5.4-mini_few_shot", "gpt-4o"),
-    ("gpt-4-turbo", "rufimelo_Legal-BERTimbau-base__supervised"),
-    ("gpt-4-turbo", "neuralmind_bert-base-portuguese-cased__supervised"),
-    ("gpt-5.4-mini_few_shot", "rufimelo_Legal-BERTimbau-base__supervised"),
-    ("gpt-4-turbo", "gpt-41-nano"),
-    ("gpt-4-turbo", "deepseek-v3_few_shot"),
-    ("gpt-4-turbo", "gemini-2.5-flash_few_shot"),
-    # Chapter-5 narrative additions
+    # closed frontier
+    ("gpt-5.2_few_shot", "gpt-5.1_few_shot"),
+    ("gpt-5.2_few_shot", "gpt-4.1_few_shot"),
+    ("gpt-4.1_few_shot", "gpt-4.1-mini_few_shot"),
+    ("gpt-4.1-mini_few_shot", "gpt-4.1-nano_few_shot"),
+    # open-weight vs best closed (p55c)
+    ("gpt-5.2_few_shot", "deepseek-v4-flash_few_shot"),
+    ("gpt-5.2_few_shot", "llama-3.3-70b_few_shot"),
+    ("gpt-5.2_few_shot", "qwen2.5-72b_few_shot"),
+    # open vs open
+    ("deepseek-v4-flash_few_shot", "llama-3.3-70b_few_shot"),
+    ("llama-3.3-70b_few_shot", "qwen2.5-72b_few_shot"),
+    # best LLM vs best supervised, and supervised internal
+    ("gpt-5.2_few_shot", "neuralmind_bert-base-portuguese-cased__supervised"),
+    ("deepseek-v4-flash_few_shot", "neuralmind_bert-base-portuguese-cased__supervised"),
     ("neuralmind_bert-base-portuguese-cased__supervised", "bilstm-crf__supervised"),
-    (
-        "rufimelo_Legal-BERTimbau-base__supervised",
-        "neuralmind_bert-base-portuguese-cased__supervised",
-    ),
-    ("gpt-4-turbo", "bilstm-crf__supervised"),
 ]
 
 
@@ -317,6 +323,10 @@ def paired_bootstrap_diff(counts_a, counts_b, n_iter=N_BOOTSTRAP, seed=SEED, alp
     n = len(counts_a["tp"])
     assert n == len(counts_b["tp"])
     rng = np.random.default_rng(seed)
+    # Resampling unit = document: each of the ``n`` entries in the tp/fp/fn
+    # arrays is one document (the unit of analysis). We draw ``n`` documents
+    # with replacement and, crucially, sample the SAME documents for both
+    # models (paired design) so the difference is computed on matched resamples.
     idx_matrix = rng.integers(0, n, size=(n_iter, n))
     diffs = np.empty(n_iter, dtype=np.float64)
     for b in range(n_iter):

@@ -1,0 +1,14 @@
+metric,value
+groups_total,794.0
+groups_decided_>=0.95,567.0
+groups_below_threshold,227.0
+groups_accept,6.0
+groups_custom,17.0
+groups_reject,544.0
+groups_altered (accept+custom),23.0
+groups_acceptance_rate,0.0406
+groups_rejection_rate,0.9594
+token_changes,4199.0
+token_decision_accept,183.0
+token_decision_reject,3238.0
+token_decision_custom,778.0

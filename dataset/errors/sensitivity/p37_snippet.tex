@@ -1,0 +1,7 @@
+% p37 — sensibilidade dos pesos do ensemble (foco: reponderação 0,3/0,7 vs 0,5/0,5).
+% Inserido ao fim do parágrafo do ensemble em Capitulo4.tex (Seção 4.3.1).
+% Números: teste controlado por tamanho (top-N), N = 4650 (tamanho do conjunto canônico).
+% Fonte: dataset/errors/sensitivity/weight_sensitivity.csv ; script: scripts/cleanlab_weight_sensitivity.py
+% NOTA HONESTA: robusto ao VALOR dos pesos; a ablação de um único modelo (transformer-only
+% 63%, linear-only 35%) altera o conjunto — esperado, pois confirma que ambos contribuem.
+Para verificar empiricamente que o resultado da auditoria não depende do valor escolhido para os pesos, a sinalização foi recomputada sob pesos iguais ($w_{\text{linear}} = w_{\text{transformer}} = 0{,}5$), controlando o tamanho do conjunto sinalizado para isolar o efeito da ponderação. A reponderação deixa $97{,}0\%$ dos \textit{tokens} mais suspeitos coincidentes com os do esquema de referência ($0{,}3/0{,}7$) e cobre as sinalizações de alta confiança ($\textit{score} \geq 0{,}95$) inspecionadas tão bem quanto o próprio esquema de referência ($83{,}0\%$ contra $83{,}2\%$), confirmando que o conjunto auditado é estável frente à escolha específica de $0{,}3/0{,}7$.

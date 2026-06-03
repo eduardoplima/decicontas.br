@@ -29,12 +29,12 @@ import pandas as pd
 from research.ner_metrics import evaluate_results
 
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_INPUT_DIR = REPO_ROOT / "dataset" / "results" / "output"
-DEFAULT_CORRECTED_JSON = (
-    REPO_ROOT / "dataset" / "release" / "decicontas-861-corrected" / "decicontas.json"
-)
-DEFAULT_OUTPUT_DIR = REPO_ROOT / "dataset" / "results" / "output_corrected"
+from research.release import paths
+
+REPO_ROOT = paths.REPO_ROOT
+DEFAULT_INPUT_DIR = paths.RAW_OUTPUT_DIR  # cycle-specific
+DEFAULT_CORRECTED_JSON = paths.CORRECTED_GOLD_JSON  # shared corrected gold
+DEFAULT_OUTPUT_DIR = paths.OUTPUT_CORRECTED_DIR  # cycle-specific
 
 
 logger = logging.getLogger("research.release.rescore_llms")
