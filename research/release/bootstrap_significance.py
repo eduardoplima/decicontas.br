@@ -93,6 +93,8 @@ DISPLAY_NAMES = {
 # the open-vs-closed narrative (p55c). "Best closed" is assumed GPT-5.2 a priori;
 # the all-91-pairs table + smallest-significant analysis cover the rest.
 HIGHLIGHTED_PAIRS = [
+    # top-2 leadership pair (open vs best closed) — decisive at temperature=0
+    ("deepseek-v4-flash_few_shot", "gpt-4.1_few_shot"),
     # closed frontier
     ("gpt-5.2_few_shot", "gpt-5.1_few_shot"),
     ("gpt-5.2_few_shot", "gpt-4.1_few_shot"),

@@ -43,7 +43,7 @@ def test_live_model_does_not_trip_breaker(monkeypatch):
     def sometimes(*_a, **_k):
         n["i"] += 1
         if n["i"] == 1:  # first doc succeeds → model is alive
-            return None
+            return None, None  # _infer_one contract: (parsed, meta)
         raise RuntimeError("flaky")
 
     monkeypatch.setattr(R, "_infer_one", sometimes)
@@ -61,7 +61,7 @@ def test_latency_breaker_skips_slow_model(monkeypatch):
     monkeypatch.setattr(R.time, "sleep", lambda *a, **k: None)
     monkeypatch.setattr(R, "make_extractor", lambda *a, **k: object())
     monkeypatch.setattr(R, "_pred_dict", lambda r: {})
-    monkeypatch.setattr(R, "_infer_one", lambda *a, **k: None)  # fast success
+    monkeypatch.setattr(R, "_infer_one", lambda *a, **k: (None, None))  # fast success
     # monotonic: combo_start=0, then probe check at +100s → > 90s threshold
     clock = iter([0.0, 100.0, 100.0])
     monkeypatch.setattr(R.time, "monotonic", lambda: next(clock))
@@ -78,7 +78,7 @@ def test_latency_breaker_allows_fast_model(monkeypatch):
     monkeypatch.setattr(R.time, "sleep", lambda *a, **k: None)
     monkeypatch.setattr(R, "make_extractor", lambda *a, **k: object())
     monkeypatch.setattr(R, "_pred_dict", lambda r: {})
-    monkeypatch.setattr(R, "_infer_one", lambda *a, **k: None)
+    monkeypatch.setattr(R, "_infer_one", lambda *a, **k: (None, None))
     clock = iter([0.0, 5.0])  # probe took 5s < 90s
     monkeypatch.setattr(R.time, "monotonic", lambda: next(clock))
     recs = R.run_model_technique(
