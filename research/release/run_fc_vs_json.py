@@ -39,12 +39,13 @@ DEFAULT_MODELS = ["deepseek-v4-flash", "gpt-4.1"]
 METHODS = [("function_calling", "fc"), ("json_schema", "json")]
 
 
-def run(models: list[str], limit: int | None) -> None:
+def run(models: list[str], limit: int | None, temperature: float | None = None,
+        seed: int | None = None) -> None:
     _load_env()
     out_dir = paths.RAW_EXPERIMENTS_DIR / "function_calling_json_schema"
     out_dir.mkdir(parents=True, exist_ok=True)
     texts = load_corpus(limit)
-    logger.info("FC-vs-JS over %d docs into %s", len(texts), out_dir)
+    logger.info("FC-vs-JS over %d docs into %s (temperature=%s)", len(texts), out_dir, temperature)
     for key in models:
         cfg = MODEL_REGISTRY[key]
         for method, suffix in METHODS:
@@ -58,6 +59,8 @@ def run(models: list[str], limit: int | None) -> None:
                 provider_order=cfg.get("provider_order"),
                 azure_deployment=cfg.get("azure_foundry"),
                 reasoning=cfg.get("reasoning", False),
+                temperature=temperature,
+                seed=seed,
             )
             path = out_dir / f"models_results_decicontas_{key}_{suffix}.json"
             path.write_text(json.dumps(records, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -68,13 +71,17 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--models", nargs="+", default=DEFAULT_MODELS, choices=list(MODEL_REGISTRY))
     parser.add_argument("--limit", type=int, default=None, help="Smoke mode: first N docs.")
+    parser.add_argument("--temperature", type=float, default=None,
+                        help="Override temperature for non-reasoning models (e.g. 0).")
+    parser.add_argument("--seed", type=int, default=None,
+                        help="Fixed sampling seed (best-effort determinism).")
     parser.add_argument("--quiet", action="store_true")
     args = parser.parse_args()
     logging.basicConfig(
         level=logging.WARNING if args.quiet else logging.INFO,
         format="%(asctime)s %(levelname)s %(name)s: %(message)s",
     )
-    run(args.models, args.limit)
+    run(args.models, args.limit, temperature=args.temperature, seed=args.seed)
 
 
 if __name__ == "__main__":
