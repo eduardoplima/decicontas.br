@@ -178,26 +178,44 @@ def make_llm(
     )
 
 
+def _sampling_kwargs(temperature: float | None, seed: int | None, reasoning: bool) -> dict[str, Any]:
+    """Sampling overrides for ``make_llm``. ``temperature`` is dropped for reasoning
+    models (gpt-5.x) which ignore/reject it; ``seed`` is sent to all (best-effort
+    determinism + ``system_fingerprint``)."""
+    extra: dict[str, Any] = {}
+    if temperature is not None and not reasoning:
+        extra["temperature"] = temperature
+    if seed is not None:
+        extra["seed"] = seed
+    return extra
+
+
 def make_extractor(
     model_id: str | None = None,
     structured: str = "function_calling",
     provider_order: list[str] | None = None,
     azure_deployment: str | None = None,
     reasoning: bool = False,
+    temperature: float | None = None,
+    seed: int | None = None,
+    include_raw: bool = False,
 ):
     """LLM that returns a validated :class:`NERDecisao`. ``structured`` selects
-    the structured-output method (``function_calling`` or ``json_mode``)."""
+    the structured-output method. ``temperature``/``seed`` (when not None) override
+    the API defaults. ``include_raw=True`` returns ``{"raw", "parsed", "parsing_error"}``
+    so the served snapshot / ``system_fingerprint`` / token usage can be persisted."""
+    extra = _sampling_kwargs(temperature, seed, reasoning)
     llm = make_llm(
         model_id, provider_order=provider_order, azure_deployment=azure_deployment,
-        reasoning=reasoning,
+        reasoning=reasoning, **extra,
     )
     if structured == "json_mode":
         llm = llm.bind(response_format={"type": "json_object"})
-        return llm.with_structured_output(NERDecisao, method="json_mode", include_raw=False)
+        return llm.with_structured_output(NERDecisao, method="json_mode", include_raw=include_raw)
     if structured == "json_schema":
         # strict Structured Outputs (constrained decoding) — the FC-vs-JS "JS" arm
-        return llm.with_structured_output(NERDecisao, method="json_schema", include_raw=False)
-    return llm.with_structured_output(NERDecisao, include_raw=False, method="function_calling")
+        return llm.with_structured_output(NERDecisao, method="json_schema", include_raw=include_raw)
+    return llm.with_structured_output(NERDecisao, include_raw=include_raw, method="function_calling")
 
 
 def make_classifier(
@@ -206,11 +224,14 @@ def make_classifier(
     provider_order: list[str] | None = None,
     azure_deployment: str | None = None,
     reasoning: bool = False,
+    temperature: float | None = None,
+    seed: int | None = None,
 ):
     """LLM that returns a :class:`DocumentClassification` (two-stage stage 1)."""
+    extra = _sampling_kwargs(temperature, seed, reasoning)
     llm = make_llm(
         model_id, provider_order=provider_order, azure_deployment=azure_deployment,
-        reasoning=reasoning,
+        reasoning=reasoning, **extra,
     )
     if structured == "json_mode":
         llm = llm.bind(response_format={"type": "json_object"})
@@ -265,15 +286,41 @@ def load_corpus(limit: int | None = None) -> list[str]:
 # ----- single-document inference per technique ------------------------------
 
 
-def _infer_one(technique: str, text: str, extractor, classifier, selector) -> NERDecisao | None:
+def _extract_meta(raw_msg) -> dict[str, Any] | None:
+    """Pull served-snapshot / fingerprint / token usage from the raw AIMessage."""
+    if raw_msg is None:
+        return None
+    rm = dict(getattr(raw_msg, "response_metadata", {}) or {})
+    tok = rm.get("token_usage") or {}
+    return {
+        "served_model": rm.get("model_name"),
+        "system_fingerprint": rm.get("system_fingerprint"),
+        "finish_reason": rm.get("finish_reason"),
+        "prompt_tokens": tok.get("prompt_tokens"),
+        "completion_tokens": tok.get("completion_tokens"),
+    }
+
+
+def _unwrap(out) -> tuple[NERDecisao | None, dict[str, Any] | None]:
+    """Normalise extractor output: with ``include_raw=True`` it is a dict
+    ``{"raw", "parsed", "parsing_error"}``; otherwise a :class:`NERDecisao`."""
+    if isinstance(out, dict) and "parsed" in out:
+        return out.get("parsed"), _extract_meta(out.get("raw"))
+    return out, None
+
+
+def _infer_one(
+    technique: str, text: str, extractor, classifier, selector
+) -> tuple[NERDecisao | None, dict[str, Any] | None]:
     if technique == "few_shot":
-        return extractor.invoke(generate_few_shot_ner_prompts(text))
+        return _unwrap(extractor.invoke(generate_few_shot_ner_prompts(text)))
     if technique == "cot":
-        return extractor.invoke(generate_prompt_for_technique(text, "cot"))
+        return _unwrap(extractor.invoke(generate_prompt_for_technique(text, "cot")))
     if technique == "dynamic_few_shot":
-        return extractor.invoke(selector.prompt(text))
+        return _unwrap(extractor.invoke(selector.prompt(text)))
     if technique == "two_stage":
-        return two_stage_ner(classifier, extractor, text, generate_few_shot_ner_prompts)
+        # two_stage uses a plain (include_raw=False) extractor internally — no per-call meta.
+        return two_stage_ner(classifier, extractor, text, generate_few_shot_ner_prompts), None
     raise ValueError(f"unknown technique: {technique}")
 
 
@@ -293,17 +340,24 @@ def run_model_technique(
     reasoning: bool = False,
     selector: _DynamicSelector | None = None,
     max_probe_seconds: float = LATENCY_MAX_SECONDS,
+    temperature: float | None = None,
+    seed: int | None = None,
+    skip_fewshot: bool = True,
 ) -> list[dict[str, Any]]:
     """Run one (model, technique) over ``texts`` with retry/backoff, mirroring
-    the notebook loop. Returns 866 records (or ``len(texts)`` in smoke mode)."""
+    the notebook loop. Returns 866 records (or ``len(texts)`` in smoke mode).
+    ``temperature``/``seed`` (when not None) override the API defaults; ``include_raw``
+    is enabled (except for two_stage) so the served snapshot/fingerprint is persisted."""
     extractor = make_extractor(
         model_id, structured=structured, provider_order=provider_order,
-        azure_deployment=azure_deployment, reasoning=reasoning,
+        azure_deployment=azure_deployment, reasoning=reasoning, temperature=temperature,
+        seed=seed, include_raw=(technique != "two_stage"),
     )
     classifier = (
         make_classifier(
             model_id, structured=structured, provider_order=provider_order,
-            azure_deployment=azure_deployment, reasoning=reasoning,
+            azure_deployment=azure_deployment, reasoning=reasoning, temperature=temperature,
+            seed=seed,
         )
         if technique == "two_stage"
         else None
@@ -312,7 +366,7 @@ def run_model_technique(
     errors = 0
     hard_failures = 0  # docs where every retry raised (vs. a valid empty extraction)
     processed = 0  # docs actually sent to the API (excludes skipped few-shot)
-    fewshot_set = set(FEWSHOT_RESULT_POSITIONS)
+    fewshot_set = set(FEWSHOT_RESULT_POSITIONS) if skip_fewshot else set()
     combo_start = time.monotonic()
     for index, text in enumerate(texts):
         # The 5 few-shot exemplar docs are in the model's own prompt — never send
@@ -327,14 +381,16 @@ def run_model_technique(
                     "golden": [],
                     "model": key,
                     "technique": technique,
+                    "meta": None,
                 }
             )
             continue
         result: NERDecisao | None = None
+        meta: dict[str, Any] | None = None
         succeeded = False
         for attempt in range(MAX_RETRIES):
             try:
-                result = _infer_one(technique, text, extractor, classifier, selector)
+                result, meta = _infer_one(technique, text, extractor, classifier, selector)
                 succeeded = True
                 break
             except ValidationError:
@@ -372,6 +428,7 @@ def run_model_technique(
                 "golden": [],  # rescore_* injects corrected gold by stripped text
                 "model": key,
                 "technique": technique,
+                "meta": meta,  # served snapshot / fingerprint / token usage (include_raw)
             }
         )
     if errors:
@@ -439,6 +496,8 @@ def run(
     structured: str | None,
     force: bool,
     max_probe_seconds: float = LATENCY_MAX_SECONDS,
+    temperature: float | None = None,
+    seed: int | None = None,
 ) -> None:
     """``structured=None`` uses each model's registry default; a value overrides
     it for all models (escape hatch). ``max_probe_seconds<=0`` disables the
@@ -488,6 +547,8 @@ def run(
                     reasoning=reasoning,
                     selector=selector,
                     max_probe_seconds=max_probe_seconds,
+                    temperature=temperature,
+                    seed=seed,
                 )
                 _write(records, key, technique, cfg)
             except Exception as exc:  # noqa: BLE001 — keep the queue going
@@ -532,6 +593,20 @@ def main() -> None:
         help=f"Skip a model if its first {LATENCY_PROBE} docs take longer than this "
         f"(rate-limit guard; default {LATENCY_MAX_SECONDS:.0f}s; 0 disables).",
     )
+    parser.add_argument(
+        "--temperature",
+        type=float,
+        default=None,
+        help="Override sampling temperature for NON-reasoning models (e.g. 0 for a "
+        "deterministic temperature=0 run). Reasoning models (gpt-5.x) ignore it.",
+    )
+    parser.add_argument(
+        "--seed",
+        type=int,
+        default=None,
+        help="Fixed sampling seed (best-effort determinism + system_fingerprint). "
+        "Recommended: 1007 (matches the experiment-wide seed).",
+    )
     parser.add_argument("--quiet", action="store_true")
     args = parser.parse_args()
 
@@ -546,6 +621,8 @@ def main() -> None:
         structured=args.structured,
         force=args.force,
         max_probe_seconds=args.max_probe_seconds,
+        temperature=args.temperature,
+        seed=args.seed,
     )
 
 

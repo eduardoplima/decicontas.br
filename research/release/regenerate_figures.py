@@ -230,8 +230,11 @@ def fig_exp1_precision_recall(df: pd.DataFrame) -> None:
     ax.set_xlabel("Precisão (Span)")
     ax.set_ylabel("Revocação (Span)")
     ax.set_title("Precisão vs Revocação — Few-Shot e Supervisionado")
-    ax.set_xlim(0.3, 0.95)
-    ax.set_ylim(0.4, 1.0)
+    # Limites derivados dos dados (com folga p/ rótulos) para não recortar
+    # modelos de baixa precisão (gpt-5-mini) ou baixa revocação (llama-3.3-70b).
+    px, py = df["span_precision"], df["span_recall"]
+    ax.set_xlim(max(0.0, px.min() - 0.05), min(1.0, px.max() + 0.08))
+    ax.set_ylim(max(0.0, py.min() - 0.05), min(1.02, py.max() + 0.08))
     ax.legend(handles=[
         Patch(color="steelblue", label="LLM few-shot"),
         Patch(color="#2ca02c", label="Supervisionado"),
