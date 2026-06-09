@@ -70,6 +70,3 @@ Both ship in JSON (Label Studio + clean), JSONL (HuggingFace `datasets`-compatib
 
 If you use this dataset or the results, please cite the dissertation. A BibTeX entry will be added here at publication.
 
-## License
-
-See [LICENSE](LICENSE).
