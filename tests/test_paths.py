@@ -1,39 +1,25 @@
-"""Cycle-aware path resolution (research.release.paths)."""
+"""Result path resolution (research.release.paths)."""
 
 from __future__ import annotations
 
-import importlib
+import research.release.paths as p
 
 
-def _reload_paths(monkeypatch, cycle: str | None):
-    if cycle is None:
-        monkeypatch.delenv("DECICONTAS_CYCLE", raising=False)
-    else:
-        monkeypatch.setenv("DECICONTAS_CYCLE", cycle)
-    import research.release.paths as p
-
-    return importlib.reload(p)
+def test_results_root_is_models_outputs():
+    assert p.RESULTS_ROOT == p.REPO_ROOT / "dataset/results/models_outputs"
+    assert p.CHAPTER5_DIR == p.RESULTS_ROOT / "chapter5"
+    assert p.OUTPUT_CORRECTED_DIR == p.RESULTS_ROOT / "output_corrected"
+    assert p.FIGURES_DIR == p.RESULTS_ROOT / "figures"
+    assert p.SIGNIFICANCE_DIR == p.RESULTS_ROOT / "significance"
 
 
-def test_default_cycle_is_new_clean(monkeypatch):
-    p = _reload_paths(monkeypatch, None)
-    assert p.CYCLE == "new_clean"
-    assert p.CHAPTER5_DIR == p.REPO_ROOT / "dataset/results/cycles/new_clean/chapter5"
-    assert p.OUTPUT_CORRECTED_DIR.parts[-2:] == ("new_clean", "output_corrected")
+def test_release_dirs_are_renamed():
+    assert p.RELEASE_DIR == p.REPO_ROOT / "dataset/release/decicontas"
+    assert p.RELEASE_PRE_DIR == p.REPO_ROOT / "dataset/release/decicontas-before-correction"
+    assert p.CORRECTED_GOLD_JSON == p.RELEASE_DIR / "decicontas.json"
 
 
-def test_cycle_switch_via_env(monkeypatch):
-    p = _reload_paths(monkeypatch, "old_leakage")
-    assert p.CYCLE == "old_leakage"
-    assert "cycles/old_leakage" in str(p.CHAPTER5_DIR)
-    assert "cycles/old_leakage" in str(p.FIGURES_DIR)
-
-
-def test_shared_dirs_are_cycle_independent(monkeypatch):
-    a = _reload_paths(monkeypatch, "new_clean")
-    shared_a = (a.KFOLD_CORRECTED, a.CORRECTED_GOLD_JSON, a.RELEASE_DIR, a.LABELED_CORPUS)
-    b = _reload_paths(monkeypatch, "old_leakage")
-    shared_b = (b.KFOLD_CORRECTED, b.CORRECTED_GOLD_JSON, b.RELEASE_DIR, b.LABELED_CORPUS)
-    assert shared_a == shared_b  # shared artifacts do not move between cycles
-    # restore default for other tests
-    _reload_paths(monkeypatch, None)
+def test_shared_inputs_and_kfold():
+    assert p.KFOLD_CORRECTED == p.RESULTS_ROOT / "supervised_kfold"
+    assert p.CORRECTIONS_JSON == p.REPO_ROOT / "dataset/errors/dataset-corrections.json"
+    assert p.LABELED_CORPUS == p.REPO_ROOT / "dataset/labeled_data/decicontas.json"

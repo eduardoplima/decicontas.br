@@ -1,0 +1,14 @@
+model,display,macro_f1_point,ci_lower,ci_upper
+deepseek-v4-flash_few_shot,DeepSeek-V4-Flash,0.7306,0.6832,0.7765
+gpt-4.1_few_shot,GPT-4.1,0.7062,0.6614,0.7504
+gpt-5.1_few_shot,GPT-5.1,0.6745,0.6284,0.7184
+gpt-4.1-mini_few_shot,GPT-4.1-mini,0.6743,0.6286,0.7179
+gpt-5.2_few_shot,GPT-5.2,0.5852,0.5339,0.6348
+neuralmind_bert-base-portuguese-cased__supervised,BERTimbau-base,0.5801,0.5184,0.6385
+qwen2.5-72b_few_shot,Qwen2.5-72B,0.5778,0.5323,0.6223
+gpt-5-mini_few_shot,GPT-5-mini,0.5242,0.4776,0.5677
+bilstm-crf__supervised,BiLSTM-CRF,0.5004,0.4378,0.564
+neuralmind_bert-large-portuguese-cased__supervised,BERTimbau-large,0.4778,0.4159,0.5378
+rufimelo_Legal-BERTimbau-base__supervised,Legal-BERTimbau-base,0.4058,0.3524,0.4608
+gpt-4.1-nano_few_shot,GPT-4.1-nano,0.3943,0.3448,0.4449
+llama-3.3-70b_few_shot,Llama-3.3-70B,0.2734,0.2205,0.3276

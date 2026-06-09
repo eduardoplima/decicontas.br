@@ -1,0 +1,4 @@
+model,n_docs,span_f1_temp0,span_f1_temp1,delta_span_f1,pred_agreement_jaccard,n_pred_temp0,n_pred_temp1
+deepseek-v4-flash,232,0.8045,0.761,0.0435,0.7745,431,403
+gpt-4.1,232,0.7826,0.7753,0.0073,0.8432,484,480
+gpt-4.1-mini,232,0.7597,0.7667,-0.007,0.8517,523,501

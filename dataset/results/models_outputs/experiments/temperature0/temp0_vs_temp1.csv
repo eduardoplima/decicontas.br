@@ -1,0 +1,4 @@
+model,span_f1_temp0,span_f1_temp1,delta_span_f1,span_f1_macro_temp0,span_f1_macro_temp1,span_precision_temp0,span_recall_temp0
+deepseek-v4-flash,0.0,0.7241,-0.7241,0.0,0.7007,0.0,0.0
+gpt-4.1,0.0,0.7151,-0.7151,0.0,0.6939,0.0,0.0
+gpt-4.1-mini,0.0,0.6983,-0.6983,0.0,0.6779,0.0,0.0

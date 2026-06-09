@@ -28,7 +28,7 @@ Método (fiel ao notebook ``notebooks/aed_decicontas.ipynb``)
    desses grupos PERMANECEM SINALIZADOS (contêm ≥1 token sinalizado na sua faixa).
 5. Mapeia os 22 grupos efetivamente acatados (accept+custom) e mede quantos reaparecem.
 
-Saídas em ``dataset/errors/sensitivity/``: ``weight_sensitivity.csv``, ``p37_snippet.tex``,
+Saídas em ``dataset/errors/sensitivity/``: ``weight_sensitivity.csv``, ``statement.txt``,
 ``versions.txt``. Cache em ``dataset/errors/oof_cache/``.
 
 Uso:
@@ -508,47 +508,10 @@ def main() -> None:
 
     ctrl_min = df_out[~df_out.scheme.str.startswith("ref")]["ctrl_decided_pct"].min()
     _emit_statement(df_out, pct_both, alt_both, n_alt, ctrl_min)
-    _emit_latex(pct_both, alt_both, n_dec, n_alt, ctrl_min)
-
-
-def _vir(x) -> str:
-    return str(x).replace(".", "{,}")
 
 
 def _is_robust(ctrl_min, alt_both, n_alt) -> bool:
     return ctrl_min >= 85.0 and (alt_both / n_alt if n_alt else 0) >= 0.85
-
-
-def _emit_latex(pct_both, alt_both, n_dec, n_alt, ctrl_min) -> None:
-    """Gera trecho HONESTO conforme o veredito (controlado por tamanho)."""
-    if _is_robust(ctrl_min, alt_both, n_alt):
-        snippet = (
-            "Para confirmar empiricamente essa independência, a sinaliza\\c{c}\\~ao foi recomputada "
-            "sob dois esquemas alternativos de pondera\\c{c}\\~ao --- pesos iguais "
-            "($w_{\\text{linear}} = w_{\\text{transformer}} = 0{,}5$) e apenas o modelo "
-            "\\textit{transformer} ($w_{\\text{transformer}} = 1{,}0$) ---, controlando o tamanho "
-            "do conjunto sinalizado. Das " + str(n_dec) + " sinaliza\\c{c}\\~oes de alta confian\\c{c}a "
-            "($\\textit{score} \\geq 0{,}95$) inspecionadas, " + _vir(pct_both) + "\\% permanecem "
-            "sinalizadas em ambos os esquemas, e " + str(alt_both) + " das " + str(n_alt) +
-            " corre\\c{c}\\~oes efetivamente acatadas reaparecem em todos eles, confirmando que o "
-            "resultado da auditoria n\\~ao depende da escolha de $0{,}3/0{,}7$.\n"
-        )
-    else:
-        snippet = (
-            "% ACHADO: a sinaliza\\c{c}\\~ao mostrou-se SENS\\'IVEL aos pesos do ensemble "
-            "(n\\~ao afirmar robustez). Trecho honesto abaixo.\n"
-            "Uma an\\'alise de sensibilidade recomputou a sinaliza\\c{c}\\~ao sob esquemas "
-            "alternativos de pondera\\c{c}\\~ao --- pesos iguais ($0{,}5/0{,}5$) e apenas o modelo "
-            "\\textit{transformer} ($1{,}0$) ---, controlando o tamanho do conjunto. Apenas "
-            + _vir(pct_both) + "\\% das " + str(n_dec) + " sinaliza\\c{c}\\~oes de alta confian\\c{c}a "
-            "inspecionadas permanecem entre as mais suspeitas em ambos os esquemas, indicando que o "
-            "\\emph{conjunto} sinalizado depende da pondera\\c{c}\\~ao adotada. As " + str(alt_both) +
-            " das " + str(n_alt) + " corre\\c{c}\\~oes efetivamente acatadas que reaparecem sugerem "
-            "maior estabilidade das corre\\c{c}\\~oes de fato aplicadas, ainda que o procedimento de "
-            "sinaliza\\c{c}\\~ao, isoladamente, n\\~ao seja invariante \\`a escolha de $0{,}3/0{,}7$.\n"
-        )
-    (OUT_DIR / "p37_snippet.tex").write_text(snippet, encoding="utf-8")
-    print(f"[salvo] {OUT_DIR / 'p37_snippet.tex'} (robusto={_is_robust(ctrl_min, alt_both, n_alt)})")
 
 
 def _emit_statement(df, pct_both, alt_both, n_alt, ctrl_min) -> None:

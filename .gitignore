@@ -33,8 +33,8 @@ venv/
 wandb/
 
 # transient release artefacts that bloat git status
-dataset/release/decicontas-861/brat/
-dataset/release/decicontas-861-corrected/brat/
+dataset/release/decicontas-before-correction/brat/
+dataset/release/decicontas/brat/
 
 # transient training artefacts
 ner_fold_*/

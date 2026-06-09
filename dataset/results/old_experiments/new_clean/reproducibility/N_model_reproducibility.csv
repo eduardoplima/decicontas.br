@@ -1,0 +1,14 @@
+modelo,chave_resultado,paradigma,id_roteado,acesso,saida_estruturada,max_tokens,context_window,snapshot_datado,temperature,top_p,seed,data_acesso
+GPT-4.1,gpt-4.1_few_shot,LLM few-shot,Azure deployment gpt-4.1,Azure AI Foundry (Brazil),function_calling,4096,1M,gpt-4.1-2025-04-14,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO
+GPT-4.1-mini,gpt-4.1-mini_few_shot,LLM few-shot,Azure deployment gpt-4.1-mini,Azure AI Foundry (Brazil),function_calling,4096,1M,gpt-4.1-mini-2025-04-14,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO
+GPT-4.1-nano,gpt-4.1-nano_few_shot,LLM few-shot,Azure deployment gpt-4.1-nano,Azure AI Foundry (Brazil),function_calling,4096,1M,gpt-4.1-nano-2025-04-14,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO
+GPT-5-mini,gpt-5-mini_few_shot,LLM few-shot,Azure deployment gpt-5-mini,Azure AI Foundry (Brazil; reasoning),function_calling,4096,—,gpt-5-mini-2025-08-07,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO
+GPT-5.1,gpt-5.1_few_shot,LLM few-shot,Azure deployment gpt-5.1,Azure AI Foundry (Brazil; reasoning),function_calling,4096,—,gpt-5.1-2025-11-13,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO
+GPT-5.2,gpt-5.2_few_shot,LLM few-shot,Azure deployment gpt-5.2,Azure AI Foundry (Brazil; reasoning),function_calling,4096,—,gpt-5.2-2025-12-11,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO
+DeepSeek-V4-Flash,deepseek-v4-flash_few_shot,LLM few-shot,Azure deployment DeepSeek-V4-Flash,Azure AI Foundry (Brazil),function_calling,4096,1M,"DeepSeek-V4-Flash (open weights, MIT)",NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO
+Llama-3.3-70B,llama-3.3-70b_few_shot,LLM few-shot,meta-llama/llama-3.3-70b-instruct,OpenRouter (provider: Fireworks/Together/DeepInfra),function_calling,4096,131K,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO
+Qwen2.5-72B,qwen2.5-72b_few_shot,LLM few-shot,qwen/qwen-2.5-72b-instruct,OpenRouter,function_calling,4096,32K,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO,NÃO PERSISTIDO
+BERTimbau-base,neuralmind_bert-base-portuguese-cased__supervised,supervisionado,neuralmind/bert-base-portuguese-cased,treino local (k-fold),BIO token-classification,—,—,nome HF (pino),—,—,ver cv_*.json (config),—
+BERTimbau-large,neuralmind_bert-large-portuguese-cased__supervised,supervisionado,neuralmind/bert-large-portuguese-cased,treino local (k-fold),BIO token-classification,—,—,nome HF (pino),—,—,ver cv_*.json (config),—
+Legal-BERTimbau-base,rufimelo_Legal-BERTimbau-base__supervised,supervisionado,rufimelo/Legal-BERTimbau-base,treino local (k-fold),BIO token-classification,—,—,nome HF (pino),—,—,ver cv_*.json (config),—
+BiLSTM-CRF,bilstm-crf__supervised,supervisionado,arquitetura local (BiLSTM-CRF),treino local (k-fold),BIO token-classification,—,—,código local,—,—,ver cv_*.json (config),—
