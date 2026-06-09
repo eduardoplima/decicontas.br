@@ -1,0 +1,9 @@
+metric,before,after,delta
+total_docs,861,861,0
+docs_with_entity,229,232,3
+docs_without_entity,632,629,-3
+total_entities,439,459,20
+MULTA,202,212,10
+OBRIGACAO,119,131,12
+RECOMENDACAO,56,53,-3
+RESSARCIMENTO,62,63,1

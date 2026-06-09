@@ -39,9 +39,9 @@ from research.ner_metrics import bipartite_greedy_match
 from research.release import paths
 
 REPO_ROOT = paths.REPO_ROOT
-DEFAULT_INPUT_DIR = paths.OUTPUT_CORRECTED_DIR  # cycle-specific
-DEFAULT_OUTPUT_DIR = paths.SIGNIFICANCE_DIR  # cycle-specific
-DEFAULT_FIG_DIR = paths.FIGURES_DIR  # cycle-specific
+DEFAULT_INPUT_DIR = paths.OUTPUT_CORRECTED_DIR
+DEFAULT_OUTPUT_DIR = paths.SIGNIFICANCE_DIR
+DEFAULT_FIG_DIR = paths.FIGURES_DIR
 
 N_BOOTSTRAP = 10_000
 SEED = 42
@@ -52,8 +52,8 @@ ALPHA = 0.05
 logger = logging.getLogger("research.release.bootstrap_significance")
 
 
-# NEW-CYCLE (new_clean) leaderboard: 9 LLMs (clean prompt, Brazil Azure + open
-# weights) + 4 shared supervised baselines.
+# Leaderboard: 9 LLMs (clean prompt, Brazil Azure + open weights) + 4
+# supervised baselines.
 MODELS = [
     # LLMs — Azure AI Foundry (Brazil)
     "gpt-4.1_few_shot",
@@ -356,85 +356,6 @@ def paired_bootstrap_diff(counts_a, counts_b, n_iter=N_BOOTSTRAP, seed=SEED, alp
     }
 
 
-# ----- LaTeX writers -------------------------------------------------------
-
-
-def _escape_latex(s: str) -> str:
-    return (
-        s.replace("\\", r"\textbackslash{}")
-        .replace("&", r"\&")
-        .replace("%", r"\%")
-        .replace("_", r"\_")
-        .replace("#", r"\#")
-    )
-
-
-def write_latex_ci(df_ci: pd.DataFrame, out_path: Path) -> None:
-    lines = []
-    for _, row in df_ci.iterrows():
-        name = _escape_latex(row["display_name"])
-        lines.append(
-            f"        {name:<35s} & {row['span_f1_point']:.4f} "
-            f"& [{row['ci_lower']:.3f};\\ {row['ci_upper']:.3f}] \\\\"
-        )
-    tex = (
-        "\\begin{table}[ht]\n"
-        "    \\centering\n"
-        "    \\caption{95\\% confidence intervals via \\textit{bootstrap} "
-        "for the Span F1 of every evaluated model "
-        f"({N_BOOTSTRAP:,} document-level resamples, IoU $\\geq$ 0.5).}}\n"
-        "    \\label{tab:bootstrap_ic}\n"
-        "    \\small\n"
-        "    \\begin{tabular}{lcc}\n"
-        "        \\hline\n"
-        "        \\textbf{Model} & \\textbf{Span F1} & \\textbf{95\\% CI} \\\\\n"
-        "        \\hline\n"
-        + "\n".join(lines)
-        + "\n"
-        "        \\hline\n"
-        "    \\end{tabular}\n"
-        "\\end{table}\n"
-    )
-    out_path.write_text(tex, encoding="utf-8")
-
-
-def write_latex_paired(df_highlighted: pd.DataFrame, out_path: Path) -> None:
-    lines = []
-    for _, row in df_highlighted.iterrows():
-        a = _escape_latex(row["display_a"])
-        b = _escape_latex(row["display_b"])
-        sig = "Yes" if row["significant_95"] else "No"
-        if row["p_value"] < 1e-3:
-            p_str = "$< 0.001$"
-        else:
-            p_str = f"{row['p_value']:.3f}"
-        diff_str = f"{row['diff_f1']:+.3f}"
-        ci_str = f"[{row['ci_lower']:+.3f};\\ {row['ci_upper']:+.3f}]"
-        lines.append(
-            f"        {a} vs. {b} & {diff_str} & {ci_str} & {p_str} & {sig} \\\\"
-        )
-    tex = (
-        "\\begin{table}[ht]\n"
-        "    \\centering\n"
-        "    \\caption{Paired comparisons via \\textit{bootstrap} "
-        f"(B = {N_BOOTSTRAP:,}). "
-        "A positive $\\Delta$ Span F1 indicates the first model outperforms the second.}\n"
-        "    \\label{tab:bootstrap_paired}\n"
-        "    \\small\n"
-        "    \\begin{tabular}{lcccc}\n"
-        "        \\hline\n"
-        "        \\textbf{Comparison} & $\\Delta$ \\textbf{F1} "
-        "& \\textbf{95\\% CI of difference} & $\\mathbf{p}$ & \\textbf{Sig. 5\\%} \\\\\n"
-        "        \\hline\n"
-        + "\n".join(lines)
-        + "\n"
-        "        \\hline\n"
-        "    \\end{tabular}\n"
-        "\\end{table}\n"
-    )
-    out_path.write_text(tex, encoding="utf-8")
-
-
 # ----- Plots ---------------------------------------------------------------
 
 
@@ -652,8 +573,6 @@ def run(
     df_pairs.to_markdown(
         output_dir / "paired_bootstrap_results.csv", index=False
     )
-    write_latex_ci(df_ci, output_dir / "table_bootstrap_ic.tex")
-    write_latex_paired(df_highlighted, output_dir / "table_bootstrap_paired.tex")
     write_forest_plot(df_ci, fig_dir / "forest_plot_bootstrap.png")
     write_heatmap(df_ci, df_pairs, fig_dir / "heatmap_pairs_bootstrap.png")
 

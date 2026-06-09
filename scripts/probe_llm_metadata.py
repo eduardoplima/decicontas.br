@@ -30,7 +30,7 @@ from langchain_core.messages import HumanMessage
 from research.release.run_llm_inference import MODEL_REGISTRY, _load_env, make_llm
 
 REPO = Path(__file__).resolve().parents[1]
-OUT_DIR = REPO / "dataset" / "results" / "cycles" / "new_clean" / "reproducibility"
+OUT_DIR = REPO / "dataset" / "results" / "models_outputs" / "reproducibility"
 NA = "não consta"
 PROMPT = "Responda apenas: ok"
 

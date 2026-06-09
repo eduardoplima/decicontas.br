@@ -39,8 +39,8 @@ from matplotlib.patches import Patch
 from research.release import paths
 
 REPO_ROOT = paths.REPO_ROOT
-NUMS = paths.CHAPTER5_DIR  # cycle-specific
-FIG_DIR = paths.FIGURES_DIR  # cycle-specific
+NUMS = paths.CHAPTER5_DIR
+FIG_DIR = paths.FIGURES_DIR
 SUFFIX = ""  # figures are isolated per cycle dir, no suffix needed
 ENTITY_LABELS = ["MULTA", "OBRIGACAO", "RECOMENDACAO", "RESSARCIMENTO"]
 

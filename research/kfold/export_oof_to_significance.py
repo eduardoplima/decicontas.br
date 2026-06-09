@@ -21,10 +21,10 @@ from research.fewshot import FEWSHOT_RESULT_POSITIONS
 
 from .config import REPO_ROOT, SUMMARY_DIR, SUPERVISED_MODELS, safe_name
 
-# When ``DECICONTAS_RESULTS_SUFFIX`` is set the OOFs land beside the
-# corrected-dataset run instead of the legacy ``dataset/results/output/``.
+# Supervised OOF predictions land beside the LLM leaderboard so they get
+# scored together. ``DECICONTAS_RESULTS_SUFFIX`` keeps variant runs separate.
 _SUFFIX = os.environ.get("DECICONTAS_RESULTS_SUFFIX", "")
-OUT_DIR = REPO_ROOT / "dataset" / "results" / f"output{_SUFFIX}"
+OUT_DIR = REPO_ROOT / "dataset" / "results" / "models_outputs" / f"output{_SUFFIX}"
 
 
 def _expand_to_866(values: list[list[str]]) -> list[list[str]]:

@@ -59,12 +59,12 @@ logger = logging.getLogger("research.release.run_llm_inference")
 
 REPO_ROOT = paths.REPO_ROOT
 CORPUS_PATH = paths.LABELED_CORPUS
-OUTPUT_DIR = paths.RAW_OUTPUT_DIR  # cycle-specific (DECICONTAS_CYCLE)
-PROMPT_ENG_DIR = paths.RAW_PROMPT_ENG_DIR  # cycle-specific
+OUTPUT_DIR = paths.RAW_OUTPUT_DIR
+PROMPT_ENG_DIR = paths.RAW_PROMPT_ENG_DIR
 
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 
-# NEW-CYCLE (new_clean) registry. Per-model config keyed by short name.
+# Model registry. Per-model config keyed by short name.
 # Routing: ``azure_foundry`` (deployment on the Brazil AI Foundry resource, served
 # via {base}/openai/v1) or ``openrouter`` (OpenRouter model id). ``reasoning``
 # (gpt-5.x) → ``max_completion_tokens`` instead of ``max_tokens`` (smoke F5).

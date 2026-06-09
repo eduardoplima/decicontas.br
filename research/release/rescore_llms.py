@@ -12,9 +12,10 @@ This avoids re-running any LLM API calls. Supervised baseline JSONs
 own tokeniser) are NOT handled here — those need a proper retrain on
 the corrected labels via the supervised k-fold orchestrator.
 
-Outputs go to ``dataset/results/output_corrected/`` and a markdown
-summary table to ``dataset/results/supervised_kfold_corrected/summary/
-llm_rescored.md`` (created if missing).
+Outputs go to ``dataset/results/models_outputs/output_corrected/`` and a
+markdown summary table to
+``dataset/results/models_outputs/supervised_kfold/summary/llm_rescored.md``
+(created if missing).
 """
 
 from __future__ import annotations
@@ -32,9 +33,9 @@ from research.ner_metrics import evaluate_results
 from research.release import paths
 
 REPO_ROOT = paths.REPO_ROOT
-DEFAULT_INPUT_DIR = paths.RAW_OUTPUT_DIR  # cycle-specific
+DEFAULT_INPUT_DIR = paths.RAW_OUTPUT_DIR
 DEFAULT_CORRECTED_JSON = paths.CORRECTED_GOLD_JSON  # shared corrected gold
-DEFAULT_OUTPUT_DIR = paths.OUTPUT_CORRECTED_DIR  # cycle-specific
+DEFAULT_OUTPUT_DIR = paths.OUTPUT_CORRECTED_DIR
 
 
 logger = logging.getLogger("research.release.rescore_llms")

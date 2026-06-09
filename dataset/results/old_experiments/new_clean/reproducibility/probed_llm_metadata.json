@@ -1,0 +1,485 @@
+[
+  {
+    "chave": "gpt-4.1",
+    "acesso": "Azure AI Foundry (Brazil)",
+    "id_pedido": "gpt-4.1",
+    "reasoning": false,
+    "data_sonda_utc": "2026-06-03T20:56:56+00:00",
+    "snapshot_servido": "gpt-4.1-2025-04-14",
+    "system_fingerprint": "fp_dc49d4fcba",
+    "provider": "—",
+    "finish_reason": "stop",
+    "prompt_tokens": 13,
+    "completion_tokens": 2,
+    "generation_id": "chatcmpl-DmmvxClYpvTp4jkxTFjcNl7O5DQMc",
+    "resposta": "ok",
+    "temperature": "1.0 (default API; omitido no código)",
+    "top_p": "1.0 (default API; omitido no código)",
+    "seed": "não fixado (sem seed; não determinístico)",
+    "_raw_response_metadata": {
+      "token_usage": {
+        "completion_tokens": 2,
+        "prompt_tokens": 13,
+        "total_tokens": 15,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cached_tokens": 0
+        },
+        "latency_checkpoint": {
+          "engine_tbt_ms": 0,
+          "engine_ttft_ms": 316,
+          "engine_ttlt_ms": 317,
+          "pre_inference_ms": 80,
+          "service_tbt_ms": 3,
+          "service_ttft_ms": 673,
+          "service_ttlt_ms": 675,
+          "total_duration_ms": 599,
+          "user_visible_ttft_ms": 594
+        }
+      },
+      "model_provider": "openai",
+      "model_name": "gpt-4.1-2025-04-14",
+      "system_fingerprint": "fp_dc49d4fcba",
+      "id": "chatcmpl-DmmvxClYpvTp4jkxTFjcNl7O5DQMc",
+      "service_tier": "default",
+      "finish_reason": "stop",
+      "logprobs": null
+    },
+    "_raw_usage_metadata": {
+      "input_tokens": 13,
+      "output_tokens": 2,
+      "total_tokens": 15,
+      "input_token_details": {
+        "audio": 0,
+        "cache_read": 0
+      },
+      "output_token_details": {
+        "audio": 0,
+        "reasoning": 0
+      }
+    },
+    "_openrouter_generation": {},
+    "erro": null
+  },
+  {
+    "chave": "gpt-4.1-mini",
+    "acesso": "Azure AI Foundry (Brazil)",
+    "id_pedido": "gpt-4.1-mini",
+    "reasoning": false,
+    "data_sonda_utc": "2026-06-03T20:56:56+00:00",
+    "snapshot_servido": "gpt-4.1-mini-2025-04-14",
+    "system_fingerprint": "fp_a7294185dc",
+    "provider": "—",
+    "finish_reason": "stop",
+    "prompt_tokens": 13,
+    "completion_tokens": 2,
+    "generation_id": "chatcmpl-Dmmvx4yaUKxz7l9RrWwJcpvNEKzy8",
+    "resposta": "ok",
+    "temperature": "1.0 (default API; omitido no código)",
+    "top_p": "1.0 (default API; omitido no código)",
+    "seed": "não fixado (sem seed; não determinístico)",
+    "_raw_response_metadata": {
+      "token_usage": {
+        "completion_tokens": 2,
+        "prompt_tokens": 13,
+        "total_tokens": 15,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cached_tokens": 0
+        },
+        "latency_checkpoint": {
+          "engine_tbt_ms": 19,
+          "engine_ttft_ms": 134,
+          "engine_ttlt_ms": 172,
+          "pre_inference_ms": 77,
+          "service_tbt_ms": 22,
+          "service_ttft_ms": 477,
+          "service_ttlt_ms": 509,
+          "total_duration_ms": 443,
+          "user_visible_ttft_ms": 400
+        }
+      },
+      "model_provider": "openai",
+      "model_name": "gpt-4.1-mini-2025-04-14",
+      "system_fingerprint": "fp_a7294185dc",
+      "id": "chatcmpl-Dmmvx4yaUKxz7l9RrWwJcpvNEKzy8",
+      "service_tier": "default",
+      "finish_reason": "stop",
+      "logprobs": null
+    },
+    "_raw_usage_metadata": {
+      "input_tokens": 13,
+      "output_tokens": 2,
+      "total_tokens": 15,
+      "input_token_details": {
+        "audio": 0,
+        "cache_read": 0
+      },
+      "output_token_details": {
+        "audio": 0,
+        "reasoning": 0
+      }
+    },
+    "_openrouter_generation": {},
+    "erro": null
+  },
+  {
+    "chave": "gpt-4.1-nano",
+    "acesso": "Azure AI Foundry (Brazil)",
+    "id_pedido": "gpt-4.1-nano",
+    "reasoning": false,
+    "data_sonda_utc": "2026-06-03T20:56:56+00:00",
+    "snapshot_servido": "gpt-4.1-nano-2025-04-14",
+    "system_fingerprint": "fp_28b5fb7b1e",
+    "provider": "—",
+    "finish_reason": "stop",
+    "prompt_tokens": 13,
+    "completion_tokens": 2,
+    "generation_id": "chatcmpl-DmmvyHbdZcr3qWGTjLQRxLi51Rzrq",
+    "resposta": "ok",
+    "temperature": "1.0 (default API; omitido no código)",
+    "top_p": "1.0 (default API; omitido no código)",
+    "seed": "não fixado (sem seed; não determinístico)",
+    "_raw_response_metadata": {
+      "token_usage": {
+        "completion_tokens": 2,
+        "prompt_tokens": 13,
+        "total_tokens": 15,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cached_tokens": 0
+        },
+        "latency_checkpoint": {
+          "engine_tbt_ms": 2,
+          "engine_ttft_ms": 30,
+          "engine_ttlt_ms": 33,
+          "pre_inference_ms": 58,
+          "service_tbt_ms": 8,
+          "service_ttft_ms": 807,
+          "service_ttlt_ms": 811,
+          "total_duration_ms": 764,
+          "user_visible_ttft_ms": 749
+        }
+      },
+      "model_provider": "openai",
+      "model_name": "gpt-4.1-nano-2025-04-14",
+      "system_fingerprint": "fp_28b5fb7b1e",
+      "id": "chatcmpl-DmmvyHbdZcr3qWGTjLQRxLi51Rzrq",
+      "service_tier": "default",
+      "finish_reason": "stop",
+      "logprobs": null
+    },
+    "_raw_usage_metadata": {
+      "input_tokens": 13,
+      "output_tokens": 2,
+      "total_tokens": 15,
+      "input_token_details": {
+        "audio": 0,
+        "cache_read": 0
+      },
+      "output_token_details": {
+        "audio": 0,
+        "reasoning": 0
+      }
+    },
+    "_openrouter_generation": {},
+    "erro": null
+  },
+  {
+    "chave": "gpt-5-mini",
+    "acesso": "Azure AI Foundry (Brazil)",
+    "id_pedido": "gpt-5-mini",
+    "reasoning": true,
+    "data_sonda_utc": "2026-06-03T20:56:56+00:00",
+    "snapshot_servido": "gpt-5-mini-2025-08-07",
+    "system_fingerprint": "não consta",
+    "provider": "—",
+    "finish_reason": "stop",
+    "prompt_tokens": 12,
+    "completion_tokens": 11,
+    "generation_id": "chatcmpl-DmmvzDaLI1CjFLSuZX7UN0vi1LPQE",
+    "resposta": "ok",
+    "temperature": "1.0 nominal — reasoning ignora (omitido no código)",
+    "top_p": "1.0 nominal — reasoning ignora (omitido no código)",
+    "seed": "não fixado (sem seed; não determinístico)",
+    "_raw_response_metadata": {
+      "token_usage": {
+        "completion_tokens": 11,
+        "prompt_tokens": 12,
+        "total_tokens": 23,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cached_tokens": 0
+        },
+        "latency_checkpoint": {
+          "engine_tbt_ms": 10,
+          "engine_ttft_ms": 42,
+          "engine_ttlt_ms": 751,
+          "pre_inference_ms": 100,
+          "service_tbt_ms": 10,
+          "service_ttft_ms": 452,
+          "service_ttlt_ms": 1156,
+          "total_duration_ms": 1069,
+          "user_visible_ttft_ms": 352
+        }
+      },
+      "model_provider": "openai",
+      "model_name": "gpt-5-mini-2025-08-07",
+      "system_fingerprint": null,
+      "id": "chatcmpl-DmmvzDaLI1CjFLSuZX7UN0vi1LPQE",
+      "service_tier": "default",
+      "finish_reason": "stop",
+      "logprobs": null
+    },
+    "_raw_usage_metadata": {
+      "input_tokens": 12,
+      "output_tokens": 11,
+      "total_tokens": 23,
+      "input_token_details": {
+        "audio": 0,
+        "cache_read": 0
+      },
+      "output_token_details": {
+        "audio": 0,
+        "reasoning": 0
+      }
+    },
+    "_openrouter_generation": {},
+    "erro": null
+  },
+  {
+    "chave": "gpt-5.1",
+    "acesso": "Azure AI Foundry (Brazil)",
+    "id_pedido": "gpt-5.1",
+    "reasoning": true,
+    "data_sonda_utc": "2026-06-03T20:56:56+00:00",
+    "snapshot_servido": "gpt-5.1-2025-11-13",
+    "system_fingerprint": "não consta",
+    "provider": "—",
+    "finish_reason": "stop",
+    "prompt_tokens": 12,
+    "completion_tokens": 11,
+    "generation_id": "chatcmpl-Dmmw1MwkAFM3dUsBEjemwUmeBlGPW",
+    "resposta": "ok",
+    "temperature": "1.0 nominal — reasoning ignora (omitido no código)",
+    "top_p": "1.0 nominal — reasoning ignora (omitido no código)",
+    "seed": "não fixado (sem seed; não determinístico)",
+    "_raw_response_metadata": {
+      "token_usage": {
+        "completion_tokens": 11,
+        "prompt_tokens": 12,
+        "total_tokens": 23,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cached_tokens": 0
+        },
+        "latency_checkpoint": {
+          "engine_tbt_ms": 5,
+          "engine_ttft_ms": 24,
+          "engine_ttlt_ms": 78,
+          "pre_inference_ms": 67,
+          "service_tbt_ms": 5,
+          "service_ttft_ms": 703,
+          "service_ttlt_ms": 744,
+          "total_duration_ms": 686,
+          "user_visible_ttft_ms": 636
+        }
+      },
+      "model_provider": "openai",
+      "model_name": "gpt-5.1-2025-11-13",
+      "system_fingerprint": null,
+      "id": "chatcmpl-Dmmw1MwkAFM3dUsBEjemwUmeBlGPW",
+      "service_tier": "default",
+      "finish_reason": "stop",
+      "logprobs": null
+    },
+    "_raw_usage_metadata": {
+      "input_tokens": 12,
+      "output_tokens": 11,
+      "total_tokens": 23,
+      "input_token_details": {
+        "audio": 0,
+        "cache_read": 0
+      },
+      "output_token_details": {
+        "audio": 0,
+        "reasoning": 0
+      }
+    },
+    "_openrouter_generation": {},
+    "erro": null
+  },
+  {
+    "chave": "gpt-5.2",
+    "acesso": "Azure AI Foundry (Brazil)",
+    "id_pedido": "gpt-5.2",
+    "reasoning": true,
+    "data_sonda_utc": "2026-06-03T20:56:56+00:00",
+    "snapshot_servido": "gpt-5.2-2025-12-11",
+    "system_fingerprint": "não consta",
+    "provider": "—",
+    "finish_reason": "stop",
+    "prompt_tokens": 12,
+    "completion_tokens": 5,
+    "generation_id": "chatcmpl-Dmmw29Q08Ut27H3vyC2UpviPgeaJI",
+    "resposta": "ok",
+    "temperature": "1.0 nominal — reasoning ignora (omitido no código)",
+    "top_p": "1.0 nominal — reasoning ignora (omitido no código)",
+    "seed": "não fixado (sem seed; não determinístico)",
+    "_raw_response_metadata": {
+      "token_usage": {
+        "completion_tokens": 5,
+        "prompt_tokens": 12,
+        "total_tokens": 17,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cached_tokens": 0
+        },
+        "latency_checkpoint": {
+          "engine_tbt_ms": 11,
+          "engine_ttft_ms": 125,
+          "engine_ttlt_ms": 179,
+          "pre_inference_ms": 78,
+          "service_tbt_ms": 13,
+          "service_ttft_ms": 1255,
+          "service_ttlt_ms": 1305,
+          "total_duration_ms": 1240,
+          "user_visible_ttft_ms": 1177
+        }
+      },
+      "model_provider": "openai",
+      "model_name": "gpt-5.2-2025-12-11",
+      "system_fingerprint": null,
+      "id": "chatcmpl-Dmmw29Q08Ut27H3vyC2UpviPgeaJI",
+      "service_tier": "default",
+      "finish_reason": "stop",
+      "logprobs": null
+    },
+    "_raw_usage_metadata": {
+      "input_tokens": 12,
+      "output_tokens": 5,
+      "total_tokens": 17,
+      "input_token_details": {
+        "audio": 0,
+        "cache_read": 0
+      },
+      "output_token_details": {
+        "audio": 0,
+        "reasoning": 0
+      }
+    },
+    "_openrouter_generation": {},
+    "erro": null
+  },
+  {
+    "chave": "deepseek-v4-flash",
+    "acesso": "Azure AI Foundry (Brazil)",
+    "id_pedido": "DeepSeek-V4-Flash",
+    "reasoning": false,
+    "data_sonda_utc": "2026-06-03T20:56:56+00:00",
+    "snapshot_servido": "DeepSeek-V4-Flash",
+    "system_fingerprint": "não consta",
+    "provider": "—",
+    "finish_reason": "stop",
+    "prompt_tokens": 9,
+    "completion_tokens": 2,
+    "generation_id": "b3f7030d4dea4a709f78edfc4020636f",
+    "resposta": "ok",
+    "temperature": "1.0 (default API; omitido no código)",
+    "top_p": "1.0 (default API; omitido no código)",
+    "seed": "não fixado (sem seed; não determinístico)",
+    "_raw_response_metadata": {
+      "token_usage": {
+        "completion_tokens": 2,
+        "prompt_tokens": 9,
+        "total_tokens": 11,
+        "completion_tokens_details": null,
+        "prompt_tokens_details": null,
+        "audio_prompt_tokens": 0
+      },
+      "model_provider": "openai",
+      "model_name": "DeepSeek-V4-Flash",
+      "system_fingerprint": null,
+      "id": "b3f7030d4dea4a709f78edfc4020636f",
+      "finish_reason": "stop",
+      "logprobs": null
+    },
+    "_raw_usage_metadata": {
+      "input_tokens": 9,
+      "output_tokens": 2,
+      "total_tokens": 11,
+      "input_token_details": {},
+      "output_token_details": {}
+    },
+    "_openrouter_generation": {},
+    "erro": null
+  },
+  {
+    "chave": "llama-3.3-70b",
+    "acesso": "OpenRouter",
+    "id_pedido": "meta-llama/llama-3.3-70b-instruct",
+    "reasoning": false,
+    "data_sonda_utc": "2026-06-03T20:56:56+00:00",
+    "snapshot_servido": "não consta",
+    "system_fingerprint": "não consta",
+    "provider": "não consta",
+    "finish_reason": "não consta",
+    "prompt_tokens": "não consta",
+    "completion_tokens": "não consta",
+    "generation_id": "não consta",
+    "resposta": "não consta",
+    "erro": "APIStatusError: Error code: 402 - {'error': {'message': 'Insufficient credits. Add more using https://openrouter.ai/settings/credits', 'code': 402}}"
+  },
+  {
+    "chave": "qwen2.5-72b",
+    "acesso": "OpenRouter",
+    "id_pedido": "qwen/qwen-2.5-72b-instruct",
+    "reasoning": false,
+    "data_sonda_utc": "2026-06-03T20:56:56+00:00",
+    "snapshot_servido": "não consta",
+    "system_fingerprint": "não consta",
+    "provider": "não consta",
+    "finish_reason": "não consta",
+    "prompt_tokens": "não consta",
+    "completion_tokens": "não consta",
+    "generation_id": "não consta",
+    "resposta": "não consta",
+    "erro": "APIStatusError: Error code: 402 - {'error': {'message': 'Insufficient credits. Add more using https://openrouter.ai/settings/credits', 'code': 402}}"
+  }
+]
