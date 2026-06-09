@@ -7,6 +7,7 @@ Companion repository for the dissertation **"Reconhecimento de Entidades Nomeada
 ```
 decicontas.br/
 ├── dataset/              # 861-document corpus, gold + cleanlab-corrected releases, results
+│   ├── raw/              # raw scraped corpora + Label Studio imports (provenance)
 │   ├── labeled_data/     # original Label Studio export
 │   ├── errors/           # cleanlab audit decisions (dataset-corrections.json)
 │   ├── release/          # publishable bundles (JSON, JSONL, CoNLL, BRAT)
