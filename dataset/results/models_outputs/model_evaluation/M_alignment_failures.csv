@@ -1,0 +1,10 @@
+model,display,n_pred_strings,n_aligned,n_failed,failure_rate
+gpt-4.1-nano_few_shot,GPT-4.1-nano,707,697,10,0.0141
+qwen2.5-72b_few_shot,Qwen2.5-72B,584,581,3,0.0051
+gpt-5-mini_few_shot,GPT-5-mini,1315,1313,2,0.0015
+gpt-4.1_few_shot,GPT-4.1,561,561,0,0.0
+gpt-4.1-mini_few_shot,GPT-4.1-mini,624,624,0,0.0
+gpt-5.1_few_shot,GPT-5.1,578,578,0,0.0
+gpt-5.2_few_shot,GPT-5.2,698,698,0,0.0
+deepseek-v4-flash_few_shot,DeepSeek-V4-Flash,479,479,0,0.0
+llama-3.3-70b_few_shot,Llama-3.3-70B,183,183,0,0.0

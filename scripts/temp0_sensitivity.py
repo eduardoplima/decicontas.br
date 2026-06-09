@@ -17,7 +17,7 @@ Reporta, por modelo:
 
 Honestidade: o baseline temp=1.0 é UMA amostra (o Δ mistura efeito de temperatura +
 ruído de amostragem); temp=0 não é 100% determinístico (MoE/backend). Aditivo: grava só
-em cycles/new_clean/experiments/temperature0/.
+em results/models_outputs/experiments/temperature0/.
 
 Uso:
     uv run python scripts/temp0_sensitivity.py            # subconjunto informativo (232)
@@ -44,7 +44,7 @@ from research.release.run_llm_inference import (
 logger = logging.getLogger("scripts.temp0_sensitivity")
 
 MODELS_T0 = ["deepseek-v4-flash", "gpt-4.1", "gpt-4.1-mini"]
-OUT_DIR = paths.CYCLE_ROOT / "experiments" / "temperature0"
+OUT_DIR = paths.RESULTS_ROOT / "experiments" / "temperature0"
 
 
 def _label(span: dict) -> str:

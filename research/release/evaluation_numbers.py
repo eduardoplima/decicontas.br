@@ -64,13 +64,13 @@ from research.release.bootstrap_significance import (
 from research.release import paths
 
 REPO_ROOT = paths.REPO_ROOT
-OUTPUT_ROOT = paths.CHAPTER5_DIR  # cycle-specific
+OUTPUT_ROOT = paths.CHAPTER5_DIR
 RELEASE_DIR = paths.RELEASE_DIR  # shared
 RELEASE_PRE_DIR = paths.RELEASE_PRE_DIR  # shared
 CORRECTIONS_JSON = paths.CORRECTIONS_JSON  # shared
 
-CORRECTED_OUTPUT_DIR = paths.OUTPUT_CORRECTED_DIR  # cycle-specific
-EXPERIMENTS_DIR = paths.CORRECTED_EXPERIMENTS_DIR  # cycle-specific
+CORRECTED_OUTPUT_DIR = paths.OUTPUT_CORRECTED_DIR
+EXPERIMENTS_DIR = paths.CORRECTED_EXPERIMENTS_DIR
 KFOLD_CORRECTED = paths.KFOLD_CORRECTED  # shared
 
 logger = logging.getLogger("research.release.chapter5_numbers")
@@ -1195,7 +1195,7 @@ def write_report(out_dir: Path, j_summary: list[dict[str, Any]]) -> None:
         ("gpt-5.4-nano", "function_calling"): 0.7482,
         ("gpt-5.4-nano", "json_schema"): 0.7087,
     }
-    # FC-vs-JSON only exists in cycles that ran that experiment (old_leakage).
+    # FC-vs-JSON only exists for runs that ran that experiment (else archived under old_experiments).
     if (out_dir / "F_fc_vs_json_overall.csv").exists():
         df_fcjs_now = pd.read_csv(out_dir / "F_fc_vs_json_overall.csv")
         fcjs_rows = []

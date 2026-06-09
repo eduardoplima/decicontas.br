@@ -8,11 +8,11 @@ of Rio Grande do Norte (TCE/RN). Four entity classes are annotated:
 
 ## Versions
 
-- **`decicontas-861/`** — the canonical 861-document split (5 documents
+- **`decicontas-before-correction/`** — the canonical 861-document split (5 documents
   used as few-shot examples in LLM prompts have been removed to avoid
   evaluation contamination). Annotations are the original gold labels
   from the Label Studio export.
-- **`decicontas-861-corrected/`** — the same 861 documents with
+- **`decicontas/`** — the same 861 documents with
   reviewer-validated corrections applied. The corrections were sourced
   from a Cleanlab error-detection pass: every group flagged by the
   ensemble with confidence ≥ 0.95 was reviewed entity-by-entity in a
@@ -36,7 +36,7 @@ The BIO label set is fixed:
 ['O', 'B-MULTA', 'B-OBRIGACAO', 'B-RESSARCIMENTO', 'B-RECOMENDACAO', 'I-MULTA', 'I-OBRIGACAO', 'I-RESSARCIMENTO', 'I-RECOMENDACAO']
 ```
 
-(see `decicontas-861/dataset_info.json` for the exact integer encoding).
+(see `decicontas-before-correction/dataset_info.json` for the exact integer encoding).
 
 ## Tokenisation
 
@@ -56,11 +56,11 @@ BRAT `.ann` files are positions in the document's `text` (UTF-8).
 
 The remaining `227` groups fell below the 0.95 ensemble-confidence
 threshold and were not reviewed; they keep their original gold labels in
-`decicontas-861-corrected/`.
+`decicontas/`.
 
 ## Statistics
 
-### Before corrections (`decicontas-861/`)
+### Before corrections (`decicontas-before-correction/`)
 
 ```
 documents:                861
@@ -71,7 +71,7 @@ entities per label:       {'MULTA': 202, 'OBRIGACAO': 119, 'RESSARCIMENTO': 62, 
 documents per label:      {'MULTA': 139, 'OBRIGACAO': 88, 'RESSARCIMENTO': 56, 'RECOMENDACAO': 51}
 ```
 
-### After corrections (`decicontas-861-corrected/`)
+### After corrections (`decicontas/`)
 
 ```
 documents:                861

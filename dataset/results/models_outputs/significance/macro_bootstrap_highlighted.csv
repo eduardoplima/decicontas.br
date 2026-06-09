@@ -1,0 +1,14 @@
+display_a,display_b,diff_macro,ci_lower,ci_upper,p_value,p_holm,sig_holm
+DeepSeek-V4-Flash,Llama-3.3-70B,0.4572,0.3961,0.5168,0.0,0.0,True
+GPT-5.2,Llama-3.3-70B,0.3118,0.2411,0.3821,0.0,0.0,True
+Llama-3.3-70B,Qwen2.5-72B,-0.3044,-0.3726,-0.2365,0.0,0.0,True
+GPT-4.1-mini,GPT-4.1-nano,0.28,0.2233,0.3343,0.0,0.0,True
+DeepSeek-V4-Flash,BERTimbau-base,0.1505,0.0883,0.2159,0.0,0.0,True
+GPT-5.2,DeepSeek-V4-Flash,-0.1454,-0.1933,-0.0967,0.0,0.0,True
+GPT-4.1,GPT-5.2,0.121,0.0792,0.1634,0.0,0.0,True
+GPT-5.1,GPT-5.2,0.0893,0.0458,0.1329,0.0002,0.0012000000000000001,True
+BERTimbau-base,BiLSTM-CRF,0.0797,-0.0011,0.1566,0.0538,0.2152,False
+GPT-4.1,GPT-4.1-mini,0.0319,0.0073,0.0592,0.0102,0.051000000000000004,False
+GPT-4.1,DeepSeek-V4-Flash,-0.0244,-0.0507,0.0014,0.0626,0.2152,False
+GPT-5.2,Qwen2.5-72B,0.0074,-0.039,0.0554,0.7488,1.0,False
+GPT-5.2,BERTimbau-base,0.0051,-0.0666,0.0797,0.859,1.0,False

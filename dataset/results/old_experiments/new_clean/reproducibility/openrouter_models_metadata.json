@@ -1,0 +1,67 @@
+{
+  "_meta": {
+    "fonte": "OpenRouter /api/v1/models e /endpoints (público, sem créditos); model cards Hugging Face; generation_config.json (Qwen oficial; Llama via mirror unsloth pois o repo oficial é gated)",
+    "data_coleta_utc": "2026-06-03",
+    "motivo": "llama-3.3-70b e qwen2.5-72b não puderam ser sondados por inferência (conta OpenRouter sem créditos, HTTP 402). Estes são os metadados PÚBLICOS declarados, não uma resposta crua de uma chamada real.",
+    "ressalvas": [
+      "Modelos de PESOS ABERTOS: o 'snapshot' é o checkpoint imutável no Hugging Face — não há snapshot datado servidor-side como nos modelos OpenAI. Isso os torna, nesse aspecto, mais reprodutíveis.",
+      "O código (run_llm_inference.py) NÃO passou temperature/top_p/seed; o OpenRouter repassa ao provider, que aplica SEU default se não especificado — que NÃO é necessariamente o generation_config do HF abaixo. Os valores do generation_config são a recomendação dos autores, não o que foi efetivamente usado.",
+      "O provider e a QUANTIZAÇÃO (fp8/bf16/int8) que serviram as execuções ORIGINAIS não são recuperáveis (nenhum generation_id foi persistido; a sonda foi bloqueada por falta de créditos). A quantização varia por provider e pode afetar as saídas.",
+      "provider_order do código para o llama era ['Fireworks','Together','DeepInfra'], mas 'Fireworks' NÃO consta mais na lista atual de endpoints do OpenRouter."
+    ],
+    "parametros_amostragem_adotados": {
+      "nota": "Não setados no código → adota-se o default da API OpenAI-compatível (padrão da literatura) como o valor efetivo. O OpenRouter repassa ao provider; 1.0/1.0/sem-seed é o default usual quando o parâmetro é omitido (NÃO o generation_config do HF, que é só recomendação dos autores). Vale para llama-3.3-70b e qwen2.5-72b (ambos não-reasoning).",
+      "temperature": "1.0 (default API; omitido no código)",
+      "top_p": "1.0 (default API; omitido no código)",
+      "seed": "não fixado (sem seed; não determinístico)"
+    }
+  },
+  "modelos": [
+    {
+      "chave": "llama-3.3-70b",
+      "id_pedido_codigo": "meta-llama/llama-3.3-70b-instruct",
+      "checkpoint_huggingface": "meta-llama/Llama-3.3-70B-Instruct",
+      "release": "2024-12-06",
+      "tokenizer": "Llama3",
+      "context_length_declarado": 131072,
+      "top_provider": {"context_length": 131072, "max_completion_tokens": 16384},
+      "pricing_usd_por_token": {"prompt": "0.0000001", "completion": "0.00000032"},
+      "supported_parameters": ["frequency_penalty","logit_bias","max_tokens","min_p","presence_penalty","repetition_penalty","response_format","seed","stop","structured_outputs","temperature","tool_choice","tools","top_k","top_p"],
+      "generation_config_default_HF": {"temperature": 0.6, "top_p": 0.9, "do_sample": true, "fonte": "mirror unsloth/Llama-3.3-70B-Instruct (oficial é gated)"},
+      "provider_order_no_codigo": ["Fireworks", "Together", "DeepInfra"],
+      "providers_disponiveis_quantizacao": [
+        {"provider": "DeepInfra", "quant": "fp8", "ctx": 131072},
+        {"provider": "Inceptron", "quant": "fp8", "ctx": 131072},
+        {"provider": "Nebius", "quant": "fp8", "ctx": 131072},
+        {"provider": "AkashML", "quant": "fp8", "ctx": 131072},
+        {"provider": "Novita", "quant": "bf16", "ctx": 131072},
+        {"provider": "Parasail", "quant": "int8", "ctx": 131072},
+        {"provider": "Cloudflare", "quant": "fp8", "ctx": 24000},
+        {"provider": "SambaNova", "quant": "bf16", "ctx": 131072},
+        {"provider": "Groq", "quant": "unknown", "ctx": 131072},
+        {"provider": "WandB", "quant": "fp16", "ctx": 128000},
+        {"provider": "Google", "quant": "unknown", "ctx": 128000},
+        {"provider": "Together", "quant": "fp8", "ctx": 131072}
+      ]
+    },
+    {
+      "chave": "qwen2.5-72b",
+      "id_pedido_codigo": "qwen/qwen-2.5-72b-instruct",
+      "checkpoint_huggingface": "Qwen/Qwen2.5-72B-Instruct",
+      "release": "2024-09-19",
+      "tokenizer": "Qwen (chatml)",
+      "context_length_declarado": 131072,
+      "context_config_json": 32768,
+      "geracao_max_length": 8192,
+      "top_provider": {"context_length": 32768, "max_completion_tokens": 16384},
+      "pricing_usd_por_token": {"prompt": "0.00000036", "completion": "0.0000004"},
+      "supported_parameters": ["frequency_penalty","logit_bias","max_tokens","min_p","presence_penalty","repetition_penalty","response_format","seed","stop","structured_outputs","temperature","tool_choice","tools","top_k","top_p"],
+      "generation_config_default_HF": {"temperature": 0.7, "top_p": 0.8, "top_k": 20, "repetition_penalty": 1.05, "do_sample": true, "fonte": "Qwen/Qwen2.5-72B-Instruct generation_config.json"},
+      "provider_order_no_codigo": null,
+      "providers_disponiveis_quantizacao": [
+        {"provider": "DeepInfra", "quant": "fp8", "ctx": 32768},
+        {"provider": "Novita", "quant": "bf16", "ctx": 32000}
+      ]
+    }
+  ]
+}

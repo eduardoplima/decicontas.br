@@ -9,11 +9,10 @@ Inputs:
     dataset/errors/dataset-corrections.json
 
 Outputs:
-    dataset/release/decicontas-861/{decicontas.{json,jsonl,conll},brat/,dataset_info.json}
-    dataset/release/decicontas-861-corrected/...   (same layout)
+    dataset/release/decicontas-before-correction/{decicontas.{json,jsonl,conll},brat/,dataset_info.json}
+    dataset/release/decicontas/...                 (same layout)
     dataset/release/README.md
     dataset/release/MANIFEST.json                  (sha256 of every artefact)
-    docs/dissertacao/tab_dataset_corrections.tex
 """
 
 from __future__ import annotations
@@ -33,7 +32,6 @@ from research.release.stats import (
     count_entities,
     total_chars,
     total_tokens,
-    write_latex_table,
 )
 
 
@@ -41,7 +39,6 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_LABELED = REPO_ROOT / "dataset" / "labeled_data" / "decicontas.json"
 DEFAULT_CORRECTIONS = REPO_ROOT / "dataset" / "errors" / "dataset-corrections.json"
 DEFAULT_RELEASE_DIR = REPO_ROOT / "dataset" / "release"
-DEFAULT_TEX_PATH = REPO_ROOT / "docs" / "dissertacao" / "tab_dataset_corrections.tex"
 
 
 logger = logging.getLogger("research.release.export_dataset")
@@ -101,11 +98,11 @@ of Rio Grande do Norte (TCE/RN). Four entity classes are annotated:
 
 ## Versions
 
-- **`decicontas-861/`** — the canonical 861-document split (5 documents
-  used as few-shot examples in LLM prompts have been removed to avoid
-  evaluation contamination). Annotations are the original gold labels
-  from the Label Studio export.
-- **`decicontas-861-corrected/`** — the same 861 documents with
+- **`decicontas-before-correction/`** — the canonical 861-document split
+  (5 documents used as few-shot examples in LLM prompts have been removed
+  to avoid evaluation contamination). Annotations are the original gold
+  labels from the Label Studio export.
+- **`decicontas/`** — the same 861 documents with
   reviewer-validated corrections applied. The corrections were sourced
   from a Cleanlab error-detection pass: every group flagged by the
   ensemble with confidence ≥ 0.95 was reviewed entity-by-entity in a
@@ -129,7 +126,7 @@ The BIO label set is fixed:
 {["O"] + [f"B-{e}" for e in ["MULTA", "OBRIGACAO", "RESSARCIMENTO", "RECOMENDACAO"]] + [f"I-{e}" for e in ["MULTA", "OBRIGACAO", "RESSARCIMENTO", "RECOMENDACAO"]]}
 ```
 
-(see `decicontas-861/dataset_info.json` for the exact integer encoding).
+(see `decicontas-before-correction/dataset_info.json` for the exact integer encoding).
 
 ## Tokenisation
 
@@ -149,11 +146,11 @@ BRAT `.ann` files are positions in the document's `text` (UTF-8).
 
 The remaining `{(corrections_meta.get('groups_total') or 0) - (corrections_meta.get('groups_decided') or 0)}` groups fell below the 0.95 ensemble-confidence
 threshold and were not reviewed; they keep their original gold labels in
-`decicontas-861-corrected/`.
+`decicontas/`.
 
 ## Statistics
 
-### Before corrections (`decicontas-861/`)
+### Before corrections (`decicontas-before-correction/`)
 
 ```
 documents:                {stats_before['documents']}
@@ -164,7 +161,7 @@ entities per label:       {stats_before['entities_per_label']}
 documents per label:      {stats_before['documents_per_label']}
 ```
 
-### After corrections (`decicontas-861-corrected/`)
+### After corrections (`decicontas/`)
 
 ```
 documents:                {stats_after['documents']}
@@ -195,7 +192,6 @@ def export_release(
     labeled_path: Path = DEFAULT_LABELED,
     corrections_path: Path = DEFAULT_CORRECTIONS,
     release_dir: Path = DEFAULT_RELEASE_DIR,
-    tex_path: Path = DEFAULT_TEX_PATH,
 ) -> dict:
     logger.info("loading master dataset from %s", labeled_path)
     dataset = load_dataset(labeled_path, exclude_fewshot=True)
@@ -212,8 +208,8 @@ def export_release(
     )
     corrected_documents = apply_corrections(documents, overrides)
 
-    before_dir = release_dir / "decicontas-861"
-    after_dir = release_dir / "decicontas-861-corrected"
+    before_dir = release_dir / "decicontas-before-correction"
+    after_dir = release_dir / "decicontas"
     logger.info("writing pre-correction bundle to %s", before_dir)
     write_all_formats(documents, before_dir)
     logger.info("writing post-correction bundle to %s", after_dir)
@@ -221,15 +217,6 @@ def export_release(
 
     stats_before = _stats_block(documents)
     stats_after = _stats_block(corrected_documents)
-
-    logger.info("writing LaTeX table to %s", tex_path)
-    write_latex_table(
-        stats_before["entities_per_label"],
-        stats_after["entities_per_label"],
-        tex_path,
-        decided_groups=corrections_meta.get("groups_decided") or 0,
-        total_groups=corrections_meta.get("groups_total") or 0,
-    )
 
     readme_path = release_dir / "README.md"
     readme_path.parent.mkdir(parents=True, exist_ok=True)
@@ -281,7 +268,6 @@ def main() -> None:
     parser.add_argument("--labeled", type=Path, default=DEFAULT_LABELED)
     parser.add_argument("--corrections", type=Path, default=DEFAULT_CORRECTIONS)
     parser.add_argument("--release-dir", type=Path, default=DEFAULT_RELEASE_DIR)
-    parser.add_argument("--tex", type=Path, default=DEFAULT_TEX_PATH)
     parser.add_argument("--quiet", action="store_true")
     args = parser.parse_args()
 
@@ -293,7 +279,6 @@ def main() -> None:
         labeled_path=args.labeled,
         corrections_path=args.corrections,
         release_dir=args.release_dir,
-        tex_path=args.tex,
     )
     print(json.dumps(
         {

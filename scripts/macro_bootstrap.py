@@ -8,13 +8,13 @@ classes (\\textsc{Multa}, \\textsc{Obrigação}, \\textsc{Recomendação}, \\tex
 
 Reusa a mesma lógica de casamento (``bipartite_greedy_match``, IoU>=0,5, mesmo rótulo),
 a mesma semente (42), N=10000 e a mesma família ``HIGHLIGHTED_PAIRS`` com correção de Holm.
-Lê os modelos do ciclo apontado por ``DECICONTAS_CYCLE`` (use ``new_clean_temp0``).
+Lê os modelos de ``dataset/results/models_outputs/output_corrected/``.
 
-Saída: ``<cycle>/significance/macro_bootstrap_paired.csv`` (todos os pares) e
+Saída: ``models_outputs/significance/macro_bootstrap_paired.csv`` (todos os pares) e
 ``macro_bootstrap_highlighted.csv`` (família destacada, com Holm) + ``macro_bootstrap_ci.csv``.
 
 Uso:
-    DECICONTAS_CYCLE=new_clean_temp0 uv run python scripts/macro_bootstrap.py
+    uv run python scripts/macro_bootstrap.py
 """
 
 from __future__ import annotations

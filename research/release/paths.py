@@ -1,54 +1,46 @@
-"""Cycle-aware result paths.
+"""Result paths for the released pipeline.
 
-A *cycle* is a self-contained tree of LLM-derived artifacts under
-``dataset/results/cycles/<CYCLE>/``. Set the ``DECICONTAS_CYCLE`` env var to
-switch between cycles (mirrors the existing ``DECICONTAS_RESULTS_SUFFIX``
-pattern used by the k-fold orchestrator). Default is ``new_clean``.
+All LLM-derived artifacts live under a single canonical tree,
+``dataset/results/models_outputs/`` (the temperature-0 run that the
+dissertation reports). Superseded runs are archived under
+``dataset/results/old_experiments/`` and are not addressed by this module.
 
-Two cycles exist:
-- ``old_leakage`` — the original LLM results produced with the prompt that
-  carried the OBRIGACAO test-set leakage (archived).
-- ``new_clean`` — clean prompt + the Brazil-region Azure model set.
-
-Shared, prompt-independent artifacts (corrected gold, cleanlab audit, supervised
-k-fold) live at fixed paths OUTSIDE any cycle and are read by both.
+Shared, prompt-independent inputs (raw corpus, cleanlab corrections) and the
+supervised k-fold results live at fixed paths read by the whole pipeline.
 """
 
 from __future__ import annotations
 
-import os
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DATASET = REPO_ROOT / "dataset"
 
-CYCLE = os.getenv("DECICONTAS_CYCLE", "new_clean")
-CYCLES_ROOT = DATASET / "results" / "cycles"
-CYCLE_ROOT = CYCLES_ROOT / CYCLE
+RESULTS_ROOT = DATASET / "results" / "models_outputs"
 
-# --- cycle-specific (LLM-derived) ---
-RAW_OUTPUT_DIR = CYCLE_ROOT / "output"  # raw few_shot leaderboard predictions
-OUTPUT_CORRECTED_DIR = CYCLE_ROOT / "output_corrected"  # rescored vs corrected gold
-RAW_PROMPT_ENG_DIR = CYCLE_ROOT / "experiments" / "prompt_engineering"  # raw cot/two_stage
-RAW_EXPERIMENTS_DIR = CYCLE_ROOT / "experiments"  # parent of prompt_engineering, etc.
-CORRECTED_EXPERIMENTS_DIR = CYCLE_ROOT / "experiments_corrected"  # has prompt_engineering/ subdir
-CHAPTER5_DIR = CYCLE_ROOT / "chapter5"  # block A-M CSVs + REPORT.md
-SIGNIFICANCE_DIR = CYCLE_ROOT / "significance"  # bootstrap CSVs/LaTeX
-FIGURES_DIR = CYCLE_ROOT / "figures"
-REPRODUCIBILITY_DIR = CYCLE_ROOT / "reproducibility"
-EXPERIMENTS_SUMMARY_DIR = CYCLE_ROOT / "experiments_summary"  # rescore_experiments md tables
+# --- LLM-derived results ---
+RAW_OUTPUT_DIR = RESULTS_ROOT / "output"  # raw few_shot leaderboard predictions
+OUTPUT_CORRECTED_DIR = RESULTS_ROOT / "output_corrected"  # rescored vs corrected gold
+RAW_PROMPT_ENG_DIR = RESULTS_ROOT / "experiments" / "prompt_engineering"  # raw cot/two_stage
+RAW_EXPERIMENTS_DIR = RESULTS_ROOT / "experiments"  # parent of prompt_engineering, etc.
+CORRECTED_EXPERIMENTS_DIR = RESULTS_ROOT / "experiments_corrected"  # has prompt_engineering/ subdir
+CHAPTER5_DIR = RESULTS_ROOT / "chapter5"  # block A-M CSVs + REPORT.md
+SIGNIFICANCE_DIR = RESULTS_ROOT / "significance"  # bootstrap CSVs
+FIGURES_DIR = RESULTS_ROOT / "figures"
+REPRODUCIBILITY_DIR = RESULTS_ROOT / "reproducibility"
+EXPERIMENTS_SUMMARY_DIR = RESULTS_ROOT / "experiments_summary"  # rescore_experiments md tables
 
-# --- shared (prompt-independent; read by every cycle) ---
-RELEASE_DIR = DATASET / "release" / "decicontas-861-corrected"
-RELEASE_PRE_DIR = DATASET / "release" / "decicontas-861"
+# --- shared inputs / supervised results ---
+RELEASE_DIR = DATASET / "release" / "decicontas"
+RELEASE_PRE_DIR = DATASET / "release" / "decicontas-before-correction"
 CORRECTIONS_JSON = DATASET / "errors" / "dataset-corrections.json"
-KFOLD_CORRECTED = DATASET / "results" / "supervised_kfold_corrected"
+KFOLD_CORRECTED = RESULTS_ROOT / "supervised_kfold"
 LABELED_CORPUS = DATASET / "labeled_data" / "decicontas.json"
 CORRECTED_GOLD_JSON = RELEASE_DIR / "decicontas.json"
 
 
-def ensure_cycle_dirs() -> None:
-    """Create the cycle-specific directories (idempotent)."""
+def ensure_results_dirs() -> None:
+    """Create the result directories (idempotent)."""
     for d in (
         RAW_OUTPUT_DIR,
         OUTPUT_CORRECTED_DIR,

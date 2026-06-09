@@ -7,7 +7,8 @@ with the original (no overwrite of the legacy artefacts):
   on. Read by ``data.load_bio_samples``. Default: the master export.
 - ``DECICONTAS_RESULTS_SUFFIX`` — suffix appended to the
   ``supervised_kfold`` results root so each variant lives in its own
-  tree. Default: empty string (legacy ``supervised_kfold/`` dir).
+  tree. Default: empty string (the canonical
+  ``results/models_outputs/supervised_kfold/`` dir).
 """
 
 from __future__ import annotations
@@ -22,7 +23,11 @@ REPO_ROOT: Path = Path(__file__).resolve().parents[2]
 
 _RESULTS_SUFFIX: str = os.environ.get("DECICONTAS_RESULTS_SUFFIX", "")
 RESULTS_ROOT: Path = (
-    REPO_ROOT / "dataset" / "results" / f"supervised_kfold{_RESULTS_SUFFIX}"
+    REPO_ROOT
+    / "dataset"
+    / "results"
+    / "models_outputs"
+    / f"supervised_kfold{_RESULTS_SUFFIX}"
 )
 GRID_DIR: Path = RESULTS_ROOT / "grid"
 CV_DIR: Path = RESULTS_ROOT / "cv"

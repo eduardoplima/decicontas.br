@@ -39,8 +39,8 @@ def get_decicontas_df(include_fewshot=False, path: str | None = None):
     avoid evaluation leakage. Pass ``include_fewshot=True`` to keep them.
 
     Pass ``path`` to read from a different dataset file (e.g.
-    ``dataset/release/decicontas-861-corrected/decicontas.json`` for the
-    cleanlab-corrected version). Defaults to the master Label Studio export.
+    ``dataset/release/decicontas/decicontas.json`` for the cleanlab-corrected
+    version). Defaults to the master Label Studio export.
     """
 
     df = pd.read_json(path or DEFAULT_DATASET_PATH)

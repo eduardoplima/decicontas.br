@@ -8,8 +8,8 @@ calls.** Predictions are reused as-is; only the gold reference changes.
 
 Inputs:
 - LLM JSONs at ``dataset/experiments/{few_shot_and_supervised, function_calling_json_schema, prompt_engineering}/``
-- Corrected gold at ``dataset/release/decicontas-861-corrected/decicontas.json``
-- Retrained supervised CV at ``dataset/results/supervised_kfold_corrected/summary/cv_*.json``
+- Corrected gold at ``dataset/release/decicontas/decicontas.json``
+- Retrained supervised CV at ``dataset/results/models_outputs/supervised_kfold/summary/cv_*.json``
 
 Outputs:
 - Rescored experiment files at ``dataset/experiments_corrected/<dir>/``
@@ -39,9 +39,9 @@ from research.release import paths
 
 REPO_ROOT = paths.REPO_ROOT
 
-EXPERIMENTS_SRC = paths.RAW_EXPERIMENTS_DIR  # cycle-specific
-EXPERIMENTS_DST = paths.CORRECTED_EXPERIMENTS_DIR  # cycle-specific
-SUMMARY_DST = paths.EXPERIMENTS_SUMMARY_DIR  # cycle-specific
+EXPERIMENTS_SRC = paths.RAW_EXPERIMENTS_DIR
+EXPERIMENTS_DST = paths.CORRECTED_EXPERIMENTS_DIR
+SUMMARY_DST = paths.EXPERIMENTS_SUMMARY_DIR
 CORRECTED_JSON = paths.CORRECTED_GOLD_JSON  # shared corrected gold
 KFOLD_CORRECTED = paths.KFOLD_CORRECTED  # shared
 
@@ -255,9 +255,9 @@ def run() -> None:
 
     lookup = _load_gold_lookup(CORRECTED_JSON)
 
-    # Each experiment subdir is optional per cycle (the new_clean cycle only has
+    # Each experiment subdir is optional (the canonical run only has
     # prompt_engineering; few_shot_and_supervised / function_calling_json_schema
-    # are old-cycle, archived in old_leakage). Skip summaries for absent dirs.
+    # are archived under old_experiments). Skip summaries for absent dirs.
 
     # ---------- Experiment 1: few-shot vs supervised (optional) ----------
     results_fewshot = _load_dir(EXPERIMENTS_SRC / "few_shot_and_supervised", lookup)
