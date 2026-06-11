@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qualificação — Reconhecimento de entidades nomeadas em decisões do TCE/RN</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=DM+Sans:wght@400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ===========================================
+   FIXED 16:9 STAGE: MANDATORY BASE STYLES
+   Slides are authored at 1920×1080 and scaled as a whole.
+   =========================================== */
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: var(--stage-bg, #000);
+}
+.deck-viewport {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    background: var(--stage-bg, #000);
+}
+.deck-stage {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    transform-origin: 0 0;
+    background: var(--slide-bg, #fff);
+}
+.slide {
+    position: absolute;
+    inset: 0;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    display: block;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    background: var(--slide-bg, #fff);
+}
+.slide.active,
+.slide.visible {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 1;
+}
+img, video, canvas, svg {
+    max-width: 100%;
+    max-height: 100%;
+}
+.deck-controls {
+    position: fixed;
+    left: 50%;
+    bottom: 22px;
+    transform: translateX(-50%);
+    z-index: 1000;
+}
+@media print {
+    html, body {
+        width: 1920px;
+        height: auto;
+        overflow: visible;
+        background: #fff;
+    }
+    .deck-viewport {
+        position: static;
+        overflow: visible;
+        background: #fff;
+    }
+    .deck-stage {
+        position: static;
+        width: auto;
+        height: auto;
+        transform: none !important;
+        background: none;
+    }
+    .slide {
+        position: relative;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        width: 1920px;
+        height: 1080px;
+        break-after: page;
+        page-break-after: always;
+    }
+    .slide:last-child {
+        break-after: auto;
+        page-break-after: auto;
+    }
+    .deck-controls {
+        display: none !important;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.2s !important;
+    }
+}
+
+/* ===========================================
+   MAT — material-tactile system
+   1920×1080 stage coordinates (5.5vw → 106px, 5.5vh → 59px)
+   =========================================== */
+:root {
+    --bg-dark: #232E26;
+    --bg-dark-alt: #2E3D30;
+    --bg-cream: #EDE6D0;
+    --bg-cream-alt: #E4DAC4;
+    --ink-cream: #F0E8D2;
+    --ink-cream-2: rgba(240, 232, 210, 0.58);
+    --ink-cream-3: rgba(240, 232, 210, 0.3);
+    --ink-dark: #1E2820;
+    --ink-dark-2: rgba(30, 40, 32, 0.6);
+    --ink-dark-3: rgba(30, 40, 32, 0.3);
+    --accent: #C07030;
+    --border-dark: rgba(240, 232, 210, 0.12);
+    --border-cream: rgba(30, 40, 32, 0.14);
+    --f-disp: 'Bricolage Grotesque', sans-serif;
+    --f-body: 'DM Sans', sans-serif;
+    --f-mono: 'DM Mono', monospace;
+    --pad-x: 106px;
+    --pad-y: 59px;
+    --gap-lg: 49px;
+    --gap-md: 30px;
+    --gap-sm: 15px;
+    --stage-bg: #1A211C;
+    --slide-bg: var(--bg-dark);
+}
+
+.slide {
+    box-sizing: border-box;
+    padding: var(--pad-y) var(--pad-x);
+    display: flex;
+    flex-direction: column;
+    font-family: var(--f-body);
+    color: var(--ink-cream);
+}
+.slide *, .slide *::before, .slide *::after { box-sizing: border-box; }
+
+/* Atmospheric wood glow — every dark slide */
+.slide.dark::before {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 55%;
+    height: 70%;
+    background: radial-gradient(ellipse at 70% 80%, rgba(122, 78, 36, 0.28) 0%, rgba(80, 50, 20, 0.14) 40%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+.slide > * { position: relative; z-index: 1; }
+
+.slide.light {
+    background: var(--bg-cream);
+    color: var(--ink-dark);
+}
+
+/* --- Chrome --- */
+.chrome-band, .foot-band {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--f-mono);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-cream-3);
+}
+.chrome-band {
+    border-bottom: 1px solid var(--border-dark);
+    padding-bottom: var(--gap-sm);
+    margin-bottom: var(--gap-lg);
+}
+.foot-band {
+    border-top: 1px solid var(--border-dark);
+    padding-top: var(--gap-sm);
+    margin-top: auto;
+}
+.light .chrome-band, .light .foot-band {
+    color: var(--ink-dark-3);
+    border-color: var(--border-cream);
+}
+
+/* --- Type --- */
+.kicker {
+    font-family: var(--f-mono);
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 var(--gap-md);
+}
+.rule {
+    width: 32px;
+    height: 1px;
+    background: var(--accent);
+    border: none;
+    margin: var(--gap-md) 0;
+}
+h1, h2, h3 {
+    font-family: var(--f-disp);
+    margin: 0;
+    color: var(--ink-cream);
+}
+.light h1, .light h2, .light h3 { color: var(--ink-dark); }
+h1 { font-size: 108px; font-weight: 800; line-height: 0.96; letter-spacing: -0.025em; }
+h2 { font-size: 72px; font-weight: 700; line-height: 1.0; letter-spacing: -0.02em; }
+h3 { font-size: 42px; font-weight: 600; line-height: 1.1; letter-spacing: -0.01em; }
+.lead {
+    font-family: var(--f-body);
+    font-size: 28px;
+    line-height: 1.55;
+    color: var(--ink-cream-2);
+    margin: 0;
+    max-width: 1240px;
+}
+.light .lead { color: var(--ink-dark-2); }
+.body-txt {
+    font-size: 20px;
+    line-height: 1.65;
+    color: var(--ink-cream-2);
+    margin: 0;
+}
+.caption {
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--ink-cream-3);
+    margin: 0;
+}
+.light .caption { color: var(--ink-dark-3); }
+em {
+    font-style: normal;
+    color: var(--accent);
+}
+.mono-tag {
+    font-family: var(--f-mono);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+/* --- Bullets: em-dash in mono orange --- */
+.bullets {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 20px;
+}
+.bullets li {
+    position: relative;
+    padding-left: 1.4em;
+    font-size: 26px;
+    line-height: 1.5;
+    color: var(--ink-cream-2);
+}
+.bullets li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    font-family: var(--f-mono);
+    color: var(--accent);
+}
+.bullets strong { color: var(--ink-cream); font-weight: 500; }
+.light .bullets li { color: var(--ink-dark-2); }
+.light .bullets strong { color: var(--ink-dark); }
+
+/* --- Stat cells --- */
+.stat-row {
+    display: flex;
+    margin: var(--gap-lg) 0;
+}
+.stat-cell {
+    border-right: 1px solid var(--border-dark);
+    padding: var(--gap-md) 64px var(--gap-md) 0;
+    margin-right: 64px;
+    flex: 1;
+}
+.stat-cell:last-child { border-right: none; margin-right: 0; padding-right: 0; }
+.stat-value {
+    font-family: var(--f-disp);
+    font-size: 105px;
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.025em;
+    color: var(--ink-cream);
+}
+.stat-label {
+    font-size: 20px;
+    line-height: 1.45;
+    color: var(--ink-cream-2);
+    margin-top: 14px;
+}
+
+/* --- Info-card: cream paper on green --- */
+.info-card {
+    background: var(--bg-cream);
+    color: var(--ink-dark);
+    padding: var(--gap-md) 56px;
+}
+.info-card h3 { color: var(--ink-dark); font-size: 32px; margin-bottom: 16px; }
+.info-card p { font-size: 20px; line-height: 1.6; color: var(--ink-dark-2); margin: 0; }
+.info-card .mono-tag { color: var(--accent); display: block; margin-bottom: 18px; }
+
+/* --- Two-column helpers --- */
+.cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+}
+.compare {
+    display: grid;
+    grid-template-columns: 1fr 1px 1fr;
+    gap: 0 72px;
+}
+.compare .divider { background: var(--border-dark); height: 100%; }
+
+/* --- Bar chart (light slide) --- */
+.barchart { display: grid; gap: 13px; margin-top: var(--gap-md); }
+.bar-row {
+    display: grid;
+    grid-template-columns: 320px 1fr 96px;
+    align-items: center;
+    gap: 24px;
+}
+.bar-row .bar-name {
+    font-family: var(--f-mono);
+    font-size: 16px;
+    letter-spacing: 0.04em;
+    color: var(--ink-dark-2);
+    text-align: right;
+    white-space: nowrap;
+}
+.bar-row .bar-name .sup {
+    color: var(--ink-dark-3);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-left: 8px;
+}
+.bar-track { height: 26px; background: rgba(30, 40, 32, 0.07); position: relative; }
+.bar-fill { height: 100%; background: var(--ink-dark-3); }
+.bar-fill.accent { background: var(--accent); }
+.bar-row .bar-val {
+    font-family: var(--f-mono);
+    font-size: 17px;
+    color: var(--ink-dark-2);
+}
+.bar-row.lead-row .bar-name, .bar-row.lead-row .bar-val { color: var(--ink-dark); font-weight: 500; }
+
+/* --- Comparison rows (significance) --- */
+.sig-row {
+    display: grid;
+    grid-template-columns: 520px 260px 1fr;
+    gap: 48px;
+    align-items: baseline;
+    padding: 34px 0;
+    border-bottom: 1px solid var(--border-dark);
+}
+.sig-row:last-of-type { border-bottom: none; }
+.sig-pair { font-family: var(--f-mono); font-size: 19px; letter-spacing: 0.02em; color: var(--ink-cream); line-height: 1.6; }
+.sig-delta {
+    font-family: var(--f-disp);
+    font-size: 64px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--ink-cream);
+}
+.sig-note { font-size: 20px; line-height: 1.55; color: var(--ink-cream-2); }
+
+/* --- Scatter --- */
+.scatter-wrap { display: grid; grid-template-columns: 1fr 430px; gap: 72px; align-items: stretch; }
+.scatter {
+    position: relative;
+    height: 600px;
+    border-left: 1px solid var(--border-dark);
+    border-bottom: 1px solid var(--border-dark);
+}
+.scatter .gridline-h { position: absolute; left: 0; right: 0; height: 1px; background: rgba(240, 232, 210, 0.05); }
+.scatter .gridline-v { position: absolute; top: 0; bottom: 0; width: 1px; background: rgba(240, 232, 210, 0.05); }
+.dot {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--ink-cream-2);
+    transform: translate(-50%, 50%);
+}
+.dot.sup { background: transparent; border: 1px solid var(--ink-cream-2); }
+.dot.hero { background: var(--accent); width: 22px; height: 22px; }
+.dot-label {
+    position: absolute;
+    transform: translate(-50%, 50%);
+    font-family: var(--f-mono);
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    color: var(--ink-cream-3);
+    white-space: nowrap;
+}
+.dot-label.hero { color: var(--accent); }
+.axis-label {
+    position: absolute;
+    font-family: var(--f-mono);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-cream-3);
+}
+.region-note {
+    position: absolute;
+    font-size: 18px;
+    line-height: 1.45;
+    color: var(--ink-cream-3);
+    max-width: 300px;
+}
+
+/* --- Heatmap grid --- */
+.heat {
+    display: grid;
+    grid-template-columns: 340px repeat(4, 1fr);
+    gap: 10px;
+    margin-top: var(--gap-md);
+}
+.heat .h-head {
+    font-family: var(--f-mono);
+    font-size: 14px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-cream-3);
+    align-self: end;
+    padding-bottom: 10px;
+    text-align: center;
+}
+.heat .h-model {
+    font-family: var(--f-mono);
+    font-size: 17px;
+    letter-spacing: 0.02em;
+    color: var(--ink-cream-2);
+    align-self: center;
+    text-align: right;
+    padding-right: 28px;
+    line-height: 1.5;
+}
+.heat .h-model .sup { color: var(--ink-cream-3); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; }
+.heat .h-cell {
+    font-family: var(--f-disp);
+    font-size: 44px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink-cream);
+    text-align: center;
+    padding: 26px 0;
+}
+
+/* --- Timeline (gantt) --- */
+.gantt {
+    display: grid;
+    grid-template-columns: 460px 1fr;
+    gap: 18px 36px;
+    margin-top: var(--gap-md);
+    align-items: center;
+}
+.gantt .g-months {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    font-family: var(--f-mono);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-cream-3);
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-dark);
+}
+.gantt .g-label {
+    font-size: 22px;
+    color: var(--ink-cream-2);
+    text-align: right;
+    line-height: 1.35;
+}
+.gantt .g-track {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    height: 34px;
+}
+.gantt .g-bar { background: var(--ink-cream-3); }
+.gantt .g-bar.accent { background: var(--accent); }
+
+/* --- Flow (pipeline) --- */
+.flow {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin-top: var(--gap-lg);
+}
+.flow .step {
+    border-left: 1px solid var(--border-dark);
+    padding: 8px 40px 8px 32px;
+}
+.flow .step .num {
+    font-family: var(--f-mono);
+    font-size: 14px;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 18px;
+}
+.flow .step h3 { font-size: 32px; margin-bottom: 14px; }
+.flow .step p { font-size: 18px; line-height: 1.55; color: var(--ink-cream-2); margin: 0; }
+
+/* --- Objective items --- */
+.obj { display: grid; gap: 0; margin-top: var(--gap-md); }
+.obj .item {
+    display: grid;
+    grid-template-columns: 96px 1fr 280px;
+    gap: 40px;
+    align-items: baseline;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--border-dark);
+}
+.obj .item:last-child { border-bottom: none; }
+.obj .num {
+    font-family: var(--f-disp);
+    font-size: 52px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--ink-cream-3);
+}
+.obj .what { font-size: 26px; line-height: 1.45; color: var(--ink-cream); }
+.obj .what small { display: block; font-size: 19px; color: var(--ink-cream-2); margin-top: 6px; }
+.obj .status { font-family: var(--f-mono); font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-cream-3); text-align: right; }
+.obj .status.now { color: var(--accent); }
+
+/* --- Error bars --- */
+.err { display: grid; gap: 22px; }
+.err .e-row { display: grid; grid-template-columns: 230px 1fr; gap: 24px; align-items: center; }
+.err .e-name { font-size: 20px; color: var(--ink-cream-2); text-align: right; }
+.err .e-track { height: 30px; background: rgba(240, 232, 210, 0.06); position: relative; }
+.err .e-fill { height: 100%; background: var(--ink-cream-3); }
+.err .e-val {
+    position: absolute;
+    left: calc(100% + 16px);
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--f-mono);
+    font-size: 16px;
+    color: var(--ink-cream-2);
+    white-space: nowrap;
+}
+
+/* --- Cover / end --- */
+.cover { justify-content: center; }
+.cover .credits {
+    display: flex;
+    gap: 64px;
+    margin-top: 90px;
+    font-family: var(--f-mono);
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-cream-3);
+}
+
+/* --- Reveal --- */
+.fx { opacity: 0; transform: translateY(14px); transition: opacity 0.55s ease, transform 0.55s ease; }
+.slide.active .fx { opacity: 1; transform: none; }
+.slide.active .fx.d1 { transition-delay: 0.08s; }
+.slide.active .fx.d2 { transition-delay: 0.16s; }
+.slide.active .fx.d3 { transition-delay: 0.24s; }
+
+/* --- Nav dots --- */
+.deck-controls { display: flex; gap: 9px; }
+.deck-controls .nd {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.25);
+    cursor: pointer;
+}
+.deck-controls .nd.on { background: rgba(255, 255, 255, 0.7); }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<!-- 01 · Capa -->
+<section class="slide dark cover active">
+    <p class="kicker fx">Qualificação de mestrado — PPgTI · IMD · UFRN</p>
+    <hr class="rule fx">
+    <h1 class="fx d1" style="max-width:1640px;">Reconhecimento de entidades nomeadas e extração estruturada em decisões do TCE/RN</h1>
+    <p class="lead fx d2" style="margin-top:36px;">com modelos de linguagem de grande porte</p>
+    <div class="credits fx d3">
+        <span>Eduardo Pereira Lima</span>
+        <span>Orientador — Dr. Elias Jacob de Menezes Neto</span>
+        <span>Natal-RN · Junho de 2026</span>
+    </div>
+</section>
+
+<!-- 02 · Contexto -->
+<section class="slide dark">
+    <header class="chrome-band"><span>Contexto</span><span>02 / 19</span></header>
+    <p class="kicker fx">Tribunais de Contas × Inteligência Artificial</p>
+    <h2 class="fx d1" style="max-width:1400px;">A IA já é realidade no controle externo</h2>
+    <div class="stat-row fx d2">
+        <div class="stat-cell">
+            <div class="stat-value">60<em>%</em></div>
+            <div class="stat-label">dos Tribunais de Contas brasileiros já implantaram soluções baseadas em IA</div>
+        </div>
+        <div class="stat-cell">
+            <div class="stat-value">80<em>%</em></div>
+            <div class="stat-label">citam a melhoria da eficiência operacional entre os objetivos estratégicos</div>
+        </div>
+        <div class="stat-cell">
+            <div class="stat-value">65<em>%</em></div>
+            <div class="stat-label">citam a detecção de fraudes; 53% a automação de atividades repetitivas</div>
+        </div>
+    </div>
+    <ul class="bullets fx d3" style="max-width:1340px;">
+        <li><strong>INACIA (TCU)</strong> — LLMs na triagem e interpretação de peças processuais</li>
+        <li><strong>Ana JulIA (TCE/CE)</strong> e <strong>ContAI (TCE/RO)</strong> — analistas de jurisprudência sobre as deliberações</li>
+    </ul>
+    <footer class="foot-band"><span>Eduardo Pereira Lima — Qualificação</span><span>IRB · Atricon, 2024</span></footer>
+</section>
+
+<!-- 03 · Motivação -->
+<section class="slide dark">
+    <header class="chrome-band"><span>Motivação</span><span>03 / 19</span></header>
+    <p class="kicker fx">O problema</p>
+    <h2 class="fx d1" style="max-width:1500px;">Força de título executivo, armazenada em texto livre</h2>
+    <div class="cols" style="margin-top:var(--gap-lg);">
+        <div>
+            <p class="lead fx d2" style="margin-bottom:var(--gap-md);">Pelo art. 71, VIII da CRFB/88, imputações de débito e multas têm <em>eficácia de título executivo</em> — mas o monitoramento do cumprimento depende de leitura humana, caso a caso.</p>
+            <ul class="bullets fx d3">
+                <li>Alimentação manual consome tempo significativo de servidores</li>
+                <li>Sujeita a erros de transcrição e omissão</li>
+                <li>Fragiliza o <strong>follow-up</strong> exigido pelas NBASP</li>
+            </ul>
+        </div>
+        <aside class="info-card fx d2" style="max-width:620px;">
+            <span class="mono-tag">Regimento Interno · art. 431, IV</span>
+            <h3>CGAD — Cadastro Geral de Acompanhamento de Decisões</h3>
+            <p>Subdivide-se em Cadastro Geral de Multas (CGM), de Devoluções (CGD) e de Recomendações (CGR) — as quatro categorias de deliberação centrais à atuação da Corte. Hoje, sua alimentação é inteiramente manual.</p>
+        </aside>
+    </div>
+    <footer class="foot-band"><span>Eduardo Pereira Lima — Qualificação</span><span>TCE/RN</span></footer>
+</section>
+
+<!-- 04 · Objetivos -->
+<section class="slide dark">
+    <header class="chrome-band"><span>Objetivos</span><span>04 / 19</span></header>
+    <p class="kicker fx">Objetivo</p>
+    <h2 class="fx d1" style="max-width:1480px;">Conhecimento empírico — e uma ferramenta validada</h2>
+    <p class="lead fx d2" style="margin-top:var(--gap-md);">Produzir conhecimento empírico sobre como extrair, de forma confiável, os elementos decisórios do texto não estruturado — e aplicá-lo numa ferramenta validada com decisões reais do TCE/RN.</p>
+    <div class="obj fx d3">
+        <div class="item">
+            <span class="num">01</span>
+            <div class="what">Construir um corpus anotado representativo do domínio
+                <small>decicontas.br — quatro categorias semanticamente relevantes ao controle externo</small></div>
+            <span class="status">Cumprido</span>
+        </div>
+        <div class="item">
+            <span class="num">02</span>
+            <div class="what">Comparar modelos na tarefa de REN sobre o corpus
+                <small>LLMs em regime few-shot × modelos supervisionados ajustados ao domínio</small></div>
+            <span class="status">Cumprido</span>
+        </div>
+        <div class="item">
+            <span class="num">03</span>
+            <div class="what">Pipeline integrado de extração estruturada
+                <small>persistência em SQL Server, alimentando os subcadastros do CGAD</small></div>
+            <span class="status now">Em implementação</span>
+        </div>
+    </div>
+    <footer class="foot-band"><span>Eduardo Pereira Lima — Qualificação</span><span>Capítulo 1</span></footer>
+</section>
+
+<!-- 05 · Mapeamento -->
+<section class="slide dark">
+    <header class="chrome-band"><span>Mapeamento sistemático</span><span>05 / 19</span></header>
+    <p class="kicker fx">Revisão da literatura</p>
+    <h2 class="fx d1">79 artigos, quatro questões de pesquisa</h2>
+    <div class="stat-row fx d2">
+        <div class="stat-cell">
+            <div class="stat-value">79</div>
+            <div class="stat-label">artigos elegíveis analisados (protocolo de Petersen et al., 2008)</div>
+        </div>
+        <div class="stat-cell">
+            <div class="stat-value">3</div>
+            <div class="stat-label">bases consultadas — ACM Digital Library, IEEE Xplore e Scopus</div>
+        </div>
+        <div class="stat-cell">
+            <div class="stat-value">4</div>
+            <div class="stat-label">questões de pesquisa: técnicas de PLN, REN jurídico, LLMs × supervisionados, esquemas de anotação</div>
+        </div>
+    </div>
+    <p class="lead fx d3" style="max-width:1480px;">A lacuna identificada: decisões de Cortes de Contas em português são um subdomínio <em>sub-representado</em>, sem corpus público — e a comparação controlada entre paradigmas nesse domínio era uma pergunta em aberto (QP3).</p>
+    <footer class="foot-band"><span>Eduardo Pereira Lima — Qualificação</span><span>Capítulo 3</span></footer>
+</section>
+
+<!-- 06 · Corpus -->
+<section class="slide dark">
+    <header class="chrome-band"><span>Corpus decicontas.br</span><span>06 / 19</span></header>
+    <p class="kicker fx">Contribuição 1 — recurso linguístico</p>
+    <h2 class="fx d1">861 decisões reais do TCE/RN</h2>
+    <div class="stat-row fx d2">
+        <div class="stat-cell">
+            <div class="stat-value">861</div>
+            <div class="stat-label">decisões anotadas manualmente na ferramenta Label Studio</div>
+        </div>
+        <div class="stat-cell">
+            <div class="stat-value">232</div>
+            <div class="stat-label">contêm pelo menos uma entidade de interesse</div>
+        </div>
+        <div class="stat-cell">
+            <div class="stat-value">459</div>
+            <div class="stat-label">entidades anotadas nas quatro categorias</div>
+        </div>
+    </div>
+    <ul class="bullets fx d3" style="max-width:1400px;">
+        <li>O desbalanceamento é característica do domínio: a maior parte das decisões não gera registro — reconhecer a <strong>ausência</strong> também importa</li>
+        <li>Corpus, código e experimentos públicos: <strong>github.com/eduardoplima/decicontas.br</strong></li>
+    </ul>
+    <footer class="foot-band"><span>Eduardo Pereira Lima — Qualificação</span><span>Capítulo 4</span></footer>
+</section>
+
+<!-- 07 · Esquema de anotação -->
+<section class="slide dark">
+    <header class="chrome-band"><span>Corpus decicontas.br</span><span>07 / 19</span></header>
+    <p class="kicker fx">Esquema de anotação</p>
+    <h2 class="fx d1">Quatro categorias, espelhando o CGAD</h2>
+    <div class="stat-row fx d2">
+        <div class="stat-cell">
+            <div class="stat-value">212</div>
+            <div class="stat-label"><strong style="color:var(--ink-cream);">Multa</strong> — sanções pecuniárias impostas a gestores ou responsáveis (≈ 46% das entidades)</div>
+        </div>
+        <div class="stat-cell">
+            <div class="stat-value">131</div>
+            <div class="stat-label"><strong style="color:var(--ink-cream);">Obrigação</strong> — determinações ou ordens de fazer / não fazer</div>
+        </div>
+        <div class="stat-cell">
+            <div class="stat-value">53</div>
+            <div class="stat-label"><strong style="color:var(--ink-cream);">Recomendação</strong> — orientações não mandatórias de aprimoramento da gestão</div>
+        </div>
+        <div class="stat-cell">
+            <div class="stat-value">63</div>
+            <div class="stat-label"><strong style="color:var(--ink-cream);">Ressarcimento</strong> — devoluções de valores aos cofres públicos</div>
+        </div>
+    </div>
+    <p class="lead fx d3">Saída estruturada via Pydantic (<em>NERDecisao</em>): uma lista de trechos literais por categoria.</p>
+    <footer class="foot-band"><span>Eduardo Pereira Lima — Qualificação</span><span>Capítulo 4</span></footer>
+</section>
+
+<!-- 08 · Cleanlab -->
+<section class="slide dark">
+    <header class="chrome-band"><span>Corpus decicontas.br</span><span>08 / 19</span></header>
+    <p class="kicker fx">Qualidade da anotação</p>
+    <h2 class="fx d1">Auditoria por confident learning</h2>
+    <div class="stat-row fx d2">
+        <div class="stat-cell">
+            <div class="stat-value">794</div>
+            <div class="stat-label">grupos de potenciais inconsistências sinalizados pelo ensemble (Cleanlab)</div>
+        </div>
+        <div class="stat-cell">
+            <div class="stat-value">567</div>
+            <div class="stat-label">grupos com confiança ≥ 0,95 revisados manualmente</div>
+        </div>
+        <div class="stat-cell">
+            <div class="stat-value">23</div>
+            <div class="stat-label">correções acatadas (≈ 4%) — corpus de referência: 439 → 459 entidades</div>
+        </div>
+    </div>
+    <ul class="bullets fx d3" style="max-width:1400px;">
+        <li>Taxa baixa de correção sugere <strong>anotação consistente</strong> do anotador especialista</li>
+        <li>Toda a avaliação a seguir roda sobre o <strong>corpus corrigido</strong></li>
+    </ul>
+    <footer class="foot-band"><span>Eduardo Pereira Lima — Qualificação</span><span>Capítulo 4</span></footer>
+</section>
+
+<!-- 09 · Modelos -->
+<section class="slide dark">
+    <header class="chrome-band"><span>Protocolo</span><span>09 / 19</span></header>
+    <p class="kicker fx">Modelos avaliados</p>
+    <h2 class="fx d1">Nove LLMs few-shot × quatro supervisionados</h2>
+    <div class="compare fx d2" style="margin-top:var(--gap-lg);">
+        <div>
+            <span class="mono-tag" style="color:var(--accent); display:block; margin-bottom:24px;">LLMs · regime few-shot</span>
+            <p class="lead" style="font-family:var(--f-mono); font-size:23px; line-height:1.9; color:var(--ink-cream);">gpt-4.1 · gpt-4.1-mini · gpt-4.1-nano<br>gpt-5-mini · gpt-5.1 · gpt-5.2<br>deepseek-v4-flash · llama-3.3-70b · qwen2.5-72b</p>
+            <p class="body-txt" style="margin-top:26px; max-width:680px;">Exemplos curados de decisões reais incluídos no prompt, com saída estruturada via function calling — sem qualquer ajuste de pesos. Os exemplos não compõem o corpus de avaliação.</p>
+        </div>
+        <div class="divider"></div>
+        <div>
+            <span class="mono-tag" style="color:var(--accent); display:block; margin-bottom:24px;">Supervisionados · ajustados ao domínio</span>
+            <p class="lead" style="font-family:var(--f-mono); font-size:23px; line-height:1.9; color:var(--ink-cream);">bertimbau-base · bertimbau-large<br>legal-bertimbau-base · bilstm-crf</p>
+            <p class="body-txt" style="margin-top:26px; max-width:680px;">Treinados sobre o decicontas.br com validação cruzada estratificada de 5 partições; predições out-of-fold consolidadas em um conjunto equivalente ao corpus completo.</p>
+        </div>
+    </div>
+    <footer class="foot-band"><span>Eduardo Pereira Lima — Qualificação</span><span>Capítulo 4</span></footer>
+</section>
+
+<!-- 10 · Protocolo -->
+<section class="slide dark">
+    <header class="chrome-band"><span>Protocolo</span><span>10 / 19</span></header>
+    <p class="kicker fx">Protocolo experimental</p>
+    <h2 class="fx d1" style="max-width:1560px;">Span F1 macro (IoU ≥ 0,5) como métrica primária</h2>
+    <ul class="bullets fx d2" style="max-width:1480px; margin-top:var(--gap-lg);">
+        <li>O <strong>macro</strong> dá peso igual às quatro classes — a Multa responde por ≈ 46% das entidades e domina o micro, mascarando as minoritárias</li>
+        <li>Token F1 e span F1 micro reportados como <strong>referência</strong></li>
+        <li><strong>Bootstrap pareado</strong> no nível do documento (B = 10.000) com correção de Holm para múltiplas comparações</li>
+        <li>Piso de detecção ≈ <strong>0,03 ponto de F1</strong> — diferenças menores não devem ser lidas como ordenação</li>
+        <li>Decodificação determinística (<strong>temperature = 0</strong>); robustez verificada sob IoU 0,3 / 0,5 / 0,7</li>
+    </ul>
+    <footer class="foot-band"><span>Eduardo Pereira Lima — Qualificação</span><span>Capítulo 4</span></footer>
+</section>
+
+<!-- 11 · Resultado principal (tonal break: cream) -->
+<section class="slide light">
+    <header class="chrome-band"><span>Resultados</span><span>11 / 19</span></header>
+    <p class="kicker fx">Comparação central</p>
+    <h2 class="fx d1">Span F1 macro: um modelo aberto lidera</h2>
+    <div class="barchart fx d2">
+        <div class="bar-row lead-row"><span class="bar-name">deepseek-v4-flash</span><div class="bar-track"><div class="bar-fill accent" style="width:91.4%;"></div></div><span class="bar-val">0,731</span></div>
+        <div class="bar-row"><span class="bar-name">gpt-4.1</span><div class="bar-track"><div class="bar-fill" style="width:88.3%;"></div></div><span class="bar-val">0,706</span></div>
+        <div class="bar-row"><span class="bar-name">gpt-5.1</span><div class="bar-track"><div class="bar-fill" style="width:84.4%;"></div></div><span class="bar-val">0,675</span></div>
+        <div class="bar-row"><span class="bar-name">gpt-4.1-mini</span><div class="bar-track"><div class="bar-fill" style="width:84.3%;"></div></div><span class="bar-val">0,674</span></div>
+        <div class="bar-row"><span class="bar-name">gpt-5.2</span><div class="bar-track"><div class="bar-fill" style="width:73.1%;"></div></div><span class="bar-val">0,585</span></div>
+        <div class="bar-row"><span class="bar-name">bertimbau-base<span class="sup">sup</span></span><div class="bar-track"><div class="bar-fill" style="width:72.5%;"></div></div><span class="bar-val">0,580</span></div>
+        <div class="bar-row"><span class="bar-name">qwen2.5-72b</span><div class="bar-track"><div class="bar-fill" style="width:72.3%;"></div></div><span class="bar-val">0,578</span></div>
+        <div class="bar-row"><span class="bar-name">gpt-5-mini</span><div class="bar-track"><div class="bar-fill" style="width:65.5%;"></div></div><span class="bar-val">0,524</span></div>
+        <div class="bar-row"><span class="bar-name">bilstm-crf<span class="sup">sup</span></span><div class="bar-track"><div class="bar-fill" style="width:62.5%;"></div></div><span class="bar-val">0,500</span></div>
+        <div class="bar-row"><span class="bar-name">bertimbau-large<span class="sup">sup</span></span><div class="bar-track"><div class="bar-fill" style="width:59.8%;"></div></div><span class="bar-val">0,478</span></div>
+        <div class="bar-row"><span class="bar-name">legal-bertimbau-base<span class="sup">sup</span></span><div class="bar-track"><div class="bar-fill" style="width:50.8%;"></div></div><span class="bar-val">0,406</span></div>
+        <div class="bar-row"><span class="bar-name">gpt-4.1-nano</span><div class="bar-track"><div class="bar-fill" style="width:49.3%;"></div></div><span class="bar-val">0,394</span></div>
+        <div class="bar-row"><span class="bar-name">llama-3.3-70b</span><div class="bar-track"><div class="bar-fill" style="width:34.1%;"></div></div><span class="bar-val">0,273</span></div>
+    </div>
+    <footer class="foot-band"><span>IoU ≥ 0,5 · out-of-fold · corpus corrigido</span><span>Tabela 13</span></footer>
+</section>
+
+<!-- 12 · Significância -->
+<section class="slide dark">
+    <header class="chrome-band"><span>Resultados</span><span>12 / 19</span></header>
+    <p class="kicker fx">Significância estatística</p>
+    <h2 class="fx d1">O que resiste ao bootstrap</h2>
+    <div class="fx d2" style="margin-top:var(--gap-md);">
+        <div class="sig-row">
+            <span class="sig-pair">deepseek-v4-flash<br>× bertimbau-base (sup.)</span>
+            <span class="sig-delta">+0,151</span>
+            <span class="sig-note"><em>Significativo</em> mesmo após correção (p &lt; 0,001) — a vantagem dobra do micro (+0,075) para o macro: ela mora nas classes minoritárias.</span>
+        </div>
+        <div class="sig-row">
+            <span class="sig-pair">deepseek-v4-flash<br>× gpt-4.1</span>
+            <span class="sig-delta">+0,024</span>
+            <span class="sig-note">IC 95% [−0,001; +0,051], p = 0,063 — <em>empate técnico</em> no topo: o líder aberto não se distingue do acaso frente ao proprietário.</span>
+        </div>
+        <div class="sig-row">
+            <span class="sig-pair">gpt-4.1<br>× gpt-5.2</span>
+            <span class="sig-delta">+0,121</span>
+            <span class="sig-note">p &lt; 0,001 — geração mais recente otimizada para raciocínio <em>não</em> venceu: ganhos em benchmarks não se traduzem em REN jurídico.</span>
+        </div>
+    </div>
+    <footer class="foot-band"><span>B = 10.000 · 13 comparações de interesse · Holm (8 significativas)</span><span>Tabela 14</span></footer>
+</section>
+
+<!-- 13 · Precisão × Revocação -->
+<section class="slide dark">
+    <header class="chrome-band"><span>Resultados</span><span>13 / 19</span></header>
+    <p class="kicker fx">Perfis de erro</p>
+    <h2 class="fx d1">Dois paradigmas, dois perfis</h2>
+    <div class="scatter-wrap fx d2" style="margin-top:var(--gap-md);">
+        <div class="scatter">
+            <div class="gridline-h" style="bottom:14.3%;"></div>
+            <div class="gridline-h" style="bottom:42.9%;"></div>
+            <div class="gridline-h" style="bottom:71.4%;"></div>
+            <div class="gridline-v" style="left:14.3%;"></div>
+            <div class="gridline-v" style="left:42.9%;"></div>
+            <div class="gridline-v" style="left:71.4%;"></div>
+            <!-- LLMs -->
+            <div class="dot" style="left:65.1%; bottom:86.0%;"></div>
+            <div class="dot-label" style="left:65.1%; bottom:90.5%;">gpt-4.1</div>
+            <div class="dot" style="left:56.4%; bottom:86.9%;"></div>
+            <div class="dot" style="left:59.1%; bottom:81.9%;"></div>
+            <div class="dot" style="left:43.3%; bottom:80.7%;"></div>
+            <div class="dot" style="left:10.9%; bottom:84.4%;"></div>
+            <div class="dot" style="left:49.9%; bottom:70.7%;"></div>
+            <div class="dot" style="left:22.7%; bottom:49.3%;"></div>
+            <div class="dot" style="left:56.6%; bottom:5.3%;"></div>
+            <div class="dot-label" style="left:56.6%; bottom:9.8%;">llama-3.3-70b</div>
+            <!-- Supervisionados -->
+            <div class="dot sup" style="left:85.6%; bottom:55.6%;"></div>
+            <div class="dot-label" style="left:85.6%; bottom:60.1%;">bertimbau-base</div>
+            <div class="dot sup" style="left:89.7%; bottom:39.0%;"></div>
+            <div class="dot sup" style="left:88.9%; bottom:35.0%;"></div>
+            <div class="dot sup" style="left:82.0%; bottom:40.0%;"></div>
+            <!-- Líder -->
+            <div class="dot hero" style="left:76.7%; bottom:81.3%;"></div>
+            <div class="dot-label hero" style="left:76.7%; bottom:86.2%;">deepseek-v4-flash</div>
+            <span class="axis-label" style="left:0; bottom:-44px;">0,2</span>
+            <span class="axis-label" style="right:0; bottom:-44px;">0,9 · Precisão (span)</span>
+            <span class="axis-label" style="left:-14px; top:-30px;">0,9 · Revocação (span)</span>
+        </div>
+        <div>
+            <ul class="bullets" style="gap:26px;">
+                <li><strong>LLMs few-shot</strong> — alta revocação (até 0,81), precisão moderada (0,50–0,66): mais agressivos</li>
+                <li><strong>Supervisionados</strong> — alta precisão (0,77–0,83), revocação baixa (0,47–0,59): conservadores</li>
+                <li><strong>deepseek-v4-flash</strong> é a exceção: 0,737 de precisão com 0,769 de revocação — cobertura de LLM, precisão próxima dos supervisionados</li>
+            </ul>
+        </div>
+    </div>
+    <footer class="foot-band"><span>Eduardo Pereira Lima — Qualificação</span><span>Figura 8</span></footer>
+</section>
+
+<!-- 14 · Por entidade -->
+<section class="slide dark">
+    <header class="chrome-band"><span>Resultados</span><span>14 / 19</span></header>
+    <p class="kicker fx">Span F1 por tipo de entidade</p>
+    <h2 class="fx d1">A vantagem mora nas classes minoritárias</h2>
+    <div class="heat fx d2">
+        <span></span>
+        <span class="h-head">Multa</span>
+        <span class="h-head">Obrigação</span>
+        <span class="h-head">Recomendação</span>
+        <span class="h-head">Ressarcimento</span>
+        <span class="h-model">deepseek-v4-flash</span>
+        <span class="h-cell" style="background:rgba(240,232,210,0.26); color:var(--ink-dark);">0,816</span>
+        <span class="h-cell" style="background:rgba(240,232,210,0.21); color:var(--ink-dark);">0,701</span>
+        <span class="h-cell" style="background:rgba(240,232,210,0.19); color:var(--ink-dark);">0,662</span>
+        <span class="h-cell" style="background:rgba(240,232,210,0.23); color:var(--ink-dark);">0,744</span>
+        <span class="h-model">gpt-4.1</span>
+        <span class="h-cell" style="background:rgba(240,232,210,0.25); color:var(--ink-dark);">0,789</span>
+        <span class="h-cell" style="background:rgba(240,232,210,0.17);">0,636</span>
+        <span class="h-cell" style="background:rgba(240,232,210,0.19); color:var(--ink-dark);">0,662</span>
+        <span class="h-cell" style="background:rgba(240,232,210,0.22); color:var(--ink-dark);">0,737</span>
+        <span class="h-model">bertimbau-base <span class="sup">sup</span></span>
+        <span class="h-cell" style="background:rgba(240,232,210,0.25); color:var(--ink-dark);">0,784</span>
+        <span class="h-cell" style="background:rgba(240,232,210,0.19); color:var(--ink-dark);">0,674</span>
+        <span class="h-cell" style="background:rgba(240,232,210,0.05);">0,323</span>
+        <span class="h-cell" style="background:rgba(240,232,210,0.13);">0,541</span>
+    </div>
+    <p class="lead fx d3" style="margin-top:var(--gap-lg); max-width:1520px;">Recomendação: 0,662 × 0,323 — fator ≈ 2. Ressarcimento: 0,744 × 0,541 — ≈ 20 pontos. Lemos isso como <em>eficiência amostral</em> em regime de baixa anotação, não superioridade intrínseca com dados abundantes.</p>
+    <footer class="foot-band"><span>Eduardo Pereira Lima — Qualificação</span><span>Tabela 15</span></footer>
+</section>
+
+<!-- 15 · Variáveis de implementação -->
+<section class="slide dark">
+    <header class="chrome-band"><span>Resultados</span><span>15 / 19</span></header>
+    <p class="kicker fx">Variáveis de implementação</p>
+    <h2 class="fx d1">O que importa — e o que não importa</h2>
+    <div class="compare fx d2" style="margin-top:var(--gap-lg);">
+        <div>
+            <span class="mono-tag" style="color:var(--accent); display:block; margin-bottom:24px;">Saída estruturada · FC × JSON Schema</span>
+            <div class="stat-value" style="font-size:84px;">Δ ≤ 0,012</div>
+            <p class="body-txt" style="margin-top:24px; max-width:660px; font-size:22px;">Com os mesmos campos obrigatórios no esquema, function_calling e json_schema diferem dentro do piso de detecção (0,03). Escolha de segunda ordem — desde que as listas sejam declaradas <strong style="color:var(--ink-cream);">obrigatórias</strong>.</p>
+        </div>
+        <div class="divider"></div>
+        <div>
+            <span class="mono-tag" style="color:var(--accent); display:block; margin-bottom:24px;">Técnica de prompting · span F1 médio (DP)</span>
+            <div class="err" style="margin-bottom:28px;">
+                <div class="e-row"><span class="e-name" style="font-family:var(--f-mono); font-size:17px;">few-shot</span><div class="e-track" style="max-width:430px;"><div class="e-fill" style="width:93.4%; background:var(--accent);"></div><span class="e-val">0,607 (0,163)</span></div></div>
+                <div class="e-row"><span class="e-name" style="font-family:var(--f-mono); font-size:17px;">cot</span><div class="e-track" style="max-width:430px;"><div class="e-fill" style="width:92.0%;"></div><span class="e-val">0,598 (0,196)</span></div></div>
+                <div class="e-row"><span class="e-name" style="font-family:var(--f-mono); font-size:17px;">two-stage</span><div class="e-track" style="max-width:430px;"><div class="e-fill" style="width:88.8%;"></div><span class="e-val">0,577 (0,259)</span></div></div>
+            </div>
+            <p class="body-txt" style="max-width:660px; font-size:22px;">Nenhuma técnica superou o few-shot estático em todos os modelos. CoT é dual: −0,048 no deepseek, +0,069 no gpt-5.2. Two-stage colapsa no llama (0,123).</p>
+        </div>
+    </div>
+    <footer class="foot-band"><span>Eduardo Pereira Lima — Qualificação</span><span>Tabelas 17–18</span></footer>
+</section>
+
+<!-- 16 · Erros -->
+<section class="slide dark">
+    <header class="chrome-band"><span>Resultados</span><span>16 / 19</span></header>
+    <p class="kicker fx">Análise qualitativa — deepseek-v4-flash</p>
+    <h2 class="fx d1">193 erros, padrões claros</h2>
+    <div class="cols fx d2" style="margin-top:var(--gap-lg); grid-template-columns: 760px 1fr;">
+        <div class="err">
+            <div class="e-row"><span class="e-name">Falso negativo</span><div class="e-track" style="max-width:380px;"><div class="e-fill" style="width:100%;"></div><span class="e-val">78 · 40,4%</span></div></div>
+            <div class="e-row"><span class="e-name">Falso positivo</span><div class="e-track" style="max-width:380px;"><div class="e-fill" style="width:82.1%;"></div><span class="e-val">64 · 33,2%</span></div></div>
+            <div class="e-row"><span class="e-name">Fronteira incorreta</span><div class="e-track" style="max-width:380px;"><div class="e-fill" style="width:62.8%;"></div><span class="e-val">49 · 25,4%</span></div></div>
+            <div class="e-row"><span class="e-name">Tipo errado</span><div class="e-track" style="max-width:380px;"><div class="e-fill" style="width:2.6%;"></div><span class="e-val">2 · 1,0%</span></div></div>
+            <p class="caption" style="margin-top:18px;">364 acertos exatos no corpus completo</p>
+        </div>
+        <ul class="bullets" style="gap:24px;">
+            <li><strong>Obrigação</strong> — maior volume absoluto (66), erros mistos: complexidade linguística</li>
+            <li><strong>Recomendação</strong> — 36 FP × 6 FN: generaliza marcadores discursivos para fora do dispositivo</li>
+            <li><strong>Ressarcimento</strong> — fronteiras (67% dos seus erros): pede pós-processamento dedicado</li>
+            <li>Confusão entre categorias é <strong>rara</strong> (1%) — o modelo distingue bem as classes</li>
+        </ul>
+    </div>
+    <footer class="foot-band"><span>Orienta a revisão humana do piloto</span><span>Tabelas 19–20</span></footer>
+</section>
+
+<!-- 17 · Pipeline -->
+<section class="slide dark">
+    <header class="chrome-band"><span>Próximos passos</span><span>17 / 19</span></header>
+    <p class="kicker fx">Objetivo específico 3 — em implementação</p>
+    <h2 class="fx d1">Do span ao cadastro</h2>
+    <div class="flow fx d2">
+        <div class="step">
+            <span class="num">01</span>
+            <h3>Coleta</h3>
+            <p>Coleta automatizada das decisões publicadas pelo TCE/RN e pré-processamento textual.</p>
+        </div>
+        <div class="step">
+            <span class="num">02</span>
+            <h3>REN</h3>
+            <p>Primeira chamada ao LLM — o componente few-shot avaliado nesta qualificação.</p>
+        </div>
+        <div class="step">
+            <span class="num">03</span>
+            <h3>Extração estruturada</h3>
+            <p>Segunda chamada: cada span vira um objeto Pydantic tipado — valor, responsável, prazo, fundamento legal, solidariedade.</p>
+        </div>
+        <div class="step">
+            <span class="num">04</span>
+            <h3>Persistência</h3>
+            <p>SQL Server, mapeando cada tipo ao subcadastro do CGAD — CGM, CGD e CGR.</p>
+        </div>
+    </div>
+    <p class="lead fx d3" style="margin-top:var(--gap-lg); max-width:1520px;">Orquestração via LangChain. Validação: piloto assistido de <em>duas semanas</em> em ambiente de produção do TCE/RN, com servidores do CGAD revisando as extrações — autorização e acesso já assegurados.</p>
+    <footer class="foot-band"><span>Eduardo Pereira Lima — Qualificação</span><span>Seções 6.2 · 4.7</span></footer>
+</section>
+
+<!-- 18 · Cronograma -->
+<section class="slide dark">
+    <header class="chrome-band"><span>Próximos passos</span><span>18 / 19</span></header>
+    <p class="kicker fx">Cronograma</p>
+    <h2 class="fx d1">Defesa em janeiro de 2027</h2>
+    <div class="gantt fx d2">
+        <span></span>
+        <div class="g-months"><span>Jul</span><span>Ago</span><span>Set</span><span>Out</span><span>Nov</span><span>Dez</span><span>Jan/27</span></div>
+        <span class="g-label">Ajustes no experimento</span>
+        <div class="g-track"><div class="g-bar" style="grid-column:1 / 2;"></div></div>
+        <span class="g-label">Pipeline completo de extração</span>
+        <div class="g-track"><div class="g-bar" style="grid-column:1 / 4;"></div></div>
+        <span class="g-label">Solução completa e persistência</span>
+        <div class="g-track"><div class="g-bar" style="grid-column:3 / 6;"></div></div>
+        <span class="g-label">Validação — piloto em produção</span>
+        <div class="g-track"><div class="g-bar" style="grid-column:4 / 6;"></div></div>
+        <span class="g-label">Redação da versão final</span>
+        <div class="g-track"><div class="g-bar" style="grid-column:5 / 8;"></div></div>
+        <span class="g-label">Defesa</span>
+        <div class="g-track"><div class="g-bar accent" style="grid-column:7 / 8;"></div></div>
+    </div>
+    <p class="caption fx d3" style="margin-top:var(--gap-lg);">Pré-requisitos do piloto (autorização institucional, acesso à produção, equipe do CGAD) já assegurados — a defesa não fica condicionada a calendário de terceiros. Prazos com folga interna.</p>
+    <footer class="foot-band"><span>Eduardo Pereira Lima — Qualificação</span><span>Figura 9 · Tabela 21</span></footer>
+</section>
+
+<!-- 19 · Encerramento -->
+<section class="slide dark cover">
+    <p class="kicker fx">Síntese</p>
+    <hr class="rule fx">
+    <h1 class="fx d1">Obrigado.</h1>
+    <ul class="bullets fx d2" style="margin-top:60px; max-width:1300px; gap:24px;">
+        <li><strong>Corpus público</strong> decicontas.br — 861 decisões, 459 entidades, anotação auditada</li>
+        <li><strong>Evidência comparativa controlada</strong> — LLMs few-shot × supervisionados, com rigor estatístico</li>
+        <li><strong>Ferramenta de extração</strong> em validação real no TCE/RN até a defesa</li>
+    </ul>
+    <div class="credits fx d3">
+        <span>github.com/eduardoplima/decicontas.br</span>
+        <span>Eduardo Pereira Lima · PPgTI / IMD / UFRN</span>
+    </div>
+</section>
+
+</main>
+</div>
+<nav class="deck-controls" id="deckDots" aria-label="Navegação de slides"></nav>
+<script>
+class SlidePresentation {
+    constructor() {
+        this.stage = document.getElementById('deckStage');
+        this.slides = Array.from(document.querySelectorAll('.slide'));
+        this.dotsWrap = document.getElementById('deckDots');
+        this.current = 0;
+        this.wheelLock = 0;
+        this.buildDots();
+        this.setupStageScale();
+        this.setupKeyboardNav();
+        this.setupTouchNav();
+        this.setupWheelNav();
+        this.show(0);
+    }
+    buildDots() {
+        this.slides.forEach((_, i) => {
+            const d = document.createElement('span');
+            d.className = 'nd';
+            d.addEventListener('click', () => this.show(i));
+            this.dotsWrap.appendChild(d);
+        });
+        this.dots = Array.from(this.dotsWrap.children);
+    }
+    setupStageScale() {
+        const fit = () => {
+            const f = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+            const x = (window.innerWidth - 1920 * f) / 2;
+            const y = (window.innerHeight - 1080 * f) / 2;
+            this.stage.style.transform = `translate(${x}px, ${y}px) scale(${f})`;
+        };
+        window.addEventListener('resize', fit);
+        fit();
+    }
+    setupKeyboardNav() {
+        window.addEventListener('keydown', (e) => {
+            if (['ArrowRight', 'ArrowDown', ' ', 'PageDown'].includes(e.key)) { e.preventDefault(); this.next(); }
+            else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); this.prev(); }
+            else if (e.key === 'Home') { e.preventDefault(); this.show(0); }
+            else if (e.key === 'End') { e.preventDefault(); this.show(this.slides.length - 1); }
+        });
+    }
+    setupTouchNav() {
+        let x0 = null;
+        window.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+        window.addEventListener('touchend', (e) => {
+            if (x0 === null) return;
+            const dx = e.changedTouches[0].clientX - x0;
+            if (Math.abs(dx) > 48) { dx < 0 ? this.next() : this.prev(); }
+            x0 = null;
+        }, { passive: true });
+    }
+    setupWheelNav() {
+        window.addEventListener('wheel', (e) => {
+            const now = Date.now();
+            if (now - this.wheelLock < 1000 || Math.abs(e.deltaY) < 12) return;
+            this.wheelLock = now;
+            e.deltaY > 0 ? this.next() : this.prev();
+        }, { passive: true });
+    }
+    show(i) {
+        if (i < 0 || i >= this.slides.length) return;
+        this.slides[this.current].classList.remove('active');
+        this.current = i;
+        this.slides[i].classList.add('active');
+        this.dots.forEach((d, j) => d.classList.toggle('on', j === i));
+    }
+    next() { this.show(this.current + 1); }
+    prev() { this.show(this.current - 1); }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>
