@@ -35,6 +35,13 @@ def _set_seed(seed: int) -> None:
     torch.manual_seed(seed)
 
 
+# Checkpoints with a sentence-transformers layout keep the encoder in a
+# subfolder; the root config.json is not a model config.
+HUB_SUBFOLDER: dict[str, str] = {
+    "ulysses-camara/legal-bert-pt-br": "0_Transformer",
+}
+
+
 @dataclass
 class BertConfig:
     model_name: str = "neuralmind/bert-base-portuguese-cased"
@@ -127,9 +134,11 @@ def train_one(cfg: BertConfig, mode: str, fold_idx: int) -> dict[str, Any]:
     val_data = [samples[i] for i in val_idx]
     test_data = [samples[i] for i in test_idx]
 
-    tokenizer = AutoTokenizer.from_pretrained(cfg.model_name)
+    subfolder = HUB_SUBFOLDER.get(cfg.model_name, "")
+    tokenizer = AutoTokenizer.from_pretrained(cfg.model_name, subfolder=subfolder)
     model = AutoModelForTokenClassification.from_pretrained(
         cfg.model_name,
+        subfolder=subfolder,
         num_labels=len(label2id),
         id2label=id2label,
         label2id=label2id,

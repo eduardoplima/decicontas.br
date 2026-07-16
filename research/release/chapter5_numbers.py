@@ -420,6 +420,18 @@ def block_cd_main_results(model_dfs: dict[str, pd.DataFrame], out_dir: Path) -> 
         "neuralmind_bert-base-portuguese-cased__supervised": "neuralmind_bert-base-portuguese-cased",
         "neuralmind_bert-large-portuguese-cased__supervised": "neuralmind_bert-large-portuguese-cased",
         "rufimelo_Legal-BERTimbau-base__supervised": "rufimelo_Legal-BERTimbau-base",
+        "alfaneo_jurisbert-base-portuguese-uncased__supervised": (
+            "alfaneo_jurisbert-base-portuguese-uncased"
+        ),
+        "alfaneo_bertimbaulaw-base-portuguese-cased__supervised": (
+            "alfaneo_bertimbaulaw-base-portuguese-cased"
+        ),
+        "raquelsilveira_legalbertpt_fp__supervised": "raquelsilveira_legalbertpt_fp",
+        "ulysses-camara_legal-bert-pt-br__supervised": "ulysses-camara_legal-bert-pt-br",
+        "dominguesm_legal-bert-base-cased-ptbr__supervised": (
+            "dominguesm_legal-bert-base-cased-ptbr"
+        ),
+        "dccmpmgfinalisticas_GovBERT-BR__supervised": "dccmpmgfinalisticas_GovBERT-BR",
     }
     for m, safe in safe_map.items():
         cv_path = KFOLD_CORRECTED / "summary" / f"cv_{safe}.json"
