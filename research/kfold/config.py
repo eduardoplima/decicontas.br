@@ -45,6 +45,12 @@ SUPERVISED_MODELS: list[str] = [
     "neuralmind/bert-base-portuguese-cased",
     "neuralmind/bert-large-portuguese-cased",
     "rufimelo/Legal-BERTimbau-base",
+    "alfaneo/jurisbert-base-portuguese-uncased",
+    "alfaneo/bertimbaulaw-base-portuguese-cased",
+    "raquelsilveira/legalbertpt_fp",
+    "ulysses-camara/legal-bert-pt-br",
+    "dominguesm/legal-bert-base-cased-ptbr",
+    "dccmpmgfinalisticas/GovBERT-BR",
 ]
 
 

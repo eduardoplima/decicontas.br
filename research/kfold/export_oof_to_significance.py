@@ -23,8 +23,12 @@ from .config import REPO_ROOT, SUMMARY_DIR, SUPERVISED_MODELS, safe_name
 
 # Supervised OOF predictions land beside the LLM leaderboard so they get
 # scored together. ``DECICONTAS_RESULTS_SUFFIX`` keeps variant runs separate.
+# The canonical (suffix-less) run trains on the corrected release, so its
+# leaderboard bundle is ``output_corrected/`` — ``output/`` holds the raw
+# pre-correction LLM predictions only.
 _SUFFIX = os.environ.get("DECICONTAS_RESULTS_SUFFIX", "")
-OUT_DIR = REPO_ROOT / "dataset" / "results" / "models_outputs" / f"output{_SUFFIX}"
+_OUT_NAME = f"output{_SUFFIX}" if _SUFFIX else "output_corrected"
+OUT_DIR = REPO_ROOT / "dataset" / "results" / "models_outputs" / _OUT_NAME
 
 
 def _expand_to_866(values: list[list[str]]) -> list[list[str]]:

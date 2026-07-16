@@ -1,0 +1,96 @@
+{
+  "model": "alfaneo/bertimbaulaw-base-portuguese-cased",
+  "rows": [
+    {
+      "config_id": "lr=5e-05_model_name=alfaneo-bertimbaulaw-base-portuguese-cased_warmup_ratio=0.1",
+      "config": {
+        "model_name": "alfaneo/bertimbaulaw-base-portuguese-cased",
+        "lr": 5e-05,
+        "warmup_ratio": 0.1
+      },
+      "span_f1": 0.7534246575342466,
+      "span_precision": 0.9016393442622951,
+      "span_recall": 0.6470588235294118,
+      "token_f1": 0.7632350068372729,
+      "elapsed_seconds": 801.3169331550598
+    },
+    {
+      "config_id": "lr=5e-05_model_name=alfaneo-bertimbaulaw-base-portuguese-cased_warmup_ratio=0",
+      "config": {
+        "model_name": "alfaneo/bertimbaulaw-base-portuguese-cased",
+        "lr": 5e-05,
+        "warmup_ratio": 0.0
+      },
+      "span_f1": 0.7432432432432433,
+      "span_precision": 0.873015873015873,
+      "span_recall": 0.6470588235294118,
+      "token_f1": 0.7500976944118797,
+      "elapsed_seconds": 801.2748548984528
+    },
+    {
+      "config_id": "lr=3e-05_model_name=alfaneo-bertimbaulaw-base-portuguese-cased_warmup_ratio=0.1",
+      "config": {
+        "model_name": "alfaneo/bertimbaulaw-base-portuguese-cased",
+        "lr": 3e-05,
+        "warmup_ratio": 0.1
+      },
+      "span_f1": 0.6906474820143885,
+      "span_precision": 0.8888888888888888,
+      "span_recall": 0.5647058823529412,
+      "token_f1": 0.7147091894102013,
+      "elapsed_seconds": 800.7625248432159
+    },
+    {
+      "config_id": "lr=3e-05_model_name=alfaneo-bertimbaulaw-base-portuguese-cased_warmup_ratio=0",
+      "config": {
+        "model_name": "alfaneo/bertimbaulaw-base-portuguese-cased",
+        "lr": 3e-05,
+        "warmup_ratio": 0.0
+      },
+      "span_f1": 0.6616541353383459,
+      "span_precision": 0.9166666666666666,
+      "span_recall": 0.5176470588235295,
+      "token_f1": 0.6719476130122518,
+      "elapsed_seconds": 919.1236929893494
+    },
+    {
+      "config_id": "lr=2e-05_model_name=alfaneo-bertimbaulaw-base-portuguese-cased_warmup_ratio=0",
+      "config": {
+        "model_name": "alfaneo/bertimbaulaw-base-portuguese-cased",
+        "lr": 2e-05,
+        "warmup_ratio": 0.0
+      },
+      "span_f1": 0.45454545454545453,
+      "span_precision": 1.0,
+      "span_recall": 0.29411764705882354,
+      "token_f1": 0.48915574071804924,
+      "elapsed_seconds": 936.0799331665039
+    },
+    {
+      "config_id": "lr=2e-05_model_name=alfaneo-bertimbaulaw-base-portuguese-cased_warmup_ratio=0.1",
+      "config": {
+        "model_name": "alfaneo/bertimbaulaw-base-portuguese-cased",
+        "lr": 2e-05,
+        "warmup_ratio": 0.1
+      },
+      "span_f1": 0.42592592592592593,
+      "span_precision": 1.0,
+      "span_recall": 0.27058823529411763,
+      "token_f1": 0.4585573196649581,
+      "elapsed_seconds": 896.4633281230927
+    }
+  ],
+  "best": {
+    "config_id": "lr=5e-05_model_name=alfaneo-bertimbaulaw-base-portuguese-cased_warmup_ratio=0.1",
+    "config": {
+      "model_name": "alfaneo/bertimbaulaw-base-portuguese-cased",
+      "lr": 5e-05,
+      "warmup_ratio": 0.1
+    },
+    "span_f1": 0.7534246575342466,
+    "span_precision": 0.9016393442622951,
+    "span_recall": 0.6470588235294118,
+    "token_f1": 0.7632350068372729,
+    "elapsed_seconds": 801.3169331550598
+  }
+}

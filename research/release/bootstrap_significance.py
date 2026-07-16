@@ -71,6 +71,12 @@ MODELS = [
     "neuralmind_bert-base-portuguese-cased__supervised",
     "neuralmind_bert-large-portuguese-cased__supervised",
     "bilstm-crf__supervised",
+    "alfaneo_jurisbert-base-portuguese-uncased__supervised",
+    "alfaneo_bertimbaulaw-base-portuguese-cased__supervised",
+    "raquelsilveira_legalbertpt_fp__supervised",
+    "ulysses-camara_legal-bert-pt-br__supervised",
+    "dominguesm_legal-bert-base-cased-ptbr__supervised",
+    "dccmpmgfinalisticas_GovBERT-BR__supervised",
 ]
 
 DISPLAY_NAMES = {
@@ -87,6 +93,12 @@ DISPLAY_NAMES = {
     "neuralmind_bert-base-portuguese-cased__supervised": "BERTimbau-base",
     "neuralmind_bert-large-portuguese-cased__supervised": "BERTimbau-large",
     "bilstm-crf__supervised": "BiLSTM-CRF",
+    "alfaneo_jurisbert-base-portuguese-uncased__supervised": "JurisBERT",
+    "alfaneo_bertimbaulaw-base-portuguese-cased__supervised": "BERTimbauLaw",
+    "raquelsilveira_legalbertpt_fp__supervised": "LegalBert-pt",
+    "ulysses-camara_legal-bert-pt-br__supervised": "LegalBERTPT-br",
+    "dominguesm_legal-bert-base-cased-ptbr__supervised": "Legal-BERT-STF",
+    "dccmpmgfinalisticas_GovBERT-BR__supervised": "GovBERT-BR",
 }
 
 # Highlighted pairs for Table 13 (Holm/Bonferroni family). Frontier comparisons +
