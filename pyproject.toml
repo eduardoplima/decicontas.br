@@ -17,6 +17,8 @@ dependencies = [
     "transformers>=4.40",
     "seqeval>=1.2",
     "spacy>=3.8",
+    # spaCy model wheel pinned so a fresh venv can run the metrics pipeline
+    "pt-core-news-sm @ https://github.com/explosion/spacy-models/releases/download/pt_core_news_sm-3.8.0/pt_core_news_sm-3.8.0-py3-none-any.whl",
     "cleanlab>=2.7",
     "datasets>=2.20",
     # Plotting + reports

@@ -123,6 +123,12 @@ HIGHLIGHTED_PAIRS = [
     ("gpt-5.2_few_shot", "neuralmind_bert-base-portuguese-cased__supervised"),
     ("deepseek-v4-flash_few_shot", "neuralmind_bert-base-portuguese-cased__supervised"),
     ("neuralmind_bert-base-portuguese-cased__supervised", "bilstm-crf__supervised"),
+    # domain-pretrained encoders vs generic BERTimbau-base
+    ("raquelsilveira_legalbertpt_fp__supervised", "neuralmind_bert-base-portuguese-cased__supervised"),
+    ("alfaneo_bertimbaulaw-base-portuguese-cased__supervised", "neuralmind_bert-base-portuguese-cased__supervised"),
+    # best LLMs vs best domain-pretrained supervised
+    ("gpt-5.2_few_shot", "raquelsilveira_legalbertpt_fp__supervised"),
+    ("deepseek-v4-flash_few_shot", "raquelsilveira_legalbertpt_fp__supervised"),
 ]
 
 
