@@ -407,6 +407,28 @@ def fig_exp3_best_per_technique_entity(
     _save(fig, "exp3_best_per_technique_entity")
 
 
+# ----- Cleanlab transition matrix (item 4.6) ------------------------------
+
+
+def fig_cleanlab_transition_matrix() -> None:
+    """Heatmap of the observed × suggested label matrix over flagged tokens."""
+    src = NUMS / "B_transition_matrix.csv"
+    if not src.exists():
+        logger.warning("missing %s; skipping cleanlab heatmap", src)
+        return
+    trans = pd.read_csv(src, index_col=0)
+    fig, ax = plt.subplots(figsize=(9, 7))
+    sns.heatmap(
+        trans, annot=True, fmt="d", cmap="Blues", ax=ax, linewidths=0.5,
+        cbar_kws={"label": "Tokens sinalizados"},
+    )
+    ax.set_xlabel("Rótulo sugerido pelo ensemble")
+    ax.set_ylabel("Rótulo observado (anotação)")
+    ax.set_title("Cleanlab — transições rótulo observado × sugerido")
+    plt.tight_layout()
+    _save(fig, "cleanlab_transition_heatmap")
+
+
 # ----- Orchestration ------------------------------------------------------
 
 
@@ -437,6 +459,8 @@ def run() -> None:
         fig_exp3_technique_heatmap(pe_overall)
         fig_exp3_strategy_dots(pe_overall)
         fig_exp3_best_per_technique_entity(pe_overall, pe_per)
+
+    fig_cleanlab_transition_matrix()
 
 
 def main() -> None:
