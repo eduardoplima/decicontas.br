@@ -54,10 +54,12 @@ from research.release.bootstrap_significance import (
     DISPLAY_NAMES,
     HIGHLIGHTED_PAIRS,
     MODELS,
-    bootstrap_ci_f1,
+    bootstrap_ci_f1_macro,
     compute_doc_level_counts,
+    compute_doc_level_counts_per_class,
     f1_from_sums,
-    paired_bootstrap_diff,
+    macro_f1_from_class_counts,
+    paired_bootstrap_diff_macro,
 )
 
 
@@ -177,6 +179,19 @@ def block_b_cleanlab(out_dir: Path) -> dict[str, Any]:
     ]
     pd.DataFrame(delta_rows).to_csv(out_dir / "B_class_delta.csv", index=False)
     logger.info("wrote %s", out_dir / "B_class_delta.csv")
+
+    # Transition matrix observed × suggested (item 4.6). Population: the
+    # flagged tokens the ensemble surfaced for review
+    # (``dataset/errors/erros_anotacao_decicontas.csv``), i.e. the reviewer's
+    # actual worklist — not cleanlab's internal confident joint, which is not
+    # persisted as an artifact and therefore not reproducible here.
+    if paths.CLEANLAB_ERRORS_CSV.exists():
+        errs = pd.read_csv(paths.CLEANLAB_ERRORS_CSV)
+        trans = pd.crosstab(errs["label_original"], errs["label_sugerido"])
+        trans.to_csv(out_dir / "B_transition_matrix.csv")
+        logger.info("wrote %s", out_dir / "B_transition_matrix.csv")
+    else:
+        logger.warning("missing %s; skipping B_transition_matrix", paths.CLEANLAB_ERRORS_CSV)
     return {"summary": summary, "label_final": label_final_counts}
 
 
@@ -733,22 +748,35 @@ def _holm_bonferroni(pvals: list[float]) -> tuple[list[float], list[float]]:
 
 
 def block_j_significance(model_dfs: dict[str, pd.DataFrame], out_dir: Path) -> dict[str, Any]:
+    """Bootstrap CIs and paired comparisons on the **macro** span F1.
+
+    The macro is the dissertation's primary metric (Section 4 metrics), so the
+    significance family is computed on it: per-document, per-class counts feed
+    :func:`macro_f1_from_class_counts` inside each resample. The micro point
+    estimate is carried alongside for reference.
+    """
     model_counts: dict[str, dict] = {}
     for m, df in model_dfs.items():
+        cc = compute_doc_level_counts_per_class(df)
         tp, fp, fn = compute_doc_level_counts(df)
-        p, r, f1 = f1_from_sums(int(tp.sum()), int(fp.sum()), int(fn.sum()))
-        model_counts[m] = {"tp": tp, "fp": fp, "fn": fn, "f1": f1, "p": p, "r": r}
+        _, _, f1_micro = f1_from_sums(int(tp.sum()), int(fp.sum()), int(fn.sum()))
+        model_counts[m] = {
+            "per_class": cc,
+            "f1": macro_f1_from_class_counts(cc),
+            "f1_micro": f1_micro,
+        }
 
     # Block J item 41: B = 10000, configured upstream
 
     ci_rows = []
     for m, c in model_counts.items():
-        ci = bootstrap_ci_f1(c)
+        ci = bootstrap_ci_f1_macro(c["per_class"])
         ci_rows.append(
             {
                 "model": m,
                 "display": DISPLAY_NAMES.get(m, m),
                 "span_f1_point": c["f1"],
+                "span_f1_micro": c["f1_micro"],
                 "span_f1_mean": ci["mean"],
                 "span_f1_std": ci["std"],
                 "ci_lower": ci["ci_lower"],
@@ -759,10 +787,12 @@ def block_j_significance(model_dfs: dict[str, pd.DataFrame], out_dir: Path) -> d
     df_ci = pd.DataFrame(ci_rows).sort_values("span_f1_point", ascending=False).reset_index(drop=True)
     df_ci.to_csv(out_dir / "J_bootstrap_ci.csv", index=False)
 
-    # All 91 pairs
+    # All pairs (C(n_models, 2)) on the macro span F1
     pair_rows = []
     for a, b in combinations(model_counts.keys(), 2):
-        r = paired_bootstrap_diff(model_counts[a], model_counts[b])
+        r = paired_bootstrap_diff_macro(
+            model_counts[a]["per_class"], model_counts[b]["per_class"]
+        )
         pair_rows.append(
             {
                 "model_a": a,
@@ -808,6 +838,51 @@ def block_j_significance(model_dfs: dict[str, pd.DataFrame], out_dir: Path) -> d
     df_highlighted["family_size"] = len(df_highlighted)
     df_highlighted.to_csv(out_dir / "J_bootstrap_paired_highlighted.csv", index=False)
 
+    # Leader group (DS-p.55a): which models are statistically indistinguishable
+    # from the top-ranked model. The family is the 18 leader-vs-others
+    # comparisons (clean, pre-registered by construction), Holm-corrected —
+    # deliberately distinct from the highlighted-pairs family above. A model is
+    # in the leader group when its Holm-adjusted p-value is >= 0.05.
+    leader = max(model_counts, key=lambda m: model_counts[m]["f1"])
+    leader_rows = []
+    for _, row in df_pairs.iterrows():
+        if leader not in (row["model_a"], row["model_b"]):
+            continue
+        other = row["model_b"] if row["model_a"] == leader else row["model_a"]
+        diff = row["diff_f1"] if row["model_a"] == leader else -row["diff_f1"]
+        leader_rows.append(
+            {
+                "model": other,
+                "display": DISPLAY_NAMES.get(other, other),
+                "span_f1": model_counts[other]["f1"],
+                "diff_vs_leader": diff,
+                "p_raw": row["p_value"],
+            }
+        )
+    holm_l, _ = _holm_bonferroni([r["p_raw"] for r in leader_rows])
+    for r, ph in zip(leader_rows, holm_l):
+        r["p_holm"] = ph
+        r["in_leader_group"] = ph >= 0.05
+    leader_rows.insert(
+        0,
+        {
+            "model": leader,
+            "display": DISPLAY_NAMES.get(leader, leader),
+            "span_f1": model_counts[leader]["f1"],
+            "diff_vs_leader": 0.0,
+            "p_raw": float("nan"),
+            "p_holm": float("nan"),
+            "in_leader_group": True,
+        },
+    )
+    df_leader = (
+        pd.DataFrame(leader_rows)
+        .sort_values("span_f1", ascending=False)
+        .reset_index(drop=True)
+    )
+    df_leader.to_csv(out_dir / "J_leader_group.csv", index=False)
+    n_leader_group = int(df_leader["in_leader_group"].sum())
+
     # Smallest significant diff
     sig = df_pairs[df_pairs["significant_95"]].copy()
     sig["abs_diff"] = sig["diff_f1"].abs()
@@ -850,6 +925,8 @@ def block_j_significance(model_dfs: dict[str, pd.DataFrame], out_dir: Path) -> d
                 f"{smallest['display_a']} vs {smallest['display_b']}" if smallest else None
             ),
         },
+        {"metric": "leader_model", "value": DISPLAY_NAMES.get(leader, leader)},
+        {"metric": "leader_group_size_holm", "value": n_leader_group},
     ]
     pd.DataFrame(summary_rows).to_csv(out_dir / "J_bootstrap_summary.csv", index=False)
 
@@ -1292,9 +1369,17 @@ def write_report(out_dir: Path, j_summary: list[dict[str, Any]]) -> None:
     parts.append(_md_table(pd.read_csv(out_dir / "B_label_final_counts.csv")) + "\n")
     parts.append("**Saldo líquido por classe:**\n")
     parts.append(_md_table(pd.read_csv(out_dir / "B_class_delta.csv")) + "\n")
+    trans_path = out_dir / "B_transition_matrix.csv"
+    if trans_path.exists():
+        parts.append(
+            "**Matriz de transições rótulo observado × rótulo sugerido** "
+            "(população: os tokens sinalizados pelo ensemble em "
+            "`erros_anotacao_decicontas.csv` — a lista de trabalho da revisão):\n"
+        )
+        parts.append(_md_table(pd.read_csv(trans_path), float_fmt=".0f") + "\n")
 
     # ----- C. Main results -------------------------------------------------
-    parts.append("## C. Resultados gerais (14 modelos × 6 métricas)\n")
+    parts.append("## C. Resultados gerais (modelos × métricas)\n")
     parts.append(_md_table(pd.read_csv(out_dir / "C_main_results.csv")) + "\n")
     parts.append("**Variabilidade entre folds dos supervisionados (itens 17–19):**\n")
     parts.append(_md_table(pd.read_csv(out_dir / "C_supervised_fold_std.csv")) + "\n")
@@ -1415,7 +1500,16 @@ def write_report(out_dir: Path, j_summary: list[dict[str, Any]]) -> None:
         "da Tabela 13. Diferenças marginais tendem a não sobreviver, reforçando a "
         "leitura de saturação.\n"
     )
-    parts.append("**Tabela completa dos 91 pares (ordenada por |Δ|):**\n")
+    leader_path = out_dir / "J_leader_group.csv"
+    if leader_path.exists():
+        parts.append(
+            "**Grupo do líder (DS-p.55a).** Família: as comparações líder × demais "
+            "modelos, com correção de Holm; `in_leader_group=True` marca os modelos "
+            "estatisticamente indistinguíveis do líder a 5% — a fonte do marcador "
+            "(†) na tabela geral de resultados:\n"
+        )
+        parts.append(_md_table(pd.read_csv(leader_path)) + "\n")
+    parts.append("**Tabela completa dos pares (ordenada por |Δ|):**\n")
     parts.append(_md_table(pd.read_csv(out_dir / "J_bootstrap_paired_all.csv")) + "\n")
 
     # ----- K. IoU sensitivity ---------------------------------------------

@@ -316,7 +316,90 @@ def f1_from_sums(tp_sum: int, fp_sum: int, fn_sum: int):
     return p, r, f1
 
 
+def compute_doc_level_counts_per_class(df: pd.DataFrame, iou_threshold: float = IOU_THRESHOLD):
+    """Per-document, per-class tp/fp/fn — the building block of the macro F1.
+
+    Because :func:`bipartite_greedy_match` requires label equality, the global
+    matching decomposes exactly into independent per-class matchings; summing
+    the per-class counts reproduces :func:`compute_doc_level_counts`.
+    """
+    from research.ner_metrics import ENTITY_LABELS
+
+    n = len(df)
+    counts = {
+        lab: {
+            "tp": np.zeros(n, dtype=np.int32),
+            "fp": np.zeros(n, dtype=np.int32),
+            "fn": np.zeros(n, dtype=np.int32),
+        }
+        for lab in ENTITY_LABELS
+    }
+    for i, row in enumerate(df.itertuples(index=False)):
+        gold = [(g["start"], g["end"], g["labels"][0]) for g in row.golden]
+        pred = [(p["start"], p["end"], p["labels"][0]) for p in row.pred_as_golden]
+        for lab in ENTITY_LABELS:
+            g = [s for s in gold if s[2] == lab]
+            p = [s for s in pred if s[2] == lab]
+            matches = bipartite_greedy_match(p, g, iou_threshold=iou_threshold)
+            counts[lab]["tp"][i] = len(matches)
+            counts[lab]["fp"][i] = len(p) - len(matches)
+            counts[lab]["fn"][i] = len(g) - len(matches)
+    return counts
+
+
+def macro_f1_from_class_counts(class_counts, idx=None) -> float:
+    """Macro span F1 (unweighted mean of per-class F1) over (resampled) docs."""
+    f1s = []
+    for c in class_counts.values():
+        tp = c["tp"] if idx is None else c["tp"][idx]
+        fp = c["fp"] if idx is None else c["fp"][idx]
+        fn = c["fn"] if idx is None else c["fn"][idx]
+        _, _, f1 = f1_from_sums(int(tp.sum()), int(fp.sum()), int(fn.sum()))
+        f1s.append(f1)
+    return float(np.mean(f1s))
+
+
 # ----- Bootstrap -----------------------------------------------------------
+
+
+def bootstrap_ci_f1_macro(class_counts, n_iter=N_BOOTSTRAP, seed=SEED, alpha=ALPHA):
+    """95% CI for the macro span F1 (document-level resampling)."""
+    n = len(next(iter(class_counts.values()))["tp"])
+    rng = np.random.default_rng(seed)
+    idx_matrix = rng.integers(0, n, size=(n_iter, n))
+    f1s = np.empty(n_iter, dtype=np.float64)
+    for b in range(n_iter):
+        f1s[b] = macro_f1_from_class_counts(class_counts, idx_matrix[b])
+    lo = np.percentile(f1s, 100 * alpha / 2)
+    hi = np.percentile(f1s, 100 * (1 - alpha / 2))
+    return {
+        "mean": float(f1s.mean()),
+        "std": float(f1s.std(ddof=1)),
+        "ci_lower": float(lo),
+        "ci_upper": float(hi),
+    }
+
+
+def paired_bootstrap_diff_macro(cc_a, cc_b, n_iter=N_BOOTSTRAP, seed=SEED, alpha=ALPHA):
+    """Paired bootstrap on the macro span F1 (same resamples for both models)."""
+    n = len(next(iter(cc_a.values()))["tp"])
+    assert n == len(next(iter(cc_b.values()))["tp"])
+    rng = np.random.default_rng(seed)
+    idx_matrix = rng.integers(0, n, size=(n_iter, n))
+    diffs = np.empty(n_iter, dtype=np.float64)
+    for b in range(n_iter):
+        idx = idx_matrix[b]
+        diffs[b] = macro_f1_from_class_counts(cc_a, idx) - macro_f1_from_class_counts(cc_b, idx)
+    lo = float(np.percentile(diffs, 100 * alpha / 2))
+    hi = float(np.percentile(diffs, 100 * (1 - alpha / 2)))
+    p_two = 2 * min((diffs <= 0).mean(), (diffs >= 0).mean())
+    return {
+        "mean_diff": float(diffs.mean()),
+        "ci_lower": lo,
+        "ci_upper": hi,
+        "p_value": float(min(p_two, 1.0)),
+        "significant": (lo > 0) or (hi < 0),
+    }
 
 
 def bootstrap_ci_f1(counts, n_iter=N_BOOTSTRAP, seed=SEED, alpha=ALPHA):
