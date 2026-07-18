@@ -1,0 +1,165 @@
+label,n,ngram,count,pct_of_spans
+MULTA,1,multa,157,0.7406
+MULTA,1,o,2,0.0094
+MULTA,1,multas:,2,0.0094
+MULTA,1,ao,2,0.0094
+MULTA,1,1.multa,2,0.0094
+MULTA,1,valor,2,0.0094
+MULTA,1,06,1,0.0047
+MULTA,1,saint,1,0.0047
+MULTA,1,ciro,1,0.0047
+MULTA,1,condenando,1,0.0047
+MULTA,1,servidores,1,0.0047
+MULTA,1,grande,1,0.0047
+MULTA,1,claudio,1,0.0047
+MULTA,1,tatiana,1,0.0047
+MULTA,1,cinthia,1,0.0047
+MULTA,2,multa no,115,0.5476
+MULTA,2,multa de,15,0.0714
+MULTA,2,multa ao,10,0.0476
+MULTA,2,multa equivalente,6,0.0286
+MULTA,2,multa na,4,0.019
+MULTA,2,multa à,2,0.0095
+MULTA,2,ao sr.,2,0.0095
+MULTA,2,1.multa no,2,0.0095
+MULTA,2,valor de,2,0.0095
+MULTA,2,06 multas,1,0.0048
+MULTA,2,saint clay,1,0.0048
+MULTA,2,ciro gustavo,1,0.0048
+MULTA,2,condenando a,1,0.0048
+MULTA,2,servidores do,1,0.0048
+MULTA,2,grande do,1,0.0048
+MULTA,3,multa no valor,105,0.5048
+MULTA,3,multa de r$,14,0.0673
+MULTA,3,multa ao sr.,7,0.0337
+MULTA,3,multa no equivalente,6,0.0288
+MULTA,3,multa equivalente a,6,0.0288
+MULTA,3,multa na quantia,4,0.0192
+MULTA,3,multa no montante,3,0.0144
+MULTA,3,multa à sra.,2,0.0096
+MULTA,3,1.multa no valor,2,0.0096
+MULTA,3,valor de r$,2,0.0096
+MULTA,3,06 multas de,1,0.0048
+MULTA,3,saint clay alcântara,1,0.0048
+MULTA,3,ciro gustavo alves,1,0.0048
+MULTA,3,"condenando a responsável,",1,0.0048
+MULTA,3,grande do norte,1,0.0048
+OBRIGACAO,1,determinação,68,0.5191
+OBRIGACAO,1,determinar,10,0.0763
+OBRIGACAO,1,decide,7,0.0534
+OBRIGACAO,1,prazo,6,0.0458
+OBRIGACAO,1,determinando,3,0.0229
+OBRIGACAO,1,"deve,",2,0.0153
+OBRIGACAO,1,notificação,2,0.0153
+OBRIGACAO,1,joão,2,0.0153
+OBRIGACAO,1,medida,2,0.0153
+OBRIGACAO,1,representação,2,0.0153
+OBRIGACAO,1,município,2,0.0153
+OBRIGACAO,1,fixação,2,0.0153
+OBRIGACAO,1,"decide,",2,0.0153
+OBRIGACAO,1,determinada,1,0.0076
+OBRIGACAO,1,saúde,1,0.0076
+OBRIGACAO,2,determinação constante,48,0.3692
+OBRIGACAO,2,determinação ao,13,0.1
+OBRIGACAO,2,determinar a,6,0.0462
+OBRIGACAO,2,prazo de,6,0.0462
+OBRIGACAO,2,decide pela,3,0.0231
+OBRIGACAO,2,determinação à,3,0.0231
+OBRIGACAO,2,"deve, ainda,",2,0.0154
+OBRIGACAO,2,notificação ao,2,0.0154
+OBRIGACAO,2,joão maria,2,0.0154
+OBRIGACAO,2,medida de,2,0.0154
+OBRIGACAO,2,"determinação para,",2,0.0154
+OBRIGACAO,2,representação ao,2,0.0154
+OBRIGACAO,2,determinar aos,2,0.0154
+OBRIGACAO,2,município de,2,0.0154
+OBRIGACAO,2,fixação de,2,0.0154
+OBRIGACAO,3,determinação constante na,48,0.3721
+OBRIGACAO,3,determinação ao órgão,11,0.0853
+OBRIGACAO,3,determinar a imediata,3,0.0233
+OBRIGACAO,3,determinar a instauração,3,0.0233
+OBRIGACAO,3,prazo de 18,3,0.0233
+OBRIGACAO,3,determinação à autoridade,3,0.0233
+OBRIGACAO,3,"deve, ainda, ser",2,0.0155
+OBRIGACAO,3,notificação ao instituto,2,0.0155
+OBRIGACAO,3,"joão maria montenegro,",2,0.0155
+OBRIGACAO,3,medida de proibição,2,0.0155
+OBRIGACAO,3,"determinação para, no",2,0.0155
+OBRIGACAO,3,"determinar aos responsáveis,",2,0.0155
+OBRIGACAO,3,fixação de prazo,2,0.0155
+OBRIGACAO,3,"decide também, pela",2,0.0155
+OBRIGACAO,3,decide pela formalização,2,0.0155
+RESSARCIMENTO,1,ressarcimento,49,0.7778
+RESSARCIMENTO,1,ressarcir,10,0.1587
+RESSARCIMENTO,1,maria,1,0.0159
+RESSARCIMENTO,1,devolução,1,0.0159
+RESSARCIMENTO,1,restituição,1,0.0159
+RESSARCIMENTO,1,ressarcimentos,1,0.0159
+RESSARCIMENTO,2,ressarcimento ao,32,0.5079
+RESSARCIMENTO,2,ressarcir ao,7,0.1111
+RESSARCIMENTO,2,ressarcimento da,4,0.0635
+RESSARCIMENTO,2,ressarcimento do,2,0.0317
+RESSARCIMENTO,2,ressarcimento no,2,0.0317
+RESSARCIMENTO,2,ressarcimento dos,2,0.0317
+RESSARCIMENTO,2,ressarcimento aos,2,0.0317
+RESSARCIMENTO,2,maria izabel,1,0.0159
+RESSARCIMENTO,2,ressarcir aos,1,0.0159
+RESSARCIMENTO,2,ressarcir integralmente,1,0.0159
+RESSARCIMENTO,2,ressarcimento em,1,0.0159
+RESSARCIMENTO,2,ressarcir a,1,0.0159
+RESSARCIMENTO,2,devolução ao,1,0.0159
+RESSARCIMENTO,2,restituição aos,1,0.0159
+RESSARCIMENTO,2,ressarcimento das,1,0.0159
+RESSARCIMENTO,3,ressarcimento ao erário,29,0.4603
+RESSARCIMENTO,3,ressarcir ao erário,7,0.1111
+RESSARCIMENTO,3,ressarcimento da quantia,4,0.0635
+RESSARCIMENTO,3,"ressarcimento ao erário,",2,0.0317
+RESSARCIMENTO,3,ressarcimento no valor,2,0.0317
+RESSARCIMENTO,3,ressarcimento aos cofres,2,0.0317
+RESSARCIMENTO,3,maria izabel araújo,1,0.0159
+RESSARCIMENTO,3,ressarcir aos cofres,1,0.0159
+RESSARCIMENTO,3,ressarcir integralmente o,1,0.0159
+RESSARCIMENTO,3,ressarcimento do valor,1,0.0159
+RESSARCIMENTO,3,ressarcimento ao patamar,1,0.0159
+RESSARCIMENTO,3,ressarcimento dos cofres,1,0.0159
+RESSARCIMENTO,3,ressarcimento em favor,1,0.0159
+RESSARCIMENTO,3,ressarcir a quantia,1,0.0159
+RESSARCIMENTO,3,devolução ao erário,1,0.0159
+RECOMENDACAO,1,recomende,26,0.4906
+RECOMENDACAO,1,recomendação,14,0.2642
+RECOMENDACAO,1,recomendar,7,0.1321
+RECOMENDACAO,1,decide,2,0.0377
+RECOMENDACAO,1,ramalho,1,0.0189
+RECOMENDACAO,1,como,1,0.0189
+RECOMENDACAO,1,imediata,1,0.0189
+RECOMENDACAO,1,corpo,1,0.0189
+RECOMENDACAO,2,recomende à,26,0.4906
+RECOMENDACAO,2,recomendação ao,5,0.0943
+RECOMENDACAO,2,recomendar ao,4,0.0755
+RECOMENDACAO,2,recomendação à,4,0.0755
+RECOMENDACAO,2,recomendação de,2,0.0377
+RECOMENDACAO,2,recomendar à,2,0.0377
+RECOMENDACAO,2,"ramalho cortez,",1,0.0189
+RECOMENDACAO,2,recomendar a,1,0.0189
+RECOMENDACAO,2,recomendação aos,1,0.0189
+RECOMENDACAO,2,como também,1,0.0189
+RECOMENDACAO,2,decide recomendar,1,0.0189
+RECOMENDACAO,2,decide também,1,0.0189
+RECOMENDACAO,2,"recomendação que,",1,0.0189
+RECOMENDACAO,2,recomendação para,1,0.0189
+RECOMENDACAO,2,imediata da,1,0.0189
+RECOMENDACAO,3,recomende à secretaria,26,0.4906
+RECOMENDACAO,3,recomendação ao atual,3,0.0566
+RECOMENDACAO,3,recomendação à atual,2,0.0377
+RECOMENDACAO,3,recomendar à secretaria,2,0.0377
+RECOMENDACAO,3,"ramalho cortez, dos",1,0.0189
+RECOMENDACAO,3,recomendar a secretaria,1,0.0189
+RECOMENDACAO,3,recomendação ao consórcio,1,0.0189
+RECOMENDACAO,3,recomendação ao referido,1,0.0189
+RECOMENDACAO,3,recomendação aos chefes,1,0.0189
+RECOMENDACAO,3,"recomendar ao responsável,",1,0.0189
+RECOMENDACAO,3,recomendar ao controle,1,0.0189
+RECOMENDACAO,3,como também para,1,0.0189
+RECOMENDACAO,3,recomendar ao chefe,1,0.0189
+RECOMENDACAO,3,decide recomendar ao,1,0.0189
+RECOMENDACAO,3,decide também recomendar,1,0.0189

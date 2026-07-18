@@ -1,0 +1,8 @@
+metric,value
+decicontas_types,3997.0
+lener_types,14404.0
+jaccard_top5000,0.2868
+decicontas_top5000_oov_in_lener,0.332
+lener_top5000_oov_in_decicontas,0.599
+lener_docs,10395.0
+decicontas_docs,861.0
