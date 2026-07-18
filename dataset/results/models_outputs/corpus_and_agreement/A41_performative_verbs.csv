@@ -1,0 +1,12 @@
+stem,docs_with_stem,doc_rate,MULTA_spans,MULTA_rate,OBRIGACAO_spans,OBRIGACAO_rate,RESSARCIMENTO_spans,RESSARCIMENTO_rate,RECOMENDACAO_spans,RECOMENDACAO_rate
+determin,146,0.1696,0,0.0,82,0.626,0,0.0,0,0.0
+julg,860,0.9988,0,0.0,0,0.0,0,0.0,0,0.0
+aplic,229,0.266,1,0.0047,0,0.0,0,0.0,0,0.0
+recomend,87,0.101,0,0.0,0,0.0,0,0.0,49,0.9245
+conden,51,0.0592,1,0.0047,0,0.0,0,0.0,0,0.0
+imput,49,0.0569,0,0.0,0,0.0,0,0.0,0,0.0
+mult,204,0.2369,166,0.783,0,0.0,0,0.0,0,0.0
+ressarc,135,0.1568,0,0.0,0,0.0,60,0.9524,0,0.0
+restitu,2,0.0023,0,0.0,0,0.0,1,0.0159,0,0.0
+obrig,22,0.0256,0,0.0,1,0.0076,0,0.0,0,0.0
+fix,69,0.0801,0,0.0,3,0.0229,0,0.0,0,0.0
