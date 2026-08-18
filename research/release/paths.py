@@ -39,6 +39,7 @@ CLEANLAB_ERRORS_CSV = DATASET / "errors" / "erros_anotacao_decicontas.csv"
 KFOLD_CORRECTED = RESULTS_ROOT / "supervised_kfold"
 LABELED_CORPUS = DATASET / "labeled_data" / "decicontas.json"
 CORRECTED_GOLD_JSON = RELEASE_DIR / "decicontas.json"
+ANNOTATORS_DIR = DATASET / "annotators"  # independent annotations (agreement study)
 
 
 def ensure_results_dirs() -> None:

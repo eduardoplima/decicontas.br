@@ -1,0 +1,5 @@
+metric,value
+fleiss_kappa_token,0.8646167888368088
+mean_pairwise_kappa_token,0.8650083287847337
+mean_pairwise_span_f1_micro,0.8006407719809783
+n_documents,856.0
