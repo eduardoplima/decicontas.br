@@ -14,7 +14,7 @@ O `decicontas.br` foi criado para a tarefa de Reconhecimento de Entidades Nomead
 
 **Quem criou o dataset (equipe, grupo de pesquisa) e em nome de qual entidade (empresa, instituição, organização)?**
 
-O dataset foi criado por Eduardo Pessoa de Lima como artefato da dissertação de mestrado *"Reconhecimento de Entidades Nomeadas em Decisões do TCE/RN"*. A anotação foi realizada integralmente pelo autor, que possui conhecimento do domínio de controle externo.
+O dataset foi criado por Eduardo Pessoa de Lima como artefato da dissertação de mestrado *"Reconhecimento de Entidades Nomeadas em Decisões do TCE/RN"*. A anotação de referência (padrão-ouro) foi realizada pelo autor, que possui conhecimento do domínio de controle externo (Anotador 1); duas anotadoras adicionais — colaboradoras da unidade do TCE/RN responsável pelo acompanhamento de decisões (Anotadores 2 e 3) — re-anotaram o corpus de forma independente para o estudo de concordância que acompanha o dataset.
 
 **Quem financiou a criação do dataset?**
 
@@ -62,7 +62,7 @@ Não há *split* fixo. O protocolo da dissertação usa validação cruzada de 5
 
 **Há erros, fontes de ruído ou redundâncias conhecidas no dataset?**
 
-Sim, e são documentadas. A anotação foi feita por um único anotador, o que impede medidas de concordância inter-anotadores (κ de Cohen); como mitigação, foi conduzida uma auditoria de erros de anotação com a biblioteca Cleanlab (*confident learning*), que confronta cada rótulo com predições fora da amostra de um *ensemble* de modelos. Dos 794 grupos sinalizados, os 567 com confiança de *ensemble* ≥ 0,95 foram revisados um a um em interface própria (6 aceitos, 544 rejeitados, 17 correções customizadas; 4.199 sobrescritas de rótulo em nível de *token*); os 227 grupos abaixo do limiar **não** foram revisados e mantêm o rótulo original — ruído residual de anotação pode persistir nesses casos. As duas versões (antes/depois das correções) são distribuídas para permitir a quantificação desse efeito. Não há documentos duplicados no release.
+Sim, e são documentadas. O padrão-ouro reflete o julgamento de um único anotador; dois mecanismos independentes quantificam e mitigam o ruído decorrente. Primeiro, um estudo de concordância inter-anotadores: duas anotadoras adicionais re-anotaram independentemente os 856 documentos comuns, com κ de Cohen token-level par-a-par de 0,842–0,899 (κ de Fleiss 0,865, faixa "quase perfeita" de Landis & Koch) e F1 de *span* par-a-par (IoU ≥ 0,5) de 0,776–0,838; as três anotações e as planilhas de divergência são distribuídas em `dataset/annotators/` e `dataset/results/models_outputs/chapter4/`. Segundo, foi conduzida uma auditoria de erros de anotação com a biblioteca Cleanlab (*confident learning*), que confronta cada rótulo com predições fora da amostra de um *ensemble* de modelos. Dos 794 grupos sinalizados, os 567 com confiança de *ensemble* ≥ 0,95 foram revisados um a um em interface própria (6 aceitos, 544 rejeitados, 17 correções customizadas; 4.199 sobrescritas de rótulo em nível de *token*); os 227 grupos abaixo do limiar **não** foram revisados e mantêm o rótulo original — ruído residual de anotação pode persistir nesses casos. As duas versões (antes/depois das correções) são distribuídas para permitir a quantificação desse efeito. Não há documentos duplicados no release.
 
 **O dataset é autocontido ou depende de recursos externos (sites, tweets, outros datasets)?**
 
@@ -110,11 +110,11 @@ Amostragem não probabilística por conveniência temporal: lotes de decisões d
 
 **Quem participou do processo de coleta (estudantes, trabalhadores de plataformas, terceirizados) e como foram remunerados?**
 
-Exclusivamente o autor da dissertação, sem remuneração específica pela tarefa.
+O autor da dissertação (extração e anotação de referência) e duas anotadoras colaboradoras da unidade de acompanhamento de decisões do TCE/RN (re-anotação independente para o estudo de concordância), sem remuneração específica pela tarefa.
 
 **Ao longo de que período os dados foram coletados? Esse período corresponde ao período de criação dos dados das instâncias?**
 
-Os textos anotados provêm de decisões proferidas em sessões realizadas entre 2023 e 2025. A importação para o Label Studio e a anotação ocorreram em junho de 2025; a auditoria Cleanlab e a revisão das correções foram concluídas em maio de 2026. O período de coleta é, portanto, próximo ao de criação dos documentos (decisões recentes, não um recorte histórico).
+Os textos anotados provêm de decisões proferidas em sessões realizadas entre 2023 e 2025. A importação para o Label Studio e a anotação de referência ocorreram em junho de 2025; a auditoria Cleanlab e a revisão das correções foram concluídas em maio de 2026; a re-anotação independente pelas Anotadoras 2 e 3 ocorreu em agosto de 2026. O período de coleta é, portanto, próximo ao de criação dos documentos (decisões recentes, não um recorte histórico).
 
 **Foram conduzidos processos de revisão ética (por exemplo, por um comitê institucional)?**
 
@@ -161,7 +161,7 @@ Sim:
 
 **Os dados "brutos" foram preservados além dos dados pré-processados/limpos/rotulados (para suportar usos futuros não previstos)?**
 
-Sim. O repositório preserva os extratos brutos (`dataset/raw/`), o export original do Label Studio (`dataset/labeled_data/decicontas.json`, 866 tarefas) e o arquivo de decisões de correção (`dataset/errors/dataset-corrections.json`), permitindo reconstruir cada etapa. A versão `decicontas-before-correction` congela o estado anterior à auditoria.
+Sim. O repositório preserva os extratos brutos (`dataset/raw/`), o export original do Label Studio (`dataset/labeled_data/decicontas.json`, 866 tarefas) e o arquivo de decisões de correção (`dataset/errors/dataset-corrections.json`), permitindo reconstruir cada etapa. A versão `decicontas-before-correction` congela o estado anterior à auditoria, e `dataset/annotators/` preserva as três anotações independentes usadas no estudo de concordância (anonimizadas como anotador 1/2/3).
 
 **O software usado para pré-processar/limpar/rotular os dados está disponível?**
 
@@ -177,7 +177,7 @@ A tokenização por espaço em branco é deliberadamente simples para garantir a
 
 **O dataset já foi usado para alguma tarefa?**
 
-Sim. Na dissertação de origem, foi usado para: (i) comparar nove LLMs de quatro provedores (OpenAI, DeepSeek, Meta e Alibaba, incluindo três de pesos abertos) em regime *few-shot* com saída estruturada contra dez modelos supervisionados (BiLSTM-CRF, BERTimbau *base* e *large* e sete *encoders* com pré-treino jurídico/governamental) sob validação cruzada de 5 *folds*; (ii) avaliar o impacto do mecanismo de saída estruturada (*function calling* vs. *JSON schema*) e de três técnicas de *prompting* (*few-shot* estático, *Chain-of-Thought*, duas fases); (iii) estudar detecção de erros de anotação com Cleanlab; e (iv) aferir significância estatística por *bootstrap* pareado no nível de documento.
+Sim. Na dissertação de origem, foi usado para: (i) comparar nove LLMs de quatro provedores (OpenAI, DeepSeek, Meta e Alibaba, incluindo três de pesos abertos) em regime *few-shot* com saída estruturada contra dez modelos supervisionados (BiLSTM-CRF, BERTimbau *base* e *large* e sete *encoders* com pré-treino jurídico/governamental) sob validação cruzada de 5 *folds*; (ii) avaliar o impacto do mecanismo de saída estruturada (*function calling* vs. *JSON schema*) e de três técnicas de *prompting* (*few-shot* estático, *Chain-of-Thought*, duas fases); (iii) estudar detecção de erros de anotação com Cleanlab; (iv) aferir significância estatística por *bootstrap* pareado no nível de documento; e (v) conduzir um estudo de concordância inter-anotadores com três anotações independentes do corpus.
 
 **Há um repositório que reúna todos os artigos ou sistemas que usam o dataset?**
 
@@ -189,7 +189,7 @@ Além de REN: extração estruturada de atributos das decisões (valores, prazos
 
 **Há algo na composição do dataset ou na forma como foi coletado e pré-processado/limpo/rotulado que possa impactar usos futuros?**
 
-Sim, quatro pontos: (i) **desbalanceamento** — MULTA concentra ~46% das entidades e 73,1% dos documentos são vazios; o micro-F1 é dominado pela classe majoritária e pela capacidade de abstenção, recomendando-se o macro-F1 de *span* e a análise do subconjunto informativo; (ii) **anotador único** — apesar da auditoria Cleanlab, não há medidas de concordância inter-anotadores, e os 227 grupos abaixo do limiar de revisão mantêm o rótulo original; (iii) **recorte institucional e temporal** — um único tribunal (TCE/RN) e sessões de 2023–2025; a transferência para outras Cortes de Contas, com formulários decisórios distintos, deve ser validada empiricamente; (iv) **mascaramento de CPFs** — modelos treinados no corpus não verão CPFs reais, o que afeta usos que dependam desse padrão numérico. O vocabulário do corpus também é distante do de corpora judiciais (Jaccard de 0,29 com o LeNER-Br nos 5.000 tipos mais frequentes), o que limita comparações diretas.
+Sim, quatro pontos: (i) **desbalanceamento** — MULTA concentra ~46% das entidades e 73,1% dos documentos são vazios; o micro-F1 é dominado pela classe majoritária e pela capacidade de abstenção, recomendando-se o macro-F1 de *span* e a análise do subconjunto informativo; (ii) **padrão-ouro de anotador único** — o estudo de concordância com duas anotadoras independentes (F1 de *span* par-a-par 0,776–0,838) fornece um teto humano de referência, mas as divergências não foram adjudicadas (em especial na classe RECOMENDACAO, a de menor concordância frente ao padrão-ouro) e os 227 grupos abaixo do limiar de revisão da auditoria mantêm o rótulo original; (iii) **recorte institucional e temporal** — um único tribunal (TCE/RN) e sessões de 2023–2025; a transferência para outras Cortes de Contas, com formulários decisórios distintos, deve ser validada empiricamente; (iv) **mascaramento de CPFs** — modelos treinados no corpus não verão CPFs reais, o que afeta usos que dependam desse padrão numérico. O vocabulário do corpus também é distante do de corpora judiciais (Jaccard de 0,29 com o LeNER-Br nos 5.000 tipos mais frequentes), o que limita comparações diretas.
 
 **Há tarefas para as quais o dataset não deve ser usado?**
 
