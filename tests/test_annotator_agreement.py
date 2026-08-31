@@ -151,5 +151,5 @@ def test_load_study_real_files_align():
     if not paths.ANNOTATORS_DIR.exists():  # pragma: no cover
         pytest.skip("annotator files not present")
     data, ids = load_study()
-    assert len(ids) == 856
+    assert len(ids) == 861
     assert set(data) == {"anotador1", "anotador2", "anotador3"}

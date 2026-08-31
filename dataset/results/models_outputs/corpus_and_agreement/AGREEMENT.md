@@ -1,6 +1,6 @@
 # Capítulo 4 — Concordância entre anotadores
 
-Gerado por `research.release.annotator_agreement` a partir de `dataset/annotators/` (856 documentos comuns aos três anotadores). O anotador 1 é a anotação original pós-auditoria Cleanlab (idêntica à release corrigida); os anotadores 2 e 3 anotaram de forma independente e cega. Os CSVs ao lado são as fontes canônicas.
+Gerado por `research.release.annotator_agreement` a partir de `dataset/annotators/` (861 documentos comuns aos três anotadores). O anotador 1 é a anotação original pós-auditoria Cleanlab (idêntica à release corrigida); os anotadores 2 e 3 anotaram de forma independente e cega. Os CSVs ao lado são as fontes canônicas.
 
 ## (a) Concordância par-a-par
 
@@ -8,9 +8,9 @@ Gerado por `research.release.annotator_agreement` a partir de `dataset/annotator
 
 | pair                  |   kappa_token |   obs_agreement_token |   span_precision |   span_recall |   span_f1_micro |   span_f1_macro |   kappa_doc_presence |
 |:----------------------|--------------:|----------------------:|-----------------:|--------------:|----------------:|----------------:|---------------------:|
-| anotador1 x anotador2 |         0.842 |                 0.945 |            0.760 |         0.791 |           0.776 |           0.714 |                0.786 |
+| anotador1 x anotador2 |         0.842 |                 0.945 |            0.760 |         0.791 |           0.776 |           0.714 |                0.787 |
 | anotador1 x anotador3 |         0.855 |                 0.949 |            0.765 |         0.812 |           0.788 |           0.716 |                0.817 |
-| anotador2 x anotador3 |         0.899 |                 0.966 |            0.830 |         0.847 |           0.838 |           0.812 |                0.917 |
+| anotador2 x anotador3 |         0.899 |                 0.966 |            0.830 |         0.847 |           0.838 |           0.812 |                0.918 |
 
 ## (b) Concordância global (3 anotadores)
 
@@ -19,7 +19,7 @@ Gerado por `research.release.annotator_agreement` a partir de `dataset/annotator
 | fleiss_kappa_token          |   0.865 |
 | mean_pairwise_kappa_token   |   0.865 |
 | mean_pairwise_span_f1_micro |   0.801 |
-| n_documents                 | 856.000 |
+| n_documents                 | 861.000 |
 
 ## (c) Concordância por classe
 
@@ -64,5 +64,5 @@ Mesmas medidas tomando como referência a anotação original *antes* da auditor
 | pair                          |   kappa_token |   obs_agreement_token |   span_precision |   span_recall |   span_f1_micro |   span_f1_macro |   kappa_doc_presence |
 |:------------------------------|--------------:|----------------------:|-----------------:|--------------:|----------------:|----------------:|---------------------:|
 | gold-pre-correcao x anotador1 |         0.979 |                 0.992 |            0.982 |         0.939 |           0.960 |           0.959 |                0.961 |
-| gold-pre-correcao x anotador2 |         0.828 |                 0.940 |            0.779 |         0.776 |           0.777 |           0.709 |                0.757 |
-| gold-pre-correcao x anotador3 |         0.844 |                 0.945 |            0.786 |         0.799 |           0.792 |           0.716 |                0.788 |
+| gold-pre-correcao x anotador2 |         0.828 |                 0.941 |            0.779 |         0.776 |           0.777 |           0.709 |                0.758 |
+| gold-pre-correcao x anotador3 |         0.844 |                 0.946 |            0.786 |         0.799 |           0.792 |           0.716 |                0.789 |

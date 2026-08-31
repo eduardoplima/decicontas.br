@@ -8,9 +8,9 @@ same Label Studio configuration and the annotation guidelines of Chapter 4:
 - **anotador2** / **anotador3** — independent blind annotations produced by
   staff of the decisions-monitoring unit of the TCE/RN.
 
-The three JSONL files live in ``dataset/annotators/`` and cover the 856
-documents common to all annotators (five empty documents of the 861-doc
-release are absent from the study files).
+The three JSONL files live in ``dataset/annotators/`` and cover all 861
+documents of the release (the five documents with no entities in the gold
+were annotated as empty by all three annotators).
 
 Agreement is measured at three granularities:
 
