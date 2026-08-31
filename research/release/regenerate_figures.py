@@ -34,6 +34,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 from matplotlib.patches import Patch
+from matplotlib.transforms import Bbox
 
 
 from research.release import paths
@@ -211,7 +212,87 @@ def fig_exp1_entity_heatmap(df: pd.DataFrame) -> None:
     _save(fig, "exp1_entity_heatmap")
 
 
+# Nomes de exibição da Figura 11 — os mesmos slugs \texttt{...} usados no texto
+# da dissertação (Capítulos 4 e 5).
+EXP1_LABELS = {
+    "deepseek-v4-flash_few_shot": "deepseek-v4-flash",
+    "gpt-4.1_few_shot": "gpt-4.1",
+    "gpt-4.1-mini_few_shot": "gpt-4.1-mini",
+    "gpt-4.1-nano_few_shot": "gpt-4.1-nano",
+    "gpt-5-mini_few_shot": "gpt-5-mini",
+    "gpt-5.1_few_shot": "gpt-5.1",
+    "gpt-5.2_few_shot": "gpt-5.2",
+    "qwen2.5-72b_few_shot": "qwen2.5-72b",
+    "llama-3.3-70b_few_shot": "llama-3.3-70b",
+    "raquelsilveira_legalbertpt_fp": "legalbert-pt-fp",
+    "alfaneo_bertimbaulaw-base-portuguese-cased": "bertimbaulaw",
+    "alfaneo_jurisbert-base-portuguese-uncased": "jurisbert",
+    "neuralmind_bert-base-portuguese-cased": "bertimbau-base",
+    "neuralmind_bert-large-portuguese-cased": "bertimbau-large",
+    "dominguesm_legal-bert-base-cased-ptbr": "legal-bert-stf",
+    "rufimelo_Legal-BERTimbau-base": "legal-bertimbau-base",
+    "dccmpmgfinalisticas_GovBERT-BR": "govbert-br",
+    "ulysses-camara_legal-bert-pt-br": "legal-bert-pt-br",
+    "bilstm-crf": "bilstm-crf",
+}
+
+
+def _annotate_no_overlap(fig: plt.Figure, ax: plt.Axes, df: pd.DataFrame) -> None:
+    """Label each scatter point trying candidate offsets until the text box
+    collides with nothing already drawn (labels, markers, legend); placements
+    afastados ganham uma linha-guia fina. Determinístico."""
+    fig.canvas.draw()
+    renderer = fig.canvas.get_renderer()
+    pts = ax.transData.transform(df[["span_precision", "span_recall"]].to_numpy())
+    keep_out = [Bbox.from_bounds(x - 7, y - 7, 14, 14) for x, y in pts]
+    axes_box = ax.get_window_extent(renderer)
+    placed: list[Bbox] = []
+    legend = ax.get_legend()
+    if legend is not None:
+        placed.append(legend.get_window_extent(renderer))
+    candidates = [
+        (5, 4, "left", "bottom"), (5, -12, "left", "top"),
+        (-5, 4, "right", "bottom"), (-5, -12, "right", "top"),
+        (5, 16, "left", "bottom"), (-5, 16, "right", "bottom"),
+        (5, -26, "left", "top"), (-5, -26, "right", "top"),
+        (18, -4, "left", "center"), (-18, -4, "right", "center"),
+        (8, 30, "left", "bottom"), (-8, 30, "right", "bottom"),
+        (8, -44, "left", "top"), (-8, -44, "right", "top"),
+        (30, 14, "left", "bottom"), (-30, 14, "right", "bottom"),
+        (10, 58, "left", "bottom"), (10, -72, "left", "top"),
+    ]
+    for i, (_, row) in enumerate(df.iterrows()):
+        xy = (row["span_precision"], row["span_recall"])
+        others = keep_out[:i] + keep_out[i + 1:]
+        for j, (dx, dy, ha, va) in enumerate(candidates):
+            # mede a colisão com o texto puro; a linha-guia entraria no bbox
+            # da anotação e inflaria a caixa, estragando o posicionamento
+            ann = ax.annotate(
+                row["model"], xy, fontsize=7, ha=ha, va=va,
+                xytext=(dx, dy), textcoords="offset points", zorder=6,
+            )
+            box = ann.get_window_extent(renderer).expanded(1.08, 1.2)
+            inside = axes_box.contains(box.x0, box.y0) and axes_box.contains(box.x1, box.y1)
+            collides = any(box.overlaps(b) for b in placed) or any(
+                box.overlaps(k) for k in others
+            )
+            if (inside and not collides) or j == len(candidates) - 1:
+                if abs(dx) >= 8 or abs(dy) >= 12:
+                    ann.remove()
+                    ann = ax.annotate(
+                        row["model"], xy, fontsize=7, ha=ha, va=va,
+                        xytext=(dx, dy), textcoords="offset points", zorder=6,
+                        arrowprops=dict(
+                            arrowstyle="-", lw=0.5, color="0.45", shrinkA=0, shrinkB=2
+                        ),
+                    )
+                placed.append(box)
+                break
+            ann.remove()
+
+
 def fig_exp1_precision_recall(df: pd.DataFrame) -> None:
+    df = df.assign(model=df["model"].map(lambda m: EXP1_LABELS.get(m, m)))
     paradigm_colors = df["paradigm"].map(
         {"supervised": "#2ca02c", "few-shot": "steelblue"}
     )
@@ -220,12 +301,6 @@ def fig_exp1_precision_recall(df: pd.DataFrame) -> None:
         df["span_precision"], df["span_recall"], s=120, c=paradigm_colors,
         edgecolors="k", zorder=5,
     )
-    for _, row in df.iterrows():
-        ax.annotate(
-            row["model"], (row["span_precision"], row["span_recall"]),
-            fontsize=7, ha="left", va="bottom", xytext=(4, 4),
-            textcoords="offset points",
-        )
     ax.plot([0, 1], [0, 1], "k--", alpha=0.3)
     ax.set_xlabel("Precisão (Span)")
     ax.set_ylabel("Revocação (Span)")
@@ -240,6 +315,7 @@ def fig_exp1_precision_recall(df: pd.DataFrame) -> None:
         Patch(color="#2ca02c", label="Supervisionado"),
     ])
     plt.tight_layout()
+    _annotate_no_overlap(fig, ax, df)
     _save(fig, "exp1_precision_recall")
 
 
