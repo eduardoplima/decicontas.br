@@ -68,5 +68,16 @@ Both ship in JSON (Label Studio + clean), JSONL (HuggingFace `datasets`-compatib
 
 ## Citation
 
-If you use this dataset or the results, please cite the dissertation. A BibTeX entry will be added here at publication.
+If you use this dataset or the results, please cite it using the metadata in
+[`CITATION.cff`](CITATION.cff) (GitHub renders it under "Cite this repository").
+A DOI and a BibTeX entry for the accompanying paper will be added here at publication.
+
+## License
+
+Dual-licensed, see [`LICENSE`](LICENSE):
+
+- **Data** (`dataset/`) — [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+  The underlying decisions are public acts of the TCE/RN; the license covers the
+  annotations, tokenisation, release bundles and documentation produced by the authors.
+- **Code** (`research/`, `scripts/`, `tests/`, `notebooks/`) — MIT.
 

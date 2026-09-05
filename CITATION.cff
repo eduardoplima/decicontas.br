@@ -1,0 +1,37 @@
+cff-version: 1.2.0
+message: "If you use this dataset, please cite it as below."
+title: "decicontas.br: a Named Entity Recognition dataset of Brazilian audit-court decisions"
+abstract: >-
+  A public Named Entity Recognition dataset of 861 decisions issued by the
+  Tribunal de Contas do Estado do Rio Grande do Norte (TCE/RN), annotated with
+  four audit-relevant entity types (MULTA, OBRIGACAO, RESSARCIMENTO,
+  RECOMENDACAO). The corpus is distributed in paired pre- and post-review
+  versions, audited for label errors with confident learning, and validated by
+  an independent three-annotator agreement study. Release bundles are provided
+  in JSON, JSONL, CoNLL-2003 and BRAT formats, together with the evaluation and
+  training pipelines used to produce the reported results.
+type: dataset
+version: 1.0.0
+date-released: "2026-09-05"
+license: CC-BY-4.0
+repository-code: "https://github.com/eduardoplima/decicontas.br"
+authors:
+  - family-names: "Pereira Lima"
+    given-names: "Eduardo"
+    email: "eduardo.lima.059@ufrn.edu.br"
+    affiliation: "Instituto Metrópole Digital, Universidade Federal do Rio Grande do Norte"
+    # orcid: "https://orcid.org/0000-0000-0000-0000"
+  - family-names: "de Menezes Neto"
+    given-names: "Elias Jacob"
+    email: "elias.jacob@ufrn.br"
+    affiliation: "Instituto Metrópole Digital, Universidade Federal do Rio Grande do Norte"
+    # orcid: "https://orcid.org/0000-0000-0000-0000"
+keywords:
+  - named entity recognition
+  - legal NLP
+  - Brazilian Portuguese
+  - courts of accounts
+  - public administration
+  - information extraction
+  - annotated corpus
+  - large language models
