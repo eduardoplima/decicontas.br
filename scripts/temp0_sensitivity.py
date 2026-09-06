@@ -34,7 +34,7 @@ import pandas as pd
 
 from research.ner_metrics import compute_iou_raw
 from research.release import paths
-from research.release.chapter5_numbers import _load_llm_df, _per_entity_metrics_llm
+from research.release.evaluation_numbers import _load_llm_df, _per_entity_metrics_llm
 from research.release.run_llm_inference import (
     MODEL_REGISTRY,
     _load_env,

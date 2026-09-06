@@ -1,5 +1,5 @@
 # Resultados consolidados — decicontas.br
-Briefing pronto para consumo por uma LLM redatora do capítulo de Resultados. Cobre os modelos supervisionados (5-fold CV após grid search) e as LLMs (bootstrap pareado de documento), todos avaliados sobre os mesmos 861 documentos.
+Briefing dos resultados. Cobre os modelos supervisionados (5-fold CV após grid search) e as LLMs (bootstrap pareado de documento), todos avaliados sobre os mesmos 861 documentos.
 
 ## Setup do experimento
 - Dataset: 861 documentos (866 rotulados originais menos 5 IDs `[6, 782, 790, 817, 852]` excluídos por aparecerem como exemplos few-shot no prompt das LLMs).

@@ -1,4 +1,4 @@
-"""Descriptive and linguistic analysis of the decicontas.br corpus (Chapter 4).
+"""Descriptive and linguistic analysis of the decicontas.br corpus.
 
 Produces the tables behind the "Análise descritiva e linguística do corpus"
 section: entity counts per document, class co-occurrence, relative span
@@ -8,7 +8,7 @@ performative-verb markers, and a lexical comparison against LeNER-Br.
 All inputs come from the corrected release bundle
 (``dataset/release/decicontas/decicontas.json``), whose tokenisation and BIO
 construction originate in :mod:`research.dataset_io` — no re-tokenisation
-happens here. Outputs land in ``dataset/results/models_outputs/chapter4/``
+happens here. Outputs land in ``dataset/results/models_outputs/corpus_and_agreement/``
 as one CSV per table plus a self-contained ``REPORT.md``.
 
 Run:
@@ -34,7 +34,7 @@ import pandas as pd
 from research.dataset_io import ENTITY_LABELS
 from research.release import paths
 
-OUTPUT_ROOT = paths.CHAPTER4_DIR
+OUTPUT_ROOT = paths.CORPUS_DIR
 RELEASE_JSON = paths.RELEASE_DIR / "decicontas.json"
 
 # Pinned LeNER-Br source. The canonical repo (``peluz/lener_br``) is a
@@ -390,7 +390,7 @@ def run(skip_lener: bool = False) -> None:
         overlap.to_csv(OUTPUT_ROOT / "A41_lener_vocab_overlap.csv", index=False)
         distinctive.to_csv(OUTPUT_ROOT / "A41_lener_distinctive_terms.csv", index=False)
 
-    parts = ["# Capítulo 4 — Análise descritiva e linguística do corpus\n"]
+    parts = ["# Análise descritiva e linguística do corpus\n"]
     parts.append(
         "Gerado por `research.release.corpus_analysis` a partir de "
         "`dataset/release/decicontas/decicontas.json` (release corrigida, 861 docs). "

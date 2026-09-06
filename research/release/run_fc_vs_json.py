@@ -4,7 +4,7 @@ Runs the few-shot NER over the master corpus for a small set of models with TWO
 structured-output methods — ``function_calling`` (FC) and strict ``json_schema``
 (JS) — using the SAME prompt and the SAME ``NERDecisao`` schema, so the only
 difference is the decoding mechanism. Writes the per-(model, method) result JSONs
-in the layout ``rescore_experiments`` / ``chapter5_numbers`` expect:
+in the layout ``rescore_experiments`` / ``evaluation_numbers`` expect:
 
     <cycle>/experiments/function_calling_json_schema/models_results_decicontas_<key>_fc.json
     <cycle>/experiments/function_calling_json_schema/models_results_decicontas_<key>_json.json

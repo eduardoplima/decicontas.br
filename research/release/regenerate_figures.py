@@ -19,8 +19,8 @@ ner_experiments.ipynb (8):
   exp3_strategy_dots_corrected.png
   exp3_best_per_technique_entity_corrected.png
 
-All data comes from CSVs already produced by ``chapter5_numbers``
-(``dataset/results/chapter5_corrected/``) — no metric recomputation.
+All data comes from CSVs already produced by ``evaluation_numbers``
+(``dataset/results/model_evaluation_corrected/``) — no metric recomputation.
 """
 
 from __future__ import annotations
@@ -40,7 +40,7 @@ from matplotlib.transforms import Bbox
 from research.release import paths
 
 REPO_ROOT = paths.REPO_ROOT
-NUMS = paths.CHAPTER5_DIR
+NUMS = paths.EVALUATION_DIR
 FIG_DIR = paths.FIGURES_DIR
 SUFFIX = ""  # figures are isolated per cycle dir, no suffix needed
 ENTITY_LABELS = ["MULTA", "OBRIGACAO", "RECOMENDACAO", "RESSARCIMENTO"]
@@ -213,7 +213,7 @@ def fig_exp1_entity_heatmap(df: pd.DataFrame) -> None:
 
 
 # Nomes de exibição da Figura 11 — os mesmos slugs \texttt{...} usados no texto
-# da dissertação (Capítulos 4 e 5).
+# dos relatórios de avaliação.
 EXP1_LABELS = {
     "deepseek-v4-flash_few_shot": "deepseek-v4-flash",
     "gpt-4.1_few_shot": "gpt-4.1",

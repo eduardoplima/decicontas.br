@@ -5,14 +5,14 @@ Varredura focada em encontrar falhas no cálculo das métricas reportadas (token
 Os arquivos auditados:
 - `tools/ner_metrics.py` (498 linhas)
 - `tools/release/bootstrap_significance.py` (689 linhas)
-- `tools/release/chapter5_numbers.py` (981 linhas)
+- `tools/release/evaluation_numbers.py` (981 linhas)
 - `backend/scripts/supervised_kfold/metrics.py` (30 linhas)
 
 ---
 
 ## 🔴 ALTA — Comparação token-F1 entre LLM e supervisionado é incomensurável
 
-**Onde:** `tools/ner_metrics.py:205-233` (LLM, via spaCy) vs `tools/ner_metrics.py:362-400` e `tools/release/chapter5_numbers.py:_per_entity_metrics_bio` (supervisionado, via `\S+`).
+**Onde:** `tools/ner_metrics.py:205-233` (LLM, via spaCy) vs `tools/ner_metrics.py:362-400` e `tools/release/evaluation_numbers.py:_per_entity_metrics_bio` (supervisionado, via `\S+`).
 
 **Problema:** Token F1 de LLMs é computado sobre tokens spaCy `pt_core_news_sm`; token F1 de supervisionados é computado sobre tokens whitespace `\S+`. Os dois esquemas têm contagens de tokens **diferentes** para o mesmo documento (`pt_core_news_sm` quebra pontuação, contrações, hífens; `\S+` não). Isso significa que precisão/revocação/F1 de token usam **denominadores diferentes** entre LLM e supervisionado e **não podem ser comparados diretamente** na Tabela 5.1.
 
@@ -148,7 +148,7 @@ Atribui coluna no DataFrame do chamador. Se o chamador reusa o mesmo `df` para m
 return 1.0 if (iou >= threshold and label_a == label_b) else 0.0
 ```
 
-A função conflate "sem sobreposição" com "sobreposição correta mas rótulo errado" — ambas retornam 0. Não é bug para F1 (correto: type-error é miss + falso positivo), mas qualquer análise que tente diferenciar "erro de fronteira" de "erro de tipo" precisa de outra função (já reimplementei isso em `chapter5_numbers.py:_classify_pair`).
+A função conflate "sem sobreposição" com "sobreposição correta mas rótulo errado" — ambas retornam 0. Não é bug para F1 (correto: type-error é miss + falso positivo), mas qualquer análise que tente diferenciar "erro de fronteira" de "erro de tipo" precisa de outra função (já reimplementei isso em `evaluation_numbers.py:_classify_pair`).
 
 **Sugestão:** manter assim para P/R/F1, mas exportar `compute_iou_raw(span_a, span_b) -> float` separado para análise de erros.
 
@@ -166,9 +166,9 @@ Para o **individual CI**, cada modelo usa o mesmo seed, então cada modelo é av
 
 ---
 
-## ⚠️ Item adicional — `_per_entity_metrics_bio` em `chapter5_numbers.py` usa max-end como tamanho
+## ⚠️ Item adicional — `_per_entity_metrics_bio` em `evaluation_numbers.py` usa max-end como tamanho
 
-**Onde:** `tools/release/chapter5_numbers.py:225-244`.
+**Onde:** `tools/release/evaluation_numbers.py:225-244`.
 
 ```python
 ends = [s[1] for s in gold_spans] + [s[1] for s in pred_spans]

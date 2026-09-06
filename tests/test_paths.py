@@ -7,7 +7,7 @@ import research.release.paths as p
 
 def test_results_root_is_models_outputs():
     assert p.RESULTS_ROOT == p.REPO_ROOT / "dataset/results/models_outputs"
-    assert p.CHAPTER5_DIR == p.RESULTS_ROOT / "chapter5"
+    assert p.EVALUATION_DIR == p.RESULTS_ROOT / "model_evaluation"
     assert p.OUTPUT_CORRECTED_DIR == p.RESULTS_ROOT / "output_corrected"
     assert p.FIGURES_DIR == p.RESULTS_ROOT / "figures"
     assert p.SIGNIFICANCE_DIR == p.RESULTS_ROOT / "significance"

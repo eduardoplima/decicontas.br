@@ -131,11 +131,11 @@ where a reviewer filters false positives more cheaply than hunting omissions.
 | LegalBERTPT-br | supervised | 0.573 | 0.718 | 0.377 | 0.495 | 0.341 |
 | Llama-3.3-70B | LLM | 0.402 | 0.596 | 0.237 | 0.340 | 0.273 |
 
-Source: [`chapter5/C_main_results.csv`](dataset/results/models_outputs/chapter5/C_main_results.csv).
+Source: [`model_evaluation/C_main_results.csv`](dataset/results/models_outputs/model_evaluation/C_main_results.csv).
 </details>
 
-Every number cited in the paper and in Chapter 5 is regenerated into
-[`chapter5/REPORT.md`](dataset/results/models_outputs/chapter5/REPORT.md), one section
+Every number cited in the paper is regenerated into
+[`model_evaluation/REPORT.md`](dataset/results/models_outputs/model_evaluation/REPORT.md), one section
 per block, each showing its table inline next to the CSV that produced it.
 
 ## Annotation quality
@@ -149,13 +149,13 @@ Quality is measured, not asserted.
 - **Inter-annotator agreement.** The whole corpus was independently re-annotated,
   blind, by two staff of the Court unit that feeds the registry. Token-level Fleiss
   κ = **0.865**; pairwise span F1 between **0.776** and **0.838**. Details in
-  [`chapter4/AGREEMENT.md`](dataset/results/models_outputs/chapter4/AGREEMENT.md).
+  [`corpus_and_agreement/AGREEMENT.md`](dataset/results/models_outputs/corpus_and_agreement/AGREEMENT.md).
 
 ## Reproduce
 
 ```bash
 uv sync                                                           # install (Python 3.12)
-uv run python -m research.release.chapter5_numbers                # all Chapter 5 CSVs + REPORT.md
+uv run python -m research.release.evaluation_numbers                # all evaluation CSVs + REPORT.md
 uv run python -m research.release.regenerate_figures              # the result figures
 uv run python -m research.release.bootstrap_significance --quiet  # bootstrap CIs (N=10,000)
 uv run pytest tests/                                              # test suite

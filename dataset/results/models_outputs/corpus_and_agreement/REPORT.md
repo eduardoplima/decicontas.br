@@ -1,4 +1,4 @@
-# Capítulo 4 — Análise descritiva e linguística do corpus
+# Análise descritiva e linguística do corpus
 
 Gerado por `research.release.corpus_analysis` a partir de `dataset/release/decicontas/decicontas.json` (release corrigida, 861 docs). Os CSVs ao lado são as fontes canônicas.
 

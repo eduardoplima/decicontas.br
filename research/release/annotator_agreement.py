@@ -1,7 +1,7 @@
-"""Inter-annotator agreement study for the decicontas.br corpus (Chapter 4).
+"""Inter-annotator agreement study for the decicontas.br corpus.
 
 Three annotators labelled the same set of documents independently, using the
-same Label Studio configuration and the annotation guidelines of Chapter 4:
+same Label Studio configuration and the annotation guidelines:
 
 - **anotador1** — the original author annotation *after* the Cleanlab audit
   (span-identical to the corrected release ``dataset/release/decicontas``);
@@ -25,7 +25,7 @@ Agreement is measured at three granularities:
 
 A divergence typology (class confusion / boundary / presence) and a
 robustness check against the *pre*-correction gold are also produced.
-Outputs land in ``dataset/results/models_outputs/chapter4/`` as ``A42_*.csv``
+Outputs land in ``dataset/results/models_outputs/corpus_and_agreement/`` as ``A42_*.csv``
 plus a self-contained ``AGREEMENT.md``.
 
 Run:
@@ -47,7 +47,7 @@ from research.dataset_io import ENTITY_LABELS, collapse_label, tokenize
 from research.ner_metrics import bipartite_greedy_match, compute_iou_raw
 from research.release import paths
 
-OUTPUT_ROOT = paths.CHAPTER4_DIR
+OUTPUT_ROOT = paths.CORPUS_DIR
 ANNOTATOR_IDS = ("anotador1", "anotador2", "anotador3")
 IOU_THRESHOLD = 0.5
 
@@ -352,7 +352,7 @@ def _write_report(
     def _md(df: pd.DataFrame) -> str:
         return df.to_markdown(index=False, floatfmt=".3f") + "\n"
 
-    parts = ["# Capítulo 4 — Concordância entre anotadores\n"]
+    parts = ["# Concordância entre anotadores\n"]
     parts.append(
         "Gerado por `research.release.annotator_agreement` a partir de "
         f"`dataset/annotators/` ({len(ids)} documentos comuns aos três anotadores). "

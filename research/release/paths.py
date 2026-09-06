@@ -24,8 +24,8 @@ OUTPUT_CORRECTED_DIR = RESULTS_ROOT / "output_corrected"  # rescored vs correcte
 RAW_PROMPT_ENG_DIR = RESULTS_ROOT / "experiments" / "prompt_engineering"  # raw cot/two_stage
 RAW_EXPERIMENTS_DIR = RESULTS_ROOT / "experiments"  # parent of prompt_engineering, etc.
 CORRECTED_EXPERIMENTS_DIR = RESULTS_ROOT / "experiments_corrected"  # has prompt_engineering/ subdir
-CHAPTER4_DIR = RESULTS_ROOT / "chapter4"  # corpus_analysis CSVs + REPORT.md
-CHAPTER5_DIR = RESULTS_ROOT / "chapter5"  # block A-M CSVs + REPORT.md
+CORPUS_DIR = RESULTS_ROOT / "corpus_and_agreement"  # corpus_analysis CSVs + REPORT.md
+EVALUATION_DIR = RESULTS_ROOT / "model_evaluation"  # block A-M CSVs + REPORT.md
 SIGNIFICANCE_DIR = RESULTS_ROOT / "significance"  # bootstrap CSVs
 FIGURES_DIR = RESULTS_ROOT / "figures"
 REPRODUCIBILITY_DIR = RESULTS_ROOT / "reproducibility"
@@ -49,7 +49,7 @@ def ensure_results_dirs() -> None:
         OUTPUT_CORRECTED_DIR,
         RAW_PROMPT_ENG_DIR,
         CORRECTED_EXPERIMENTS_DIR,
-        CHAPTER5_DIR,
+        EVALUATION_DIR,
         SIGNIFICANCE_DIR,
         FIGURES_DIR,
         REPRODUCIBILITY_DIR,

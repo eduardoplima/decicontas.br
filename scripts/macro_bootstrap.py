@@ -33,7 +33,7 @@ from research.release.bootstrap_significance import (
     N_BOOTSTRAP,
     SEED,
 )
-from research.release.chapter5_numbers import load_all_models
+from research.release.evaluation_numbers import load_all_models
 
 LABELS = ["MULTA", "OBRIGACAO", "RECOMENDACAO", "RESSARCIMENTO"]
 

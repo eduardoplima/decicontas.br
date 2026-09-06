@@ -66,7 +66,7 @@ There is no fixed split. The dissertation protocol uses 5-fold cross-validation 
 
 Yes, and they are documented. The gold standard reflects the judgement of a single annotator; two independent mechanisms quantify and mitigate the resulting noise.
 
-First, an inter-annotator agreement study: two additional annotators independently re-annotated all 861 documents, yielding pairwise token-level Cohen's κ of 0.842–0.899 (Fleiss' κ 0.865, the "almost perfect" band of Landis & Koch) and pairwise span F1 (IoU ≥ 0.5) of 0.776–0.838. The three annotations and the divergence tables are distributed under `dataset/annotators/` and `dataset/results/models_outputs/chapter4/`.
+First, an inter-annotator agreement study: two additional annotators independently re-annotated all 861 documents, yielding pairwise token-level Cohen's κ of 0.842–0.899 (Fleiss' κ 0.865, the "almost perfect" band of Landis & Koch) and pairwise span F1 (IoU ≥ 0.5) of 0.776–0.838. The three annotations and the divergence tables are distributed under `dataset/annotators/` and `dataset/results/models_outputs/corpus_and_agreement/`.
 
 Second, an annotation-error audit with the cleanlab library (*confident learning*), which confronts each label with out-of-sample predictions from a model ensemble. Of the 794 flagged groups, the 567 with ensemble confidence ≥ 0.95 were reviewed one by one in a purpose-built interface (6 accepted, 544 rejected, 17 custom corrections). The review is best read as a confirmation of the original annotation: only 23 of the 567 reviewed groups (4.1%) were actually changed. The 227 groups below the threshold were **not** reviewed and keep their original label — residual annotation noise may persist in those cases. Both versions (before/after corrections) are distributed so that this effect can be quantified. There are no duplicate documents in the release.
 
@@ -267,7 +267,7 @@ Yes. The pre-correction version (`decicontas-before-correction`) is a permanent 
 
 **If others want to extend/augment/build on/contribute to the dataset, is there a mechanism for them to do so?**
 
-Yes: issues and pull requests in the GitHub repository. Annotation contributions will be validated by the maintainer against the delimitation guidelines of the scheme (Chapter 4 of the dissertation) and, where applicable, submitted to the same automated audit procedure before being incorporated into a new release.
+Yes: issues and pull requests in the GitHub repository. Annotation contributions will be validated by the maintainer against the delimitation guidelines of the annotation scheme and, where applicable, submitted to the same automated audit procedure before being incorporated into a new release.
 
 **Any other comments?**
 

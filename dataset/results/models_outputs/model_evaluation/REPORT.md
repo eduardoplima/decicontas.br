@@ -1,6 +1,6 @@
-# Capítulo 5 — Números reproduzíveis (gold corrigido)
+# Avaliação de modelos — números reproduzíveis (gold corrigido)
 
-Documento auto-contido: todas as tabelas aparecem inline. Os CSVs ao lado deste arquivo são as fontes canônicas (uma por bloco), geradas por `research.release.chapter5_numbers`. Cada bloco abaixo corresponde a um item do checklist do capítulo.
+Documento auto-contido: todas as tabelas aparecem inline. Os CSVs ao lado deste arquivo são as fontes canônicas (uma por bloco), geradas por `research.release.evaluation_numbers`. Cada bloco abaixo corresponde a um bloco da avaliação.
 
 ## Pipeline de métricas (correções aplicadas)
 

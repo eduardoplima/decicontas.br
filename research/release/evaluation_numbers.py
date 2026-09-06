@@ -1,9 +1,9 @@
-"""Reproducible numerics for Chapter 5 of the dissertation.
+"""Reproducible numerics for the model evaluation.
 
 Consumes the cleanlab-corrected results we already produced (LLM
 rescores + supervised k-fold retrain + bootstrap) and emits one CSV
 per logical block plus a master ``REPORT.md`` cross-referencing the
-specific numbers each section of the chapter cites.
+specific numbers each reported result cites.
 
 Blocks (mirrors the user's checklist):
 
@@ -20,7 +20,7 @@ J. Bootstrap CIs + paired comparisons
 K. Canonical token F1 number normalisation note
 
 Run:
-    uv run python -m research.release.chapter5_numbers
+    uv run python -m research.release.evaluation_numbers
 """
 
 from __future__ import annotations
@@ -66,7 +66,7 @@ from research.release.bootstrap_significance import (
 from research.release import paths
 
 REPO_ROOT = paths.REPO_ROOT
-OUTPUT_ROOT = paths.CHAPTER5_DIR
+OUTPUT_ROOT = paths.EVALUATION_DIR
 RELEASE_DIR = paths.RELEASE_DIR  # shared
 RELEASE_PRE_DIR = paths.RELEASE_PRE_DIR  # shared
 CORRECTIONS_JSON = paths.CORRECTIONS_JSON  # shared
@@ -75,7 +75,7 @@ CORRECTED_OUTPUT_DIR = paths.OUTPUT_CORRECTED_DIR
 EXPERIMENTS_DIR = paths.CORRECTED_EXPERIMENTS_DIR
 KFOLD_CORRECTED = paths.KFOLD_CORRECTED  # shared
 
-logger = logging.getLogger("research.release.chapter5_numbers")
+logger = logging.getLogger("research.release.evaluation_numbers")
 
 
 def _ensure_pred_as_golden(df: pd.DataFrame) -> pd.DataFrame:
@@ -825,7 +825,7 @@ def block_j_significance(model_dfs: dict[str, pd.DataFrame], out_dir: Path) -> d
     )
     df_highlighted = df_pairs[mask].copy().reset_index(drop=True)
     # Multiple-comparison correction (p48a). The reported family is the set of
-    # highlighted pairs (the comparisons the chapter actually discusses); we
+    # highlighted pairs (the comparisons actually discussed); we
     # adjust the per-comparison p-values with Holm and Bonferroni so the "Sig."
     # column in Table 13 reflects family-wise error control instead of 12
     # uncorrected tests. Marginal differences (e.g. GPT-4 Turbo vs GPT-4.1)
@@ -1158,12 +1158,12 @@ def _pivot_md(
 
 def write_report(out_dir: Path, j_summary: list[dict[str, Any]]) -> None:
     """Compose the master REPORT.md with every table rendered inline."""
-    parts = ["# Capítulo 5 — Números reproduzíveis (gold corrigido)\n"]
+    parts = ["# Avaliação de modelos — números reproduzíveis (gold corrigido)\n"]
     parts.append(
         "Documento auto-contido: todas as tabelas aparecem inline. Os CSVs "
         "ao lado deste arquivo são as fontes canônicas (uma por bloco), "
-        "geradas por `research.release.chapter5_numbers`. Cada bloco abaixo "
-        "corresponde a um item do checklist do capítulo.\n"
+        "geradas por `research.release.evaluation_numbers`. Cada bloco abaixo "
+        "corresponde a um bloco da avaliação.\n"
     )
 
     parts.append("## Pipeline de métricas (correções aplicadas)\n")

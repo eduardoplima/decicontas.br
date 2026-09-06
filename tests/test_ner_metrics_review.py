@@ -1,4 +1,4 @@
-"""Tests for the metric utilities added for the advisor review (Chapter 5).
+"""Tests for the metric utilities added for the advisor review.
 
 Covers: macro-F1 surfacing, the multi-IoU span sweep (incl. exact match),
 the string→offset alignment failure counter, the Holm/Bonferroni correction
@@ -14,7 +14,7 @@ from research.ner_metrics import (
     flatten_metrics,
     span_metrics_multi_iou,
 )
-from research.release.chapter5_numbers import _holm_bonferroni, _keep_informative_only
+from research.release.evaluation_numbers import _holm_bonferroni, _keep_informative_only
 
 
 def _df_one_doc() -> pd.DataFrame:
