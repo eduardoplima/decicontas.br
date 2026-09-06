@@ -84,7 +84,7 @@ documents per label:      {'MULTA': 141, 'OBRIGACAO': 92, 'RESSARCIMENTO': 57, '
 
 ## Reproducibility
 
-Re-run `uv run python -m tools.release.export_dataset` from the
+Re-run `uv run python -m research.release.export_dataset` from the
 repository root. Outputs are deterministic (documents sorted by
 `document_id`; no run-time timestamps embedded in any artefact). The
 `MANIFEST.json` next to this README lists the SHA256 of every released

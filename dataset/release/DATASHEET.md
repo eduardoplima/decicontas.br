@@ -1,268 +1,274 @@
 # Datasheet: decicontas.br
 
-Este documento segue o modelo *Datasheets for Datasets* (GEBRU, T. et al. Datasheets for datasets. *Communications of the ACM*, v. 64, n. 12, 2021. arXiv:1803.09010v8), respondendo pergunta a pergunta às sete seções propostas: motivação, composição, processo de coleta, pré-processamento/limpeza/rotulagem, usos, distribuição e manutenção. Perguntas não aplicáveis são respondidas com "N/A" e justificativa breve, conforme recomendado pelos autores.
+This document follows the *Datasheets for Datasets* template (GEBRU, T. et al. Datasheets for datasets. *Communications of the ACM*, v. 64, n. 12, 2021. arXiv:1803.09010v8), answering, question by question, the seven proposed sections: motivation, composition, collection process, preprocessing/cleaning/labelling, uses, distribution and maintenance. Questions that do not apply are answered "N/A" with a brief justification, as the authors recommend.
 
-Versão do dataset documentada: **decicontas** (861 documentos, correções Cleanlab aplicadas), com a versão **decicontas-before-correction** distribuída em paralelo.
+Documented dataset version: **decicontas** (861 documents, cleanlab corrections applied), distributed alongside **decicontas-before-correction**.
 
----
-
-## 1. Motivação
-
-**Com que propósito o dataset foi criado? Havia uma tarefa específica em mente? Havia uma lacuna específica a preencher?**
-
-O `decicontas.br` foi criado para a tarefa de Reconhecimento de Entidades Nomeadas (REN) em decisões de prestação e tomada de contas do Tribunal de Contas do Estado do Rio Grande do Norte (TCE/RN). O objetivo aplicado é viabilizar a alimentação automatizada dos subcadastros do Cadastro Geral de Acompanhamento de Decisões (CGAD, art. 431, IV, do Regimento Interno do TCE/RN) — Cadastro Geral de Multas (CGM), Cadastro Geral de Devoluções (CGD) e Cadastro Geral de Recomendações (CGR) —, hoje preenchidos por leitura humana caso a caso. A lacuna preenchida é a ausência de corpus anotado de REN para decisões de Cortes de Contas brasileiras: os corpora jurídicos de REN em português existentes (LeNER-Br, UlyssesNER-Br) cobrem o contencioso judicial e o domínio legislativo, mas nenhum trata do controle externo exercido pelos Tribunais de Contas. O dataset serve ainda de banco de avaliação para a comparação entre LLMs em regime *few-shot* e modelos supervisionados ajustados ao domínio.
-
-**Quem criou o dataset (equipe, grupo de pesquisa) e em nome de qual entidade (empresa, instituição, organização)?**
-
-O dataset foi criado por Eduardo Pessoa de Lima como artefato da dissertação de mestrado *"Reconhecimento de Entidades Nomeadas em Decisões do TCE/RN"*. A anotação de referência (padrão-ouro) foi realizada pelo autor, que possui conhecimento do domínio de controle externo (Anotador 1); duas anotadoras adicionais — colaboradoras da unidade do TCE/RN responsável pelo acompanhamento de decisões (Anotadores 2 e 3) — re-anotaram o corpus de forma independente para o estudo de concordância que acompanha o dataset.
-
-**Quem financiou a criação do dataset?**
-
-Não houve financiamento específico (bolsa ou projeto com número de outorga) dedicado à construção do dataset. *(Preencher com agência/edital caso aplicável antes da publicação.)*
-
-**Algum outro comentário?**
-
-O dataset é distribuído em duas versões pareadas — antes e depois da auditoria de erros de anotação com Cleanlab — precisamente para permitir estudos sobre o efeito de ruído de rotulagem (ver Seções 3 e 4).
+A Portuguese translation of this document is kept at [`DATASHEET.pt-BR.md`](DATASHEET.pt-BR.md).
 
 ---
 
-## 2. Composição
+## 1. Motivation
 
-**O que representam as instâncias que compõem o dataset (documentos, fotos, pessoas, países)?**
+**For what purpose was the dataset created? Was there a specific task in mind? Was there a specific gap that needed to be filled?**
 
-Cada instância é o texto integral de uma decisão colegiada (acórdão ou decisão) proferida pelo TCE/RN em processos de prestação e tomada de contas. A decisão é a unidade de análise em todo o trabalho, inclusive como unidade de reamostragem do *bootstrap* de avaliação. Há um único tipo de instância.
+`decicontas.br` was created for Named Entity Recognition (NER) over accountability rulings of the Court of Accounts of the State of Rio Grande do Norte (TCE/RN, *Tribunal de Contas do Estado do Rio Grande do Norte*). The applied goal is to automate the feeding of the subregistries of the General Registry for Decision Monitoring (CGAD, art. 431, IV of the Court's internal rules) — the registries of fines (CGM), refunds (CGD) and recommendations (CGR) — which are today filled in by reading each decision by hand. The gap it fills is the absence of an annotated NER corpus for Brazilian Court of Accounts decisions: the existing Portuguese legal NER corpora (LeNER-Br, UlyssesNER-Br) cover judicial litigation and the legislative domain, but none addresses the external control exercised by Courts of Accounts. The dataset also serves as an evaluation benchmark for comparing few-shot LLMs against domain-adapted supervised models.
 
-**Quantas instâncias há no total (de cada tipo, se apropriado)?**
+**Who created the dataset (team, research group) and on behalf of which entity (company, institution, organisation)?**
 
-861 documentos, totalizando 116.844 *tokens* e 754.555 caracteres. Desses, 232 documentos (26,9%) contêm ao menos uma entidade anotada e 629 (73,1%) são vazios — verdadeiros negativos, integralmente lidos e julgados sem comando registrável (arquivamentos, julgamentos de regularidade plena). Na versão corrigida há 459 entidades: 212 MULTA, 131 OBRIGACAO, 63 RESSARCIMENTO e 53 RECOMENDACAO (na versão antes das correções: 439 entidades — 202/119/62/56).
+The dataset was created by Eduardo Pereira Lima as an artefact of the master's dissertation *"Reconhecimento de Entidades Nomeadas em Decisões do TCE/RN"* (Named Entity Recognition in TCE/RN Decisions), at the Federal University of Rio Grande do Norte (UFRN). The reference annotation (gold standard) was produced by the author, who has working knowledge of the external-control domain (Annotator 1); two additional annotators — staff of the TCE/RN unit responsible for decision monitoring (Annotators 2 and 3) — independently re-annotated the corpus for the agreement study that accompanies the dataset.
 
-**O dataset contém todas as instâncias possíveis ou é uma amostra (não necessariamente aleatória) de um conjunto maior?**
+**Who funded the creation of the dataset?**
 
-É uma amostra. O conjunto maior é a base de decisões colegiadas do TCE/RN (mais de 40 mil decisões entre 2012 e 2025 no extrato bruto que acompanha o repositório, em `dataset/raw/`). O subconjunto anotado foi importado ao Label Studio em lotes extraídos de sessões recentes do Tribunal (2023–2025), incluindo um lote complementar direcionado a decisões com ressarcimento, para reforçar a classe mais rara. A amostra **não** é probabilística nem pretende ser representativa da base histórica completa; ela reflete o fluxo recente de deliberações, o que preserva a proporção realista de decisões sem comando registrável (73,1% de documentos vazios). Da anotação original de 866 documentos, 5 foram removidos da avaliação por terem sido usados como exemplares *few-shot* nos *prompts* dos LLMs (prevenção de contaminação), resultando nos 861 publicados.
+No specific funding (grant or project with an award number) was dedicated to building the dataset.
 
-**Em que consistem os dados de cada instância? Dados "brutos" ou features?**
+**Any other comments?**
 
-Texto bruto (não processado) da decisão, acompanhado dos artefatos derivados: lista de *tokens*, rótulos BIO por *token* (`ner_tags`), *offsets* de caractere por *token* (`token_offsets`) e entidades reconstruídas como *spans* de caracteres (`entities`).
-
-**Há um rótulo ou alvo associado a cada instância?**
-
-Sim. Cada *token* recebe um dos nove rótulos BIO: `O`, `B-/I-MULTA`, `B-/I-OBRIGACAO`, `B-/I-RESSARCIMENTO`, `B-/I-RECOMENDACAO`. As quatro categorias correspondem aos subcadastros do CGAD: MULTA (sanção pecuniária), OBRIGACAO (determinação vinculante de fazer/não fazer), RESSARCIMENTO (devolução de valores ao erário) e RECOMENDACAO (orientação não vinculante). O esquema é *flat* — sem aninhamento nem sobreposição de *spans* (nas 459 entidades não há um único par sobreposto).
-
-**Falta alguma informação em instâncias individuais?**
-
-Sim, por decisão de projeto: (i) o corpus não inclui segmentação estrutural explícita (relatório/voto/dispositivo) — as decisões são publicadas como texto corrido; (ii) metadados processuais (número do processo, data da sessão, relator, órgão jurisdicionado) não acompanham o release, embora existam nos extratos brutos; (iii) números de CPF presentes nos textos originais foram mascarados (ver "dados sensíveis" abaixo).
-
-**Relações entre instâncias individuais são explicitadas (por exemplo, avaliações de usuários, vínculos de rede social)?**
-
-Não. As decisões são tratadas como documentos independentes. Decisões distintas podem se referir ao mesmo processo ou gestor, mas esses vínculos não são anotados.
-
-**Há divisões (splits) recomendadas (treino, validação, teste)?**
-
-Não há *split* fixo. O protocolo da dissertação usa validação cruzada de 5 *folds* estratificada no nível de documento (semente 1007) para os modelos supervisionados, e avaliação sobre os 861 documentos para os LLMs *few-shot*, com intervalos de confiança por *bootstrap* pareado de documento (B = 10.000, semente 42). Recomenda-se reportar macro-F1 de *span* (IoU ≥ 0,5) como métrica primária, dado o desbalanceamento entre classes, além do subconjunto informativo (232 documentos) em separado.
-
-**Há erros, fontes de ruído ou redundâncias conhecidas no dataset?**
-
-Sim, e são documentadas. O padrão-ouro reflete o julgamento de um único anotador; dois mecanismos independentes quantificam e mitigam o ruído decorrente. Primeiro, um estudo de concordância inter-anotadores: duas anotadoras adicionais re-anotaram independentemente os 856 documentos comuns, com κ de Cohen token-level par-a-par de 0,842–0,899 (κ de Fleiss 0,865, faixa "quase perfeita" de Landis & Koch) e F1 de *span* par-a-par (IoU ≥ 0,5) de 0,776–0,838; as três anotações e as planilhas de divergência são distribuídas em `dataset/annotators/` e `dataset/results/models_outputs/chapter4/`. Segundo, foi conduzida uma auditoria de erros de anotação com a biblioteca Cleanlab (*confident learning*), que confronta cada rótulo com predições fora da amostra de um *ensemble* de modelos. Dos 794 grupos sinalizados, os 567 com confiança de *ensemble* ≥ 0,95 foram revisados um a um em interface própria (6 aceitos, 544 rejeitados, 17 correções customizadas; 4.199 sobrescritas de rótulo em nível de *token*); os 227 grupos abaixo do limiar **não** foram revisados e mantêm o rótulo original — ruído residual de anotação pode persistir nesses casos. As duas versões (antes/depois das correções) são distribuídas para permitir a quantificação desse efeito. Não há documentos duplicados no release.
-
-**O dataset é autocontido ou depende de recursos externos (sites, tweets, outros datasets)?**
-
-Autocontido. Todos os textos e anotações estão nos próprios arquivos do release; `MANIFEST.json` registra o SHA256 de cada artefato. Os textos originais também são públicos nos canais oficiais do TCE/RN (publicação oficial das decisões), mas o dataset não depende deles.
-
-**O dataset contém dados que possam ser considerados confidenciais (protegidos por sigilo legal, comunicações privadas)?**
-
-Não. As decisões são documentos públicos, de publicação oficial obrigatória, proferidos por órgão de controle externo no exercício de sua competência constitucional.
-
-**O dataset contém dados que, se visualizados diretamente, possam ser ofensivos, insultuosos, ameaçadores ou causar ansiedade?**
-
-Não. O conteúdo é técnico-jurídico (julgamento de contas públicas). Registre-se apenas que as decisões atribuem irregularidades e sanções a pessoas nomeadas, no exercício regular da função sancionadora do Tribunal.
-
-**O dataset identifica subpopulações (por idade, gênero)?**
-
-Não. Nenhuma subpopulação é anotada ou identificada por atributos demográficos.
-
-**É possível identificar indivíduos (uma ou mais pessoas naturais), direta ou indiretamente, a partir do dataset?**
-
-Sim. As decisões nomeiam gestores públicos, agentes e demais responsáveis nos processos de contas — informação que integra o documento público original e é essencial ao propósito do dataset (os *spans* de MULTA e RESSARCIMENTO devem conter a identificação do responsável). Trata-se de dados já públicos por força do dever de transparência e publicidade dos atos do controle externo.
-
-**O dataset contém dados que possam ser considerados sensíveis (origem racial ou étnica, opiniões políticas, crenças religiosas, dados de saúde, biometria, identificadores governamentais como números de documentos, antecedentes criminais)?**
-
-Os textos originais continham CPFs (identificador governamental brasileiro) de pessoas citadas. Esses números foram mascarados no padrão `***.***.***-**` nos dados brutos distribuídos, e os textos do release foram verificados quanto à ausência de CPFs formatados. Permanecem nomes de pessoas e os fatos apurados nos processos (irregularidades administrativas e sanções correspondentes), que são informação pública. Não há dados de saúde, biometria, crença ou origem étnica.
-
-**Algum outro comentário?**
-
-A distribuição de entidades é fortemente assimétrica (MULTA responde por ~46% das entidades) e os *spans* são longos (mediana de ~300 caracteres para MULTA), características que condicionam a escolha de métricas e esquemas de rotulagem (ver Seção 5).
+The dataset is distributed in two paired versions — before and after the cleanlab annotation-error audit — precisely to enable studies on the effect of label noise (see Sections 3 and 4).
 
 ---
 
-## 3. Processo de coleta
+## 2. Composition
 
-**Como os dados associados a cada instância foram adquiridos? Eram diretamente observáveis, reportados por sujeitos ou inferidos de outros dados?**
+**What do the instances that comprise the dataset represent (documents, photos, people, countries)?**
 
-Diretamente observáveis: texto bruto das decisões colegiadas tal como registrado nos sistemas institucionais do TCE/RN (campo de texto do acórdão vinculado à composição de pauta e ao voto da sessão de julgamento). Nenhum dado foi reportado por sujeitos nem inferido por modelos; os únicos dados derivados são as anotações manuais de entidades.
+Each instance is the full text of a collegiate decision (*acórdão* or *decisão*) issued by the TCE/RN in accountability proceedings. The decision is the unit of analysis throughout the work, including as the resampling unit of the evaluation bootstrap. There is a single instance type.
 
-**Quais mecanismos ou procedimentos foram usados para coletar os dados (aparato de hardware, curadoria humana manual, programas de software, APIs)? Como esses mecanismos foram validados?**
+**How many instances are there in total (of each type, if appropriate)?**
 
-Extração programática da base de decisões do TCE/RN (consultas ao banco corporativo que registra as deliberações das sessões), com exportação para CSV e importação no Label Studio no formato de tarefas de anotação. A validação consistiu na conferência manual das decisões durante a anotação — cada um dos 866 documentos importados foi lido integralmente pelo anotador, o que funciona como inspeção de qualidade da extração (textos truncados ou corrompidos seriam detectados nessa leitura).
+861 documents, totalling 116,844 tokens and 754,555 characters. Of these, 232 documents (27.0%) contain at least one annotated entity and 629 (73.0%) are empty — true negatives, read in full and judged to carry no registrable command (filings, clean-account judgments). The corrected version holds 459 entities: 212 MULTA, 131 OBRIGACAO, 63 RESSARCIMENTO and 53 RECOMENDACAO (before corrections: 439 entities — 202/119/62/56).
 
-**Se o dataset é uma amostra de um conjunto maior, qual foi a estratégia de amostragem (determinística, probabilística com probabilidades específicas)?**
+**Does the dataset contain all possible instances or is it a sample (not necessarily random) of a larger set?**
 
-Amostragem não probabilística por conveniência temporal: lotes de decisões de sessões de 2023–2025 extraídos da base institucional, complementados por um lote direcionado a decisões contendo ressarcimento (busca orientada pela classe mais rara). A estratégia priorizou o fluxo decisório recente — o mesmo que alimentará o *pipeline* de produção — em vez de representatividade histórica.
+It is a sample. The larger set is the TCE/RN base of collegiate decisions (more than 40,000 decisions between 2012 and 2025 in the raw extract shipped with the repository, under `dataset/raw/`). The annotated subset was imported into Label Studio in batches drawn from Court sessions, including a complementary batch targeted at decisions containing reimbursements, to reinforce the rarest class. The sample is **not** probabilistic and does not claim to represent the full historical base; it reflects the recent flow of deliberations, which preserves the realistic proportion of decisions with no registrable command (73.0% empty documents). Of the 866 originally annotated documents, 5 were removed from evaluation because they had been reused as few-shot exemplars in the LLM prompts (contamination prevention), yielding the 861 published.
 
-**Quem participou do processo de coleta (estudantes, trabalhadores de plataformas, terceirizados) e como foram remunerados?**
+**What data does each instance consist of? "Raw" data or features?**
 
-O autor da dissertação (extração e anotação de referência) e duas anotadoras colaboradoras da unidade de acompanhamento de decisões do TCE/RN (re-anotação independente para o estudo de concordância), sem remuneração específica pela tarefa.
+Raw (unprocessed) decision text, accompanied by derived artefacts: token list, per-token BIO labels (`ner_tags`), per-token character offsets (`token_offsets`) and entities reconstructed as character spans (`entities` in the JSON bundle, `spans` in the JSONL bundle).
 
-**Ao longo de que período os dados foram coletados? Esse período corresponde ao período de criação dos dados das instâncias?**
+**Is there a label or target associated with each instance?**
 
-Os textos anotados provêm de decisões proferidas em sessões realizadas entre 2023 e 2025. A importação para o Label Studio e a anotação de referência ocorreram em junho de 2025; a auditoria Cleanlab e a revisão das correções foram concluídas em maio de 2026; a re-anotação independente pelas Anotadoras 2 e 3 ocorreu em agosto de 2026. O período de coleta é, portanto, próximo ao de criação dos documentos (decisões recentes, não um recorte histórico).
+Yes. Each token receives one of nine BIO labels: `O`, `B-/I-MULTA`, `B-/I-OBRIGACAO`, `B-/I-RESSARCIMENTO`, `B-/I-RECOMENDACAO`. The four categories map onto the CGAD subregistries: MULTA (pecuniary sanction), OBRIGACAO (binding order to do or refrain from doing), RESSARCIMENTO (reimbursement to the treasury) and RECOMENDACAO (non-binding guidance). The scheme is flat — no nesting and no overlapping spans (across the 459 entities there is not a single overlapping pair).
 
-**Foram conduzidos processos de revisão ética (por exemplo, por um comitê institucional)?**
+**Is any information missing from individual instances?**
 
-Não. Por se tratar de documentos públicos oficiais, sem coleta de dados diretamente de pessoas, o trabalho não se enquadra nas hipóteses de submissão a comitê de ética em pesquisa com seres humanos.
+Yes, by design: (i) the corpus carries no explicit structural segmentation (report / opinion / operative part) — decisions are published as running text; (ii) procedural metadata (case number, session date, rapporteur, audited body) does not ship with the release, though it exists in the raw extracts; (iii) Brazilian taxpayer numbers (CPF) present in the original texts were masked (see "sensitive data" below).
 
-**Os dados foram coletados diretamente dos indivíduos em questão ou obtidos de terceiros/outras fontes (sites)?**
+**Are relationships between individual instances made explicit (e.g., user ratings, social-network links)?**
 
-De outra fonte: a base institucional de decisões do TCE/RN. As pessoas nomeadas nas decisões não são a fonte dos dados; são mencionadas em documentos públicos produzidos pelo Tribunal.
+No. Decisions are treated as independent documents. Distinct decisions may refer to the same case or the same public official, but those links are not annotated.
 
-**Os indivíduos em questão foram notificados sobre a coleta de dados?**
+**Are there recommended data splits (training, validation, test)?**
 
-Não individualmente. As decisões são atos públicos, publicados oficialmente pelo Tribunal, e as partes dos processos são delas intimadas na forma da lei processual. A construção do dataset não envolveu nova coleta junto aos indivíduos.
+There is no fixed split. The dissertation protocol uses 5-fold cross-validation at the document level (seed 1007) for the supervised models, and evaluation over all 861 documents for the few-shot LLMs, with confidence intervals from a paired document-level bootstrap (B = 10,000, seed 42). We recommend reporting macro span F1 (IoU ≥ 0.5) as the primary metric, given the class imbalance, alongside the informative subset (232 documents) reported separately.
 
-**Os indivíduos em questão consentiram com a coleta e o uso de seus dados?**
+**Are there any errors, sources of noise, or redundancies in the dataset?**
 
-N/A — não se aplica consentimento individual: o tratamento recai sobre documentos públicos oficiais, em finalidade acadêmica e de interesse público (aprimoramento do controle externo), hipóteses compatíveis com a Lei Geral de Proteção de Dados Pessoais (LGPD, Lei n.º 13.709/2018) para dados tornados manifestamente públicos e tratamento para fins de estudo por órgão de pesquisa. Como salvaguarda adicional, os CPFs foram mascarados.
+Yes, and they are documented. The gold standard reflects the judgement of a single annotator; two independent mechanisms quantify and mitigate the resulting noise.
 
-**Se houve consentimento, foi fornecido mecanismo para revogá-lo no futuro ou para certos usos?**
+First, an inter-annotator agreement study: two additional annotators independently re-annotated all 861 documents, yielding pairwise token-level Cohen's κ of 0.842–0.899 (Fleiss' κ 0.865, the "almost perfect" band of Landis & Koch) and pairwise span F1 (IoU ≥ 0.5) of 0.776–0.838. The three annotations and the divergence tables are distributed under `dataset/annotators/` and `dataset/results/models_outputs/chapter4/`.
 
-N/A (ver resposta anterior). Solicitações relativas a dados pessoais podem ser dirigidas ao mantenedor (Seção 7).
+Second, an annotation-error audit with the cleanlab library (*confident learning*), which confronts each label with out-of-sample predictions from a model ensemble. Of the 794 flagged groups, the 567 with ensemble confidence ≥ 0.95 were reviewed one by one in a purpose-built interface (6 accepted, 544 rejected, 17 custom corrections). The review is best read as a confirmation of the original annotation: only 23 of the 567 reviewed groups (4.1%) were actually changed. The 227 groups below the threshold were **not** reviewed and keep their original label — residual annotation noise may persist in those cases. Both versions (before/after corrections) are distributed so that this effect can be quantified. There are no duplicate documents in the release.
 
-**Foi conduzida análise do impacto potencial do dataset e de seu uso sobre os titulares dos dados (por exemplo, um relatório de impacto à proteção de dados)?**
+**Is the dataset self-contained, or does it link to or otherwise rely on external resources (websites, tweets, other datasets)?**
 
-Não foi conduzido relatório formal de impacto. As medidas de minimização adotadas — mascaramento de CPFs, ausência de metadados pessoais adicionais, restrição do escopo aos comandos decisórios — refletem avaliação informal de risco: o dataset não agrega informação além da já constante dos documentos públicos originais.
+Self-contained. All texts and annotations live in the release files themselves; `MANIFEST.json` records the SHA-256 of every artefact. The original texts are also public through the TCE/RN official channels (mandatory publication of decisions), but the dataset does not depend on them.
 
-**Algum outro comentário?**
+**Does the dataset contain data that might be considered confidential (protected by legal privilege, private communications)?**
 
-Nenhum.
+No. The decisions are public documents, subject to mandatory official publication, issued by an external-control body in the exercise of its constitutional competence.
 
----
+**Does the dataset contain data that, if viewed directly, might be offensive, insulting, threatening, or might otherwise cause anxiety?**
 
-## 4. Pré-processamento / limpeza / rotulagem
+No. The content is technical and legal (adjudication of public accounts). We note only that the decisions attribute irregularities and sanctions to named individuals, in the ordinary exercise of the Court's sanctioning function.
 
-**Foi realizado pré-processamento, limpeza ou rotulagem dos dados (discretização, tokenização, remoção de instâncias, tratamento de valores ausentes)?**
+**Does the dataset identify any subpopulations (by age, gender)?**
 
-Sim:
+No. No subpopulation is annotated or identified by demographic attributes.
 
-1. **Rotulagem manual** — os 866 documentos importados foram anotados no nível de *span* no Label Studio, com registro dos limites de início e fim de cada entidade, seguindo diretrizes de delimitação ancoradas no dispositivo da decisão (o comando, não sua fundamentação). Rótulos finos usados durante a anotação foram colapsados nas quatro categorias de avaliação: `MULTA_FIXA`/`MULTA_PERCENTUAL` → `MULTA`; `OBRIGACAO_MULTA` → `OBRIGACAO`.
-2. **Tokenização** — por espaço em branco (`re.finditer(r'\S+', text)`), única em todo o *pipeline* (anotação → auditoria → treino → avaliação), implementada em `research/dataset_io.py`, fonte única de verdade para índices de *tokens*.
-3. **Projeção BIO** — os *spans* de caracteres são projetados para rótulos BIO por *token* (9 classes).
-4. **Remoção de instâncias** — os 5 documentos usados como exemplares *few-shot* nos *prompts* (IDs 6, 782, 790, 817 e 852 do export original) foram removidos, resultando em 861 documentos.
-5. **Auditoria e correção de rótulos** — detecção de erros de anotação com Cleanlab (*confident learning*) sobre probabilidades fora da amostra de um *ensemble*; revisão humana dos 567 grupos com confiança ≥ 0,95; aplicação de 4.199 sobrescritas de rótulo em nível de *token* (arquivo `dataset/errors/dataset-corrections.json`, schema v2).
-6. **Mascaramento de CPFs** — números de CPF substituídos por `***.***.***-**` nos extratos brutos distribuídos.
+**Is it possible to identify individuals (i.e., one or more natural persons), either directly or indirectly, from the dataset?**
 
-**Os dados "brutos" foram preservados além dos dados pré-processados/limpos/rotulados (para suportar usos futuros não previstos)?**
+Yes. The decisions name public officials, agents and other responsible parties in the accountability proceedings — information that is part of the original public document and is essential to the dataset's purpose (MULTA and RESSARCIMENTO spans must contain the identification of the responsible party). This is data already public by force of the transparency and publicity duties attached to acts of external control.
 
-Sim. O repositório preserva os extratos brutos (`dataset/raw/`), o export original do Label Studio (`dataset/labeled_data/decicontas.json`, 866 tarefas) e o arquivo de decisões de correção (`dataset/errors/dataset-corrections.json`), permitindo reconstruir cada etapa. A versão `decicontas-before-correction` congela o estado anterior à auditoria, e `dataset/annotators/` preserva as três anotações independentes usadas no estudo de concordância (anonimizadas como anotador 1/2/3).
+**Does the dataset contain data that might be considered sensitive (racial or ethnic origin, political opinions, religious beliefs, health data, biometrics, government identifiers such as document numbers, criminal history)?**
 
-**O software usado para pré-processar/limpar/rotular os dados está disponível?**
+The original texts contained CPF numbers (a Brazilian government identifier) of individuals mentioned. Those numbers were masked with the pattern `***.***.***-**` in the distributed raw extracts, and the release texts were checked for the absence of formatted CPFs. Names of individuals and the facts established in the proceedings (administrative irregularities and the corresponding sanctions) remain, and are public information. There are no health, biometric, religious or ethnic-origin data.
 
-Sim. A rotulagem usou o Label Studio (código aberto). Todo o restante do *pipeline* — tokenização, projeção BIO, aplicação de correções, exportadores de release — está no pacote `research/` do repositório público (`https://github.com/eduardoplima/decicontas.br/`); o comando `uv run python -m research.release.export_dataset` regenera deterministicamente os bundles distribuídos.
+**Any other comments?**
 
-**Algum outro comentário?**
-
-A tokenização por espaço em branco é deliberadamente simples para garantir alinhamento exato de índices entre todos os produtores e consumidores do dataset. O arquivo legado `dataset/labeled_data/decicontas.conll` foi gerado por outro tokenizador e **não** deve ser usado — os índices não são compatíveis.
+The entity distribution is strongly skewed (MULTA accounts for ~46% of entities) and spans are long (median ~300 characters for MULTA), characteristics that drive the choice of metrics and labelling schemes (see Section 5).
 
 ---
 
-## 5. Usos
+## 3. Collection process
 
-**O dataset já foi usado para alguma tarefa?**
+**How was the data associated with each instance acquired? Was it directly observable, reported by subjects, or inferred from other data?**
 
-Sim. Na dissertação de origem, foi usado para: (i) comparar nove LLMs de quatro provedores (OpenAI, DeepSeek, Meta e Alibaba, incluindo três de pesos abertos) em regime *few-shot* com saída estruturada contra dez modelos supervisionados (BiLSTM-CRF, BERTimbau *base* e *large* e sete *encoders* com pré-treino jurídico/governamental) sob validação cruzada de 5 *folds*; (ii) avaliar o impacto do mecanismo de saída estruturada (*function calling* vs. *JSON schema*) e de três técnicas de *prompting* (*few-shot* estático, *Chain-of-Thought*, duas fases); (iii) estudar detecção de erros de anotação com Cleanlab; (iv) aferir significância estatística por *bootstrap* pareado no nível de documento; e (v) conduzir um estudo de concordância inter-anotadores com três anotações independentes do corpus.
+Directly observable: raw text of the collegiate decisions as recorded in the TCE/RN institutional systems (the ruling text field linked to the session agenda and to the vote of the judging session). No data was reported by subjects nor inferred by models; the only derived data are the manual entity annotations.
 
-**Há um repositório que reúna todos os artigos ou sistemas que usam o dataset?**
+**What mechanisms or procedures were used to collect the data (hardware apparatus, manual human curation, software programs, APIs)? How were these mechanisms validated?**
 
-O repositório `https://github.com/eduardoplima/decicontas.br/` concentra o dataset, o código e os resultados; usos futuros serão listados no README.
+Programmatic extraction from the TCE/RN decisions base (queries against the corporate database that records session deliberations), exported to CSV and imported into Label Studio as annotation tasks. Validation consisted of manual inspection during annotation — each of the 866 imported documents was read in full by the annotator, which doubles as a quality check on the extraction (truncated or corrupted texts would surface in that reading).
 
-**Para que outras tarefas o dataset poderia ser usado?**
+**If the dataset is a sample from a larger set, what was the sampling strategy (deterministic, probabilistic with specific probabilities)?**
 
-Além de REN: extração estruturada de atributos das decisões (valores, prazos, responsáveis — o repositório inclui esquemas Pydantic para isso); classificação de decisões (informativa vs. sem comando registrável); pesquisa em adaptação de domínio para o português jurídico-administrativo; estudos de *few-shot learning* em cenário de baixa anotação; pesquisa metodológica em detecção de erros de anotação (usando o par antes/depois das correções); e pré-treinamento/avaliação de modelos para o gênero decisório de Cortes de Contas.
+Non-probabilistic convenience sampling by recency: batches of decisions extracted from the institutional base, complemented by a batch targeted at decisions containing reimbursements (a search driven by the rarest class). The strategy prioritised the recent decision flow — the same flow that will feed the production pipeline — over historical representativeness.
 
-**Há algo na composição do dataset ou na forma como foi coletado e pré-processado/limpo/rotulado que possa impactar usos futuros?**
+**Who was involved in the data collection process (students, crowdworkers, contractors) and how were they compensated?**
 
-Sim, quatro pontos: (i) **desbalanceamento** — MULTA concentra ~46% das entidades e 73,1% dos documentos são vazios; o micro-F1 é dominado pela classe majoritária e pela capacidade de abstenção, recomendando-se o macro-F1 de *span* e a análise do subconjunto informativo; (ii) **padrão-ouro de anotador único** — o estudo de concordância com duas anotadoras independentes (F1 de *span* par-a-par 0,776–0,838) fornece um teto humano de referência, mas as divergências não foram adjudicadas (em especial na classe RECOMENDACAO, a de menor concordância frente ao padrão-ouro) e os 227 grupos abaixo do limiar de revisão da auditoria mantêm o rótulo original; (iii) **recorte institucional e temporal** — um único tribunal (TCE/RN) e sessões de 2023–2025; a transferência para outras Cortes de Contas, com formulários decisórios distintos, deve ser validada empiricamente; (iv) **mascaramento de CPFs** — modelos treinados no corpus não verão CPFs reais, o que afeta usos que dependam desse padrão numérico. O vocabulário do corpus também é distante do de corpora judiciais (Jaccard de 0,29 com o LeNER-Br nos 5.000 tipos mais frequentes), o que limita comparações diretas.
+The dissertation author (extraction and reference annotation) and two annotators from the TCE/RN decision-monitoring unit (independent re-annotation for the agreement study), with no specific compensation for the task.
 
-**Há tarefas para as quais o dataset não deve ser usado?**
+**Over what timeframe was the data collected? Does this timeframe match the creation timeframe of the data associated with the instances?**
 
-Sim. O dataset **não** deve ser usado para: identificar, perfilar ou pontuar pessoas nomeadas nas decisões (inclusive tentativas de reidentificação dos CPFs mascarados); construir rankings ou juízos sobre gestores a partir das sanções mencionadas — as decisões refletem um momento processual e podem ter sido reformadas em recurso ou revisão, e o dataset não registra o trânsito em julgado nem o estado atual de cada processo; e servir de fonte autoritativa do teor vigente das decisões — para fins oficiais, consulte-se a publicação original do TCE/RN.
+The annotated texts come from decisions issued in sessions held between July 2015 and May 2025, with 86.9% concentrated in 2024 and a sparse tail over the earlier years. Import into Label Studio and the reference annotation took place in June 2025; the cleanlab audit and the review of corrections were completed in May 2026; the independent re-annotation by Annotators 2 and 3 took place in August 2026. The collection timeframe is therefore close to the creation timeframe of the documents.
 
-**Algum outro comentário?**
+**Were any ethical review processes conducted (e.g., by an institutional review board)?**
 
-Nenhum.
+No. Because the work deals with official public documents and involves no data collection directly from persons, it does not fall under the cases requiring submission to a research ethics committee for human-subjects research.
 
----
+**Was the data collected directly from the individuals in question, or obtained via third parties or other sources (websites)?**
 
-## 6. Distribuição
+From another source: the TCE/RN institutional decisions base. The individuals named in the decisions are not the source of the data; they are mentioned in public documents produced by the Court.
 
-**O dataset será distribuído a terceiros fora da entidade em nome da qual foi criado?**
+**Were the individuals in question notified about the data collection?**
 
-Sim. O dataset é público, como artefato acadêmico que acompanha a dissertação.
+Not individually. The decisions are public acts, officially published by the Court, and the parties to the proceedings are summoned in the form prescribed by procedural law. Building the dataset involved no new collection from individuals.
 
-**Como o dataset será distribuído (tarball em site, API, GitHub)? Possui DOI (digital object identifier)?**
+**Did the individuals in question consent to the collection and use of their data?**
 
-Via repositório GitHub (`https://github.com/eduardoplima/decicontas.br/`), no diretório `dataset/release/`, em quatro formatos por versão: JSON (array com texto, *tokens*, BIO, *offsets* e entidades), JSONL (compatível com a biblioteca `datasets` da Hugging Face, com `dataset_info.json` declarando os `ClassLabel`), CoNLL-2003 BIO e BRAT *standoff*. O `MANIFEST.json` lista o SHA256 de cada arquivo. Ainda não há DOI; pretende-se depositar o release em repositório com DOI (por exemplo, Zenodo) por ocasião da publicação da dissertação.
+N/A — individual consent does not apply: the processing bears on official public documents, for academic purposes and in the public interest (improving external control), which are compatible with the Brazilian General Data Protection Law (LGPD, Law 13,709/2018) for data made manifestly public and for processing for study purposes by a research body. As an additional safeguard, CPF numbers were masked.
 
-**Quando o dataset será distribuído?**
+**If consent was obtained, was a mechanism provided to revoke it in the future or for certain uses?**
 
-O repositório já é público; o release formal (com citação e DOI) acompanhará a publicação da dissertação, prevista para 2026.
+N/A (see the previous answer). Requests concerning personal data can be addressed to the maintainer (Section 7).
 
-**O dataset será distribuído sob licença de direitos autorais ou outra licença de propriedade intelectual e/ou termos de uso?**
+**Has an analysis of the potential impact of the dataset and its use on data subjects been conducted (e.g., a data protection impact assessment)?**
 
-Os textos das decisões são atos oficiais, não protegidos por direito autoral (art. 8º, IV, da Lei n.º 9.610/1998). As anotações e artefatos derivados serão distribuídos sob licença aberta a ser fixada no release formal (prevista: CC BY 4.0, com solicitação de citação da dissertação). Até lá, aplica-se o pedido de citação constante do README.
+No formal impact assessment was conducted. The minimisation measures adopted — masking of CPF numbers, absence of additional personal metadata, restriction of scope to the operative commands — reflect an informal risk assessment: the dataset adds no information beyond what the original public documents already contain.
 
-**Terceiros impuseram restrições de propriedade intelectual ou outras restrições sobre os dados associados às instâncias?**
+**Any other comments?**
 
-Não. Não há dados de terceiros sujeitos a restrição contratual ou de PI.
-
-**Aplicam-se controles de exportação ou outras restrições regulatórias ao dataset ou a instâncias individuais?**
-
-Não há controles de exportação. O tratamento de dados pessoais constantes dos documentos públicos observa a LGPD (ver Seção 3).
-
-**Algum outro comentário?**
-
-Nenhum.
+None.
 
 ---
 
-## 7. Manutenção
+## 4. Preprocessing / cleaning / labelling
 
-**Quem dará suporte/hospedará/manterá o dataset?**
+**Was any preprocessing, cleaning, or labelling of the data done (discretisation, tokenisation, removal of instances, handling of missing values)?**
 
-O autor, por meio do repositório GitHub.
+Yes:
 
-**Como o responsável pelo dataset pode ser contatado (por exemplo, endereço de e-mail)?**
+1. **Manual labelling** — the 866 imported documents were annotated at the span level in Label Studio, recording the start and end boundaries of each entity, following delimitation guidelines anchored on the operative part of the decision (the command, not its reasoning). Fine-grained labels used during annotation were collapsed into the four evaluation categories: `MULTA_FIXA`/`MULTA_PERCENTUAL` → `MULTA`; `OBRIGACAO_MULTA` → `OBRIGACAO`.
+2. **Tokenisation** — whitespace-based (`re.finditer(r'\S+', text)`), identical across the whole pipeline (annotation → audit → training → evaluation), implemented in `research/dataset_io.py`, the single source of truth for token indices.
+3. **BIO projection** — character spans are projected onto per-token BIO labels (9 classes).
+4. **Removal of instances** — the 5 documents reused as few-shot exemplars in the prompts (IDs 6, 782, 790, 817 and 852 of the original export) were removed, yielding 861 documents.
+5. **Audit and label correction** — annotation-error detection with cleanlab (*confident learning*) over out-of-sample ensemble probabilities; human review of the 567 groups with confidence ≥ 0.95; 4,199 token-level decisions recorded, of which 961 changed a label (183 `accept` and 778 `custom`) while 3,238 confirmed the original annotation (file `dataset/errors/dataset-corrections.json`, schema v2).
+6. **CPF masking** — CPF numbers replaced by `***.***.***-**` in the distributed raw extracts.
 
-Eduardo Pessoa de Lima — `eduardoplima@gmail.com`, ou via *issues* no repositório GitHub.
+**Was the "raw" data saved in addition to the preprocessed/cleaned/labelled data (to support unanticipated future uses)?**
 
-**Há uma errata?**
+Yes. The repository preserves the raw extracts (`dataset/raw/`), the original Label Studio export (`dataset/labeled_data/decicontas.json`, 866 tasks) and the corrections-decision file (`dataset/errors/dataset-corrections.json`), allowing every step to be reconstructed. The `decicontas-before-correction` version freezes the state prior to the audit, and `dataset/annotators/` preserves the three independent annotations used in the agreement study (anonymised as annotator 1/2/3).
 
-Sim, na prática: o arquivo `dataset/errors/dataset-corrections.json` documenta, decisão a decisão, todas as correções de rótulo aplicadas após a auditoria Cleanlab, e o par de versões `decicontas-before-correction`/`decicontas` materializa o antes/depois. Correções futuras seguirão o mesmo mecanismo, com registro no README do release.
+**Is the software used to preprocess/clean/label the data available?**
 
-**O dataset será atualizado (para corrigir erros de rotulagem, adicionar ou remover instâncias)?**
+Yes. Labelling used Label Studio (open source). Everything else in the pipeline — tokenisation, BIO projection, application of corrections, release exporters — is in the `research/` package of the public repository (`https://github.com/eduardoplima/decicontas.br/`); the command `uv run python -m research.release.export_dataset` deterministically regenerates the distributed bundles.
 
-Sim, se necessário. Correções de rótulo identificadas por usuários ou por novas rodadas de auditoria serão incorporadas via arquivo de correções versionado e novo release regenerado deterministicamente (`research.release.export_dataset`), com atualização do `MANIFEST.json`. As atualizações serão comunicadas pelo histórico do repositório GitHub (commits e *releases*).
+**Any other comments?**
 
-**Se o dataset se relaciona a pessoas, há limites aplicáveis à retenção dos dados (os indivíduos foram informados de que seus dados seriam retidos por período fixo)?**
+Whitespace tokenisation is deliberately simple, to guarantee exact index alignment across all producers and consumers of the dataset. The legacy file `dataset/labeled_data/decicontas.conll` was generated by a different tokeniser and must **not** be used — its indices are not compatible.
 
-Não há prazo de retenção: os documentos-fonte são públicos por natureza e de guarda permanente pelo Tribunal. Solicitações fundadas na LGPD relativas a dados pessoais podem ser dirigidas ao mantenedor e serão avaliadas caso a caso.
+---
 
-**Versões mais antigas do dataset continuarão a ser suportadas/hospedadas/mantidas?**
+## 5. Uses
 
-Sim. A versão pré-correção (`decicontas-before-correction`) é parte permanente do release, e o histórico do Git preserva todos os estados anteriores dos artefatos. Caso uma versão seja descontinuada, isso será comunicado no README.
+**Has the dataset been used for any tasks already?**
 
-**Se terceiros quiserem estender/aumentar/contribuir com o dataset, há mecanismo para isso?**
+Yes. In the originating dissertation it was used to: (i) compare nine LLMs from four providers (OpenAI, DeepSeek, Meta and Alibaba, including three open-weights models) under few-shot prompting with structured output against ten supervised models (BiLSTM-CRF, BERTimbau *base* and *large*, and seven encoders with legal or governmental pre-training) under 5-fold cross-validation; (ii) evaluate the impact of the structured-output mechanism (function calling vs. JSON schema) and of three prompting techniques (static few-shot, chain-of-thought, two-stage); (iii) study annotation-error detection with cleanlab; (iv) assess statistical significance via paired document-level bootstrap; and (v) conduct an inter-annotator agreement study with three independent annotations of the corpus.
 
-Sim: *issues* e *pull requests* no repositório GitHub. Contribuições de anotação serão validadas pelo mantenedor contra as diretrizes de delimitação do esquema (Capítulo 4 da dissertação) e, quando cabível, submetidas ao mesmo procedimento de auditoria automatizada antes da incorporação a um novo release.
+**Is there a repository that links to any or all papers or systems that use the dataset?**
 
-**Algum outro comentário?**
+The repository `https://github.com/eduardoplima/decicontas.br/` gathers the dataset, the code and the results; future uses will be listed in the README.
 
-Nenhum.
+**What (other) tasks could the dataset be used for?**
+
+Beyond NER: structured extraction of decision attributes (amounts, deadlines, responsible parties — the repository includes Pydantic schemas for this); decision classification (informative vs. no registrable command); research on domain adaptation for legal-administrative Portuguese; few-shot learning studies in a low-annotation regime; methodological research on annotation-error detection (using the before/after correction pair); and pre-training or evaluation of models for the Court-of-Accounts decision genre.
+
+**Is there anything about the composition of the dataset or the way it was collected and preprocessed/cleaned/labelled that might impact future uses?**
+
+Yes, four points: (i) **imbalance** — MULTA concentrates ~46% of entities and 73.0% of documents are empty; micro F1 is dominated by the majority class and by the ability to abstain, so macro span F1 and the informative-subset analysis are recommended; (ii) **single-annotator gold standard** — the agreement study with two independent annotators (pairwise span F1 0.776–0.838) provides a human reference ceiling, but divergences were not adjudicated (particularly for RECOMENDACAO, the class with the lowest agreement against the gold), and the 227 groups below the audit review threshold keep their original label; (iii) **institutional and temporal scope** — a single court (TCE/RN), with 86.9% of the decisions from 2024; transfer to other Courts of Accounts, with different decision templates, must be validated empirically; (iv) **CPF masking** — models trained on the corpus will never see real CPF numbers, which affects uses that depend on that numeric pattern. The corpus vocabulary is also distant from judicial corpora (Jaccard of 0.29 with LeNER-Br over the 5,000 most frequent types), which limits direct comparisons.
+
+**Are there tasks for which the dataset should not be used?**
+
+Yes. The dataset must **not** be used to: identify, profile or score individuals named in the decisions (including attempts to re-identify the masked CPF numbers); build rankings or judgements about public officials from the sanctions mentioned — the decisions reflect one procedural moment and may have been reversed on appeal or review, and the dataset records neither finality nor the current state of each case; or serve as an authoritative source of the decisions in force — for official purposes, consult the original TCE/RN publication.
+
+**Any other comments?**
+
+None.
+
+---
+
+## 6. Distribution
+
+**Will the dataset be distributed to third parties outside of the entity on behalf of which it was created?**
+
+Yes. The dataset is public, as an academic artefact accompanying the dissertation.
+
+**How will the dataset be distributed (tarball on a website, API, GitHub)? Does it have a digital object identifier (DOI)?**
+
+Through the GitHub repository (`https://github.com/eduardoplima/decicontas.br/`), under `dataset/release/`, in four formats per version: JSON (array with text, tokens, BIO, offsets and entities), JSONL (compatible with the HuggingFace `datasets` library, with a `dataset_info.json` declaring the `ClassLabel` features), CoNLL-2003 BIO and BRAT standoff. `MANIFEST.json` lists the SHA-256 of every file. The BRAT trees are not versioned in git; they are regenerated by `research.release.export_dataset` and shipped as release assets. A DOI is being minted by depositing the release in Zenodo.
+
+**When will the dataset be distributed?**
+
+The repository is already public; the formal release (with citation and DOI) accompanies the publication of the dissertation, expected in 2026.
+
+**Will the dataset be distributed under a copyright or other intellectual property (IP) licence, and/or under applicable terms of use?**
+
+The decision texts are official acts, not protected by copyright (art. 8, IV of Brazilian Law 9,610/1998). The annotations and derived artefacts are distributed under CC BY 4.0; the repository code is under the MIT licence (see `LICENSE`).
+
+**Have any third parties imposed IP-based or other restrictions on the data associated with the instances?**
+
+No. There is no third-party data subject to contractual or IP restriction.
+
+**Do any export controls or other regulatory restrictions apply to the dataset or to individual instances?**
+
+There are no export controls. Processing of personal data contained in the public documents observes the LGPD (see Section 3).
+
+**Any other comments?**
+
+None.
+
+---
+
+## 7. Maintenance
+
+**Who will be supporting/hosting/maintaining the dataset?**
+
+The author, through the GitHub repository.
+
+**How can the owner/curator/manager of the dataset be contacted (e.g., email address)?**
+
+Eduardo Pereira Lima — `eduardo.lima.059@ufrn.edu.br`, or through issues in the GitHub repository.
+
+**Is there an erratum?**
+
+Yes, in practice: the file `dataset/errors/dataset-corrections.json` documents, decision by decision, every label correction applied after the cleanlab audit, and the version pair `decicontas-before-correction`/`decicontas` materialises the before/after. Future corrections will follow the same mechanism, recorded in the release README.
+
+**Will the dataset be updated (to correct labelling errors, add or remove instances)?**
+
+Yes, if needed. Label corrections identified by users or by new audit rounds will be incorporated through the versioned corrections file and a new release regenerated deterministically (`research.release.export_dataset`), with `MANIFEST.json` updated. Updates will be communicated through the GitHub repository history (commits and releases).
+
+**If the dataset relates to people, are there applicable limits on the retention of the data (were individuals told their data would be retained for a fixed period)?**
+
+There is no retention period: the source documents are public by nature and permanently retained by the Court. Requests grounded in the LGPD concerning personal data can be addressed to the maintainer and will be assessed case by case.
+
+**Will older versions of the dataset continue to be supported/hosted/maintained?**
+
+Yes. The pre-correction version (`decicontas-before-correction`) is a permanent part of the release, and the Git history preserves every previous state of the artefacts. Should a version be discontinued, this will be announced in the README.
+
+**If others want to extend/augment/build on/contribute to the dataset, is there a mechanism for them to do so?**
+
+Yes: issues and pull requests in the GitHub repository. Annotation contributions will be validated by the maintainer against the delimitation guidelines of the scheme (Chapter 4 of the dissertation) and, where applicable, submitted to the same automated audit procedure before being incorporated into a new release.
+
+**Any other comments?**
+
+None.
