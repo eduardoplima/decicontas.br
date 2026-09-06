@@ -4,44 +4,11 @@ Documento auto-contido: todas as tabelas aparecem inline. Os CSVs ao lado deste 
 
 ## Pipeline de métricas (correções aplicadas)
 
-Esta versão dos números incorpora as duas correções priorizadas no `METRICS_AUDIT.md`:
+Esta versão dos números incorpora duas correções no pipeline de avaliação:
 
 1. **Matching pred↔gold bipartido por IoU descendente** (`research.ner_metrics.bipartite_greedy_match`). Cada predição casa com no máximo um gold e vice-versa, eliminando a divergência anterior entre `calculate_metrics` (que tinha `break` após o primeiro match) e o bootstrap (que contava todos os pares sobrepostos). Esta única função é agora a fonte para `calculate_metrics`, `evaluate_bio_results` e `compute_doc_level_counts` — `matched ≤ min(|pred|, |gold|)` por construção, e P/R sempre em [0, 1].
 
 2. **Token F1 de supervisionados via spaCy.** As predições BIO dos supervisionados (token-level `\S+`) são reconvertidas para spans caractere-level via `bio_to_char_spans`, depois pontuadas por `calculate_metrics` (que tokeniza com `pt_core_news_sm`). Resultado: supervisionados e LLMs compartilham o mesmo tokenizador de avaliação, tornando o token F1 da Tabela C diretamente comparável entre paradigmas.
-
-### Comparativo antes × depois — Span F1 (14 modelos)
-
-| model                |   span F1 antes |   span F1 depois |   Δ span F1 |
-|:---------------------|----------------:|-----------------:|------------:|
-| BERTimbau-base       |          0.6896 |           0.6786 |     -0.0110 |
-| Legal-BERTimbau-base |          0.6051 |           0.6021 |     -0.0030 |
-| BERTimbau-large      |          0.6049 |           0.6018 |     -0.0031 |
-| BiLSTM-CRF           |          0.5926 |           0.5926 |     -0.0000 |
-
-### Comparativo antes × depois — Token F1 supervisionados (efeito da unificação do tokenizador)
-
-| model                |   token F1 antes (\S+) |   token F1 depois (spaCy) |   Δ token F1 |
-|:---------------------|-----------------------:|--------------------------:|-------------:|
-| BERTimbau-base       |                 0.7642 |                    0.7683 |       0.0041 |
-| Legal-BERTimbau-base |                 0.6679 |                    0.6855 |       0.0176 |
-| BERTimbau-large      |                 0.6514 |                    0.6820 |       0.0306 |
-| BiLSTM-CRF           |                 0.7191 |                    0.7307 |       0.0116 |
-
-### Comparativo antes × depois — Significância (bootstrap pareado)
-
-| métrica                            |   antes |   depois |       Δ |
-|:-----------------------------------|--------:|---------:|--------:|
-| Pares significativos a 5% (de 91)  | 61.0000 | 133.0000 | 72.0000 |
-| Menor Δ detectável (significativo) |  0.0337 |   0.0318 | -0.0019 |
-
-### Comparativo antes × depois — FC vs JSON Schema (8 experimentos)
-
-
-
-### Comparativo antes × depois — Técnicas de prompting (16 experimentos)
-
-
 
 ## A. Caracterização do corpus
 
@@ -115,7 +82,7 @@ Dos **567** grupos com confiança ≥ 0,95 inspecionados (anotador único), apen
 | I-RESSARCIMENTO  |            39 |               27 |        54 |            28 |                0 |                 0 | 132 |
 | O                |           417 |              412 |       387 |           640 |              547 |               229 |   0 |
 
-## C. Resultados gerais (14 modelos × 6 métricas)
+## C. Resultados gerais (modelos × métricas)
 
 | model                                                  | display              |   token_f1 |   token_f1_macro |   token_precision |   token_recall |   span_f1 |   span_f1_macro |   span_precision |   span_recall |
 |:-------------------------------------------------------|:---------------------|-----------:|-----------------:|------------------:|---------------:|----------:|----------------:|-----------------:|--------------:|
@@ -817,5 +784,3 @@ As predições dos LLMs são strings (não offsets); são localizadas no texto-f
 | gpt-5.2_few_shot           | GPT-5.2           |              698 |         698 |          0 |         0.0000 |
 | deepseek-v4-flash_few_shot | DeepSeek-V4-Flash |              479 |         479 |          0 |         0.0000 |
 | llama-3.3-70b_few_shot     | Llama-3.3-70B     |              183 |         183 |          0 |         0.0000 |
-
-## Nota — Token F1 do GPT-4-turbo (canônico)

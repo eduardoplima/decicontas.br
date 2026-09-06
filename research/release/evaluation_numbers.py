@@ -1168,8 +1168,8 @@ def write_report(out_dir: Path, j_summary: list[dict[str, Any]]) -> None:
 
     parts.append("## Pipeline de métricas (correções aplicadas)\n")
     parts.append(
-        "Esta versão dos números incorpora as duas correções priorizadas no "
-        "`METRICS_AUDIT.md`:\n\n"
+        "Esta versão dos números incorpora duas correções no pipeline de "
+        "avaliação:\n\n"
         "1. **Matching pred↔gold bipartido por IoU descendente** "
         "(`research.ner_metrics.bipartite_greedy_match`). Cada predição casa com "
         "no máximo um gold e vice-versa, eliminando a divergência anterior "
@@ -1185,171 +1185,6 @@ def write_report(out_dir: Path, j_summary: list[dict[str, Any]]) -> None:
         "supervisionados e LLMs compartilham o mesmo tokenizador de avaliação, "
         "tornando o token F1 da Tabela C diretamente comparável entre paradigmas.\n"
     )
-    # Comparison: pre-fix vs post-fix span F1 (LLM and supervised) and token F1 supervised.
-    pre_span_f1 = {
-        "gpt-4-turbo": 0.7599,
-        "gpt-5.4-mini_few_shot": 0.7574,
-        "gpt-4o": 0.7515,
-        "gpt-5.4-nano_few_shot": 0.7490,
-        "gpt-41-mini": 0.7345,
-        "gpt-35": 0.7323,
-        "gpt-41": 0.7264,
-        "gemini-2.5-flash_few_shot": 0.7100,
-        "neuralmind_bert-base-portuguese-cased__supervised": 0.6896,
-        "deepseek-v3_few_shot": 0.6704,
-        "rufimelo_Legal-BERTimbau-base__supervised": 0.6051,
-        "neuralmind_bert-large-portuguese-cased__supervised": 0.6049,
-        "bilstm-crf__supervised": 0.5926,
-        "gpt-41-nano": 0.4424,
-    }
-    pre_token_f1_sup = {
-        "neuralmind_bert-base-portuguese-cased__supervised": 0.7642,
-        "neuralmind_bert-large-portuguese-cased__supervised": 0.6514,
-        "rufimelo_Legal-BERTimbau-base__supervised": 0.6679,
-        "bilstm-crf__supervised": 0.7191,
-    }
-    # Block J old summary numbers (pre-fix)
-    pre_n_sig = 61
-    pre_smallest = 0.0337
-    df_main_for_compare = pd.read_csv(out_dir / "C_main_results.csv")
-    rows = []
-    for _, r in df_main_for_compare.iterrows():
-        m = r["model"]
-        if m not in pre_span_f1:
-            continue
-        rows.append(
-            {
-                "model": r["display"],
-                "span F1 antes": pre_span_f1[m],
-                "span F1 depois": float(r["span_f1"]),
-                "Δ span F1": float(r["span_f1"]) - pre_span_f1[m],
-            }
-        )
-    rows.sort(key=lambda x: -x["span F1 depois"])
-    parts.append("### Comparativo antes × depois — Span F1 (14 modelos)\n")
-    parts.append(
-        pd.DataFrame(rows).to_markdown(index=False, floatfmt=".4f") + "\n"
-    )
-    sup_rows = []
-    for _, r in df_main_for_compare.iterrows():
-        m = r["model"]
-        if m not in pre_token_f1_sup:
-            continue
-        sup_rows.append(
-            {
-                "model": r["display"],
-                "token F1 antes (\\S+)": pre_token_f1_sup[m],
-                "token F1 depois (spaCy)": float(r["token_f1"]),
-                "Δ token F1": float(r["token_f1"]) - pre_token_f1_sup[m],
-            }
-        )
-    parts.append(
-        "### Comparativo antes × depois — Token F1 supervisionados (efeito da unificação do tokenizador)\n"
-    )
-    parts.append(
-        pd.DataFrame(sup_rows).to_markdown(index=False, floatfmt=".4f") + "\n"
-    )
-    j_summary_df = pd.DataFrame(j_summary)
-    n_sig_now = int(
-        j_summary_df.loc[
-            j_summary_df["metric"] == "n_significant_5pct_uncorrected", "value"
-        ].iloc[0]
-    )
-    smallest_now = float(
-        j_summary_df.loc[
-            j_summary_df["metric"] == "smallest_significant_abs_diff", "value"
-        ].iloc[0]
-    )
-    parts.append(
-        "### Comparativo antes × depois — Significância (bootstrap pareado)\n"
-    )
-    parts.append(
-        pd.DataFrame(
-            [
-                {"métrica": "Pares significativos a 5% (de 91)", "antes": pre_n_sig, "depois": n_sig_now, "Δ": n_sig_now - pre_n_sig},
-                {"métrica": "Menor Δ detectável (significativo)", "antes": pre_smallest, "depois": smallest_now, "Δ": smallest_now - pre_smallest},
-            ]
-        ).to_markdown(index=False, floatfmt=".4f")
-        + "\n"
-    )
-
-    # FC vs JSON Schema: span F1 antes/depois por (modelo, método)
-    pre_fcjs_span_f1 = {
-        ("gpt-3.5", "function_calling"): 0.7276,
-        ("gpt-3.5", "json_schema"): 0.6734,
-        ("gpt-4o", "function_calling"): 0.7500,
-        ("gpt-4o", "json_schema"): 0.6715,
-        ("gpt-5.4-mini", "function_calling"): 0.7566,
-        ("gpt-5.4-mini", "json_schema"): 0.5650,
-        ("gpt-5.4-nano", "function_calling"): 0.7482,
-        ("gpt-5.4-nano", "json_schema"): 0.7087,
-    }
-    # FC-vs-JSON only exists for runs that ran that experiment (else archived under old_experiments).
-    if (out_dir / "F_fc_vs_json_overall.csv").exists():
-        df_fcjs_now = pd.read_csv(out_dir / "F_fc_vs_json_overall.csv")
-        fcjs_rows = []
-        for _, r in df_fcjs_now.iterrows():
-            key = (r["model"], r["method"])
-            if key not in pre_fcjs_span_f1:
-                continue
-            fcjs_rows.append(
-                {
-                    "model": r["model"],
-                    "method": r["method"],
-                    "span F1 antes": pre_fcjs_span_f1[key],
-                    "span F1 depois": float(r["span_f1"]),
-                    "Δ span F1": float(r["span_f1"]) - pre_fcjs_span_f1[key],
-                }
-            )
-        parts.append(
-            "### Comparativo antes × depois — FC vs JSON Schema (8 experimentos)\n"
-        )
-        parts.append(
-            pd.DataFrame(fcjs_rows).to_markdown(index=False, floatfmt=".4f") + "\n"
-        )
-
-    # Prompting techniques: span F1 antes/depois por (modelo, técnica)
-    pre_prompt_span_f1 = {
-        ("gpt-5.4-nano", "cot"): 0.7613,
-        ("gpt-5.4-mini", "few_shot"): 0.7566,
-        ("gpt-5.4-nano", "few_shot"): 0.7482,
-        ("gpt-5.4-mini", "cot"): 0.7348,
-        ("gemini-2.5-flash", "cot"): 0.7346,
-        ("gemini-2.5-flash", "two_stage"): 0.7253,
-        ("gpt-5.4-nano", "two_stage"): 0.7196,
-        ("gemini-2.5-flash", "few_shot"): 0.7093,
-        ("gemini-2.5-flash", "dynamic_few_shot"): 0.7085,
-        ("deepseek-v3", "two_stage"): 0.6954,
-        ("gpt-5.4-nano", "dynamic_few_shot"): 0.6925,
-        ("gpt-5.4-mini", "dynamic_few_shot"): 0.6800,
-        ("gpt-5.4-mini", "two_stage"): 0.6798,
-        ("deepseek-v3", "few_shot"): 0.6685,
-        ("deepseek-v3", "dynamic_few_shot"): 0.5584,
-        ("deepseek-v3", "cot"): 0.5250,
-    }
-    df_prompt_now = pd.read_csv(out_dir / "H_prompting_overall.csv")
-    prompt_rows = []
-    for _, r in df_prompt_now.iterrows():
-        key = (r["model"], r["technique"])
-        if key not in pre_prompt_span_f1:
-            continue
-        prompt_rows.append(
-            {
-                "model": r["model"],
-                "technique": r["technique"],
-                "span F1 antes": pre_prompt_span_f1[key],
-                "span F1 depois": float(r["span_f1"]),
-                "Δ span F1": float(r["span_f1"]) - pre_prompt_span_f1[key],
-            }
-        )
-    prompt_rows.sort(key=lambda x: -x["span F1 depois"])
-    parts.append(
-        "### Comparativo antes × depois — Técnicas de prompting (16 experimentos)\n"
-    )
-    parts.append(
-        pd.DataFrame(prompt_rows).to_markdown(index=False, floatfmt=".4f") + "\n"
-    )
-
     # ----- A. Corpus -------------------------------------------------------
     parts.append("## A. Caracterização do corpus\n")
     parts.append(_md_table(pd.read_csv(out_dir / "A_corpus.csv")) + "\n")
@@ -1550,16 +1385,6 @@ def write_report(out_dir: Path, j_summary: list[dict[str, Any]]) -> None:
         )
         parts.append(_md_table(pd.read_csv(m_path)) + "\n")
 
-    # ----- Nota: Canonical token F1 ---------------------------------------
-    parts.append("## Nota — Token F1 do GPT-4-turbo (canônico)\n")
-    row = df_main[df_main["model"] == "gpt-4-turbo"]
-    if not row.empty:
-        token_f1 = row.iloc[0]["token_f1"]
-        parts.append(
-            f"Valor canônico após correção: **{token_f1:.4f}** "
-            f"(reportar como `0,{int(round(token_f1 * 10000)):04d}` ou "
-            f"{token_f1*100:.2f}\\% conforme convenção da seção).\n"
-        )
     (out_dir / "REPORT.md").write_text("\n".join(parts), encoding="utf-8")
     logger.info("wrote %s", out_dir / "REPORT.md")
 
