@@ -16,7 +16,7 @@ O `decicontas.br` foi criado para a tarefa de Reconhecimento de Entidades Nomead
 
 **Quem criou o dataset (equipe, grupo de pesquisa) e em nome de qual entidade (empresa, instituição, organização)?**
 
-O dataset foi criado por Eduardo Pessoa de Lima como artefato da dissertação de mestrado *"Reconhecimento de Entidades Nomeadas em Decisões do TCE/RN"*. A anotação de referência (padrão-ouro) foi realizada pelo autor, que possui conhecimento do domínio de controle externo (Anotador 1); duas anotadoras adicionais — colaboradoras da unidade do TCE/RN responsável pelo acompanhamento de decisões (Anotadores 2 e 3) — re-anotaram o corpus de forma independente para o estudo de concordância que acompanha o dataset.
+O dataset foi criado por Eduardo Pereira Lima como artefato da dissertação de mestrado *"Reconhecimento de Entidades Nomeadas em Decisões do TCE/RN"*. A anotação de referência (padrão-ouro) foi realizada pelo autor, que possui conhecimento do domínio de controle externo (Anotador 1); duas anotadoras adicionais — colaboradoras da unidade do TCE/RN responsável pelo acompanhamento de decisões (Anotadores 2 e 3) — re-anotaram o corpus de forma independente para o estudo de concordância que acompanha o dataset.
 
 **Quem financiou a criação do dataset?**
 
@@ -243,7 +243,7 @@ O autor, por meio do repositório GitHub.
 
 **Como o responsável pelo dataset pode ser contatado (por exemplo, endereço de e-mail)?**
 
-Eduardo Pessoa de Lima — `eduardoplima@gmail.com`, ou via *issues* no repositório GitHub.
+Eduardo Pereira Lima — `eduardo.lima.059@ufrn.edu.br`, ou via *issues* no repositório GitHub.
 
 **Há uma errata?**
 
