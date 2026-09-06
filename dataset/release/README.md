@@ -8,10 +8,10 @@ of Rio Grande do Norte (TCE/RN). Four entity classes are annotated:
 
 ## Versions
 
-- **`decicontas-before-correction/`** — the canonical 861-document split (5 documents
-  used as few-shot examples in LLM prompts have been removed to avoid
-  evaluation contamination). Annotations are the original gold labels
-  from the Label Studio export.
+- **`decicontas-before-correction/`** — the canonical 861-document split
+  (5 documents used as few-shot examples in LLM prompts have been removed
+  to avoid evaluation contamination). Annotations are the original gold
+  labels from the Label Studio export.
 - **`decicontas/`** — the same 861 documents with
   reviewer-validated corrections applied. The corrections were sourced
   from a Cleanlab error-detection pass: every group flagged by the
@@ -75,11 +75,11 @@ documents per label:      {'MULTA': 139, 'OBRIGACAO': 88, 'RESSARCIMENTO': 56, '
 
 ```
 documents:                861
-documents with entity:    232
+documents with entity:    231
 tokens:                   116844
 characters:               754555
-entities per label:       {'MULTA': 212, 'OBRIGACAO': 131, 'RESSARCIMENTO': 63, 'RECOMENDACAO': 53}
-documents per label:      {'MULTA': 141, 'OBRIGACAO': 92, 'RESSARCIMENTO': 57, 'RECOMENDACAO': 48}
+entities per label:       {'MULTA': 203, 'OBRIGACAO': 123, 'RESSARCIMENTO': 63, 'RECOMENDACAO': 52}
+documents per label:      {'MULTA': 140, 'OBRIGACAO': 92, 'RESSARCIMENTO': 57, 'RECOMENDACAO': 47}
 ```
 
 ## Reproducibility

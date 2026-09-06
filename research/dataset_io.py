@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import json
 import re
+from bisect import bisect_left, bisect_right
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -82,6 +83,90 @@ def tokenize(text: str) -> list[Token]:
         Token(text=m.group(), char_start=m.start(), char_end=m.end(), bio="O")
         for m in _TOKEN_RE.finditer(text or "")
     ]
+
+
+TokenOffsets = list[tuple[int, int]]
+
+# Every span-level metric in this repository is computed in whitespace token
+# index units, over the tokenisation produced by :func:`tokenize`. Character
+# offsets are an input format, never a scoring unit: an offset pair emitted by
+# a generative model is located in the source by fuzzy string matching, so its
+# right edge is an estimate, while an offset pair derived from a BIO sequence
+# always lands on a token boundary. Comparing the two in character space
+# measures that asymmetry rather than extraction quality.
+SPAN_UNIT = "token"
+
+
+def token_offsets(text: str) -> TokenOffsets:
+    """``(char_start, char_end)`` for each canonical ``\\S+`` token of ``text``."""
+    return [(m.start(), m.end()) for m in _TOKEN_RE.finditer(text or "")]
+
+
+def char_span_to_token_span(
+    char_start: int, char_end: int, offsets: TokenOffsets
+) -> tuple[int, int] | None:
+    """Map a character interval onto the half-open token range covering it.
+
+    A token belongs to the span when it overlaps ``[char_start, char_end)`` at
+    all, which is byte-for-byte the predicate :func:`assign_bio_from_spans`
+    uses to lay down BIO tags. Keeping the two identical is what guarantees
+    that a document's ``entities`` and its ``ner_tags`` describe the same
+    spans, whichever one you convert from.
+
+    A zero-length interval falls back to the token containing ``char_start``.
+    Returns ``None`` when nothing overlaps — a span that lands in whitespace or
+    past the end of the text — and also for an inverted interval, which is
+    corrupt input and should be counted rather than quietly snapped to a token.
+    """
+    if not offsets or char_end < char_start:
+        return None
+    if char_end == char_start:
+        for idx, (start, end) in enumerate(offsets):
+            if start <= char_start < end:
+                return (idx, idx + 1)
+        return None
+    starts = [start for start, _ in offsets]
+    ends = [end for _, end in offsets]
+    lo = bisect_right(ends, char_start)
+    hi = bisect_left(starts, char_end)
+    return (lo, hi) if hi > lo else None
+
+
+def spans_to_token_units(
+    text_or_offsets: str | TokenOffsets,
+    spans: list[dict],
+    *,
+    shift: int = 0,
+) -> tuple[list[dict], int]:
+    """Convert ``{"start", "end", "labels"}`` dicts from characters to tokens.
+
+    ``shift`` is added to both offsets first, for the case where the offsets
+    were computed against a text that differs from the canonical one by a
+    leading-whitespace prefix.
+
+    Returns the converted spans and the number that could not be placed on any
+    token. Callers must report that count rather than discard it: a silent drop
+    is indistinguishable from a model that predicted nothing.
+    """
+    offsets = (
+        token_offsets(text_or_offsets)
+        if isinstance(text_or_offsets, str)
+        else text_or_offsets
+    )
+    out: list[dict] = []
+    dropped = 0
+    for span in spans or []:
+        converted = char_span_to_token_span(
+            int(span["start"]) + shift, int(span["end"]) + shift, offsets
+        )
+        if converted is None:
+            dropped += 1
+            continue
+        start, end = converted
+        new = dict(span)
+        new["start"], new["end"] = start, end
+        out.append(new)
+    return out, dropped
 
 
 def assign_bio_from_spans(tokens: list[Token], spans: list[NerSpan]) -> None:

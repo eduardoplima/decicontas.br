@@ -8,110 +8,110 @@
   "n_folds": 5,
   "fold_metrics": [
     {
-      "model": "alfaneo/jurisbert-base-portuguese-uncased",
-      "token_f1": 0.6492061338037726,
-      "token_precision": 0.9105443471640655,
-      "token_recall": 0.5044285111767187,
-      "span_f1": 0.5853658536585366,
-      "span_precision": 0.7058823529411765,
-      "span_recall": 0.5,
+      "model": "alfaneo/jurisbert-base-portuguese-uncased fold 0",
+      "token_f1": 0.6318281752071706,
+      "token_precision": 0.8998073217726397,
+      "token_recall": 0.4868386760489966,
+      "span_f1": 0.6065573770491803,
+      "span_precision": 0.7254901960784313,
+      "span_recall": 0.5211267605633803,
       "per_entity_f1": {
-        "MULTA": 0.6666666666666666,
+        "MULTA": 0.6792452830188679,
         "OBRIGACAO": 0.5806451612903225,
         "RECOMENDACAO": 0.2222222222222222,
-        "RESSARCIMENTO": 0.7
+        "RESSARCIMENTO": 0.8000000000000002
       }
     },
     {
-      "model": "alfaneo/jurisbert-base-portuguese-uncased",
-      "token_f1": 0.7771438160765229,
-      "token_precision": 0.9639883430474604,
-      "token_recall": 0.6509699184706214,
-      "span_f1": 0.6461538461538462,
+      "model": "alfaneo/jurisbert-base-portuguese-uncased fold 1",
+      "token_f1": 0.7510979470942702,
+      "token_precision": 0.9658523771998949,
+      "token_recall": 0.6144719251336899,
+      "span_f1": 0.6395939086294415,
       "span_precision": 0.7,
-      "span_recall": 0.6,
+      "span_recall": 0.5887850467289719,
       "per_entity_f1": {
-        "MULTA": 0.6476190476190476,
+        "MULTA": 0.6355140186915889,
         "OBRIGACAO": 0.7499999999999999,
         "RECOMENDACAO": 0.0,
         "RESSARCIMENTO": 0.7096774193548386
       }
     },
     {
-      "model": "alfaneo/jurisbert-base-portuguese-uncased",
-      "token_f1": 0.6469064151725568,
-      "token_precision": 0.9471927162367223,
-      "token_recall": 0.4911866540761725,
-      "span_f1": 0.5952380952380952,
+      "model": "alfaneo/jurisbert-base-portuguese-uncased fold 2",
+      "token_f1": 0.5999758366557931,
+      "token_precision": 0.9455445544554455,
+      "token_recall": 0.4393912581843921,
+      "span_f1": 0.5649717514124294,
       "span_precision": 0.7142857142857143,
-      "span_recall": 0.5102040816326531,
+      "span_recall": 0.4672897196261682,
       "per_entity_f1": {
-        "MULTA": 0.6105263157894736,
-        "OBRIGACAO": 0.6206896551724137,
-        "RECOMENDACAO": 0.16666666666666669,
+        "MULTA": 0.5858585858585859,
+        "OBRIGACAO": 0.5625,
+        "RECOMENDACAO": 0.14285714285714285,
         "RESSARCIMENTO": 0.6875
       }
     },
     {
-      "model": "alfaneo/jurisbert-base-portuguese-uncased",
-      "token_f1": 0.7677100494233937,
-      "token_precision": 0.9132138857782754,
-      "token_recall": 0.6622005684125051,
-      "span_f1": 0.6917293233082706,
+      "model": "alfaneo/jurisbert-base-portuguese-uncased fold 3",
+      "token_f1": 0.7241234809330912,
+      "token_precision": 0.912033779028853,
+      "token_recall": 0.6004169562195969,
+      "span_f1": 0.7419354838709676,
       "span_precision": 0.8363636363636363,
-      "span_recall": 0.5897435897435898,
+      "span_recall": 0.6666666666666666,
       "per_entity_f1": {
-        "MULTA": 0.8461538461538461,
-        "OBRIGACAO": 0.6,
+        "MULTA": 0.8979591836734694,
+        "OBRIGACAO": 0.6818181818181818,
         "RECOMENDACAO": 0.5263157894736842,
         "RESSARCIMENTO": 0.6666666666666666
       }
     },
     {
-      "model": "alfaneo/jurisbert-base-portuguese-uncased",
-      "token_f1": 0.737518910741301,
-      "token_precision": 0.984516997643891,
-      "token_recall": 0.5895988711953235,
-      "span_f1": 0.6821705426356589,
-      "span_precision": 0.8148148148148148,
-      "span_recall": 0.5866666666666667,
+      "model": "alfaneo/jurisbert-base-portuguese-uncased fold 4",
+      "token_f1": 0.6410256410256411,
+      "token_precision": 0.9845890410958904,
+      "token_recall": 0.47520661157024796,
+      "span_f1": 0.6099290780141844,
+      "span_precision": 0.7962962962962963,
+      "span_recall": 0.4942528735632184,
       "per_entity_f1": {
-        "OBRIGACAO": 0.7407407407407406,
-        "MULTA": 0.7352941176470588,
+        "OBRIGACAO": 0.5882352941176471,
         "RECOMENDACAO": 0.0,
+        "MULTA": 0.6666666666666666,
         "RESSARCIMENTO": 0.6666666666666665
       }
     }
   ],
   "span_f1": {
-    "mean": 0.6401315321988814,
-    "std": 0.048684132269611956,
+    "mean": 0.6325975197952406,
+    "std": 0.06665007817198391,
     "values": [
-      0.5853658536585366,
-      0.6461538461538462,
-      0.5952380952380952,
-      0.6917293233082706,
-      0.6821705426356589
+      0.6065573770491803,
+      0.6395939086294415,
+      0.5649717514124294,
+      0.7419354838709676,
+      0.6099290780141844
     ]
   },
   "token_f1": {
-    "mean": 0.7156970650435094,
-    "std": 0.06346346223038277,
+    "mean": 0.6696102161831933,
+    "std": 0.06462478953959186,
     "values": [
-      0.6492061338037726,
-      0.7771438160765229,
-      0.6469064151725568,
-      0.7677100494233937,
-      0.737518910741301
+      0.6318281752071706,
+      0.7510979470942702,
+      0.5999758366557931,
+      0.7241234809330912,
+      0.6410256410256411
     ]
   },
   "span_precision": {
-    "mean": 0.7542693036810684,
-    "std": 0.06574644500258506
+    "mean": 0.7544871686048157,
+    "std": 0.0589015959431916
   },
   "span_recall": {
-    "mean": 0.5573228676085819,
-    "std": 0.04806139443146564
+    "mean": 0.5476242134296812,
+    "std": 0.08042009340454326
   },
   "fold_oof": [
     {

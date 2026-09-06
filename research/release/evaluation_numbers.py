@@ -28,25 +28,22 @@ from __future__ import annotations
 import argparse
 import json
 import logging
-from collections import Counter, defaultdict
+from collections import Counter
 from itertools import combinations
 from pathlib import Path
 from typing import Any
 
 import numpy as np
 import pandas as pd
-from sklearn.metrics import precision_recall_fscore_support
 
 from research.fewshot import FEWSHOT_RESULT_POSITIONS
+from research.dataset_io import spans_to_token_units, token_offsets
 from research.ner_metrics import (
     ENTITY_LABELS,
-    _span_metric_totals,
-    _strip_bio,
-    bio_to_char_spans,
-    bipartite_greedy_match,
     calculate_metrics,
     convert_pred_to_golden_format,
     count_alignment_failures,
+    extract_spans_from_bio,
     flatten_metrics,
     span_metrics_multi_iou,
 )
@@ -79,10 +76,33 @@ logger = logging.getLogger("research.release.evaluation_numbers")
 
 
 def _ensure_pred_as_golden(df: pd.DataFrame) -> pd.DataFrame:
-    if "pred_as_golden" in df.columns:
-        return df
+    """Locate the emitted strings and put every span on the token grid.
+
+    This is the single funnel through which LLM frames reach the metrics, so
+    it is where character offsets stop being character offsets. The gold is
+    converted alongside the predictions: converting only one side would be a
+    worse bug than the mixed units it replaces.
+    """
     df = df.copy()
-    df["pred_as_golden"] = df.apply(convert_pred_to_golden_format, axis=1)
+    if "pred_as_golden" not in df.columns:
+        df["pred_as_golden"] = df.apply(convert_pred_to_golden_format, axis=1)
+    if df.attrs.get("span_unit") == "token":
+        return df
+
+    gold_out: list[list[dict]] = []
+    pred_out: list[list[dict]] = []
+    dropped = 0
+    for _, row in df.iterrows():
+        offsets = token_offsets(row.get("text") or "")
+        gold, _ = spans_to_token_units(offsets, row.get("golden") or [])
+        pred, n_dropped = spans_to_token_units(offsets, row.get("pred_as_golden") or [])
+        gold_out.append(gold)
+        pred_out.append(pred)
+        dropped += n_dropped
+    df["golden"] = gold_out
+    df["pred_as_golden"] = pred_out
+    df.attrs["span_unit"] = "token"
+    df.attrs["spans_dropped_no_token"] = dropped
     return df
 
 
@@ -229,19 +249,40 @@ def _corrected_docs_by_master_position() -> list[dict]:
     return full
 
 
-def _load_supervised_df(path: Path) -> pd.DataFrame:
-    """Load supervised OOF JSON and convert BIO sequences to character-level
-    spans using the corrected dataset's ``token_offsets``.
+def _gold_token_spans(doc: dict) -> list[dict]:
+    """Canonical gold for one release document, as token-index spans."""
+    spans, _ = spans_to_token_units(
+        [tuple(o) for o in doc.get("token_offsets", [])],
+        [
+            {"start": e["start"], "end": e["end"], "labels": [e["label"]]}
+            for e in doc.get("entities", [])
+        ],
+    )
+    return spans
 
-    Carrying ``text`` plus char-offset spans lets ``calculate_metrics``
-    score supervised baselines through the same spaCy tokenizer used for
-    LLMs — fixing audit finding #1 (incommensurable token F1).
+
+def _load_supervised_df(path: Path) -> pd.DataFrame:
+    """Load supervised out-of-fold predictions as token-index spans.
+
+    Two things this deliberately does not do.
+
+    It does not derive the gold from the model's own ``true_labels``. Those
+    are frozen at training time, so a model trained against a superseded gold
+    would be scored against that superseded gold.
+
+    It does not truncate the gold to the length of the prediction sequence.
+    The encoders cut their input at a subword limit, dropping the tail of 7 to
+    29 documents each; truncating the gold to match deleted the entities past
+    the cut from the denominator entirely — 40 of them for BERTimbau-base —
+    while the LLMs were scored against all of them. Predictions are now scored
+    against the whole gold, so an entity the model never had the chance to see
+    counts as the recall loss it is.
     """
     raw = json.loads(path.read_text(encoding="utf-8"))
     rec = raw[0] if isinstance(raw, list) else raw
     full = _corrected_docs_by_master_position()
     rows: list[dict] = []
-    for i, (tl, pl) in enumerate(zip(rec["true_labels"], rec["pred_labels"])):
+    for i, (_tl, pl) in enumerate(zip(rec["true_labels"], rec["pred_labels"])):
         doc = full[i]
         if not doc:
             # Fewshot placeholder — drop_fewshot will remove it later.
@@ -255,19 +296,17 @@ def _load_supervised_df(path: Path) -> pd.DataFrame:
                 }
             )
             continue
-        offsets = [
-            {"start": s, "end": e} for s, e in doc.get("token_offsets", [])
+        n_tokens = len(doc.get("token_offsets", []))
+        pred_spans = [
+            {"start": start, "end": end, "labels": [label]}
+            for start, end, label in extract_spans_from_bio(pl[:n_tokens])
         ]
-        # Truncate to whichever is shortest so misaligned BIO sequences
-        # (e.g. truncated at training time) don't wander off into
-        # unmapped offset territory.
-        min_len = min(len(tl), len(pl), len(offsets))
         rows.append(
             {
                 "doc_id": i,
                 "text": doc["text"],
-                "golden": bio_to_char_spans(tl[:min_len], offsets[:min_len]),
-                "pred_as_golden": bio_to_char_spans(pl[:min_len], offsets[:min_len]),
+                "golden": _gold_token_spans(doc),
+                "pred_as_golden": pred_spans,
                 "model": rec.get("model", path.stem),
             }
         )
@@ -299,69 +338,8 @@ def load_all_models(input_dir: Path) -> dict[str, pd.DataFrame]:
 
 
 def _per_entity_metrics_llm(df: pd.DataFrame) -> dict[str, Any]:
-    """Run calculate_metrics; flatten per-entity P/R/F1 (LLM/char-offset path)."""
+    """Run calculate_metrics; flatten per-entity P/R/F1."""
     raw = calculate_metrics(df, iou_threshold=0.5)
-    return _pack_per_entity(raw)
-
-
-def _per_entity_metrics_bio(df: pd.DataFrame) -> dict[str, Any]:
-    """Compute BIO-based metrics for supervised predictions where ``golden``
-    and ``pred_as_golden`` carry token-index spans (not character offsets).
-
-    Mirrors :func:`research.ner_metrics.evaluate_bio_results` but operates on
-    the per-doc DataFrame layout used here and exposes the raw dict for
-    per-entity extraction.
-    """
-    flat_true: list[str] = []
-    flat_pred: list[str] = []
-    label_metrics: dict[str, dict[str, int]] = defaultdict(
-        lambda: {"total_gold": 0, "total_pred": 0, "matched": 0}
-    )
-    for _, row in df.iterrows():
-        gold_spans = [(g["start"], g["end"], g["labels"][0]) for g in row.get("golden", [])]
-        pred_spans = [(p["start"], p["end"], p["labels"][0]) for p in row.get("pred_as_golden", [])]
-        # Token-level: rebuild BIO sequences over the document's token range.
-        ends = [s[1] for s in gold_spans] + [s[1] for s in pred_spans]
-        max_tok = max(ends) if ends else 0
-        true_bio = ["O"] * max_tok
-        pred_bio = ["O"] * max_tok
-        for s, e, lab in gold_spans:
-            for j in range(s, e):
-                true_bio[j] = (f"B-{lab}" if j == s else f"I-{lab}")
-        for s, e, lab in pred_spans:
-            for j in range(s, e):
-                pred_bio[j] = (f"B-{lab}" if j == s else f"I-{lab}")
-        for t, p in zip(true_bio, pred_bio):
-            tl, pl = _strip_bio(t), _strip_bio(p)
-            if tl != "O" or pl != "O":
-                flat_true.append(tl)
-                flat_pred.append(pl)
-        # Span-level IoU at token-index granularity, using the shared bipartite
-        # matcher (each pred matches at most one gold and vice-versa).
-        for _, _, lab in gold_spans:
-            label_metrics[lab]["total_gold"] += 1
-        for _, _, lab in pred_spans:
-            label_metrics[lab]["total_pred"] += 1
-        for pi, _ in bipartite_greedy_match(pred_spans, gold_spans, iou_threshold=0.5):
-            label_metrics[pred_spans[pi][2]]["matched"] += 1
-
-    labels_sorted = sorted({lab for lab in flat_true + flat_pred if lab != "O"})
-    if labels_sorted:
-        token_prec, token_rec, token_f1, _ = precision_recall_fscore_support(
-            flat_true, flat_pred, labels=labels_sorted, average="micro", zero_division=0
-        )
-    else:
-        token_prec = token_rec = token_f1 = 0.0
-    iou_p, iou_r, iou_f1, per_label = _span_metric_totals(label_metrics)
-    raw = {
-        "token_flat": {
-            "precision": float(token_prec),
-            "recall": float(token_rec),
-            "f1": float(token_f1),
-        },
-        "iou_agg": {"precision": iou_p, "recall": iou_r, "f1": iou_f1},
-        "iou_per_label": per_label,
-    }
     return _pack_per_entity(raw)
 
 
@@ -382,11 +360,12 @@ def _pack_per_entity(raw: dict) -> dict[str, Any]:
 
 
 def _per_entity_metrics(df: pd.DataFrame) -> dict[str, Any]:
-    """Dispatch based on whether the DataFrame carries char-offset
-    predictions (LLM, with ``text``) or token-index ones (supervised)."""
-    if "text" in df.columns:
-        return _per_entity_metrics_llm(df)
-    return _per_entity_metrics_bio(df)
+    """Overall and per-entity metrics for one model.
+
+    There is no longer a paradigm-specific branch here: generative and BIO
+    predictions arrive in the same unit, which is the whole point.
+    """
+    return _per_entity_metrics_llm(df)
 
 
 def block_cd_main_results(model_dfs: dict[str, pd.DataFrame], out_dir: Path) -> dict[str, dict]:
@@ -508,7 +487,7 @@ def block_fg_structured(out_dir: Path) -> None:
     overall_rows = []
     per_entity_rows = []
     for jf in sorted(src.glob("*.json")):
-        df = _ensure_pred_as_golden(_load_llm_df(jf))
+        df = _load_llm_df(jf)
         df = _drop_fewshot(df)
         result = _per_entity_metrics(df)
         flat = result["flat"]
@@ -586,7 +565,7 @@ def block_h_prompting(out_dir: Path) -> None:
     overall_rows = []
     per_entity_rows = []
     for jf in sorted(src.glob("*.json")):
-        df = _ensure_pred_as_golden(_load_llm_df(jf))
+        df = _load_llm_df(jf)
         df = _drop_fewshot(df)
         result = _per_entity_metrics(df)
         flat = result["flat"]
@@ -953,7 +932,12 @@ def block_k_iou_sensitivity(model_dfs: dict[str, pd.DataFrame], out_dir: Path) -
     Because entities are long, the canonical IoU ≥ 0.5 is permissive; this
     block shows whether the model ranking is stable as the threshold tightens.
     Span IoU is computed over character offsets, so no re-tokenisation is
-    needed (see :func:`research.ner_metrics.span_metrics_multi_iou`).
+    needed (see :func:`research.ner_metrics.span_metrics_multi_iou`). Spans are
+    in whitespace token indices, so ``exact`` means the same token range, not
+    the same character range. Scoring exact matching in character space instead
+    measured whether a generative model's estimated right edge happened to fall
+    on a token boundary, which collapsed every LLM to near zero and had nothing
+    to do with extraction quality.
     """
     rows: list[dict] = []
     for m, df in model_dfs.items():
@@ -1055,6 +1039,11 @@ def block_m_alignment_failures(model_dfs: dict[str, pd.DataFrame], out_dir: Path
     rate means real predictions never reach the metric. This block surfaces it.
     Only LLM result frames carry the raw ``pred``/``text``; supervised BIO
     frames are skipped.
+
+    ``n_dropped_no_token`` counts the second way a prediction can vanish: a
+    located span that overlaps no whitespace token, so it cannot be placed on
+    the scoring grid. It is zero on the current artefacts and is reported so a
+    regression cannot hide.
     """
     rows: list[dict] = []
     for m, df in model_dfs.items():
@@ -1074,6 +1063,7 @@ def block_m_alignment_failures(model_dfs: dict[str, pd.DataFrame], out_dir: Path
                 "n_aligned": n_aligned,
                 "n_failed": n_failed,
                 "failure_rate": round(n_failed / n_total, 4) if n_total else 0.0,
+                "n_dropped_no_token": int(df.attrs.get("spans_dropped_no_token", 0)),
             }
         )
     if not rows:
@@ -1168,7 +1158,7 @@ def write_report(out_dir: Path, j_summary: list[dict[str, Any]]) -> None:
 
     parts.append("## Pipeline de métricas (correções aplicadas)\n")
     parts.append(
-        "Esta versão dos números incorpora duas correções no pipeline de "
+        "Esta versão dos números incorpora quatro correções no pipeline de "
         "avaliação:\n\n"
         "1. **Matching pred↔gold bipartido por IoU descendente** "
         "(`research.ner_metrics.bipartite_greedy_match`). Cada predição casa com "
@@ -1178,12 +1168,29 @@ def write_report(out_dir: Path, j_summary: list[dict[str, Any]]) -> None:
         "função é agora a fonte para `calculate_metrics`, `evaluate_bio_results` "
         "e `compute_doc_level_counts` — `matched ≤ min(|pred|, |gold|)` por "
         "construção, e P/R sempre em [0, 1].\n\n"
-        "2. **Token F1 de supervisionados via spaCy.** As predições BIO dos "
-        "supervisionados (token-level `\\S+`) são reconvertidas para spans "
-        "caractere-level via `bio_to_char_spans`, depois pontuadas por "
-        "`calculate_metrics` (que tokeniza com `pt_core_news_sm`). Resultado: "
-        "supervisionados e LLMs compartilham o mesmo tokenizador de avaliação, "
-        "tornando o token F1 da Tabela C diretamente comparável entre paradigmas.\n"
+        "2. **Unidade única de span: índices de token.** Todas as predições, "
+        "generativas e BIO, são convertidas para spans em índices de token "
+        "sobre a tokenização canônica `\\S+` de `research.dataset_io` antes do "
+        "emparelhamento, e o gold é convertido junto. A relocalização difusa "
+        "das strings emitidas pelos LLMs permanece; o que mudou é a unidade em "
+        "que se pontua. O spaCy saiu do caminho de métricas: o token F1 era "
+        "calculado sobre `pt_core_news_sm` no caminho generativo e sobre a "
+        "tokenização canônica no caminho BIO. O efeito maior aparece na "
+        "correspondência exata, que antes media se a borda direita estimada "
+        "pelo modelo caía por acaso em fronteira de token.\n\n"
+        "3. **Gold supervisionado não truncado.** O gold dos supervisionados "
+        "vinha do próprio `true_labels` do modelo, cortado no limite de "
+        "subwords do encoder. Entre 7 e 29 documentos por modelo perdiam a "
+        "cauda, e as entidades além do corte sumiam do denominador — 40 delas "
+        "no BERTimbau-base — enquanto os LLMs eram avaliados contra o gold "
+        "inteiro. Agora todos são pontuados contra o gold canônico completo, e "
+        "o que o encoder não pôde ver conta como perda de revocação.\n\n"
+        "4. **Gold canônico íntegro.** As decisões `reject` do cleanlab "
+        "deixaram de ser aplicadas (um `reject` é, por definição, operação "
+        "nula) e o BIO passou a ser re-derivado dos spans reconstruídos. Antes "
+        "disso o release publicava 459 entidades no campo `entities` e apenas "
+        "442 sob IOB2 estrito em `ner_tags`, e trazia fragmentos espúrios de "
+        "até um caractere.\n"
     )
     # ----- A. Corpus -------------------------------------------------------
     parts.append("## A. Caracterização do corpus\n")

@@ -36,7 +36,7 @@ Cada instância é o texto integral de uma decisão colegiada (acórdão ou deci
 
 **Quantas instâncias há no total (de cada tipo, se apropriado)?**
 
-861 documentos, totalizando 116.844 *tokens* e 754.555 caracteres. Desses, 232 documentos (26,9%) contêm ao menos uma entidade anotada e 629 (73,0%) são vazios — verdadeiros negativos, integralmente lidos e julgados sem comando registrável (arquivamentos, julgamentos de regularidade plena). Na versão corrigida há 459 entidades: 212 MULTA, 131 OBRIGACAO, 63 RESSARCIMENTO e 53 RECOMENDACAO (na versão antes das correções: 439 entidades — 202/119/62/56).
+861 documentos, totalizando 116.844 *tokens* e 754.555 caracteres. Desses, 231 documentos (26,8%) contêm ao menos uma entidade anotada e 630 (73,2%) são vazios — verdadeiros negativos, integralmente lidos e julgados sem comando registrável (arquivamentos, julgamentos de regularidade plena). Na versão corrigida há 441 entidades: 203 MULTA, 123 OBRIGACAO, 63 RESSARCIMENTO e 52 RECOMENDACAO (na versão antes das correções: 439 entidades — 202/119/62/56).
 
 **O dataset contém todas as instâncias possíveis ou é uma amostra (não necessariamente aleatória) de um conjunto maior?**
 
@@ -48,7 +48,7 @@ Texto bruto (não processado) da decisão, acompanhado dos artefatos derivados: 
 
 **Há um rótulo ou alvo associado a cada instância?**
 
-Sim. Cada *token* recebe um dos nove rótulos BIO: `O`, `B-/I-MULTA`, `B-/I-OBRIGACAO`, `B-/I-RESSARCIMENTO`, `B-/I-RECOMENDACAO`. As quatro categorias correspondem aos subcadastros do CGAD: MULTA (sanção pecuniária), OBRIGACAO (determinação vinculante de fazer/não fazer), RESSARCIMENTO (devolução de valores ao erário) e RECOMENDACAO (orientação não vinculante). O esquema é *flat* — sem aninhamento nem sobreposição de *spans* (nas 459 entidades não há um único par sobreposto).
+Sim. Cada *token* recebe um dos nove rótulos BIO: `O`, `B-/I-MULTA`, `B-/I-OBRIGACAO`, `B-/I-RESSARCIMENTO`, `B-/I-RECOMENDACAO`. As quatro categorias correspondem aos subcadastros do CGAD: MULTA (sanção pecuniária), OBRIGACAO (determinação vinculante de fazer/não fazer), RESSARCIMENTO (devolução de valores ao erário) e RECOMENDACAO (orientação não vinculante). O esquema é *flat* — sem aninhamento nem sobreposição de *spans* (nas 441 entidades não há um único par sobreposto).
 
 **Falta alguma informação em instâncias individuais?**
 
@@ -60,7 +60,7 @@ Não. As decisões são tratadas como documentos independentes. Decisões distin
 
 **Há divisões (splits) recomendadas (treino, validação, teste)?**
 
-Não há *split* fixo. O protocolo da dissertação usa validação cruzada de 5 *folds* no nível de documento (semente 1007) para os modelos supervisionados, e avaliação sobre os 861 documentos para os LLMs *few-shot*, com intervalos de confiança por *bootstrap* pareado de documento (B = 10.000, semente 42). Recomenda-se reportar macro-F1 de *span* (IoU ≥ 0,5) como métrica primária, dado o desbalanceamento entre classes, além do subconjunto informativo (232 documentos) em separado.
+Não há *split* fixo. O protocolo da dissertação usa validação cruzada de 5 *folds* no nível de documento (semente 1007) para os modelos supervisionados, e avaliação sobre os 861 documentos para os LLMs *few-shot*, com intervalos de confiança por *bootstrap* pareado de documento (B = 10.000, semente 42). Recomenda-se reportar macro-F1 de *span* (IoU ≥ 0,5) como métrica primária, dado o desbalanceamento entre classes, além do subconjunto informativo (231 documentos) em separado.
 
 **Há erros, fontes de ruído ou redundâncias conhecidas no dataset?**
 

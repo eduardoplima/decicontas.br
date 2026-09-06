@@ -15,9 +15,12 @@ from collections import defaultdict
 from typing import Any
 
 import pandas as pd
-import spacy
 from rapidfuzz import fuzz
 from sklearn.metrics import classification_report, precision_recall_fscore_support
+
+from research.dataset_io import SPAN_UNIT, spans_to_token_units, token_offsets
+
+__all__ = ["SPAN_UNIT"]
 
 DICT_LABELS: dict[str, str] = {
     "obrigacoes": "OBRIGACAO",
@@ -133,7 +136,11 @@ def bio_to_char_spans(
     bio_tags: list[str],
     token_offsets: list[dict[str, int]],
 ) -> list[dict[str, Any]]:
-    """Turn a BIO sequence + token char offsets into `golden`-style span dicts."""
+    """Turn a BIO sequence + token char offsets into `golden`-style span dicts.
+
+    Not for scoring: span metrics are computed in token-index units (see
+    :data:`research.dataset_io.SPAN_UNIT`). Kept for the exploratory notebooks
+    and for exports that genuinely need character offsets."""
     spans: list[dict[str, Any]] = []
     current_label: str | None = None
     current_start: int | None = None
@@ -251,8 +258,17 @@ def calculate_metrics(
       - `text`: document source
       - `golden`: list of `{start, end, labels}` gold spans
       - `pred_as_golden`: list of `{start, end, labels}` predicted spans
+
+    Span offsets must already be **whitespace token indices** (see
+    :data:`research.dataset_io.SPAN_UNIT`); convert with
+    :func:`research.dataset_io.spans_to_token_units` at the point where the
+    predictions are loaded. ``text`` is used only to size the token sequence.
+
+    ``spacy_model`` is accepted and ignored: token-level metrics used to be
+    computed over a spaCy tokenisation while the BIO path used the canonical
+    whitespace one, which made the two paradigms silently incomparable.
     """
-    nlp = spacy.load(spacy_model)
+    del spacy_model  # kept for call-site compatibility; tokenisation is canonical now
     y_true_tokens: list[list[str]] = []
     y_pred_tokens: list[list[str]] = []
     label_metrics: dict[str, dict[str, int]] = defaultdict(
@@ -260,32 +276,25 @@ def calculate_metrics(
     )
 
     for _, row in df.iterrows():
-        text = row["text"]
-        doc = nlp(text)
-        true_bio = ["O"] * len(doc)
-        pred_bio = ["O"] * len(doc)
+        n_tokens = len(token_offsets(row["text"]))
+        true_bio = ["O"] * n_tokens
+        pred_bio = ["O"] * n_tokens
 
-        for ann in row.get("golden", []):
-            start, end, label = ann["start"], ann["end"], ann["labels"][0]
-            cs = doc.char_span(start, end, label=label, alignment_mode="expand")
-            if cs:
-                for j, tok in enumerate(cs):
-                    true_bio[tok.i] = f"B-{label}" if j == 0 else f"I-{label}"
+        gold_spans = [
+            (a["start"], a["end"], a["labels"][0]) for a in row.get("golden", []) or []
+        ]
+        pred_spans = [
+            (a["start"], a["end"], a["labels"][0])
+            for a in row.get("pred_as_golden", []) or []
+        ]
 
-        for ann in row.get("pred_as_golden", []):
-            start, end, label = ann["start"], ann["end"], ann["labels"][0]
-            cs = doc.char_span(start, end, label=label, alignment_mode="expand")
-            if cs:
-                for j, tok in enumerate(cs):
-                    pred_bio[tok.i] = f"B-{label}" if j == 0 else f"I-{label}"
+        for bio, spans in ((true_bio, gold_spans), (pred_bio, pred_spans)):
+            for start, end, label in spans:
+                for j, idx in enumerate(range(max(0, start), min(end, n_tokens))):
+                    bio[idx] = f"B-{label}" if j == 0 else f"I-{label}"
 
         y_true_tokens.append([_strip_bio(t) for t in true_bio])
         y_pred_tokens.append([_strip_bio(t) for t in pred_bio])
-
-        gold_spans = [(a["start"], a["end"], a["labels"][0]) for a in row.get("golden", [])]
-        pred_spans = [
-            (a["start"], a["end"], a["labels"][0]) for a in row.get("pred_as_golden", [])
-        ]
         for _, _, lab in gold_spans:
             label_metrics[lab]["total_gold"] += 1
         for _, _, lab in pred_spans:
@@ -365,10 +374,12 @@ def span_metrics_multi_iou(
 ) -> dict[float, dict[str, Any]]:
     """Span-level (P/R/F1) at several IoU thresholds in a single pass.
 
-    Span IoU is computed over the character-offset intervals carried in
-    ``golden`` / ``pred_as_golden`` — it does **not** need spaCy (the
-    tokenizer is only used by :func:`calculate_metrics` for token-level
-    metrics). Extracting the spans once and re-running
+    Span IoU is computed over the **token-index** intervals carried in
+    ``golden`` / ``pred_as_golden``; convert with
+    :func:`research.ner_metrics.to_token_units` before calling. Scoring in
+    character space instead makes exact matching measure whether a generative
+    model's estimated right edge happened to land on a token boundary, which
+    is not a property of the extraction. Extracting the spans once and re-running
     :func:`bipartite_greedy_match` per threshold makes the IoU-sensitivity
     sweep (p43a) cheap. A threshold of ``1.0`` is exact-span matching.
 
@@ -491,8 +502,35 @@ def flatten_metrics(raw: dict[str, Any]) -> dict[str, float]:
     return metrics
 
 
+def to_token_units(df: pd.DataFrame) -> tuple[pd.DataFrame, int]:
+    """Convert ``golden`` and ``pred_as_golden`` from characters to token indices.
+
+    This is the single funnel where a generative model's character offsets stop
+    being character offsets. Both the gold and the predictions go through it, so
+    they land on the same grid as a BIO tagger's spans and the three paradigms
+    become comparable.
+
+    Returns the converted frame and the number of predicted spans that could not
+    be placed on any token.
+    """
+    df = df.copy()
+    gold_out: list[list[dict]] = []
+    pred_out: list[list[dict]] = []
+    dropped = 0
+    for _, row in df.iterrows():
+        offsets = token_offsets(row["text"])
+        gold, _ = spans_to_token_units(offsets, row.get("golden") or [])
+        pred, n_dropped = spans_to_token_units(offsets, row.get("pred_as_golden") or [])
+        gold_out.append(gold)
+        pred_out.append(pred)
+        dropped += n_dropped
+    df["golden"] = gold_out
+    df["pred_as_golden"] = pred_out
+    return df, dropped
+
+
 def evaluate_results(df_results: pd.DataFrame, return_raw: bool = False):
-    """End-to-end LLM evaluation: run conversion, compute metrics, flatten.
+    """End-to-end LLM evaluation: locate, convert to token units, score.
 
     By default returns the flat metrics dict. Pass `return_raw=True` to also
     get the nested `raw` dict from :func:`calculate_metrics` (used by
@@ -504,7 +542,8 @@ def evaluate_results(df_results: pd.DataFrame, return_raw: bool = False):
         ),
         axis=1,
     )
-    raw = calculate_metrics(df_results, iou_threshold=0.5)
+    scored, _dropped = to_token_units(df_results)
+    raw = calculate_metrics(scored, iou_threshold=0.5)
     metrics = flatten_metrics(raw)
     return (metrics, raw) if return_raw else metrics
 
@@ -566,6 +605,14 @@ def evaluate_bio_results(
     return flatten_metrics(raw)
 
 
+def _bio_to_token_spans(bio_seq: list[str]) -> list[dict[str, Any]]:
+    """``{start, end, labels}`` dicts in token-index units from a BIO sequence."""
+    return [
+        {"start": start, "end": end, "labels": [label]}
+        for start, end, label in extract_spans_from_bio(bio_seq)
+    ]
+
+
 def full_evaluation(
     bio_data: list[dict[str, Any]],
     oof_true: list[list[str]],
@@ -573,17 +620,16 @@ def full_evaluation(
     model_name: str = "Model",
     iou_threshold: float = 0.5,
 ) -> dict[str, Any]:
-    """Run the spaCy metric pipeline on out-of-fold BIO predictions.
+    """Run the metric pipeline on out-of-fold BIO predictions.
 
-    Converts BIO + char offsets back to char spans, builds a DataFrame, calls
-    :func:`calculate_metrics`, prints a short summary, and returns a dict in
-    the shape the supervised notebooks expect.
+    BIO sequences are already indexed by token, so the spans go straight to
+    :func:`calculate_metrics` without a detour through character offsets.
+    Returns a dict in the shape the supervised notebooks expect.
     """
     rows = []
     for i, sample in enumerate(bio_data):
-        offsets = sample["token_offsets"]
-        golden = bio_to_char_spans(oof_true[i], offsets)
-        pred_as_golden = bio_to_char_spans(oof_pred[i], offsets)
+        golden = _bio_to_token_spans(oof_true[i])
+        pred_as_golden = _bio_to_token_spans(oof_pred[i])
         rows.append(
             {
                 "text": sample["text"],
@@ -596,7 +642,7 @@ def full_evaluation(
     raw = calculate_metrics(df, iou_threshold=iou_threshold)
 
     print(f"\n{'=' * 60}")
-    print(f"  {model_name} (avaliação via spaCy)")
+    print(f"  {model_name}")
     print(f"{'=' * 60}")
     print(f"Token-level F1 (micro, excl. O): {raw['token_flat']['f1']:.4f}")
     print(f"  Precision: {raw['token_flat']['precision']:.4f}")

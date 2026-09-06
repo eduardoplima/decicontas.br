@@ -8,110 +8,110 @@
   "n_folds": 5,
   "fold_metrics": [
     {
-      "model": "neuralmind/bert-base-portuguese-cased",
-      "token_f1": 0.7755958997159442,
-      "token_precision": 0.9359165424739195,
-      "token_recall": 0.6621678616617461,
-      "span_f1": 0.6984126984126984,
+      "model": "neuralmind/bert-base-portuguese-cased fold 0",
+      "token_f1": 0.7597162245527452,
+      "token_precision": 0.9304873441632037,
+      "token_recall": 0.6419077404222049,
+      "span_f1": 0.704,
       "span_precision": 0.8148148148148148,
-      "span_recall": 0.6111111111111112,
+      "span_recall": 0.6197183098591549,
       "per_entity_f1": {
-        "MULTA": 0.8275862068965517,
+        "MULTA": 0.8421052631578947,
         "OBRIGACAO": 0.6875000000000001,
         "RECOMENDACAO": 0.3333333333333333,
         "RESSARCIMENTO": 0.6666666666666665
       }
     },
     {
-      "model": "neuralmind/bert-base-portuguese-cased",
-      "token_f1": 0.8261011419249592,
-      "token_precision": 0.952058657642414,
-      "token_recall": 0.7295778706238294,
-      "span_f1": 0.7035175879396984,
-      "span_precision": 0.7291666666666666,
-      "span_recall": 0.6796116504854369,
+      "model": "neuralmind/bert-base-portuguese-cased fold 1",
+      "token_f1": 0.7894582149505242,
+      "token_precision": 0.9540610940089983,
+      "token_recall": 0.6732954545454546,
+      "span_f1": 0.6699507389162561,
+      "span_precision": 0.7083333333333334,
+      "span_recall": 0.6355140186915887,
       "per_entity_f1": {
-        "MULTA": 0.8080808080808081,
-        "OBRIGACAO": 0.7169811320754716,
+        "MULTA": 0.7450980392156863,
+        "OBRIGACAO": 0.7037037037037038,
         "RECOMENDACAO": 0.5882352941176471,
         "RESSARCIMENTO": 0.39999999999999997
       }
     },
     {
-      "model": "neuralmind/bert-base-portuguese-cased",
-      "token_f1": 0.7148389726865063,
-      "token_precision": 0.9529891304347826,
-      "token_recall": 0.571917808219178,
-      "span_f1": 0.6455696202531646,
-      "span_precision": 0.796875,
-      "span_recall": 0.5425531914893617,
+      "model": "neuralmind/bert-base-portuguese-cased fold 2",
+      "token_f1": 0.6472582719513621,
+      "token_precision": 0.9538249483115093,
+      "token_recall": 0.4898248097681826,
+      "span_f1": 0.6315789473684211,
+      "span_precision": 0.84375,
+      "span_recall": 0.5046728971962616,
       "per_entity_f1": {
-        "MULTA": 0.717391304347826,
-        "OBRIGACAO": 0.6428571428571429,
+        "MULTA": 0.707070707070707,
+        "OBRIGACAO": 0.5806451612903225,
         "RECOMENDACAO": 0.0,
-        "RESSARCIMENTO": 0.6428571428571429
+        "RESSARCIMENTO": 0.689655172413793
       }
     },
     {
-      "model": "neuralmind/bert-base-portuguese-cased",
-      "token_f1": 0.718158567774936,
-      "token_precision": 0.9586889723455104,
-      "token_recall": 0.5741157227560826,
-      "span_f1": 0.6071428571428572,
-      "span_precision": 0.9444444444444444,
-      "span_recall": 0.4473684210526316,
+      "model": "neuralmind/bert-base-portuguese-cased fold 3",
+      "token_f1": 0.6703978218121313,
+      "token_precision": 0.9659982563208369,
+      "token_recall": 0.51331943479268,
+      "span_f1": 0.6666666666666666,
+      "span_precision": 0.9722222222222222,
+      "span_recall": 0.5072463768115942,
       "per_entity_f1": {
-        "MULTA": 0.8163265306122449,
-        "OBRIGACAO": 0.5833333333333334,
+        "MULTA": 0.8936170212765958,
+        "OBRIGACAO": 0.6666666666666666,
         "RECOMENDACAO": 0.0,
         "RESSARCIMENTO": 0.0
       }
     },
     {
-      "model": "neuralmind/bert-base-portuguese-cased",
-      "token_f1": 0.7863043218005507,
-      "token_precision": 0.9529889727219966,
-      "token_recall": 0.6692480130425922,
-      "span_f1": 0.7218045112781954,
+      "model": "neuralmind/bert-base-portuguese-cased fold 4",
+      "token_f1": 0.6852536997885835,
+      "token_precision": 0.9505131964809385,
+      "token_recall": 0.5357438016528926,
+      "span_f1": 0.6575342465753424,
       "span_precision": 0.8135593220338984,
-      "span_recall": 0.6486486486486487,
+      "span_recall": 0.5517241379310345,
       "per_entity_f1": {
-        "OBRIGACAO": 0.7586206896551724,
-        "MULTA": 0.7761194029850746,
-        "RECOMENDACAO": 0.4444444444444445,
+        "OBRIGACAO": 0.6111111111111112,
+        "RECOMENDACAO": 0.4,
+        "MULTA": 0.7222222222222222,
         "RESSARCIMENTO": 0.6428571428571429
       }
     }
   ],
   "span_f1": {
-    "mean": 0.6752894550053228,
-    "std": 0.047493130325948776,
+    "mean": 0.6659461199053373,
+    "std": 0.026060104146083538,
     "values": [
-      0.6984126984126984,
-      0.7035175879396984,
-      0.6455696202531646,
-      0.6071428571428572,
-      0.7218045112781954
+      0.704,
+      0.6699507389162561,
+      0.6315789473684211,
+      0.6666666666666666,
+      0.6575342465753424
     ]
   },
   "token_f1": {
-    "mean": 0.7641997807805793,
-    "std": 0.04745140525514087,
+    "mean": 0.7104168466110693,
+    "std": 0.06103621554315803,
     "values": [
-      0.7755958997159442,
-      0.8261011419249592,
-      0.7148389726865063,
-      0.718158567774936,
-      0.7863043218005507
+      0.7597162245527452,
+      0.7894582149505242,
+      0.6472582719513621,
+      0.6703978218121313,
+      0.6852536997885835
     ]
   },
   "span_precision": {
-    "mean": 0.8197720495919649,
-    "std": 0.07800639155488469
+    "mean": 0.8305359384808538,
+    "std": 0.09449662740333918
   },
   "span_recall": {
-    "mean": 0.585858604557438,
-    "std": 0.09276960988544233
+    "mean": 0.5637751480979267,
+    "std": 0.061461182450237496
   },
   "fold_oof": [
     {

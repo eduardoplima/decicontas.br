@@ -8,110 +8,110 @@
   "n_folds": 5,
   "fold_metrics": [
     {
-      "model": "alfaneo/bertimbaulaw-base-portuguese-cased",
-      "token_f1": 0.6485965877820583,
-      "token_precision": 0.933095803642122,
-      "token_recall": 0.49704765921552085,
-      "span_f1": 0.5762711864406781,
+      "model": "alfaneo/bertimbaulaw-base-portuguese-cased fold 0",
+      "token_f1": 0.6337786913326482,
+      "token_precision": 0.9245377311344328,
+      "token_recall": 0.4821475110763617,
+      "span_f1": 0.5811965811965811,
       "span_precision": 0.7391304347826086,
-      "span_recall": 0.4722222222222222,
+      "span_recall": 0.4788732394366197,
       "per_entity_f1": {
-        "MULTA": 0.6666666666666667,
+        "MULTA": 0.68,
         "OBRIGACAO": 0.5333333333333333,
         "RECOMENDACAO": 0.3157894736842105,
         "RESSARCIMENTO": 0.6666666666666665
       }
     },
     {
-      "model": "alfaneo/bertimbaulaw-base-portuguese-cased",
-      "token_f1": 0.7961441743503772,
-      "token_precision": 0.9518941671677691,
-      "token_recall": 0.6841953608990059,
-      "span_f1": 0.6907216494845361,
+      "model": "alfaneo/bertimbaulaw-base-portuguese-cased fold 1",
+      "token_f1": 0.7619716895893986,
+      "token_precision": 0.9542368619562485,
+      "token_recall": 0.6341911764705882,
+      "span_f1": 0.6767676767676768,
       "span_precision": 0.7362637362637363,
-      "span_recall": 0.6504854368932039,
+      "span_recall": 0.6261682242990654,
       "per_entity_f1": {
-        "MULTA": 0.7628865979381443,
-        "OBRIGACAO": 0.7599999999999999,
+        "MULTA": 0.74,
+        "OBRIGACAO": 0.7450980392156863,
         "RECOMENDACAO": 0.5000000000000001,
         "RESSARCIMENTO": 0.45161290322580644
       }
     },
     {
-      "model": "alfaneo/bertimbaulaw-base-portuguese-cased",
-      "token_f1": 0.732537983073315,
-      "token_precision": 0.9774149659863945,
-      "token_recall": 0.5857795172863666,
-      "span_f1": 0.6956521739130435,
+      "model": "alfaneo/bertimbaulaw-base-portuguese-cased fold 2",
+      "token_f1": 0.6635470285446888,
+      "token_precision": 0.9789437348981705,
+      "token_recall": 0.501858078216245,
+      "span_f1": 0.6436781609195402,
       "span_precision": 0.835820895522388,
-      "span_recall": 0.5957446808510638,
+      "span_recall": 0.5233644859813084,
       "per_entity_f1": {
-        "MULTA": 0.7708333333333333,
-        "OBRIGACAO": 0.6666666666666666,
-        "RECOMENDACAO": 0.18181818181818182,
-        "RESSARCIMENTO": 0.6666666666666666
+        "MULTA": 0.7184466019417475,
+        "OBRIGACAO": 0.6,
+        "RECOMENDACAO": 0.15384615384615385,
+        "RESSARCIMENTO": 0.6428571428571429
       }
     },
     {
-      "model": "alfaneo/bertimbaulaw-base-portuguese-cased",
-      "token_f1": 0.8263780406159339,
-      "token_precision": 0.9096045197740112,
-      "token_recall": 0.7571048865262727,
-      "span_f1": 0.7285714285714285,
-      "span_precision": 0.796875,
-      "span_recall": 0.6710526315789473,
+      "model": "alfaneo/bertimbaulaw-base-portuguese-cased fold 3",
+      "token_f1": 0.7808870116156283,
+      "token_precision": 0.9076403804848113,
+      "token_recall": 0.6851980542043086,
+      "span_f1": 0.7819548872180452,
+      "span_precision": 0.8125,
+      "span_recall": 0.7536231884057971,
       "per_entity_f1": {
-        "MULTA": 0.823529411764706,
-        "OBRIGACAO": 0.6545454545454545,
-        "RECOMENDACAO": 0.5714285714285714,
+        "MULTA": 0.8979591836734694,
+        "OBRIGACAO": 0.7346938775510204,
+        "RECOMENDACAO": 0.5454545454545455,
         "RESSARCIMENTO": 0.923076923076923
       }
     },
     {
-      "model": "alfaneo/bertimbaulaw-base-portuguese-cased",
-      "token_f1": 0.8071453754847808,
-      "token_precision": 0.9533592448639645,
-      "token_recall": 0.6998165885469737,
-      "span_f1": 0.7092198581560283,
-      "span_precision": 0.746268656716418,
-      "span_recall": 0.6756756756756757,
+      "model": "alfaneo/bertimbaulaw-base-portuguese-cased fold 4",
+      "token_f1": 0.705362939877938,
+      "token_precision": 0.9493184201328206,
+      "token_recall": 0.5611570247933885,
+      "span_f1": 0.6363636363636364,
+      "span_precision": 0.7313432835820896,
+      "span_recall": 0.5632183908045977,
       "per_entity_f1": {
-        "OBRIGACAO": 0.8125,
-        "MULTA": 0.7428571428571428,
-        "RECOMENDACAO": 0.36363636363636365,
+        "OBRIGACAO": 0.6153846153846153,
+        "RECOMENDACAO": 0.3333333333333333,
+        "MULTA": 0.6933333333333332,
         "RESSARCIMENTO": 0.6428571428571429
       }
     }
   ],
   "span_f1": {
-    "mean": 0.6800872593131428,
-    "std": 0.05985932841146633,
+    "mean": 0.6639921884930959,
+    "std": 0.07434635261355334,
     "values": [
-      0.5762711864406781,
-      0.6907216494845361,
-      0.6956521739130435,
-      0.7285714285714285,
-      0.7092198581560283
+      0.5811965811965811,
+      0.6767676767676768,
+      0.6436781609195402,
+      0.7819548872180452,
+      0.6363636363636364
     ]
   },
   "token_f1": {
-    "mean": 0.762160432261293,
-    "std": 0.07258904417125563,
+    "mean": 0.7091094721920604,
+    "std": 0.06267202030063887,
     "values": [
-      0.6485965877820583,
-      0.7961441743503772,
-      0.732537983073315,
-      0.8263780406159339,
-      0.8071453754847808
+      0.6337786913326482,
+      0.7619716895893986,
+      0.6635470285446888,
+      0.7808870116156283,
+      0.705362939877938
     ]
   },
   "span_precision": {
-    "mean": 0.7708717446570301,
-    "std": 0.043889345006136025
+    "mean": 0.7710116700301646,
+    "std": 0.049292317296734285
   },
   "span_recall": {
-    "mean": 0.6130361294442226,
-    "std": 0.08488172441994682
+    "mean": 0.5890495057854777,
+    "std": 0.10675073099247219
   },
   "fold_oof": [
     {

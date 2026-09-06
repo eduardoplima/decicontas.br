@@ -1,6 +1,6 @@
 kind,count
-exact,364
-FN,78
+exact,365
 FP,64
-boundary,49
-type_error,2
+FN,60
+boundary,46
+type_error,4

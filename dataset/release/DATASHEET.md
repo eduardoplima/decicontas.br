@@ -36,7 +36,7 @@ Each instance is the full text of a collegiate decision (*acórdão* or *decisã
 
 **How many instances are there in total (of each type, if appropriate)?**
 
-861 documents, totalling 116,844 tokens and 754,555 characters. Of these, 232 documents (27.0%) contain at least one annotated entity and 629 (73.0%) are empty — true negatives, read in full and judged to carry no registrable command (filings, clean-account judgments). The corrected version holds 459 entities: 212 MULTA, 131 OBRIGACAO, 63 RESSARCIMENTO and 53 RECOMENDACAO (before corrections: 439 entities — 202/119/62/56).
+861 documents, totalling 116,844 tokens and 754,555 characters. Of these, 231 documents (26.8%) contain at least one annotated entity and 630 (73.2%) are empty — true negatives, read in full and judged to carry no registrable command (filings, clean-account judgments). The corrected version holds 441 entities: 203 MULTA, 123 OBRIGACAO, 63 RESSARCIMENTO and 52 RECOMENDACAO (before corrections: 439 entities — 202/119/62/56).
 
 **Does the dataset contain all possible instances or is it a sample (not necessarily random) of a larger set?**
 
@@ -48,7 +48,7 @@ Raw (unprocessed) decision text, accompanied by derived artefacts: token list, p
 
 **Is there a label or target associated with each instance?**
 
-Yes. Each token receives one of nine BIO labels: `O`, `B-/I-MULTA`, `B-/I-OBRIGACAO`, `B-/I-RESSARCIMENTO`, `B-/I-RECOMENDACAO`. The four categories map onto the CGAD subregistries: MULTA (pecuniary sanction), OBRIGACAO (binding order to do or refrain from doing), RESSARCIMENTO (reimbursement to the treasury) and RECOMENDACAO (non-binding guidance). The scheme is flat — no nesting and no overlapping spans (across the 459 entities there is not a single overlapping pair).
+Yes. Each token receives one of nine BIO labels: `O`, `B-/I-MULTA`, `B-/I-OBRIGACAO`, `B-/I-RESSARCIMENTO`, `B-/I-RECOMENDACAO`. The four categories map onto the CGAD subregistries: MULTA (pecuniary sanction), OBRIGACAO (binding order to do or refrain from doing), RESSARCIMENTO (reimbursement to the treasury) and RECOMENDACAO (non-binding guidance). The scheme is flat — no nesting and no overlapping spans (across the 441 entities there is not a single overlapping pair).
 
 **Is any information missing from individual instances?**
 
@@ -60,7 +60,7 @@ No. Decisions are treated as independent documents. Distinct decisions may refer
 
 **Are there recommended data splits (training, validation, test)?**
 
-There is no fixed split. The dissertation protocol uses 5-fold cross-validation at the document level (seed 1007) for the supervised models, and evaluation over all 861 documents for the few-shot LLMs, with confidence intervals from a paired document-level bootstrap (B = 10,000, seed 42). We recommend reporting macro span F1 (IoU ≥ 0.5) as the primary metric, given the class imbalance, alongside the informative subset (232 documents) reported separately.
+There is no fixed split. The dissertation protocol uses 5-fold cross-validation at the document level (seed 1007) for the supervised models, and evaluation over all 861 documents for the few-shot LLMs, with confidence intervals from a paired document-level bootstrap (B = 10,000, seed 42). We recommend reporting macro span F1 (IoU ≥ 0.5) as the primary metric, given the class imbalance, alongside the informative subset (231 documents) reported separately.
 
 **Are there any errors, sources of noise, or redundancies in the dataset?**
 

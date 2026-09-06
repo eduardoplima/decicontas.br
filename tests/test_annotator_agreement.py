@@ -49,10 +49,32 @@ def test_fleiss_kappa_known_value():
 
 
 def _docs(spans_a, spans_b):
-    text = " ".join(["tok"] * 50)
+    """Two single-document annotator dicts over the same synthetic text.
+
+    Span comparisons run in whitespace token units, so the fixtures have to
+    carry ``token_spans`` exactly as :func:`load_annotator` builds them.
+    """
+    from research.release.annotator_agreement import _to_token_spans
+
+    # 100 tokens at 4-char stride, so the fixtures' largest offset (320) still
+    # lands inside the text. A span past the last token has no token range and
+    # is dropped, which silently turned the presence cases into no-ops.
+    text = " ".join(["tok"] * 100)
     return (
-        {1: {"text": text, "spans": spans_a}},
-        {1: {"text": text, "spans": spans_b}},
+        {
+            1: {
+                "text": text,
+                "spans": spans_a,
+                "token_spans": _to_token_spans(text, spans_a),
+            }
+        },
+        {
+            1: {
+                "text": text,
+                "spans": spans_b,
+                "token_spans": _to_token_spans(text, spans_b),
+            }
+        },
     )
 
 

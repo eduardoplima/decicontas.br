@@ -8,110 +8,110 @@
   "n_folds": 5,
   "fold_metrics": [
     {
-      "model": "raquelsilveira/legalbertpt_fp",
-      "token_f1": 0.7875435854274377,
-      "token_precision": 0.916083916083916,
-      "token_recall": 0.690636862083509,
-      "span_f1": 0.7014925373134328,
+      "model": "raquelsilveira/legalbertpt_fp fold 0",
+      "token_f1": 0.7771804062126643,
+      "token_precision": 0.9101084295208115,
+      "token_recall": 0.6781339588219963,
+      "span_f1": 0.706766917293233,
       "span_precision": 0.7580645161290323,
-      "span_recall": 0.6527777777777778,
+      "span_recall": 0.6619718309859155,
       "per_entity_f1": {
-        "MULTA": 0.7547169811320755,
+        "MULTA": 0.7692307692307692,
         "OBRIGACAO": 0.7567567567567567,
         "RECOMENDACAO": 0.4761904761904762,
         "RESSARCIMENTO": 0.6956521739130435
       }
     },
     {
-      "model": "raquelsilveira/legalbertpt_fp",
-      "token_f1": 0.8174622603019176,
-      "token_precision": 0.9426044410989838,
-      "token_recall": 0.7216539403544158,
-      "span_f1": 0.6900000000000001,
-      "span_precision": 0.711340206185567,
-      "span_recall": 0.6699029126213593,
+      "model": "raquelsilveira/legalbertpt_fp fold 1",
+      "token_f1": 0.7797075851241292,
+      "token_precision": 0.944378416924174,
+      "token_recall": 0.6639371657754011,
+      "span_f1": 0.6666666666666666,
+      "span_precision": 0.7010309278350515,
+      "span_recall": 0.6355140186915887,
       "per_entity_f1": {
-        "MULTA": 0.7961165048543688,
-        "OBRIGACAO": 0.7450980392156864,
+        "MULTA": 0.7547169811320756,
+        "OBRIGACAO": 0.7307692307692307,
         "RECOMENDACAO": 0.5000000000000001,
         "RESSARCIMENTO": 0.3333333333333333
       }
     },
     {
-      "model": "raquelsilveira/legalbertpt_fp",
-      "token_f1": 0.7971503562054744,
-      "token_precision": 0.937389770723104,
-      "token_recall": 0.6934116112198304,
-      "span_f1": 0.7380952380952381,
-      "span_precision": 0.8378378378378378,
-      "span_recall": 0.6595744680851063,
+      "model": "raquelsilveira/legalbertpt_fp fold 2",
+      "token_f1": 0.7313497197067702,
+      "token_precision": 0.9357241379310345,
+      "token_recall": 0.6002477437621659,
+      "span_f1": 0.6961325966850829,
+      "span_precision": 0.8513513513513513,
+      "span_recall": 0.5887850467289719,
       "per_entity_f1": {
-        "MULTA": 0.7500000000000001,
-        "OBRIGACAO": 0.8125000000000001,
-        "RECOMENDACAO": 0.33333333333333337,
-        "RESSARCIMENTO": 0.7857142857142857
+        "MULTA": 0.7184466019417475,
+        "OBRIGACAO": 0.742857142857143,
+        "RECOMENDACAO": 0.2857142857142857,
+        "RESSARCIMENTO": 0.7586206896551724
       }
     },
     {
-      "model": "raquelsilveira/legalbertpt_fp",
-      "token_f1": 0.7810121995410073,
-      "token_precision": 0.9542502951593861,
-      "token_recall": 0.6610100184011449,
-      "span_f1": 0.6776859504132231,
-      "span_precision": 0.9111111111111111,
-      "span_recall": 0.5394736842105263,
+      "model": "raquelsilveira/legalbertpt_fp fold 3",
+      "token_f1": 0.7327697377847829,
+      "token_precision": 0.9605559729526671,
+      "token_recall": 0.5923094741718786,
+      "span_f1": 0.7368421052631579,
+      "span_precision": 0.9333333333333333,
+      "span_recall": 0.6086956521739131,
       "per_entity_f1": {
-        "MULTA": 0.84,
-        "OBRIGACAO": 0.5882352941176471,
+        "MULTA": 0.9166666666666666,
+        "OBRIGACAO": 0.6666666666666667,
         "RECOMENDACAO": 0.0,
         "RESSARCIMENTO": 0.8333333333333333
       }
     },
     {
-      "model": "raquelsilveira/legalbertpt_fp",
-      "token_f1": 0.7890035958705487,
-      "token_precision": 0.9157242864835756,
-      "token_recall": 0.6930915019360098,
-      "span_f1": 0.6887417218543046,
-      "span_precision": 0.6753246753246753,
-      "span_recall": 0.7027027027027027,
+      "model": "raquelsilveira/legalbertpt_fp fold 4",
+      "token_f1": 0.690722968650032,
+      "token_precision": 0.9072268907563025,
+      "token_recall": 0.5576446280991736,
+      "span_f1": 0.6219512195121951,
+      "span_precision": 0.6623376623376623,
+      "span_recall": 0.5862068965517241,
       "per_entity_f1": {
-        "OBRIGACAO": 0.6153846153846153,
-        "MULTA": 0.7647058823529411,
-        "RECOMENDACAO": 0.631578947368421,
+        "OBRIGACAO": 0.4782608695652174,
+        "RECOMENDACAO": 0.6,
+        "MULTA": 0.7123287671232876,
         "RESSARCIMENTO": 0.64
       }
     }
   ],
   "span_f1": {
-    "mean": 0.6992030895352397,
-    "std": 0.023318260749290616,
+    "mean": 0.6856719010840671,
+    "std": 0.04357275482539568,
     "values": [
-      0.7014925373134328,
-      0.6900000000000001,
-      0.7380952380952381,
-      0.6776859504132231,
-      0.6887417218543046
+      0.706766917293233,
+      0.6666666666666666,
+      0.6961325966850829,
+      0.7368421052631579,
+      0.6219512195121951
     ]
   },
   "token_f1": {
-    "mean": 0.7944343994692772,
-    "std": 0.014096020646994412,
+    "mean": 0.7423460834956758,
+    "std": 0.037036752838239075,
     "values": [
-      0.7875435854274377,
-      0.8174622603019176,
-      0.7971503562054744,
-      0.7810121995410073,
-      0.7890035958705487
+      0.7771804062126643,
+      0.7797075851241292,
+      0.7313497197067702,
+      0.7327697377847829,
+      0.690722968650032
     ]
   },
   "span_precision": {
-    "mean": 0.7787356693176447,
-    "std": 0.09575959823609458
+    "mean": 0.7812235581972862,
+    "std": 0.11085615284330935
   },
   "span_recall": {
-    "mean": 0.6448863090794945,
-    "std": 0.06196451524727786
+    "mean": 0.6162346890264226,
+    "std": 0.032309313544185723
   },
   "fold_oof": [
     {

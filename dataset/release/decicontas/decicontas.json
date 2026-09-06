@@ -50206,7 +50206,7 @@
       "I-OBRIGACAO",
       "I-OBRIGACAO",
       "I-OBRIGACAO",
-      "O",
+      "I-OBRIGACAO",
       "I-OBRIGACAO",
       "I-OBRIGACAO",
       "I-OBRIGACAO",
@@ -50487,12 +50487,12 @@
       "O",
       "O",
       "O",
-      "B-RECOMENDACAO",
-      "I-RECOMENDACAO",
-      "I-RECOMENDACAO",
-      "I-RECOMENDACAO",
-      "I-RECOMENDACAO",
-      "I-RECOMENDACAO"
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O"
     ],
     "token_offsets": [
       [
@@ -51875,11 +51875,6 @@
     "entities": [
       {
         "start": 317,
-        "end": 351,
-        "label": "OBRIGACAO"
-      },
-      {
-        "start": 355,
         "end": 1318,
         "label": "OBRIGACAO"
       },
@@ -51887,11 +51882,6 @@
         "start": 1322,
         "end": 2058,
         "label": "OBRIGACAO"
-      },
-      {
-        "start": 2162,
-        "end": 2203,
-        "label": "RECOMENDACAO"
       }
     ]
   },
@@ -164975,13 +164965,13 @@
       "I-MULTA",
       "I-MULTA",
       "I-MULTA",
-      "O",
-      "O",
       "I-MULTA",
       "I-MULTA",
-      "O",
-      "O",
-      "O",
+      "I-MULTA",
+      "I-MULTA",
+      "I-MULTA",
+      "I-MULTA",
+      "I-MULTA",
       "I-MULTA",
       "I-MULTA",
       "I-MULTA",
@@ -166362,16 +166352,6 @@
     "entities": [
       {
         "start": 810,
-        "end": 920,
-        "label": "MULTA"
-      },
-      {
-        "start": 937,
-        "end": 950,
-        "label": "MULTA"
-      },
-      {
-        "start": 965,
         "end": 1275,
         "label": "MULTA"
       },
@@ -175412,7 +175392,7 @@
       "O",
       "O",
       "O",
-      "I-OBRIGACAO",
+      "B-OBRIGACAO",
       "I-OBRIGACAO",
       "I-OBRIGACAO",
       "I-OBRIGACAO",
@@ -191273,7 +191253,7 @@
       "I-OBRIGACAO",
       "I-OBRIGACAO",
       "I-OBRIGACAO",
-      "I-MULTA",
+      "I-OBRIGACAO",
       "I-OBRIGACAO",
       "I-OBRIGACAO",
       "I-OBRIGACAO",
@@ -193490,16 +193470,6 @@
       },
       {
         "start": 2143,
-        "end": 2258,
-        "label": "OBRIGACAO"
-      },
-      {
-        "start": 2259,
-        "end": 2260,
-        "label": "MULTA"
-      },
-      {
-        "start": 2261,
         "end": 2537,
         "label": "OBRIGACAO"
       },
@@ -281958,27 +281928,27 @@
       "I-MULTA",
       "I-MULTA",
       "I-MULTA",
-      "I-OBRIGACAO",
-      "I-OBRIGACAO",
-      "I-OBRIGACAO",
-      "I-OBRIGACAO",
-      "I-OBRIGACAO",
-      "I-OBRIGACAO",
-      "I-OBRIGACAO",
       "I-MULTA",
       "I-MULTA",
       "I-MULTA",
       "I-MULTA",
-      "I-OBRIGACAO",
-      "I-OBRIGACAO",
       "I-MULTA",
       "I-MULTA",
       "I-MULTA",
-      "I-OBRIGACAO",
-      "I-OBRIGACAO",
-      "I-OBRIGACAO",
       "I-MULTA",
-      "I-OBRIGACAO",
+      "I-MULTA",
+      "I-MULTA",
+      "I-MULTA",
+      "I-MULTA",
+      "I-MULTA",
+      "I-MULTA",
+      "I-MULTA",
+      "I-MULTA",
+      "I-MULTA",
+      "I-MULTA",
+      "I-MULTA",
+      "I-MULTA",
+      "I-MULTA",
       "I-MULTA",
       "I-MULTA",
       "I-MULTA",
@@ -283440,46 +283410,6 @@
     "entities": [
       {
         "start": 361,
-        "end": 586,
-        "label": "MULTA"
-      },
-      {
-        "start": 587,
-        "end": 624,
-        "label": "OBRIGACAO"
-      },
-      {
-        "start": 625,
-        "end": 653,
-        "label": "MULTA"
-      },
-      {
-        "start": 654,
-        "end": 666,
-        "label": "OBRIGACAO"
-      },
-      {
-        "start": 667,
-        "end": 680,
-        "label": "MULTA"
-      },
-      {
-        "start": 681,
-        "end": 698,
-        "label": "OBRIGACAO"
-      },
-      {
-        "start": 699,
-        "end": 703,
-        "label": "MULTA"
-      },
-      {
-        "start": 704,
-        "end": 706,
-        "label": "OBRIGACAO"
-      },
-      {
-        "start": 707,
         "end": 826,
         "label": "MULTA"
       },
@@ -311705,8 +311635,8 @@
       "O",
       "O",
       "O",
-      "B-MULTA",
-      "I-MULTA",
+      "O",
+      "O",
       "O",
       "O",
       "O",
@@ -311949,13 +311879,7 @@
         388
       ]
     ],
-    "entities": [
-      {
-        "start": 309,
-        "end": 316,
-        "label": "MULTA"
-      }
-    ]
+    "entities": []
   },
   {
     "id": 372,
@@ -333813,8 +333737,8 @@
       "I-OBRIGACAO",
       "I-OBRIGACAO",
       "I-OBRIGACAO",
-      "O",
-      "O",
+      "I-OBRIGACAO",
+      "I-OBRIGACAO",
       "I-OBRIGACAO",
       "I-OBRIGACAO",
       "I-OBRIGACAO",
@@ -333907,7 +333831,7 @@
       "I-OBRIGACAO",
       "I-OBRIGACAO",
       "I-OBRIGACAO",
-      "O",
+      "I-OBRIGACAO",
       "I-OBRIGACAO",
       "I-OBRIGACAO",
       "I-OBRIGACAO",
@@ -337433,21 +337357,11 @@
     "entities": [
       {
         "start": 407,
-        "end": 471,
-        "label": "OBRIGACAO"
-      },
-      {
-        "start": 484,
         "end": 875,
         "label": "OBRIGACAO"
       },
       {
         "start": 977,
-        "end": 1108,
-        "label": "OBRIGACAO"
-      },
-      {
-        "start": 1117,
         "end": 1937,
         "label": "OBRIGACAO"
       },
@@ -454318,7 +454232,7 @@
       "I-MULTA",
       "I-MULTA",
       "I-MULTA",
-      "O",
+      "I-MULTA",
       "I-MULTA",
       "I-MULTA",
       "I-MULTA",
@@ -454846,11 +454760,6 @@
     "entities": [
       {
         "start": 305,
-        "end": 323,
-        "label": "MULTA"
-      },
-      {
-        "start": 338,
         "end": 440,
         "label": "MULTA"
       }

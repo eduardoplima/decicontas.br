@@ -29,13 +29,13 @@ enforcement regime — translating them would misrepresent the corpus.
 
 | Label | What it is | Count |
 |---|---|---:|
-| `MULTA` | A pecuniary **fine** for administrative or fiscal misconduct | 212 |
-| `OBRIGACAO` | A binding **obligation** imposed on the audited body | 131 |
+| `MULTA` | A pecuniary **fine** for administrative or fiscal misconduct | 203 |
+| `OBRIGACAO` | A binding **obligation** imposed on the audited body | 123 |
 | `RESSARCIMENTO` | A mandated **reimbursement** to the public treasury | 63 |
-| `RECOMENDACAO` | A formally documented, non-binding **recommendation** | 53 |
+| `RECOMENDACAO` | A formally documented, non-binding **recommendation** | 52 |
 
-**861 documents, 459 entities.** Only 232 documents carry an entity; the remaining
-629 are true negatives — filings and clean-account judgments with no registrable
+**861 documents, 441 entities.** Only 231 documents carry an entity; the remaining
+630 are true negatives — filings and clean-account judgments with no registrable
 command. They are kept deliberately: in production the system must also learn *not*
 to extract. Spans are long (per-class medians of 185–356 characters), so evaluation
 uses partial matching (IoU ≥ 0.5) rather than exact boundaries.
@@ -50,7 +50,7 @@ no clone required. **Or, in a clone**, the bundles are under [`data/`](data)
 import json
 
 docs = [json.loads(line) for line in open("data/decicontas/decicontas.jsonl")]
-print(len(docs), sum(len(d["spans"]) for d in docs))   # 861 459
+print(len(docs), sum(len(d["spans"]) for d in docs))   # 861 441
 ```
 
 With HuggingFace `datasets`:
@@ -95,9 +95,9 @@ legal- or government-domain encoders). One protocol for all: span F1 with IoU �
 paired document-level bootstrap (10,000 resamples) and Holm correction.
 
 **Headline.** The best LLM, the open-weights **DeepSeek-V4-Flash** (macro span F1
-**0.731**), beats the best domain-adapted encoder, **LegalBert-pt** (**0.637**), by
-+0.094 — significant after correction (*p*<sub>Holm</sub> = 0.013). Its gap to GPT-4.1
-(0.706) is *not* significant. The advantage concentrates in the minority classes,
+**0.742**), beats the best domain-adapted encoder, **LegalBert-pt** (**0.619**), by
++0.123, 95% CI [+0.063, +0.184] — significant after correction
+(*p*<sub>Holm</sub> < 0.001). Its gap to GPT-4.1 (0.717) is *not* significant. The advantage concentrates in the minority classes,
 which is where a registry-feeding system hurts most.
 
 ![Precision vs recall, all 19 models](dataset/results/models_outputs/figures/exp1_precision_recall.png)
@@ -111,25 +111,25 @@ where a reviewer filters false positives more cheaply than hunting omissions.
 
 | Model | Type | Token F1 | Span P | Span R | Span F1 (micro) | Span F1 (macro) |
 |---|---|---:|---:|---:|---:|---:|
-| DeepSeek-V4-Flash | LLM | 0.809 | 0.737 | 0.769 | 0.753 | **0.731** |
-| GPT-4.1 | LLM | 0.800 | 0.656 | 0.802 | 0.722 | 0.706 |
-| GPT-5.1 | LLM | 0.770 | 0.614 | 0.773 | 0.685 | 0.675 |
-| GPT-4.1-mini | LLM | 0.781 | 0.595 | 0.808 | 0.685 | 0.674 |
-| LegalBert-pt | supervised | 0.796 | 0.763 | 0.647 | 0.700 | 0.637 |
-| BERTimbauLaw | supervised | 0.767 | 0.770 | 0.616 | 0.684 | 0.622 |
-| GPT-5.2 | LLM | 0.742 | 0.503 | 0.765 | 0.607 | 0.585 |
-| BERTimbau-base | supervised | 0.768 | 0.799 | 0.589 | 0.679 | 0.580 |
-| Qwen2.5-72B | LLM | 0.702 | 0.549 | 0.695 | 0.613 | 0.578 |
-| JurisBERT | supervised | 0.720 | 0.747 | 0.558 | 0.639 | 0.568 |
-| Legal-BERT-STF | supervised | 0.750 | 0.751 | 0.580 | 0.655 | 0.535 |
-| GPT-5-mini | LLM | 0.572 | 0.276 | 0.791 | 0.410 | 0.524 |
-| BiLSTM-CRF | supervised | 0.731 | 0.774 | 0.480 | 0.593 | 0.500 |
-| BERTimbau-large | supervised | 0.682 | 0.828 | 0.473 | 0.602 | 0.478 |
-| GovBERT-BR | supervised | 0.592 | 0.865 | 0.396 | 0.543 | 0.424 |
-| Legal-BERTimbau-base | supervised | 0.686 | 0.822 | 0.475 | 0.602 | 0.406 |
-| GPT-4.1-nano | LLM | 0.580 | 0.359 | 0.545 | 0.433 | 0.394 |
-| LegalBERTPT-br | supervised | 0.573 | 0.718 | 0.377 | 0.495 | 0.341 |
-| Llama-3.3-70B | LLM | 0.402 | 0.596 | 0.237 | 0.340 | 0.273 |
+| DeepSeek-V4-Flash | LLM | 0.834 | 0.739 | 0.803 | 0.770 | **0.742** |
+| GPT-4.1 | LLM | 0.817 | 0.658 | 0.837 | 0.737 | 0.717 |
+| GPT-5.1 | LLM | 0.782 | 0.621 | 0.814 | 0.705 | 0.691 |
+| GPT-4.1-mini | LLM | 0.794 | 0.596 | 0.844 | 0.699 | 0.684 |
+| LegalBert-pt | supervised | 0.743 | 0.763 | 0.615 | 0.681 | 0.619 |
+| BERTimbauLaw | supervised | 0.714 | 0.770 | 0.585 | 0.665 | 0.605 |
+| BERTimbau-base | supervised | 0.714 | 0.806 | 0.565 | 0.664 | 0.569 |
+| Legal-BERT-STF | supervised | 0.707 | 0.751 | 0.574 | 0.650 | 0.532 |
+| JurisBERT | supervised | 0.674 | 0.747 | 0.542 | 0.628 | 0.562 |
+| Qwen2.5-72B | LLM | 0.718 | 0.549 | 0.723 | 0.624 | 0.585 |
+| GPT-5.2 | LLM | 0.752 | 0.506 | 0.800 | 0.620 | 0.595 |
+| BiLSTM-CRF | supervised | 0.708 | 0.778 | 0.492 | 0.603 | 0.509 |
+| Legal-BERTimbau-base | supervised | 0.629 | 0.818 | 0.449 | 0.580 | 0.392 |
+| BERTimbau-large | supervised | 0.629 | 0.824 | 0.447 | 0.579 | 0.462 |
+| GovBERT-BR | supervised | 0.542 | 0.859 | 0.374 | 0.521 | 0.411 |
+| LegalBERTPT-br | supervised | 0.523 | 0.718 | 0.358 | 0.478 | 0.330 |
+| GPT-4.1-nano | LLM | 0.581 | 0.354 | 0.560 | 0.434 | 0.395 |
+| GPT-5-mini | LLM | 0.569 | 0.278 | 0.828 | 0.416 | 0.531 |
+| Llama-3.3-70B | LLM | 0.409 | 0.607 | 0.252 | 0.356 | 0.286 |
 
 Source: [`model_evaluation/C_main_results.csv`](dataset/results/models_outputs/model_evaluation/C_main_results.csv).
 </details>
@@ -148,7 +148,7 @@ Quality is measured, not asserted.
   mostly *confirmed* the original annotation. Both versions ship, paired.
 - **Inter-annotator agreement.** The whole corpus was independently re-annotated,
   blind, by two staff of the Court unit that feeds the registry. Token-level Fleiss
-  κ = **0.865**; pairwise span F1 between **0.776** and **0.838**. Details in
+  κ = **0.865**; pairwise span F1 between **0.796** and **0.838**. Details in
   [`corpus_and_agreement/AGREEMENT.md`](dataset/results/models_outputs/corpus_and_agreement/AGREEMENT.md).
 
 ## Reproduce

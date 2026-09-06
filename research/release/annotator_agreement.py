@@ -18,8 +18,9 @@ Agreement is measured at three granularities:
    five collapsed labels (``O`` + four entity classes), using the canonical
    whitespace tokenisation of :mod:`research.dataset_io`;
 2. span level — pairwise F1 with the same IoU >= 0.5 bipartite-greedy matcher
-   used by the dissertation's evaluation protocol
-   (:func:`research.ner_metrics.bipartite_greedy_match`);
+   (:func:`research.ner_metrics.bipartite_greedy_match`) and the same
+   whitespace token units as the model evaluation, so the annotator range
+   reads as a human ceiling on the same axis rather than merely beside it;
 3. document level — Cohen's kappa on the presence of any entity (and of each
    class) in the document.
 
@@ -43,7 +44,13 @@ from pathlib import Path
 
 import pandas as pd
 
-from research.dataset_io import ENTITY_LABELS, collapse_label, tokenize
+from research.dataset_io import (
+    ENTITY_LABELS,
+    char_span_to_token_span,
+    collapse_label,
+    token_offsets,
+    tokenize,
+)
 from research.ner_metrics import bipartite_greedy_match, compute_iou_raw
 from research.release import paths
 
@@ -59,16 +66,42 @@ Span = tuple[int, int, str]
 # ----- Loading and sanity checks -------------------------------------------
 
 
+def _to_token_spans(text: str, spans: list[Span]) -> list[Span]:
+    """Project character spans onto whitespace token indices.
+
+    Span agreement is matched in the same unit the model evaluation uses, so
+    the annotator F1 range can be read as a human ceiling on the same axis as
+    the model scores rather than merely alongside them.
+    """
+    offsets = token_offsets(text)
+    out: list[Span] = []
+    for start, end, label in spans:
+        converted = char_span_to_token_span(start, end, offsets)
+        if converted is None:
+            continue
+        out.append((converted[0], converted[1], label))
+    return sorted(out)
+
+
 def load_annotator(path: Path) -> dict[int, dict]:
-    """Load one annotator JSONL as ``{doc_id: {"text": str, "spans": [Span]}}``."""
+    """Load one annotator JSONL as ``{doc_id: {text, spans, token_spans}}``.
+
+    ``spans`` are character offsets, used for the token-level projection and
+    for checking annotator 1 against the release. ``token_spans`` are the same
+    spans in token-index units, which is what every span-level comparison uses.
+    """
     docs: dict[int, dict] = {}
     with path.open(encoding="utf-8") as fh:
         for line in fh:
             rec = json.loads(line)
-            spans = [
+            spans = sorted(
                 (s["start"], s["end"], collapse_label(s["label"])) for s in rec["spans"]
-            ]
-            docs[rec["id"]] = {"text": rec["text"], "spans": sorted(spans)}
+            )
+            docs[rec["id"]] = {
+                "text": rec["text"],
+                "spans": spans,
+                "token_spans": _to_token_spans(rec["text"], spans),
+            }
     return docs
 
 
@@ -76,10 +109,14 @@ def load_release_spans(release_json: Path) -> dict[int, dict]:
     """Load a release bundle in the same ``{doc_id: {text, spans}}`` shape."""
     docs: dict[int, dict] = {}
     for rec in json.loads(release_json.read_text(encoding="utf-8")):
-        spans = [
+        spans = sorted(
             (e["start"], e["end"], collapse_label(e["label"])) for e in rec["entities"]
-        ]
-        docs[rec["id"]] = {"text": rec["text"], "spans": sorted(spans)}
+        )
+        docs[rec["id"]] = {
+            "text": rec["text"],
+            "spans": spans,
+            "token_spans": _to_token_spans(rec["text"], spans),
+        }
     return docs
 
 
@@ -170,8 +207,8 @@ def pairwise_span_prf(
     """
     tp = n_a = n_b = 0
     for i in ids:
-        sa = [s for s in docs_a[i]["spans"] if label is None or s[2] == label]
-        sb = [s for s in docs_b[i]["spans"] if label is None or s[2] == label]
+        sa = [s for s in docs_a[i]["token_spans"] if label is None or s[2] == label]
+        sb = [s for s in docs_b[i]["token_spans"] if label is None or s[2] == label]
         tp += len(bipartite_greedy_match(sa, sb, iou_threshold=IOU_THRESHOLD))
         n_a += len(sa)
         n_b += len(sb)
@@ -203,7 +240,7 @@ def divergence_typology(
     }
     confusion: Counter = Counter()
     for i in ids:
-        sa, sb = docs_a[i]["spans"], docs_b[i]["spans"]
+        sa, sb = docs_a[i]["token_spans"], docs_b[i]["token_spans"]
         matched = bipartite_greedy_match(
             sa, sb, iou_threshold=IOU_THRESHOLD, require_label_match=False
         )

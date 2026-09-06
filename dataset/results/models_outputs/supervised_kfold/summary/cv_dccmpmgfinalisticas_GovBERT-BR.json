@@ -8,110 +8,110 @@
   "n_folds": 5,
   "fold_metrics": [
     {
-      "model": "dccmpmgfinalisticas/GovBERT-BR",
-      "token_f1": 0.40403700588730024,
-      "token_precision": 0.99833748960931,
-      "token_recall": 0.2532686630113876,
-      "span_f1": 0.3595505617977528,
+      "model": "dccmpmgfinalisticas/GovBERT-BR fold 0",
+      "token_f1": 0.3876522469550609,
+      "token_precision": 0.9978378378378379,
+      "token_recall": 0.24055251498566588,
+      "span_f1": 0.36363636363636365,
       "span_precision": 0.9411764705882353,
-      "span_recall": 0.2222222222222222,
+      "span_recall": 0.22535211267605634,
       "per_entity_f1": {
-        "MULTA": 0.42105263157894735,
+        "MULTA": 0.43243243243243246,
         "OBRIGACAO": 0.5517241379310345,
         "RECOMENDACAO": 0.0,
         "RESSARCIMENTO": 0.0
       }
     },
     {
-      "model": "dccmpmgfinalisticas/GovBERT-BR",
-      "token_f1": 0.7303421504017333,
-      "token_precision": 0.9779980657640233,
-      "token_recall": 0.5827690534505114,
-      "span_f1": 0.695121951219512,
-      "span_precision": 0.9344262295081968,
-      "span_recall": 0.5533980582524272,
+      "model": "dccmpmgfinalisticas/GovBERT-BR fold 1",
+      "token_f1": 0.6913767019667171,
+      "token_precision": 0.9782874617737003,
+      "token_recall": 0.5345922459893048,
+      "span_f1": 0.6666666666666666,
+      "span_precision": 0.9180327868852459,
+      "span_recall": 0.5233644859813084,
       "per_entity_f1": {
-        "MULTA": 0.7804878048780487,
-        "OBRIGACAO": 0.7111111111111111,
+        "MULTA": 0.7294117647058823,
+        "OBRIGACAO": 0.6956521739130436,
         "RECOMENDACAO": 0.0,
         "RESSARCIMENTO": 0.6923076923076923
       }
     },
     {
-      "model": "dccmpmgfinalisticas/GovBERT-BR",
-      "token_f1": 0.6073018699910953,
-      "token_precision": 0.9565217391304348,
-      "token_recall": 0.44487932159165033,
-      "span_f1": 0.5428571428571428,
+      "model": "dccmpmgfinalisticas/GovBERT-BR fold 2",
+      "token_f1": 0.5436105476673428,
+      "token_precision": 0.9584264640143049,
+      "token_recall": 0.37940187577419926,
+      "span_f1": 0.49673202614379086,
       "span_precision": 0.8260869565217391,
-      "span_recall": 0.40425531914893614,
+      "span_recall": 0.35514018691588783,
       "per_entity_f1": {
-        "MULTA": 0.6172839506172839,
-        "OBRIGACAO": 0.6896551724137931,
+        "MULTA": 0.5681818181818181,
+        "OBRIGACAO": 0.6249999999999999,
         "RECOMENDACAO": 0.0,
-        "RESSARCIMENTO": 0.3
+        "RESSARCIMENTO": 0.28571428571428575
       }
     },
     {
-      "model": "dccmpmgfinalisticas/GovBERT-BR",
-      "token_f1": 0.27872602498680277,
+      "model": "dccmpmgfinalisticas/GovBERT-BR fold 3",
+      "token_f1": 0.26207729468599034,
       "token_precision": 1.0,
-      "token_recall": 0.1619300756491515,
-      "span_f1": 0.2528735632183908,
+      "token_recall": 0.1507991660875608,
+      "span_f1": 0.27499999999999997,
       "span_precision": 1.0,
-      "span_recall": 0.14473684210526316,
+      "span_recall": 0.15942028985507245,
       "per_entity_f1": {
         "MULTA": 0.0,
-        "OBRIGACAO": 0.48888888888888893,
+        "OBRIGACAO": 0.5641025641025641,
         "RECOMENDACAO": 0.0,
         "RESSARCIMENTO": 0.0
       }
     },
     {
-      "model": "dccmpmgfinalisticas/GovBERT-BR",
-      "token_f1": 0.7442842942345924,
-      "token_precision": 0.9535179879019421,
-      "token_recall": 0.6103525575708172,
-      "span_f1": 0.6717557251908397,
+      "model": "dccmpmgfinalisticas/GovBERT-BR fold 4",
+      "token_f1": 0.6426812585499316,
+      "token_precision": 0.9510121457489878,
+      "token_recall": 0.4853305785123967,
+      "span_f1": 0.611111111111111,
       "span_precision": 0.7719298245614035,
-      "span_recall": 0.5945945945945946,
+      "span_recall": 0.5057471264367817,
       "per_entity_f1": {
-        "OBRIGACAO": 0.7096774193548386,
-        "MULTA": 0.7272727272727272,
+        "OBRIGACAO": 0.5789473684210527,
         "RECOMENDACAO": 0.0,
+        "MULTA": 0.676056338028169,
         "RESSARCIMENTO": 0.6666666666666665
       }
     }
   ],
   "span_f1": {
-    "mean": 0.5044317888567276,
-    "std": 0.19371929199409058,
+    "mean": 0.48262923351158643,
+    "std": 0.1641991626985255,
     "values": [
-      0.3595505617977528,
-      0.695121951219512,
-      0.5428571428571428,
-      0.2528735632183908,
-      0.6717557251908397
+      0.36363636363636365,
+      0.6666666666666666,
+      0.49673202614379086,
+      0.27499999999999997,
+      0.611111111111111
     ]
   },
   "token_f1": {
-    "mean": 0.5529382691003047,
-    "std": 0.20518575763531152,
+    "mean": 0.5054796099650085,
+    "std": 0.1788602556161068,
     "values": [
-      0.40403700588730024,
-      0.7303421504017333,
-      0.6073018699910953,
-      0.27872602498680277,
-      0.7442842942345924
+      0.3876522469550609,
+      0.6913767019667171,
+      0.5436105476673428,
+      0.26207729468599034,
+      0.6426812585499316
     ]
   },
   "span_precision": {
-    "mean": 0.894723896235915,
-    "std": 0.09301423074817645
+    "mean": 0.8914452077113248,
+    "std": 0.091542160519802
   },
   "span_recall": {
-    "mean": 0.3838414072646886,
-    "std": 0.19803714658882748
+    "mean": 0.3538048403730213,
+    "std": 0.1628835255607014
   },
   "fold_oof": [
     {

@@ -1,4 +1,4 @@
 pair,agreement,class_confusion,boundary,presence_only_a,presence_only_b
-anotador1 x anotador2,349,3,20,87,69
-anotador1 x anotador3,351,4,16,88,61
+anotador1 x anotador2,351,4,16,70,70
+anotador1 x anotador3,350,4,18,69,60
 anotador2 x anotador3,366,5,15,55,46

@@ -23,17 +23,16 @@ from __future__ import annotations
 import argparse
 import json
 import logging
-from collections import Counter
 from itertools import combinations
 from pathlib import Path
 from typing import Any
 
 import numpy as np
 import pandas as pd
-from rapidfuzz import fuzz
 
+from research.dataset_io import spans_to_token_units, token_offsets
 from research.fewshot import FEWSHOT_RESULT_POSITIONS
-from research.ner_metrics import bipartite_greedy_match
+from research.ner_metrics import bipartite_greedy_match, convert_pred_to_golden_format
 
 
 from research.release import paths
@@ -134,58 +133,6 @@ HIGHLIGHTED_PAIRS = [
 
 # ----- Layout normalisation ------------------------------------------------
 
-DICT_LABELS = {
-    "obrigacoes": "OBRIGACAO",
-    "recomendacoes": "RECOMENDACAO",
-    "ressarcimentos": "RESSARCIMENTO",
-    "multas": "MULTA",
-}
-
-
-def convert_pred_to_golden_format(row, window_size=500, step_size=100, min_score=80):
-    """Align a Pydantic LLM prediction back to character offsets in the source text."""
-    pred_spans: list[dict] = []
-    text = row["text"]
-    pred = row["pred"]
-    if not isinstance(pred, dict):
-        return pred_spans
-    for label_type, spans in pred.items():
-        if label_type not in DICT_LABELS or not spans:
-            continue
-        for span in spans:
-            if not isinstance(span, dict):
-                continue
-            span_text = (
-                span.get("descricao_multa")
-                or span.get("descricao_obrigacao")
-                or span.get("descricao_ressarcimento")
-                or span.get("descricao_recomendacao")
-            )
-            if not span_text:
-                continue
-            best_score, best_pos, best_substring = 0, -1, ""
-            for start in range(0, max(1, len(text) - 1), step_size):
-                window = text[start : start + window_size]
-                score = fuzz.partial_ratio(span_text, window)
-                if score > best_score and score >= min_score:
-                    best_score = score
-                    tokens = span_text.split()
-                    if tokens:
-                        rel = window.find(tokens[0])
-                        best_pos = start + rel if rel >= 0 else start
-                    else:
-                        best_pos = start
-                    best_substring = span_text
-            if best_score >= min_score and best_pos >= 0:
-                pred_spans.append(
-                    {
-                        "start": int(best_pos),
-                        "end": int(best_pos + len(best_substring)),
-                        "text": best_substring,
-                        "labels": [DICT_LABELS[label_type]],
-                    }
-                )
-    return pred_spans
 
 
 def bio_to_spans(bio_seq) -> list[dict]:
@@ -226,16 +173,43 @@ def _candidate_paths(
 
 
 def _load_from_llm_layout(df: pd.DataFrame, model_name: str) -> pd.DataFrame:
+    """Locate the emitted strings, then convert every span to token indices.
+
+    The BIO layout below yields token indices natively. Leaving this path in
+    character offsets is what used to make the paired bootstrap compare two
+    different rulers.
+    """
+    df = df.copy()
     if "pred_as_golden" not in df.columns:
         if "pred" not in df.columns:
             raise ValueError("LLM layout missing both 'pred_as_golden' and 'pred'.")
-        df = df.copy()
         df["pred_as_golden"] = df.apply(convert_pred_to_golden_format, axis=1)
+
+    gold_out: list[list[dict]] = []
+    pred_out: list[list[dict]] = []
+    for _, row in df.iterrows():
+        offsets = token_offsets(row["text"])
+        gold, _ = spans_to_token_units(offsets, row.get("golden") or [])
+        pred, _ = spans_to_token_units(offsets, row.get("pred_as_golden") or [])
+        gold_out.append(gold)
+        pred_out.append(pred)
+    df["golden"] = gold_out
+    df["pred_as_golden"] = pred_out
     df["model"] = model_name
     return df.reset_index(drop=True)
 
 
-def _load_from_bio_layout(obj, model_name: str) -> pd.DataFrame:
+def _load_from_bio_layout(
+    obj, model_name: str, gold_by_position: dict[int, list[dict]] | None = None
+) -> pd.DataFrame:
+    """Rows of token-index spans from paired BIO sequences.
+
+    ``gold_by_position`` supplies the canonical gold. Deriving the gold from
+    the model's own ``true_labels`` instead — as this used to — scores each
+    encoder against whatever gold it happened to be trained on, and truncates
+    that gold to the model's input limit, which silently deletes the entities
+    that fall past the cut from its denominator.
+    """
     rec = obj[0] if isinstance(obj, list) else obj
     true_labels = rec["true_labels"]
     pred_labels = rec["pred_labels"]
@@ -243,10 +217,14 @@ def _load_from_bio_layout(obj, model_name: str) -> pd.DataFrame:
         raise ValueError("BIO layout: true_labels and pred_labels lengths differ.")
     rows: list[dict] = []
     for i, (tl, pl) in enumerate(zip(true_labels, pred_labels)):
+        if gold_by_position is not None:
+            golden = gold_by_position.get(i, [])
+        else:
+            golden = bio_to_spans(tl)
         rows.append(
             {
                 "doc_id": i,
-                "golden": bio_to_spans(tl),
+                "golden": golden,
                 "pred_as_golden": bio_to_spans(pl),
                 "model": model_name,
             }
@@ -254,11 +232,48 @@ def _load_from_bio_layout(obj, model_name: str) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def gold_spans_by_master_position(
+    gold_path: Path | None = None,
+) -> dict[int, list[dict]]:
+    """Canonical gold as token-index spans, keyed by master row position.
+
+    The supervised layouts are indexed by the 866-row master export; the
+    release holds the 861 documents that survive the few-shot filter.
+    """
+    gold_path = gold_path or paths.CORRECTED_GOLD_JSON
+    release = sorted(
+        json.loads(Path(gold_path).read_text(encoding="utf-8")),
+        key=lambda d: d["id"],
+    )
+    skipped = set(FEWSHOT_RESULT_POSITIONS)
+    positions = [p for p in range(866) if p not in skipped]
+    out: dict[int, list[dict]] = {}
+    for position, doc in zip(positions, release):
+        spans, _ = spans_to_token_units(
+            [tuple(o) for o in doc["token_offsets"]],
+            [
+                {"start": e["start"], "end": e["end"], "labels": [e["label"]]}
+                for e in doc["entities"]
+            ],
+        )
+        out[position] = spans
+    return out
+
+
 def load_model_predictions(
     model_name: str,
     input_dir: Path,
     fallback_dir: Path | None = None,
+    gold_by_position: dict[int, list[dict]] | None = None,
 ) -> pd.DataFrame:
+    """Load one model's predictions as token-index spans.
+
+    ``gold_by_position`` is the canonical gold used for the BIO layouts; when
+    omitted they fall back to their own stored ``true_labels``, which is only
+    appropriate for ad-hoc inspection.
+    """
+    if gold_by_position is None:
+        gold_by_position = gold_spans_by_master_position()
     for path in _candidate_paths(model_name, input_dir, fallback_dir):
         if not path.exists():
             continue
@@ -271,9 +286,9 @@ def load_model_predictions(
             and "true_labels" in raw[0]
             and "pred_labels" in raw[0]
         ):
-            return _load_from_bio_layout(raw, model_name)
+            return _load_from_bio_layout(raw, model_name, gold_by_position)
         if isinstance(raw, dict) and "true_labels" in raw and "pred_labels" in raw:
-            return _load_from_bio_layout(raw, model_name)
+            return _load_from_bio_layout(raw, model_name, gold_by_position)
         df = pd.DataFrame(raw)
         if {"golden"} <= set(df.columns):
             return _load_from_llm_layout(df, model_name)
@@ -586,13 +601,17 @@ def run(
         for m, df in model_dfs.items()
     }
 
-    # Align lengths
+    # Every model must cover the same documents: the paired bootstrap resamples
+    # document positions, so a model with a different row count would be paired
+    # against the wrong documents. This used to silently drop the offenders.
     lengths = {m: len(df) for m, df in model_dfs.items()}
-    most_common_len, _ = Counter(lengths.values()).most_common(1)[0]
-    model_dfs = {m: df for m, df in model_dfs.items() if len(df) == most_common_len}
-    logger.info(
-        "aligned to %d docs across %d models", most_common_len, len(model_dfs)
-    )
+    if len(set(lengths.values())) > 1:
+        raise RuntimeError(
+            "models disagree on document count, so they cannot be paired: "
+            f"{lengths}"
+        )
+    n_docs = next(iter(lengths.values()))
+    logger.info("aligned to %d docs across %d models", n_docs, len(model_dfs))
 
     # Compute counts + per-model F1
     model_counts: dict[str, dict[str, Any]] = {}

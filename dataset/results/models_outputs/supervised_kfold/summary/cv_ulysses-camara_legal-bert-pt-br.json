@@ -8,52 +8,52 @@
   "n_folds": 5,
   "fold_metrics": [
     {
-      "model": "ulysses-camara/legal-bert-pt-br",
-      "token_f1": 0.5107518442944593,
-      "token_precision": 0.9987722529158993,
-      "token_recall": 0.34310417545339517,
-      "span_f1": 0.4509803921568627,
+      "model": "ulysses-camara/legal-bert-pt-br fold 0",
+      "token_f1": 0.4965733307225377,
+      "token_precision": 0.9984251968503937,
+      "token_recall": 0.3304665102945009,
+      "span_f1": 0.4554455445544555,
       "span_precision": 0.7666666666666667,
-      "span_recall": 0.3194444444444444,
+      "span_recall": 0.323943661971831,
       "per_entity_f1": {
-        "MULTA": 0.5882352941176471,
+        "MULTA": 0.6,
         "OBRIGACAO": 0.5517241379310345,
         "RECOMENDACAO": 0.0,
         "RESSARCIMENTO": 0.0
       }
     },
     {
-      "model": "ulysses-camara/legal-bert-pt-br",
-      "token_f1": 0.7721981476760982,
-      "token_precision": 0.9411764705882353,
-      "token_recall": 0.6546607117130097,
-      "span_f1": 0.6464646464646464,
+      "model": "ulysses-camara/legal-bert-pt-br fold 1",
+      "token_f1": 0.7343734067502804,
+      "token_precision": 0.9419304211352341,
+      "token_recall": 0.6017713903743316,
+      "span_f1": 0.6336633663366336,
       "span_precision": 0.6736842105263158,
-      "span_recall": 0.6213592233009708,
+      "span_recall": 0.5981308411214953,
       "per_entity_f1": {
-        "MULTA": 0.6964285714285714,
-        "OBRIGACAO": 0.7659574468085107,
+        "MULTA": 0.6782608695652174,
+        "OBRIGACAO": 0.7499999999999999,
         "RECOMENDACAO": 0.3076923076923077,
         "RESSARCIMENTO": 0.38461538461538464
       }
     },
     {
-      "model": "ulysses-camara/legal-bert-pt-br",
-      "token_f1": 0.6137363257020413,
-      "token_precision": 0.9948811700182816,
-      "token_recall": 0.4437377690802348,
-      "span_f1": 0.5314685314685315,
+      "model": "ulysses-camara/legal-bert-pt-br fold 2",
+      "token_f1": 0.5454545454545454,
+      "token_precision": 0.9976481655691439,
+      "token_recall": 0.3753317996814723,
+      "span_f1": 0.4871794871794871,
       "span_precision": 0.7755102040816326,
-      "span_recall": 0.40425531914893614,
+      "span_recall": 0.35514018691588783,
       "per_entity_f1": {
-        "MULTA": 0.6451612903225806,
-        "OBRIGACAO": 0.6153846153846153,
+        "MULTA": 0.6,
+        "OBRIGACAO": 0.5517241379310345,
         "RECOMENDACAO": 0.0,
         "RESSARCIMENTO": 0.0
       }
     },
     {
-      "model": "ulysses-camara/legal-bert-pt-br",
+      "model": "ulysses-camara/legal-bert-pt-br fold 3",
       "token_f1": 0.0,
       "token_precision": 0.0,
       "token_recall": 0.0,
@@ -68,41 +68,41 @@
       }
     },
     {
-      "model": "ulysses-camara/legal-bert-pt-br",
-      "token_f1": 0.6400660429279031,
-      "token_precision": 0.9851757729775519,
-      "token_recall": 0.4740167108212757,
-      "span_f1": 0.55,
+      "model": "ulysses-camara/legal-bert-pt-br fold 4",
+      "token_f1": 0.5426774483378257,
+      "token_precision": 0.985854189336235,
+      "token_recall": 0.3743801652892562,
+      "span_f1": 0.49624060150375937,
       "span_precision": 0.717391304347826,
-      "span_recall": 0.44594594594594594,
+      "span_recall": 0.3793103448275862,
       "per_entity_f1": {
-        "OBRIGACAO": 0.7692307692307693,
-        "MULTA": 0.6388888888888888,
+        "OBRIGACAO": 0.6060606060606061,
         "RECOMENDACAO": 0.0,
+        "MULTA": 0.5974025974025975,
         "RESSARCIMENTO": 0.0
       }
     }
   ],
   "span_f1": {
-    "mean": 0.4357827140180081,
-    "std": 0.25334057313990893,
+    "mean": 0.4145057999148671,
+    "std": 0.24160049792246957,
     "values": [
-      0.4509803921568627,
-      0.6464646464646464,
-      0.5314685314685315,
+      0.4554455445544555,
+      0.6336633663366336,
+      0.4871794871794871,
       0.0,
-      0.55
+      0.49624060150375937
     ]
   },
   "token_f1": {
-    "mean": 0.5073504721201003,
-    "std": 0.2985346440188188,
+    "mean": 0.4638157462530378,
+    "std": 0.27490162561226056,
     "values": [
-      0.5107518442944593,
-      0.7721981476760982,
-      0.6137363257020413,
+      0.4965733307225377,
+      0.7343734067502804,
+      0.5454545454545454,
       0.0,
-      0.6400660429279031
+      0.5426774483378257
     ]
   },
   "span_precision": {
@@ -110,8 +110,8 @@
     "std": 0.3304923001852333
   },
   "span_recall": {
-    "mean": 0.35820098656805943,
-    "std": 0.22851829978241492
+    "mean": 0.3313050069673601,
+    "std": 0.21440956781361747
   },
   "fold_oof": [
     {

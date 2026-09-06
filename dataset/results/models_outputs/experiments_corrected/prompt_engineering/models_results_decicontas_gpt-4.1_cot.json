@@ -1993,16 +1993,8 @@
     "golden": [
       {
         "start": 317,
-        "end": 351,
-        "text": "determinada à Secretaria de Estado",
-        "labels": [
-          "OBRIGACAO"
-        ]
-      },
-      {
-        "start": 355,
         "end": 1318,
-        "text": "Saúde Pública do RN – SESAP/RN que proceda à conclusão do processo licitatório (Processo nº 00610079.001676/2023-32 - SEI/RN) deflagrado para a contratação de serviços técnicos especializados em manutenção preventiva, preditiva e corretiva de 4 (quatro) elevadores do nível central e 1 (um) elevador do anexo da SESAP/RN, no prazo máximo de até 180 (cento e oitenta) dias corridos, vedada a contratação por inexigibilidade de licitação, devendo, ainda, alimentar o referido processo SEI com todas as informações pertinentes. Por compreender que a paralisação dos serviços certamente traria grandes prejuízos à população, em razão da imprescindível continuidade da manutenção dos elevadores da Secretaria de Saúde do RN, admitir-se-á, se for o caso, excepcionalmente, que a Administração realize a prorrogação do atual contrato em vigor (01/06/2023 a 31/05/2024) até que venha a celebrar um novo instrumento contratual, decorrente do processo licitatório em curso.",
+        "text": "determinada à Secretaria de Estado da Saúde Pública do RN – SESAP/RN que proceda à conclusão do processo licitatório (Processo nº 00610079.001676/2023-32 - SEI/RN) deflagrado para a contratação de serviços técnicos especializados em manutenção preventiva, preditiva e corretiva de 4 (quatro) elevadores do nível central e 1 (um) elevador do anexo da SESAP/RN, no prazo máximo de até 180 (cento e oitenta) dias corridos, vedada a contratação por inexigibilidade de licitação, devendo, ainda, alimentar o referido processo SEI com todas as informações pertinentes. Por compreender que a paralisação dos serviços certamente traria grandes prejuízos à população, em razão da imprescindível continuidade da manutenção dos elevadores da Secretaria de Saúde do RN, admitir-se-á, se for o caso, excepcionalmente, que a Administração realize a prorrogação do atual contrato em vigor (01/06/2023 a 31/05/2024) até que venha a celebrar um novo instrumento contratual, decorrente do processo licitatório em curso.",
         "labels": [
           "OBRIGACAO"
         ]
@@ -2013,14 +2005,6 @@
         "text": "Deve, ainda, ser demonstrado nos autos, nos 05 (cinco) dias úteis após ultimado o prazo previsto na alínea “a” acima, a efetiva conclusão do processo licitatório, trazendo a gestora aos autos a cópia de todo o processo licitatório em testilha, assim como do contrato dele decorrente, sob pena de, não cumprindo tal obrigação, no prazo antes referido, incidir multa diária e pessoal à responsável, desde já fixada no valor de R$ 200,00 (duzentos reais) por dia que superar o interregno aqui fixado, com base no art. 110 da Lei Complementar Estadual nº 464/2012, valor esse passível de revisão, limitado ao teto previsto no art. 323, inciso II, alínea `b`, do Regimento Interno, a ser apurado por ocasião de eventual subsistência de mora.",
         "labels": [
           "OBRIGACAO"
-        ]
-      },
-      {
-        "start": 2162,
-        "end": 2203,
-        "text": "Ramalho Cortez, dos termos desta Decisão.",
-        "labels": [
-          "RECOMENDACAO"
         ]
       }
     ],
@@ -5415,24 +5399,8 @@
     "golden": [
       {
         "start": 810,
-        "end": 920,
-        "text": "MULTA no valor de R$1.000,00 (mil reais) para o então gestor responsável, à época dos fatos, pelo Instituto de",
-        "labels": [
-          "MULTA"
-        ]
-      },
-      {
-        "start": 937,
-        "end": 950,
-        "text": "Servidores do",
-        "labels": [
-          "MULTA"
-        ]
-      },
-      {
-        "start": 965,
         "end": 1275,
-        "text": "Grande do Norte - IPERN,  senhor Nereu Batista Linhares, nos termos do artigo 107, inciso II, alínea “f”, da Lei Complementar Estadual nº 464/2012 c/c o artigo 323, inciso II, alínea `f`, do Novel Regimento Interno desta Casa, em virtude do descumprimento de determinação do Tribunal (Decisão nº 1829/2022-TC).",
+        "text": "MULTA no valor de R$1.000,00 (mil reais) para o então gestor responsável, à época dos fatos, pelo Instituto de Previdência dos Servidores do Estado do Rio Grande do Norte - IPERN,  senhor Nereu Batista Linhares, nos termos do artigo 107, inciso II, alínea “f”, da Lei Complementar Estadual nº 464/2012 c/c o artigo 323, inciso II, alínea `f`, do Novel Regimento Interno desta Casa, em virtude do descumprimento de determinação do Tribunal (Decisão nº 1829/2022-TC).",
         "labels": [
           "MULTA"
         ]
@@ -6275,24 +6243,8 @@
       },
       {
         "start": 2143,
-        "end": 2258,
-        "text": "determinação para, no prazo de 30 (trinta) dias, a contar da intimação deste Acórdão, o Município de Bom Jesus/RN e",
-        "labels": [
-          "OBRIGACAO"
-        ]
-      },
-      {
-        "start": 2259,
-        "end": 2260,
-        "text": "o",
-        "labels": [
-          "MULTA"
-        ]
-      },
-      {
-        "start": 2261,
         "end": 2537,
-        "text": "seu gestor, Sr. Clécio da Câmara Azevedo, demonstrem nos autos, por meio de expedição de ato administrativo, devidamente publicado no Diário Oficial, a suspensão de novas contratações temporárias, sob pena de aplicação de nova multa diária e pessoal no importe de R$ 1.000,00;",
+        "text": "determinação para, no prazo de 30 (trinta) dias, a contar da intimação deste Acórdão, o Município de Bom Jesus/RN e o seu gestor, Sr. Clécio da Câmara Azevedo, demonstrem nos autos, por meio de expedição de ato administrativo, devidamente publicado no Diário Oficial, a suspensão de novas contratações temporárias, sob pena de aplicação de nova multa diária e pessoal no importe de R$ 1.000,00;",
         "labels": [
           "OBRIGACAO"
         ]
@@ -8982,72 +8934,8 @@
     "golden": [
       {
         "start": 361,
-        "end": 586,
-        "text": "MULTA no valor de R$1.000,00 (mil reais) para o então gestor responsável, à época dos fatos, pelo Instituto de Previdência dos Servidores do Estado do Rio Grande do Norte - IPERN,  senhor Nereu Batista Linhares, nos termos do",
-        "labels": [
-          "MULTA"
-        ]
-      },
-      {
-        "start": 587,
-        "end": 624,
-        "text": "artigo 107, inciso II, alínea “f”, da",
-        "labels": [
-          "OBRIGACAO"
-        ]
-      },
-      {
-        "start": 625,
-        "end": 653,
-        "text": "Lei Complementar Estadual nº",
-        "labels": [
-          "MULTA"
-        ]
-      },
-      {
-        "start": 654,
-        "end": 666,
-        "text": "464/2012 c/c",
-        "labels": [
-          "OBRIGACAO"
-        ]
-      },
-      {
-        "start": 667,
-        "end": 680,
-        "text": "o artigo 323,",
-        "labels": [
-          "MULTA"
-        ]
-      },
-      {
-        "start": 681,
-        "end": 698,
-        "text": "inciso II, alínea",
-        "labels": [
-          "OBRIGACAO"
-        ]
-      },
-      {
-        "start": 699,
-        "end": 703,
-        "text": "`f`,",
-        "labels": [
-          "MULTA"
-        ]
-      },
-      {
-        "start": 704,
-        "end": 706,
-        "text": "do",
-        "labels": [
-          "OBRIGACAO"
-        ]
-      },
-      {
-        "start": 707,
         "end": 826,
-        "text": "Novel Regimento Interno desta Casa, em virtude do descumprimento de determinação do Tribunal (Decisão nº 1296/2020-TC).",
+        "text": "MULTA no valor de R$1.000,00 (mil reais) para o então gestor responsável, à época dos fatos, pelo Instituto de Previdência dos Servidores do Estado do Rio Grande do Norte - IPERN,  senhor Nereu Batista Linhares, nos termos do artigo 107, inciso II, alínea “f”, da Lei Complementar Estadual nº 464/2012 c/c o artigo 323, inciso II, alínea `f`, do Novel Regimento Interno desta Casa, em virtude do descumprimento de determinação do Tribunal (Decisão nº 1296/2020-TC).",
         "labels": [
           "MULTA"
         ]
@@ -9985,16 +9873,7 @@
       "obrigacoes": [],
       "recomendacoes": []
     },
-    "golden": [
-      {
-        "start": 309,
-        "end": 316,
-        "text": "no item",
-        "labels": [
-          "MULTA"
-        ]
-      }
-    ],
+    "golden": [],
     "model": "gpt-4.1",
     "technique": "cot",
     "meta": {
@@ -10874,32 +10753,16 @@
     "golden": [
       {
         "start": 407,
-        "end": 471,
-        "text": "determinar aos responsáveis, Sr. Renam Luiz de Alencar Carvalho,",
-        "labels": [
-          "OBRIGACAO"
-        ]
-      },
-      {
-        "start": 484,
         "end": 875,
-        "text": "Município de Campo Redondo/RN, e Sr. Hananiel de Souza Amorim, Secretário de Educação, a regularização/correção/aperfeiçoamento das inadequações evidenciadas na referida unidade escolar, nos moldes do Relatório Final de Auditoria, também relatadas na Proposta de Voto, no prazo de até 180 (cento e oitenta) dias corridos, de modo a promover oportunamente melhorias para a oferta educacional;",
+        "text": "determinar aos responsáveis, Sr. Renam Luiz de Alencar Carvalho, Prefeito do Município de Campo Redondo/RN, e Sr. Hananiel de Souza Amorim, Secretário de Educação, a regularização/correção/aperfeiçoamento das inadequações evidenciadas na referida unidade escolar, nos moldes do Relatório Final de Auditoria, também relatadas na Proposta de Voto, no prazo de até 180 (cento e oitenta) dias corridos, de modo a promover oportunamente melhorias para a oferta educacional;",
         "labels": [
           "OBRIGACAO"
         ]
       },
       {
         "start": 977,
-        "end": 1108,
-        "text": "determinar aos responsáveis, Sr. Renam Luiz de Alencar Carvalho, Prefeito do Município de Campo Redondo/RN, e Sr. Hananiel de Souza",
-        "labels": [
-          "OBRIGACAO"
-        ]
-      },
-      {
-        "start": 1117,
         "end": 1937,
-        "text": "Secretário de Educação:\n\nb.1. A realização de levantamento/diagnóstico da condição de infraestrutura das mencionadas instituições escolares, tomando por base o documento de verificação utilizado no trabalho de auditoria realizado (Anexo A, do Relatório Final, p. 22 a 38), com a elaboração, no prazo de até 180 (cento e oitenta) dias corridos, de plano de ação;\n\nb.2. O referido plano de ação (previsto na alínea “b.1” supra) deverá contemplar as providências necessárias à solução dos problemas que venham a ser identificados no diagnóstico que será realizado, devendo, ainda, o plano em questão prever o prazo de até mais 180 (cento e oitenta) dias corridos para a regularização/correção/aperfeiçoamento das ocorrências e inadequações evidenciadas, de modo a promover oportunamente melhorias para a oferta educacional.",
+        "text": "determinar aos responsáveis, Sr. Renam Luiz de Alencar Carvalho, Prefeito do Município de Campo Redondo/RN, e Sr. Hananiel de Souza Amorim, Secretário de Educação:\n\nb.1. A realização de levantamento/diagnóstico da condição de infraestrutura das mencionadas instituições escolares, tomando por base o documento de verificação utilizado no trabalho de auditoria realizado (Anexo A, do Relatório Final, p. 22 a 38), com a elaboração, no prazo de até 180 (cento e oitenta) dias corridos, de plano de ação;\n\nb.2. O referido plano de ação (previsto na alínea “b.1” supra) deverá contemplar as providências necessárias à solução dos problemas que venham a ser identificados no diagnóstico que será realizado, devendo, ainda, o plano em questão prever o prazo de até mais 180 (cento e oitenta) dias corridos para a regularização/correção/aperfeiçoamento das ocorrências e inadequações evidenciadas, de modo a promover oportunamente melhorias para a oferta educacional.",
         "labels": [
           "OBRIGACAO"
         ]
@@ -15031,16 +14894,8 @@
     "golden": [
       {
         "start": 305,
-        "end": 323,
-        "text": "multa de R$ 450,00",
-        "labels": [
-          "MULTA"
-        ]
-      },
-      {
-        "start": 338,
         "end": 440,
-        "text": "e cinquenta reais) à Sra. Maria das Graças Marques Silva, pelo atraso do anexo do 1º bimestre de 2010.",
+        "text": "multa de R$ 450,00 (quatrocentos e cinquenta reais) à Sra. Maria das Graças Marques Silva, pelo atraso do anexo do 1º bimestre de 2010.",
         "labels": [
           "MULTA"
         ]
