@@ -45,3 +45,6 @@ dataset/errors/oof_cache/
 
 /*.md
 !/README.md
+
+# dissertation material — never publish
+docs/
