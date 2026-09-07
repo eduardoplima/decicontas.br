@@ -480,6 +480,22 @@ def block_cd_main_results(model_dfs: dict[str, pd.DataFrame], out_dir: Path) -> 
 
 
 def block_fg_structured(out_dir: Path) -> None:
+    """Function calling vs JSON schema, plus a same-configuration replication.
+
+    Both arms of the contrast come from the same script and session
+    (``run_fc_vs_json.py``), so the mechanism is the only variable between
+    them; that is what makes the contrast interpretable and why the arms are
+    *not* taken from the main leaderboard run.
+
+    The leaderboard's LLM rows are a different execution of the identical
+    configuration (``run_llm_inference.py``, same prompt, same schema, same
+    function-calling decoding), and neither execution pinned temperature or
+    seed. Comparing the two function-calling runs therefore yields an
+    empirical replication delta: the amount by which span F1 moves when
+    *nothing* is changed. ``F_fc_vs_json_replication.csv`` records it so the
+    mechanism effect can be read against the right yardstick instead of
+    against zero.
+    """
     src = EXPERIMENTS_DIR / "function_calling_json_schema"
     if not src.exists():
         logger.warning("missing %s", src)
@@ -538,6 +554,34 @@ def block_fg_structured(out_dir: Path) -> None:
             }
         )
     df_delta = pd.DataFrame(delta_rows)
+
+    # Same-configuration replication: the ablation's function-calling arm
+    # against the leaderboard run of the same model, prompt and mechanism.
+    repl_rows = []
+    for model in pivot_overall.index.get_level_values(0).unique():
+        main_path = (
+            paths.OUTPUT_CORRECTED_DIR
+            / f"models_results_decicontas_{model}_few_shot.json"
+        )
+        if not main_path.exists():
+            continue
+        try:
+            fc = pivot_overall.loc[(model, "function_calling")]
+        except KeyError:
+            continue
+        main_flat = _per_entity_metrics(_drop_fewshot(_load_llm_df(main_path)))["flat"]
+        repl_rows.append(
+            {
+                "model": model,
+                "span_f1_ablation_run": fc["span_f1"],
+                "span_f1_leaderboard_run": main_flat["span_f1"],
+                "replication_delta_span_f1": abs(fc["span_f1"] - main_flat["span_f1"]),
+            }
+        )
+    if repl_rows:
+        df_repl = pd.DataFrame(repl_rows)
+        df_repl.to_csv(out_dir / "F_fc_vs_json_replication.csv", index=False)
+        logger.info("wrote F_fc_vs_json_replication.csv")
 
     df_overall.to_csv(out_dir / "F_fc_vs_json_overall.csv", index=False)
     df_delta.to_csv(out_dir / "F_fc_vs_json_delta.csv", index=False)

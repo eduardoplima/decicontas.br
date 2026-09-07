@@ -124,6 +124,7 @@ def train_one(cfg: BertConfig, mode: str, fold_idx: int) -> dict[str, Any]:
     from seqeval.metrics import f1_score as seq_f1
     from seqeval.metrics import precision_score as seq_p
     from seqeval.metrics import recall_score as seq_r
+    from seqeval.scheme import IOB2
 
     _set_seed(SEED)
     samples = load_bio_samples()
@@ -161,10 +162,18 @@ def train_one(cfg: BertConfig, mode: str, fold_idx: int) -> dict[str, Any]:
                     q.append(id2label[int(p_)])
             true_seqs.append(t)
             pred_seqs.append(q)
+        # Strict IOB2, matching the decoder that scores the released results
+        # (:func:`research.ner_metrics.extract_spans_from_bio`, which requires a
+        # ``B-`` to open a span). seqeval's default scheme is lenient: it treats
+        # a leading ``I-X`` as a span start, so an all-``I-`` sequence scores
+        # 1.0 there and 0.0 under the reporting decoder. Selecting checkpoints
+        # with the lenient metric picked models that never emit ``B-`` at all,
+        # which is what produced the fold collapses to F1 = 0.
+        strict = dict(mode="strict", scheme=IOB2, zero_division=0)
         return {
-            "f1": seq_f1(true_seqs, pred_seqs, zero_division=0),
-            "precision": seq_p(true_seqs, pred_seqs, zero_division=0),
-            "recall": seq_r(true_seqs, pred_seqs, zero_division=0),
+            "f1": seq_f1(true_seqs, pred_seqs, **strict),
+            "precision": seq_p(true_seqs, pred_seqs, **strict),
+            "recall": seq_r(true_seqs, pred_seqs, **strict),
         }
 
     output_dir = f"/tmp/decicontas_bert_{os.getpid()}"
