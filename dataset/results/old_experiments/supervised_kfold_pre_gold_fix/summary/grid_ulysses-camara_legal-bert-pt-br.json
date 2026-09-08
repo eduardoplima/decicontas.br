@@ -1,0 +1,96 @@
+{
+  "model": "ulysses-camara/legal-bert-pt-br",
+  "rows": [
+    {
+      "config_id": "lr=5e-05_model_name=ulysses-camara-legal-bert-pt-br_warmup_ratio=0",
+      "config": {
+        "model_name": "ulysses-camara/legal-bert-pt-br",
+        "lr": 5e-05,
+        "warmup_ratio": 0.0
+      },
+      "span_f1": 0.6666666666666667,
+      "span_precision": 0.8392857142857143,
+      "span_recall": 0.5529411764705883,
+      "token_f1": 0.6731501057082453,
+      "elapsed_seconds": 812.4348001480103
+    },
+    {
+      "config_id": "lr=5e-05_model_name=ulysses-camara-legal-bert-pt-br_warmup_ratio=0.1",
+      "config": {
+        "model_name": "ulysses-camara/legal-bert-pt-br",
+        "lr": 5e-05,
+        "warmup_ratio": 0.1
+      },
+      "span_f1": 0.2653061224489796,
+      "span_precision": 1.0,
+      "span_recall": 0.15294117647058825,
+      "token_f1": 0.2383197599657094,
+      "elapsed_seconds": 810.2492232322693
+    },
+    {
+      "config_id": "lr=2e-05_model_name=ulysses-camara-legal-bert-pt-br_warmup_ratio=0",
+      "config": {
+        "model_name": "ulysses-camara/legal-bert-pt-br",
+        "lr": 2e-05,
+        "warmup_ratio": 0.0
+      },
+      "span_f1": 0.0,
+      "span_precision": 0.0,
+      "span_recall": 0.0,
+      "token_f1": 0.0,
+      "elapsed_seconds": 802.4681582450867
+    },
+    {
+      "config_id": "lr=2e-05_model_name=ulysses-camara-legal-bert-pt-br_warmup_ratio=0.1",
+      "config": {
+        "model_name": "ulysses-camara/legal-bert-pt-br",
+        "lr": 2e-05,
+        "warmup_ratio": 0.1
+      },
+      "span_f1": 0.0,
+      "span_precision": 0.0,
+      "span_recall": 0.0,
+      "token_f1": 0.0,
+      "elapsed_seconds": 802.4852070808411
+    },
+    {
+      "config_id": "lr=3e-05_model_name=ulysses-camara-legal-bert-pt-br_warmup_ratio=0",
+      "config": {
+        "model_name": "ulysses-camara/legal-bert-pt-br",
+        "lr": 3e-05,
+        "warmup_ratio": 0.0
+      },
+      "span_f1": 0.0,
+      "span_precision": 0.0,
+      "span_recall": 0.0,
+      "token_f1": 0.0,
+      "elapsed_seconds": 810.7653818130493
+    },
+    {
+      "config_id": "lr=3e-05_model_name=ulysses-camara-legal-bert-pt-br_warmup_ratio=0.1",
+      "config": {
+        "model_name": "ulysses-camara/legal-bert-pt-br",
+        "lr": 3e-05,
+        "warmup_ratio": 0.1
+      },
+      "span_f1": 0.0,
+      "span_precision": 0.0,
+      "span_recall": 0.0,
+      "token_f1": 0.0,
+      "elapsed_seconds": 810.5204010009766
+    }
+  ],
+  "best": {
+    "config_id": "lr=5e-05_model_name=ulysses-camara-legal-bert-pt-br_warmup_ratio=0",
+    "config": {
+      "model_name": "ulysses-camara/legal-bert-pt-br",
+      "lr": 5e-05,
+      "warmup_ratio": 0.0
+    },
+    "span_f1": 0.6666666666666667,
+    "span_precision": 0.8392857142857143,
+    "span_recall": 0.5529411764705883,
+    "token_f1": 0.6731501057082453,
+    "elapsed_seconds": 812.4348001480103
+  }
+}

@@ -52,7 +52,13 @@ class BertConfig:
     grad_accum: int = 8
     weight_decay: float = 0.01
     max_grad_norm: float = 1.0
-    early_stopping_patience: int = 5
+    # Igual ao número de épocas: desativa na prática a parada antecipada.
+    # Com a métrica estrita, F1 legitimamente vale 0 nas primeiras épocas de um
+    # modelo que ainda não aprendeu a emitir tags de abertura; com paciência 5 o
+    # treino era interrompido na época 6 antes que ele aprendesse. Nove dos dez
+    # modelos já rodavam as 10 épocas, então isto uniformiza o orçamento de
+    # treino em vez de privilegiar um modelo.
+    early_stopping_patience: int = 10
     max_length: int = 512
 
 

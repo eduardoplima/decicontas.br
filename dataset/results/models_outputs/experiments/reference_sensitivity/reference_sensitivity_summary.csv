@@ -1,0 +1,4 @@
+reference,best_llm,best_llm_macro,best_supervised,best_supervised_macro,gap_macro,spearman_vs_A1
+anotador1,DeepSeek-V4-Flash,0.7423222420016693,BERTimbau-base,0.6274510495987855,0.11487119240288379,1.0
+anotador2,DeepSeek-V4-Flash,0.7259337710457866,LegalBert-pt,0.5597562163048603,0.16617755474092633,0.975438596491228
+anotador3,DeepSeek-V4-Flash,0.6745220374642533,LegalBert-pt,0.5446797899543123,0.129842247509941,0.9701754385964911
