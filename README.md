@@ -37,7 +37,7 @@ enforcement regime — translating them would misrepresent the corpus.
 **861 documents, 441 entities.** Only 231 documents carry an entity; the remaining
 630 are true negatives — filings and clean-account judgments with no registrable
 command. They are kept deliberately: in production the system must also learn *not*
-to extract. Spans are long (per-class medians of 185–356 characters), so evaluation
+to extract. Spans are long (per-class medians of 186–357 characters), so evaluation
 uses partial matching (IoU ≥ 0.5) rather than exact boundaries.
 
 ## Get the data
@@ -91,20 +91,26 @@ uses.
 
 Nine instruction-tuned LLMs under few-shot prompting with structured outputs, against
 ten supervised baselines (BiLSTM-CRF, BERTimbau base/large, and seven Portuguese
-legal- or government-domain encoders). One protocol for all: span F1 with IoU ≥ 0.5,
-paired document-level bootstrap (10,000 resamples) and Holm correction.
+legal- or government-domain encoders). One protocol for all: span F1 with IoU ≥ 0.5
+over whitespace-token indices, paired document-level bootstrap (10,000 resamples) and
+Holm correction over a pre-selected family of seventeen contrasts.
 
 **Headline.** The best LLM, the open-weights **DeepSeek-V4-Flash** (macro span F1
-**0.742**), beats the best domain-adapted encoder, **LegalBert-pt** (**0.619**), by
-+0.123, 95% CI [+0.063, +0.184] — significant after correction
-(*p*<sub>Holm</sub> < 0.001). Its gap to GPT-4.1 (0.717) is *not* significant. The advantage concentrates in the minority classes,
-which is where a registry-feeding system hurts most.
+**0.742**), exceeds the strongest supervised baseline, the generic
+**BERTimbau-base** (**0.627**), by +0.115, 95% CI [+0.055, +0.175] — significant
+after correction (*p*<sub>Holm</sub> < 0.001). None of the seven domain-adapted
+encoders beats the generic one. The gap to GPT-4.1 (0.717) is +0.025, 95% CI
+[−0.001, +0.052], *p* = 0.060 — *not* significant, and not evidence of equivalence
+either. The advantage is larger on the minority classes: on `RECOMENDACAO` (52
+instances) DeepSeek-V4-Flash and GPT-4.1 both reach span F1 0.667 against 0.390 for
+BERTimbau-base.
 
 ![Precision vs recall, all 19 models](dataset/results/models_outputs/figures/exp1_precision_recall.png)
 
-Supervised models cluster at high precision and low recall; competitive LLMs do the
-opposite. That makes LLMs the better pre-annotators for a human-in-the-loop pipeline,
-where a reviewer filters false positives more cheaply than hunting omissions.
+Supervised models favour precision (0.743–0.871) over recall (0.413–0.603);
+competitive LLMs do the opposite. That profile motivates evaluating LLMs as
+pre-annotators in a human-in-the-loop pipeline, although the relative cost of
+correcting insertions versus omissions was not measured.
 
 <details>
 <summary><b>Full ranking — 19 models</b> (sorted by macro span F1)</summary>
@@ -115,24 +121,33 @@ where a reviewer filters false positives more cheaply than hunting omissions.
 | GPT-4.1 | LLM | 0.817 | 0.658 | 0.837 | 0.737 | 0.717 |
 | GPT-5.1 | LLM | 0.782 | 0.621 | 0.814 | 0.705 | 0.691 |
 | GPT-4.1-mini | LLM | 0.794 | 0.596 | 0.844 | 0.699 | 0.684 |
-| LegalBert-pt | supervised | 0.743 | 0.763 | 0.615 | 0.681 | 0.619 |
-| BERTimbauLaw | supervised | 0.714 | 0.770 | 0.585 | 0.665 | 0.605 |
-| BERTimbau-base | supervised | 0.714 | 0.806 | 0.565 | 0.664 | 0.569 |
-| Legal-BERT-STF | supervised | 0.707 | 0.751 | 0.574 | 0.650 | 0.532 |
-| JurisBERT | supervised | 0.674 | 0.747 | 0.542 | 0.628 | 0.562 |
-| Qwen2.5-72B | LLM | 0.718 | 0.549 | 0.723 | 0.624 | 0.585 |
+| BERTimbau-base | supervised | 0.742 | 0.818 | 0.603 | 0.695 | 0.627 |
+| LegalBert-pt | supervised | 0.732 | 0.772 | 0.599 | 0.674 | 0.610 |
 | GPT-5.2 | LLM | 0.752 | 0.506 | 0.800 | 0.620 | 0.595 |
-| BiLSTM-CRF | supervised | 0.708 | 0.778 | 0.492 | 0.603 | 0.509 |
-| Legal-BERTimbau-base | supervised | 0.629 | 0.818 | 0.449 | 0.580 | 0.392 |
-| BERTimbau-large | supervised | 0.629 | 0.824 | 0.447 | 0.579 | 0.462 |
-| GovBERT-BR | supervised | 0.542 | 0.859 | 0.374 | 0.521 | 0.411 |
-| LegalBERTPT-br | supervised | 0.523 | 0.718 | 0.358 | 0.478 | 0.330 |
-| GPT-4.1-nano | LLM | 0.581 | 0.354 | 0.560 | 0.434 | 0.395 |
+| Qwen2.5-72B | LLM | 0.718 | 0.549 | 0.723 | 0.624 | 0.585 |
+| BiLSTM-CRF | supervised | 0.772 | 0.768 | 0.562 | 0.649 | 0.570 |
+| JurisBERT | supervised | 0.674 | 0.743 | 0.537 | 0.624 | 0.553 |
+| BERTimbauLaw | supervised | 0.690 | 0.816 | 0.544 | 0.653 | 0.550 |
+| Legal-BERT-STF | supervised | 0.686 | 0.826 | 0.549 | 0.659 | 0.544 |
 | GPT-5-mini | LLM | 0.569 | 0.278 | 0.828 | 0.416 | 0.531 |
+| Legal-BERTimbau-base | supervised | 0.643 | 0.833 | 0.476 | 0.606 | 0.473 |
+| BERTimbau-large | supervised | 0.640 | 0.831 | 0.467 | 0.598 | 0.450 |
+| GovBERT-BR | supervised | 0.585 | 0.871 | 0.413 | 0.560 | 0.416 |
+| GPT-4.1-nano | LLM | 0.581 | 0.354 | 0.560 | 0.434 | 0.395 |
+| LegalBERTPT-br | supervised | 0.595 | 0.803 | 0.415 | 0.547 | 0.369 |
 | Llama-3.3-70B | LLM | 0.409 | 0.607 | 0.252 | 0.356 | 0.286 |
 
 Source: [`model_evaluation/C_main_results.csv`](dataset/results/models_outputs/model_evaluation/C_main_results.csv).
 </details>
+
+**Caveats the numbers carry.** LLMs read every document in full, whereas the
+encoders truncate at 512 subwords (29 of 861 documents, 37 of 441 gold entities cut
+off) and are scored against the full gold, so their scores combine extraction
+quality with coverage loss. Supervised learning rate and warmup were selected once on
+a global 80/20 split rather than inside each cross-validation fold, which can bias
+supervised scores upward. The ranking is stable across IoU thresholds 0.3–0.7 and
+across all three reference annotations, but changes substantially under exact
+matching.
 
 Every number cited in the paper is regenerated into
 [`model_evaluation/REPORT.md`](dataset/results/models_outputs/model_evaluation/REPORT.md), one section
@@ -148,7 +163,8 @@ Quality is measured, not asserted.
   mostly *confirmed* the original annotation. Both versions ship, paired.
 - **Inter-annotator agreement.** The whole corpus was independently re-annotated,
   blind, by two staff of the Court unit that feeds the registry. Token-level Fleiss
-  κ = **0.865**; pairwise span F1 between **0.796** and **0.838**. Details in
+  κ = **0.865** (pairwise Cohen's κ 0.843–0.899); pairwise span F1 between
+  **0.796** and **0.838**. Details in
   [`corpus_and_agreement/AGREEMENT.md`](dataset/results/models_outputs/corpus_and_agreement/AGREEMENT.md).
 
 ## Reproduce
