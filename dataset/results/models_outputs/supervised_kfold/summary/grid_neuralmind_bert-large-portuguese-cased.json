@@ -2,95 +2,102 @@
   "model": "neuralmind/bert-large-portuguese-cased",
   "rows": [
     {
-      "config_id": "lr=2e-05_model_name=neuralmind-bert-large-portuguese-cased_warmup_ratio=0.1",
-      "config": {
-        "model_name": "neuralmind/bert-large-portuguese-cased",
-        "lr": 2e-05,
-        "warmup_ratio": 0.1
-      },
-      "span_f1": 0.7837837837837838,
-      "span_precision": 0.9206349206349206,
-      "span_recall": 0.6823529411764706,
-      "token_f1": 0.7933632115953084,
-      "elapsed_seconds": 2535.61363363266
-    },
-    {
-      "config_id": "lr=2e-05_model_name=neuralmind-bert-large-portuguese-cased_warmup_ratio=0",
-      "config": {
-        "model_name": "neuralmind/bert-large-portuguese-cased",
-        "lr": 2e-05,
-        "warmup_ratio": 0.0
-      },
-      "span_f1": 0.76,
-      "span_precision": 0.8769230769230769,
-      "span_recall": 0.6705882352941176,
-      "token_f1": 0.784575239199768,
-      "elapsed_seconds": 2588.318293094635
-    },
-    {
-      "config_id": "lr=3e-05_model_name=neuralmind-bert-large-portuguese-cased_warmup_ratio=0.1",
+      "config_id": "lr=3e-05_model_name=neuralmind-bert-large-portuguese-cased_stride=320_warmup_ratio=0",
       "config": {
         "model_name": "neuralmind/bert-large-portuguese-cased",
         "lr": 3e-05,
-        "warmup_ratio": 0.1
+        "warmup_ratio": 0.0,
+        "stride": 320
       },
-      "span_f1": 0.7484662576687117,
-      "span_precision": 0.782051282051282,
-      "span_recall": 0.7176470588235294,
-      "token_f1": 0.8124713434204494,
-      "elapsed_seconds": 2382.3838319778442
+      "span_f1": 0.7741935483870969,
+      "span_precision": 0.8108108108108109,
+      "span_recall": 0.7407407407407407,
+      "token_f1": 0.7995283018867925,
+      "elapsed_seconds": 2975.206326007843
     },
     {
-      "config_id": "lr=3e-05_model_name=neuralmind-bert-large-portuguese-cased_warmup_ratio=0",
+      "config_id": "lr=5e-05_model_name=neuralmind-bert-large-portuguese-cased_stride=320_warmup_ratio=0.1",
       "config": {
         "model_name": "neuralmind/bert-large-portuguese-cased",
-        "lr": 3e-05,
-        "warmup_ratio": 0.0
+        "lr": 5e-05,
+        "warmup_ratio": 0.1,
+        "stride": 320
       },
-      "span_f1": 0.7295597484276729,
+      "span_f1": 0.7483870967741936,
       "span_precision": 0.7837837837837838,
-      "span_recall": 0.6823529411764706,
-      "token_f1": 0.7942691263226894,
-      "elapsed_seconds": 2580.260960817337
+      "span_recall": 0.7160493827160493,
+      "token_f1": 0.7790074973223848,
+      "elapsed_seconds": 3101.2934668064117
     },
     {
-      "config_id": "lr=5e-05_model_name=neuralmind-bert-large-portuguese-cased_warmup_ratio=0.1",
+      "config_id": "lr=3e-05_model_name=neuralmind-bert-large-portuguese-cased_stride=320_warmup_ratio=0.1",
+      "config": {
+        "model_name": "neuralmind/bert-large-portuguese-cased",
+        "lr": 3e-05,
+        "warmup_ratio": 0.1,
+        "stride": 320
+      },
+      "span_f1": 0.7225806451612903,
+      "span_precision": 0.7567567567567568,
+      "span_recall": 0.691358024691358,
+      "token_f1": 0.7745734198509974,
+      "elapsed_seconds": 3004.2592430114746
+    },
+    {
+      "config_id": "lr=5e-05_model_name=neuralmind-bert-large-portuguese-cased_stride=320_warmup_ratio=0",
       "config": {
         "model_name": "neuralmind/bert-large-portuguese-cased",
         "lr": 5e-05,
-        "warmup_ratio": 0.1
+        "warmup_ratio": 0.0,
+        "stride": 320
       },
-      "span_f1": 0.6976744186046512,
-      "span_precision": 0.6896551724137931,
-      "span_recall": 0.7058823529411765,
-      "token_f1": 0.8047698280643372,
-      "elapsed_seconds": 2242.2117381095886
+      "span_f1": 0.704225352112676,
+      "span_precision": 0.819672131147541,
+      "span_recall": 0.6172839506172839,
+      "token_f1": 0.7402630247850278,
+      "elapsed_seconds": 3038.697021961212
     },
     {
-      "config_id": "lr=5e-05_model_name=neuralmind-bert-large-portuguese-cased_warmup_ratio=0",
+      "config_id": "lr=2e-05_model_name=neuralmind-bert-large-portuguese-cased_stride=320_warmup_ratio=0.1",
       "config": {
         "model_name": "neuralmind/bert-large-portuguese-cased",
-        "lr": 5e-05,
-        "warmup_ratio": 0.0
+        "lr": 2e-05,
+        "warmup_ratio": 0.1,
+        "stride": 320
       },
-      "span_f1": 0.6946107784431137,
-      "span_precision": 0.7073170731707317,
-      "span_recall": 0.6823529411764706,
-      "token_f1": 0.7947105603846866,
-      "elapsed_seconds": 2358.693348169327
+      "span_f1": 0.6811594202898551,
+      "span_precision": 0.8245614035087719,
+      "span_recall": 0.5802469135802469,
+      "token_f1": 0.683129711463478,
+      "elapsed_seconds": 2967.5192539691925
+    },
+    {
+      "config_id": "lr=2e-05_model_name=neuralmind-bert-large-portuguese-cased_stride=320_warmup_ratio=0",
+      "config": {
+        "model_name": "neuralmind/bert-large-portuguese-cased",
+        "lr": 2e-05,
+        "warmup_ratio": 0.0,
+        "stride": 320
+      },
+      "span_f1": 0.640625,
+      "span_precision": 0.8723404255319149,
+      "span_recall": 0.5061728395061729,
+      "token_f1": 0.6388700258046992,
+      "elapsed_seconds": 3218.8704328536987
     }
   ],
   "best": {
-    "config_id": "lr=2e-05_model_name=neuralmind-bert-large-portuguese-cased_warmup_ratio=0.1",
+    "config_id": "lr=3e-05_model_name=neuralmind-bert-large-portuguese-cased_stride=320_warmup_ratio=0",
     "config": {
       "model_name": "neuralmind/bert-large-portuguese-cased",
-      "lr": 2e-05,
-      "warmup_ratio": 0.1
+      "lr": 3e-05,
+      "warmup_ratio": 0.0,
+      "stride": 320
     },
-    "span_f1": 0.7837837837837838,
-    "span_precision": 0.9206349206349206,
-    "span_recall": 0.6823529411764706,
-    "token_f1": 0.7933632115953084,
-    "elapsed_seconds": 2535.61363363266
+    "span_f1": 0.7741935483870969,
+    "span_precision": 0.8108108108108109,
+    "span_recall": 0.7407407407407407,
+    "token_f1": 0.7995283018867925,
+    "elapsed_seconds": 2975.206326007843
   }
 }

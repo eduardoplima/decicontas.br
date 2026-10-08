@@ -2,95 +2,102 @@
   "model": "dominguesm/legal-bert-base-cased-ptbr",
   "rows": [
     {
-      "config_id": "lr=5e-05_model_name=dominguesm-legal-bert-base-cased-ptbr_warmup_ratio=0.1",
+      "config_id": "lr=5e-05_model_name=dominguesm-legal-bert-base-cased-ptbr_stride=320_warmup_ratio=0",
       "config": {
         "model_name": "dominguesm/legal-bert-base-cased-ptbr",
         "lr": 5e-05,
-        "warmup_ratio": 0.1
+        "warmup_ratio": 0.0,
+        "stride": 320
       },
-      "span_f1": 0.7733333333333334,
-      "span_precision": 0.90625,
-      "span_recall": 0.6744186046511628,
-      "token_f1": 0.7870604781997187,
-      "elapsed_seconds": 748.434296131134
+      "span_f1": 0.7210884353741497,
+      "span_precision": 0.803030303030303,
+      "span_recall": 0.654320987654321,
+      "token_f1": 0.7384996900185988,
+      "elapsed_seconds": 934.480593919754
     },
     {
-      "config_id": "lr=5e-05_model_name=dominguesm-legal-bert-base-cased-ptbr_warmup_ratio=0",
+      "config_id": "lr=3e-05_model_name=dominguesm-legal-bert-base-cased-ptbr_stride=320_warmup_ratio=0",
+      "config": {
+        "model_name": "dominguesm/legal-bert-base-cased-ptbr",
+        "lr": 3e-05,
+        "warmup_ratio": 0.0,
+        "stride": 320
+      },
+      "span_f1": 0.7058823529411765,
+      "span_precision": 0.8727272727272727,
+      "span_recall": 0.5925925925925926,
+      "token_f1": 0.6997016474250876,
+      "elapsed_seconds": 871.198205947876
+    },
+    {
+      "config_id": "lr=3e-05_model_name=dominguesm-legal-bert-base-cased-ptbr_stride=320_warmup_ratio=0.1",
+      "config": {
+        "model_name": "dominguesm/legal-bert-base-cased-ptbr",
+        "lr": 3e-05,
+        "warmup_ratio": 0.1,
+        "stride": 320
+      },
+      "span_f1": 0.6719999999999999,
+      "span_precision": 0.9545454545454546,
+      "span_recall": 0.5185185185185185,
+      "token_f1": 0.6439011064062287,
+      "elapsed_seconds": 862.9602599143982
+    },
+    {
+      "config_id": "lr=5e-05_model_name=dominguesm-legal-bert-base-cased-ptbr_stride=320_warmup_ratio=0.1",
       "config": {
         "model_name": "dominguesm/legal-bert-base-cased-ptbr",
         "lr": 5e-05,
-        "warmup_ratio": 0.0
+        "warmup_ratio": 0.1,
+        "stride": 320
       },
-      "span_f1": 0.7337278106508875,
-      "span_precision": 0.7469879518072289,
-      "span_recall": 0.7209302325581395,
-      "token_f1": 0.8147670778862088,
-      "elapsed_seconds": 748.3582768440247
+      "span_f1": 0.6231884057971014,
+      "span_precision": 0.7543859649122807,
+      "span_recall": 0.5308641975308642,
+      "token_f1": 0.6462493254182406,
+      "elapsed_seconds": 981.0854458808899
     },
     {
-      "config_id": "lr=3e-05_model_name=dominguesm-legal-bert-base-cased-ptbr_warmup_ratio=0.1",
-      "config": {
-        "model_name": "dominguesm/legal-bert-base-cased-ptbr",
-        "lr": 3e-05,
-        "warmup_ratio": 0.1
-      },
-      "span_f1": 0.6878980891719745,
-      "span_precision": 0.7605633802816901,
-      "span_recall": 0.627906976744186,
-      "token_f1": 0.7680840898232203,
-      "elapsed_seconds": 748.4382138252258
-    },
-    {
-      "config_id": "lr=3e-05_model_name=dominguesm-legal-bert-base-cased-ptbr_warmup_ratio=0",
-      "config": {
-        "model_name": "dominguesm/legal-bert-base-cased-ptbr",
-        "lr": 3e-05,
-        "warmup_ratio": 0.0
-      },
-      "span_f1": 0.6711409395973155,
-      "span_precision": 0.7936507936507936,
-      "span_recall": 0.5813953488372093,
-      "token_f1": 0.7318245543761266,
-      "elapsed_seconds": 749.4511117935181
-    },
-    {
-      "config_id": "lr=2e-05_model_name=dominguesm-legal-bert-base-cased-ptbr_warmup_ratio=0",
+      "config_id": "lr=2e-05_model_name=dominguesm-legal-bert-base-cased-ptbr_stride=320_warmup_ratio=0.1",
       "config": {
         "model_name": "dominguesm/legal-bert-base-cased-ptbr",
         "lr": 2e-05,
-        "warmup_ratio": 0.0
+        "warmup_ratio": 0.1,
+        "stride": 320
       },
-      "span_f1": 0.29411764705882354,
-      "span_precision": 0.9375,
-      "span_recall": 0.1744186046511628,
-      "token_f1": 0.3829243353783231,
-      "elapsed_seconds": 750.870621919632
+      "span_f1": 0.5737704918032787,
+      "span_precision": 0.8536585365853658,
+      "span_recall": 0.43209876543209874,
+      "token_f1": 0.5819426615318785,
+      "elapsed_seconds": 907.5654819011688
     },
     {
-      "config_id": "lr=2e-05_model_name=dominguesm-legal-bert-base-cased-ptbr_warmup_ratio=0.1",
+      "config_id": "lr=2e-05_model_name=dominguesm-legal-bert-base-cased-ptbr_stride=320_warmup_ratio=0",
       "config": {
         "model_name": "dominguesm/legal-bert-base-cased-ptbr",
         "lr": 2e-05,
-        "warmup_ratio": 0.1
+        "warmup_ratio": 0.0,
+        "stride": 320
       },
-      "span_f1": 0.2268041237113402,
-      "span_precision": 1.0,
-      "span_recall": 0.12790697674418605,
-      "token_f1": 0.2967759341697019,
-      "elapsed_seconds": 749.2659499645233
+      "span_f1": 0.5128205128205128,
+      "span_precision": 0.8333333333333334,
+      "span_recall": 0.37037037037037035,
+      "token_f1": 0.5267526307988736,
+      "elapsed_seconds": 843.6810030937195
     }
   ],
   "best": {
-    "config_id": "lr=5e-05_model_name=dominguesm-legal-bert-base-cased-ptbr_warmup_ratio=0.1",
+    "config_id": "lr=5e-05_model_name=dominguesm-legal-bert-base-cased-ptbr_stride=320_warmup_ratio=0",
     "config": {
       "model_name": "dominguesm/legal-bert-base-cased-ptbr",
       "lr": 5e-05,
-      "warmup_ratio": 0.1
+      "warmup_ratio": 0.0,
+      "stride": 320
     },
-    "span_f1": 0.7733333333333334,
-    "span_precision": 0.90625,
-    "span_recall": 0.6744186046511628,
-    "token_f1": 0.7870604781997187,
-    "elapsed_seconds": 748.434296131134
+    "span_f1": 0.7210884353741497,
+    "span_precision": 0.803030303030303,
+    "span_recall": 0.654320987654321,
+    "token_f1": 0.7384996900185988,
+    "elapsed_seconds": 934.480593919754
   }
 }

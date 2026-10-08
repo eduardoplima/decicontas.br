@@ -271,12 +271,10 @@ def _load_supervised_df(path: Path) -> pd.DataFrame:
     would be scored against that superseded gold.
 
     It does not truncate the gold to the length of the prediction sequence.
-    The encoders cut their input at a subword limit, dropping the tail of 7 to
-    29 documents each; truncating the gold to match deleted the entities past
-    the cut from the denominator entirely — 40 of them for BERTimbau-base —
-    while the LLMs were scored against all of them. Predictions are now scored
-    against the whole gold, so an entity the model never had the chance to see
-    counts as the recall loss it is.
+    The encoders now cover every document through sliding windows
+    (``research/kfold/windows.py``), so the sequences should match the gold
+    length; if a prediction ever comes up short, the missing tail still counts
+    as recall loss instead of vanishing from the denominator.
     """
     raw = json.loads(path.read_text(encoding="utf-8"))
     rec = raw[0] if isinstance(raw, list) else raw
@@ -1222,13 +1220,12 @@ def write_report(out_dir: Path, j_summary: list[dict[str, Any]]) -> None:
         "tokenização canônica no caminho BIO. O efeito maior aparece na "
         "correspondência exata, que antes media se a borda direita estimada "
         "pelo modelo caía por acaso em fronteira de token.\n\n"
-        "3. **Gold supervisionado não truncado.** O gold dos supervisionados "
-        "vinha do próprio `true_labels` do modelo, cortado no limite de "
-        "subwords do encoder. Entre 7 e 29 documentos por modelo perdiam a "
-        "cauda, e as entidades além do corte sumiam do denominador — 40 delas "
-        "no BERTimbau-base — enquanto os LLMs eram avaliados contra o gold "
-        "inteiro. Agora todos são pontuados contra o gold canônico completo, e "
-        "o que o encoder não pôde ver conta como perda de revocação.\n\n"
+        "3. **Gold supervisionado completo e entrada sem truncamento.** Todos "
+        "os modelos são pontuados contra o gold canônico completo, e não "
+        "contra o `true_labels` do próprio modelo. Os encoders processam "
+        "documentos longos em janelas deslizantes de 512 subpalavras com "
+        "sobreposição de 320, e o BiLSTM-CRF aceita até 1.100 tokens; nenhum "
+        "documento é truncado (`check_alignment`).\n\n"
         "4. **Gold canônico íntegro.** As decisões `reject` do cleanlab "
         "deixaram de ser aplicadas (um `reject` é, por definição, operação "
         "nula) e o BIO passou a ser re-derivado dos spans reconstruídos. Antes "

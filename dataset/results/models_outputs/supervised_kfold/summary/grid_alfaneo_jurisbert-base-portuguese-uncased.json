@@ -2,95 +2,102 @@
   "model": "alfaneo/jurisbert-base-portuguese-uncased",
   "rows": [
     {
-      "config_id": "lr=3e-05_model_name=alfaneo-jurisbert-base-portuguese-uncased_warmup_ratio=0.1",
+      "config_id": "lr=3e-05_model_name=alfaneo-jurisbert-base-portuguese-uncased_stride=320_warmup_ratio=0",
       "config": {
         "model_name": "alfaneo/jurisbert-base-portuguese-uncased",
         "lr": 3e-05,
-        "warmup_ratio": 0.1
+        "warmup_ratio": 0.0,
+        "stride": 320
       },
-      "span_f1": 0.7354838709677418,
-      "span_precision": 0.8260869565217391,
-      "span_recall": 0.6627906976744186,
-      "token_f1": 0.7688346366584017,
-      "elapsed_seconds": 882.0132517814636
+      "span_f1": 0.6666666666666666,
+      "span_precision": 0.8627450980392157,
+      "span_recall": 0.5432098765432098,
+      "token_f1": 0.6638069705093834,
+      "elapsed_seconds": 879.6542310714722
     },
     {
-      "config_id": "lr=5e-05_model_name=alfaneo-jurisbert-base-portuguese-uncased_warmup_ratio=0",
+      "config_id": "lr=5e-05_model_name=alfaneo-jurisbert-base-portuguese-uncased_stride=320_warmup_ratio=0",
       "config": {
         "model_name": "alfaneo/jurisbert-base-portuguese-uncased",
         "lr": 5e-05,
-        "warmup_ratio": 0.0
+        "warmup_ratio": 0.0,
+        "stride": 320
       },
-      "span_f1": 0.7019867549668873,
-      "span_precision": 0.8153846153846154,
-      "span_recall": 0.6162790697674418,
-      "token_f1": 0.736191503973315,
-      "elapsed_seconds": 887.0486528873444
+      "span_f1": 0.6405228758169934,
+      "span_precision": 0.6805555555555556,
+      "span_recall": 0.6049382716049383,
+      "token_f1": 0.6975097964859057,
+      "elapsed_seconds": 940.2720377445221
     },
     {
-      "config_id": "lr=2e-05_model_name=alfaneo-jurisbert-base-portuguese-uncased_warmup_ratio=0.1",
-      "config": {
-        "model_name": "alfaneo/jurisbert-base-portuguese-uncased",
-        "lr": 2e-05,
-        "warmup_ratio": 0.1
-      },
-      "span_f1": 0.6714285714285714,
-      "span_precision": 0.8703703703703703,
-      "span_recall": 0.5465116279069767,
-      "token_f1": 0.7086072620612927,
-      "elapsed_seconds": 818.1296319961548
-    },
-    {
-      "config_id": "lr=2e-05_model_name=alfaneo-jurisbert-base-portuguese-uncased_warmup_ratio=0",
-      "config": {
-        "model_name": "alfaneo/jurisbert-base-portuguese-uncased",
-        "lr": 2e-05,
-        "warmup_ratio": 0.0
-      },
-      "span_f1": 0.656934306569343,
-      "span_precision": 0.8823529411764706,
-      "span_recall": 0.5232558139534884,
-      "token_f1": 0.6940779380177968,
-      "elapsed_seconds": 773.2044532299042
-    },
-    {
-      "config_id": "lr=5e-05_model_name=alfaneo-jurisbert-base-portuguese-uncased_warmup_ratio=0.1",
-      "config": {
-        "model_name": "alfaneo/jurisbert-base-portuguese-uncased",
-        "lr": 5e-05,
-        "warmup_ratio": 0.1
-      },
-      "span_f1": 0.6338028169014085,
-      "span_precision": 0.8035714285714286,
-      "span_recall": 0.5232558139534884,
-      "token_f1": 0.6757672174894797,
-      "elapsed_seconds": 735.3868527412415
-    },
-    {
-      "config_id": "lr=3e-05_model_name=alfaneo-jurisbert-base-portuguese-uncased_warmup_ratio=0",
+      "config_id": "lr=3e-05_model_name=alfaneo-jurisbert-base-portuguese-uncased_stride=320_warmup_ratio=0.1",
       "config": {
         "model_name": "alfaneo/jurisbert-base-portuguese-uncased",
         "lr": 3e-05,
-        "warmup_ratio": 0.0
+        "warmup_ratio": 0.1,
+        "stride": 320
       },
-      "span_f1": 0.5970149253731343,
-      "span_precision": 0.8333333333333334,
-      "span_recall": 0.46511627906976744,
-      "token_f1": 0.6523244831566796,
-      "elapsed_seconds": 770.0620307922363
+      "span_f1": 0.624,
+      "span_precision": 0.8863636363636364,
+      "span_recall": 0.48148148148148145,
+      "token_f1": 0.6129484304932735,
+      "elapsed_seconds": 848.2380888462067
+    },
+    {
+      "config_id": "lr=2e-05_model_name=alfaneo-jurisbert-base-portuguese-uncased_stride=320_warmup_ratio=0",
+      "config": {
+        "model_name": "alfaneo/jurisbert-base-portuguese-uncased",
+        "lr": 2e-05,
+        "warmup_ratio": 0.0,
+        "stride": 320
+      },
+      "span_f1": 0.6046511627906976,
+      "span_precision": 0.8125,
+      "span_recall": 0.48148148148148145,
+      "token_f1": 0.6239409674774529,
+      "elapsed_seconds": 840.5854361057281
+    },
+    {
+      "config_id": "lr=2e-05_model_name=alfaneo-jurisbert-base-portuguese-uncased_stride=320_warmup_ratio=0.1",
+      "config": {
+        "model_name": "alfaneo/jurisbert-base-portuguese-uncased",
+        "lr": 2e-05,
+        "warmup_ratio": 0.1,
+        "stride": 320
+      },
+      "span_f1": 0.6046511627906976,
+      "span_precision": 0.8125,
+      "span_recall": 0.48148148148148145,
+      "token_f1": 0.6242821985233798,
+      "elapsed_seconds": 912.4270548820496
+    },
+    {
+      "config_id": "lr=5e-05_model_name=alfaneo-jurisbert-base-portuguese-uncased_stride=320_warmup_ratio=0.1",
+      "config": {
+        "model_name": "alfaneo/jurisbert-base-portuguese-uncased",
+        "lr": 5e-05,
+        "warmup_ratio": 0.1,
+        "stride": 320
+      },
+      "span_f1": 0.5573770491803278,
+      "span_precision": 0.8292682926829268,
+      "span_recall": 0.41975308641975306,
+      "token_f1": 0.5632050911194677,
+      "elapsed_seconds": 842.7015089988708
     }
   ],
   "best": {
-    "config_id": "lr=3e-05_model_name=alfaneo-jurisbert-base-portuguese-uncased_warmup_ratio=0.1",
+    "config_id": "lr=3e-05_model_name=alfaneo-jurisbert-base-portuguese-uncased_stride=320_warmup_ratio=0",
     "config": {
       "model_name": "alfaneo/jurisbert-base-portuguese-uncased",
       "lr": 3e-05,
-      "warmup_ratio": 0.1
+      "warmup_ratio": 0.0,
+      "stride": 320
     },
-    "span_f1": 0.7354838709677418,
-    "span_precision": 0.8260869565217391,
-    "span_recall": 0.6627906976744186,
-    "token_f1": 0.7688346366584017,
-    "elapsed_seconds": 882.0132517814636
+    "span_f1": 0.6666666666666666,
+    "span_precision": 0.8627450980392157,
+    "span_recall": 0.5432098765432098,
+    "token_f1": 0.6638069705093834,
+    "elapsed_seconds": 879.6542310714722
   }
 }

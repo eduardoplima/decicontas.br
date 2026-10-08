@@ -2,95 +2,102 @@
   "model": "dccmpmgfinalisticas/GovBERT-BR",
   "rows": [
     {
-      "config_id": "lr=5e-05_model_name=dccmpmgfinalisticas-GovBERT-BR_warmup_ratio=0",
+      "config_id": "lr=5e-05_model_name=dccmpmgfinalisticas-GovBERT-BR_stride=320_warmup_ratio=0",
       "config": {
         "model_name": "dccmpmgfinalisticas/GovBERT-BR",
         "lr": 5e-05,
-        "warmup_ratio": 0.0
+        "warmup_ratio": 0.0,
+        "stride": 320
       },
-      "span_f1": 0.6716417910447761,
-      "span_precision": 0.8035714285714286,
-      "span_recall": 0.5769230769230769,
-      "token_f1": 0.7062338720630178,
-      "elapsed_seconds": 802.8276138305664
+      "span_f1": 0.6201550387596899,
+      "span_precision": 0.8333333333333334,
+      "span_recall": 0.49382716049382713,
+      "token_f1": 0.6350027218290691,
+      "elapsed_seconds": 943.6098382472992
     },
     {
-      "config_id": "lr=5e-05_model_name=dccmpmgfinalisticas-GovBERT-BR_warmup_ratio=0.1",
+      "config_id": "lr=5e-05_model_name=dccmpmgfinalisticas-GovBERT-BR_stride=320_warmup_ratio=0.1",
       "config": {
         "model_name": "dccmpmgfinalisticas/GovBERT-BR",
         "lr": 5e-05,
-        "warmup_ratio": 0.1
+        "warmup_ratio": 0.1,
+        "stride": 320
       },
-      "span_f1": 0.6016260162601627,
-      "span_precision": 0.8222222222222222,
-      "span_recall": 0.47435897435897434,
-      "token_f1": 0.6301251618472162,
-      "elapsed_seconds": 821.9551208019257
+      "span_f1": 0.5826771653543307,
+      "span_precision": 0.8043478260869565,
+      "span_recall": 0.4567901234567901,
+      "token_f1": 0.6252225112967273,
+      "elapsed_seconds": 944.4092690944672
     },
     {
-      "config_id": "lr=3e-05_model_name=dccmpmgfinalisticas-GovBERT-BR_warmup_ratio=0",
+      "config_id": "lr=3e-05_model_name=dccmpmgfinalisticas-GovBERT-BR_stride=320_warmup_ratio=0",
       "config": {
         "model_name": "dccmpmgfinalisticas/GovBERT-BR",
         "lr": 3e-05,
-        "warmup_ratio": 0.0
+        "warmup_ratio": 0.0,
+        "stride": 320
       },
-      "span_f1": 0.24719101123595508,
-      "span_precision": 1.0,
-      "span_recall": 0.14102564102564102,
-      "token_f1": 0.3025302530253025,
-      "elapsed_seconds": 802.6957409381866
+      "span_f1": 0.4629629629629629,
+      "span_precision": 0.9259259259259259,
+      "span_recall": 0.30864197530864196,
+      "token_f1": 0.46600741656365885,
+      "elapsed_seconds": 996.8650569915771
     },
     {
-      "config_id": "lr=3e-05_model_name=dccmpmgfinalisticas-GovBERT-BR_warmup_ratio=0.1",
+      "config_id": "lr=3e-05_model_name=dccmpmgfinalisticas-GovBERT-BR_stride=320_warmup_ratio=0.1",
       "config": {
         "model_name": "dccmpmgfinalisticas/GovBERT-BR",
         "lr": 3e-05,
-        "warmup_ratio": 0.1
+        "warmup_ratio": 0.1,
+        "stride": 320
       },
-      "span_f1": 0.24719101123595508,
-      "span_precision": 1.0,
-      "span_recall": 0.14102564102564102,
-      "token_f1": 0.3025302530253025,
-      "elapsed_seconds": 802.2789421081543
+      "span_f1": 0.419047619047619,
+      "span_precision": 0.9166666666666666,
+      "span_recall": 0.2716049382716049,
+      "token_f1": 0.4355499527261267,
+      "elapsed_seconds": 985.3413109779358
     },
     {
-      "config_id": "lr=2e-05_model_name=dccmpmgfinalisticas-GovBERT-BR_warmup_ratio=0",
+      "config_id": "lr=2e-05_model_name=dccmpmgfinalisticas-GovBERT-BR_stride=320_warmup_ratio=0",
       "config": {
         "model_name": "dccmpmgfinalisticas/GovBERT-BR",
         "lr": 2e-05,
-        "warmup_ratio": 0.0
+        "warmup_ratio": 0.0,
+        "stride": 320
       },
       "span_f1": 0.0,
       "span_precision": 0.0,
       "span_recall": 0.0,
       "token_f1": 0.0,
-      "elapsed_seconds": 873.9164810180664
+      "elapsed_seconds": 932.6233327388763
     },
     {
-      "config_id": "lr=2e-05_model_name=dccmpmgfinalisticas-GovBERT-BR_warmup_ratio=0.1",
+      "config_id": "lr=2e-05_model_name=dccmpmgfinalisticas-GovBERT-BR_stride=320_warmup_ratio=0.1",
       "config": {
         "model_name": "dccmpmgfinalisticas/GovBERT-BR",
         "lr": 2e-05,
-        "warmup_ratio": 0.1
+        "warmup_ratio": 0.1,
+        "stride": 320
       },
       "span_f1": 0.0,
       "span_precision": 0.0,
       "span_recall": 0.0,
       "token_f1": 0.0,
-      "elapsed_seconds": 819.0904948711395
+      "elapsed_seconds": 950.2570881843567
     }
   ],
   "best": {
-    "config_id": "lr=5e-05_model_name=dccmpmgfinalisticas-GovBERT-BR_warmup_ratio=0",
+    "config_id": "lr=5e-05_model_name=dccmpmgfinalisticas-GovBERT-BR_stride=320_warmup_ratio=0",
     "config": {
       "model_name": "dccmpmgfinalisticas/GovBERT-BR",
       "lr": 5e-05,
-      "warmup_ratio": 0.0
+      "warmup_ratio": 0.0,
+      "stride": 320
     },
-    "span_f1": 0.6716417910447761,
-    "span_precision": 0.8035714285714286,
-    "span_recall": 0.5769230769230769,
-    "token_f1": 0.7062338720630178,
-    "elapsed_seconds": 802.8276138305664
+    "span_f1": 0.6201550387596899,
+    "span_precision": 0.8333333333333334,
+    "span_recall": 0.49382716049382713,
+    "token_f1": 0.6350027218290691,
+    "elapsed_seconds": 943.6098382472992
   }
 }
