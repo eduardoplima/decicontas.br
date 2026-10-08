@@ -28,11 +28,23 @@ warnings.filterwarnings("ignore")
 from .config import SEED  # noqa: E402
 from .data import grid_split, kfold_splits, label_set, load_bio_samples  # noqa: E402
 from .metrics import evaluate_oof  # noqa: E402
+from .windows import Window, build_windows, merge_window_predictions  # noqa: E402
 
 
 def _set_seed(seed: int) -> None:
     np.random.seed(seed)
     torch.manual_seed(seed)
+
+
+def checkpoint_dir(pid: int | None = None) -> str:
+    """Scratch directory for the HF Trainer's per-epoch checkpoints.
+
+    Defaults to ``/tmp``; ``DECICONTAS_TMP_DIR`` redirects it (e.g. to an external
+    volume — bert-large rotates two ~4 GB checkpoints per epoch). Removed after
+    each run.
+    """
+    base = os.environ.get("DECICONTAS_TMP_DIR", "/tmp")
+    return os.path.join(base, f"decicontas_bert_{pid if pid is not None else os.getpid()}")
 
 
 # Checkpoints with a sentence-transformers layout keep the encoder in a
@@ -60,39 +72,40 @@ class BertConfig:
     # treino em vez de privilegiar um modelo.
     early_stopping_patience: int = 10
     max_length: int = 512
+    # Sliding window over documents longer than ``max_length`` subwords: windows
+    # of 512 subwords overlapping by ``stride``. With 320 the longest gold entity
+    # of the corpus (408 subwords) still fits whole inside at least one window
+    # (guarded by tests/test_kfold_windows.py); 128 would leave seven entities
+    # split in every window they touch.
+    stride: int = 320
 
 
 class _TokenDataset(Dataset):
+    """One item per *window*, not per document (see :mod:`research.kfold.windows`)."""
+
     def __init__(self, samples: list[dict[str, Any]], tokenizer, label2id: dict[str, int],
-                 max_length: int) -> None:
+                 max_length: int, stride: int) -> None:
         self.samples = samples
-        self.tokenizer = tokenizer
-        self.label2id = label2id
-        self.max_length = max_length
+        self.windows: list[Window] = []
+        for doc_idx, s in enumerate(samples):
+            self.windows.extend(build_windows(
+                s["tokens"], s["labels"], tokenizer, label2id,
+                max_length=max_length, stride=stride, doc_idx=doc_idx,
+            ))
 
     def __len__(self) -> int:
-        return len(self.samples)
+        return len(self.windows)
 
     def __getitem__(self, idx: int) -> dict[str, torch.Tensor]:
-        s = self.samples[idx]
-        enc = self.tokenizer(
-            s["tokens"], is_split_into_words=True,
-            max_length=self.max_length, truncation=True, padding=False,
-        )
-        word_ids = enc.word_ids()
-        aligned: list[int] = []
-        prev = None
-        for wid in word_ids:
-            if wid is None:
-                aligned.append(-100)
-            elif wid != prev:
-                aligned.append(self.label2id[s["labels"][wid]])
-            else:
-                lbl = s["labels"][wid]
-                aligned.append(self.label2id["I-" + lbl[2:]] if lbl.startswith("B-") else self.label2id[lbl])
-            prev = wid
-        enc["labels"] = aligned
-        return {k: torch.tensor(v) for k, v in enc.items()}
+        w = self.windows[idx]
+        item = {
+            "input_ids": w.input_ids,
+            "attention_mask": w.attention_mask,
+            "labels": w.labels,
+        }
+        if w.token_type_ids is not None:
+            item["token_type_ids"] = w.token_type_ids
+        return {k: torch.tensor(v) for k, v in item.items()}
 
 
 def _split_indices(samples, mode: str, fold_idx: int) -> tuple[list[int], list[int], list[int]]:
@@ -152,9 +165,9 @@ def train_one(cfg: BertConfig, mode: str, fold_idx: int) -> dict[str, Any]:
         ignore_mismatched_sizes=True,
     )
 
-    train_ds = _TokenDataset(train_data, tokenizer, label2id, cfg.max_length)
-    val_ds = _TokenDataset(val_data, tokenizer, label2id, cfg.max_length)
-    test_ds = _TokenDataset(test_data, tokenizer, label2id, cfg.max_length)
+    train_ds = _TokenDataset(train_data, tokenizer, label2id, cfg.max_length, cfg.stride)
+    val_ds = _TokenDataset(val_data, tokenizer, label2id, cfg.max_length, cfg.stride)
+    test_ds = _TokenDataset(test_data, tokenizer, label2id, cfg.max_length, cfg.stride)
 
     def _compute_metrics(eval_pred):
         preds, labs = eval_pred
@@ -182,7 +195,7 @@ def train_one(cfg: BertConfig, mode: str, fold_idx: int) -> dict[str, Any]:
             "recall": seq_r(true_seqs, pred_seqs, **strict),
         }
 
-    output_dir = f"/tmp/decicontas_bert_{os.getpid()}"
+    output_dir = checkpoint_dir()
     args = TrainingArguments(
         output_dir=output_dir,
         eval_strategy="epoch",
@@ -222,31 +235,23 @@ def train_one(cfg: BertConfig, mode: str, fold_idx: int) -> dict[str, Any]:
     )
     trainer.train()
 
+    # Predictions come back one row per *window* (padded to the longest window in
+    # each batch). Group the rows by document and merge them into one word-level
+    # sequence per document; the gold is the full document, never a truncation.
     pred_out = trainer.predict(test_ds)
     preds_arr = np.argmax(pred_out.predictions, axis=2)
-    labels_arr = pred_out.label_ids
+    assert preds_arr.shape[0] == len(test_ds.windows)
+
+    per_doc: dict[int, list[tuple[list[int | None], list[str]]]] = {}
+    for row, w in zip(preds_arr, test_ds.windows):
+        labels_row = [id2label[int(p_)] for p_ in row[: len(w.word_ids)]]
+        per_doc.setdefault(w.doc_idx, []).append((w.word_ids, labels_row))
 
     pred_bio: list[list[str]] = []
     true_bio: list[list[str]] = []
-    for local_i, global_i in enumerate(test_idx):
-        s = samples[global_i]
-        enc = tokenizer(
-            s["tokens"], is_split_into_words=True,
-            max_length=cfg.max_length, truncation=True, padding=False,
-        )
-        word_ids = enc.word_ids()
-        true_seq, pred_seq = [], []
-        prev = None
-        for p_, l_, wid in zip(preds_arr[local_i], labels_arr[local_i], word_ids):
-            if l_ == -100:
-                prev = wid
-                continue
-            if wid != prev:
-                true_seq.append(id2label[int(l_)])
-                pred_seq.append(id2label[int(p_)])
-            prev = wid
-        true_bio.append(true_seq)
-        pred_bio.append(pred_seq)
+    for local_i, s in enumerate(test_data):
+        pred_bio.append(merge_window_predictions(len(s["tokens"]), per_doc.get(local_i, [])))
+        true_bio.append(list(s["labels"]))
 
     metrics = evaluate_oof(samples, test_idx, true_bio, pred_bio, model_name=cfg.model_name)
 

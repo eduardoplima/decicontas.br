@@ -57,7 +57,7 @@ class BiLSTMConfig:
     max_epochs: int = 50
     patience: int = 10
     grad_clip: float = 5.0
-    max_len: int = 512
+    max_len: int = 1100  # acima do documento mais longo do corpus (1056 tokens): nenhum truncamento
 
 
 class _SeqDataset(Dataset):

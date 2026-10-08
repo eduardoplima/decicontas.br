@@ -15,7 +15,6 @@ Usage:
 from __future__ import annotations
 
 import argparse
-import dataclasses
 import json
 import statistics
 import subprocess
@@ -40,8 +39,9 @@ from .config import (
 def _bilstm_grid(smoke: bool = False) -> list[dict[str, Any]]:
     if smoke:
         return [{"hidden_dim": 128, "dropout": 0.5, "lr": 1e-3, "max_epochs": 2, "patience": 2}]
+    # ``max_len`` acima do documento mais longo (1056 tokens): sem truncamento.
     return [
-        {"hidden_dim": h, "dropout": d, "lr": lr}
+        {"hidden_dim": h, "dropout": d, "lr": lr, "max_len": 1100}
         for h, d, lr in product([128, 256], [0.3, 0.5], [1e-3, 3e-3])
     ]
 
@@ -52,8 +52,11 @@ def _bert_grid(model_name: str, smoke: bool = False) -> list[dict[str, Any]]:
             {"model_name": model_name, "lr": 3e-5, "warmup_ratio": 0.1, "epochs": 1,
              "early_stopping_patience": 1}
         ]
+    # ``stride`` grava o regime de janela deslizante no nome do arquivo de cache
+    # da grade (``_config_id``); os caches de CV não codificam a config, por isso
+    # toda rodada com janela deve usar um ``DECICONTAS_RESULTS_SUFFIX`` próprio.
     return [
-        {"model_name": model_name, "lr": lr, "warmup_ratio": w}
+        {"model_name": model_name, "lr": lr, "warmup_ratio": w, "stride": 320}
         for lr, w in product([2e-5, 3e-5, 5e-5], [0.0, 0.1])
     ]
 
