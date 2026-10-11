@@ -768,6 +768,21 @@ def _holm_bonferroni(pvals: list[float]) -> tuple[list[float], list[float]]:
     return holm, bonf
 
 
+def _benjamini_hochberg(pvals: list[float]) -> list[float]:
+    """Return Benjamini-Hochberg (FDR) adjusted p-values for a family."""
+    m = len(pvals)
+    if m == 0:
+        return []
+    order = sorted(range(m), key=lambda i: pvals[i])
+    adj = [0.0] * m
+    running = 1.0
+    for rank in range(m - 1, -1, -1):
+        idx = order[rank]
+        running = min(running, pvals[idx] * m / (rank + 1))
+        adj[idx] = running
+    return adj
+
+
 def block_j_significance(model_dfs: dict[str, pd.DataFrame], out_dir: Path) -> dict[str, Any]:
     """Bootstrap CIs and paired comparisons on the **macro** span F1.
 
@@ -834,6 +849,14 @@ def block_j_significance(model_dfs: dict[str, pd.DataFrame], out_dir: Path) -> d
         .sort_values("diff_f1", key=abs, ascending=False)
         .reset_index(drop=True)
     )
+    # The inferential family is the full set of pairs: comparing every pair
+    # involves no selection, so it is pre-specified by construction. The
+    # highlighted subset below is only a reading aid and inherits these values.
+    holm_all, bonf_all = _holm_bonferroni(df_pairs["p_value"].tolist())
+    df_pairs["p_holm_all"] = holm_all
+    df_pairs["p_bonferroni_all"] = bonf_all
+    df_pairs["p_bh_all"] = _benjamini_hochberg(df_pairs["p_value"].tolist())
+    df_pairs["sig_holm_all_5pct"] = [p < 0.05 for p in holm_all]
     df_pairs.to_csv(out_dir / "J_bootstrap_paired_all.csv", index=False)
 
     # Highlighted subset
@@ -920,6 +943,12 @@ def block_j_significance(model_dfs: dict[str, pd.DataFrame], out_dir: Path) -> d
         {"metric": "n_docs_resampled", "value": n_docs},
         {"metric": "n_total_pairs", "value": n_total},
         {"metric": "n_significant_5pct_uncorrected", "value": n_sig},
+        {"metric": "n_sig_holm_all", "value": int((df_pairs["p_holm_all"] < 0.05).sum())},
+        {
+            "metric": "n_sig_bonferroni_all",
+            "value": int((df_pairs["p_bonferroni_all"] < 0.05).sum()),
+        },
+        {"metric": "n_sig_bh_all", "value": int((df_pairs["p_bh_all"] < 0.05).sum())},
         {
             "metric": "highlighted_family_size",
             "value": int(len(df_highlighted)),
@@ -935,6 +964,10 @@ def block_j_significance(model_dfs: dict[str, pd.DataFrame], out_dir: Path) -> d
         {
             "metric": "highlighted_n_sig_bonferroni",
             "value": int(df_highlighted["sig_bonferroni_5pct"].sum()),
+        },
+        {
+            "metric": "highlighted_n_sig_holm_all",
+            "value": int(df_highlighted["sig_holm_all_5pct"].sum()),
         },
         {
             "metric": "smallest_significant_abs_diff",
@@ -1377,11 +1410,12 @@ def write_report(out_dir: Path, j_summary: list[dict[str, Any]]) -> None:
     parts.append("**Itens 47–48 — Resumo:**\n")
     parts.append(_md_table(pd.DataFrame(j_summary)) + "\n")
     parts.append(
-        "**p48a — Correção para múltiplas comparações.** A família reportada são "
-        "os pares destacados acima; `p_holm`/`p_bonferroni` controlam o erro "
-        "familiar (FWER) e `sig_holm_5pct` substitui a coluna 'Sig.' não corrigida "
-        "da Tabela 13. Diferenças marginais tendem a não sobreviver, reforçando a "
-        "leitura de saturação.\n"
+        "**p48a — Correção para múltiplas comparações.** A família inferencial é "
+        "o conjunto completo dos pares (`p_holm_all`, `p_bonferroni_all`, "
+        "`p_bh_all`), pré-especificado por construção; os pares destacados acima "
+        "são uma seleção para leitura e herdam esses valores. As colunas "
+        "`p_holm`/`p_bonferroni` (correção restrita aos destacados) são mantidas "
+        "apenas como referência.\n"
     )
     leader_path = out_dir / "J_leader_group.csv"
     if leader_path.exists():

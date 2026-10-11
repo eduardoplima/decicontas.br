@@ -14,7 +14,11 @@ from research.ner_metrics import (
     flatten_metrics,
     span_metrics_multi_iou,
 )
-from research.release.evaluation_numbers import _holm_bonferroni, _keep_informative_only
+from research.release.evaluation_numbers import (
+    _benjamini_hochberg,
+    _holm_bonferroni,
+    _keep_informative_only,
+)
 
 
 def _df_one_doc() -> pd.DataFrame:
@@ -119,6 +123,21 @@ class TestHolmBonferroni:
 
     def test_empty(self) -> None:
         assert _holm_bonferroni([]) == ([], [])
+
+
+class TestBenjaminiHochberg:
+    def test_known_values(self) -> None:
+        # p sorted: 0.005, 0.01, 0.03, 0.04 -> raw BH 0.02, 0.02, 0.04, 0.04
+        adj = _benjamini_hochberg([0.01, 0.04, 0.03, 0.005])
+        assert adj == [0.02, 0.04, 0.04, 0.02]
+
+    def test_never_exceeds_bonferroni(self) -> None:
+        pvals = [0.001, 0.2, 0.03, 0.5, 0.04]
+        _, bonf = _holm_bonferroni(pvals)
+        assert all(a <= b + 1e-12 for a, b in zip(_benjamini_hochberg(pvals), bonf))
+
+    def test_empty(self) -> None:
+        assert _benjamini_hochberg([]) == []
 
 
 class TestInformativeFilter:
