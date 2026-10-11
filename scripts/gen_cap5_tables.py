@@ -83,6 +83,37 @@ def tabela_entidade(df: pd.DataFrame, modelos: list[str]) -> str:
     return "\n".join(linhas)
 
 
+def _num(x: float) -> str:
+    """Valor com sinal explícito e vírgula decimal (``$-$`` para negativos)."""
+    t = f"{abs(x):.3f}".replace(".", ",")
+    return ("+" if x >= 0 else "$-$") + t
+
+
+def _p(x: float) -> str:
+    return "$< 0{,}001$" if x < 0.001 else "$" + f"{x:.3f}".replace(".", "{,}") + "$"
+
+
+def tabela_bootstrap(df: pd.DataFrame) -> str:
+    """Linhas de pares do bootstrap: A | B | Δ | IC | p | p_Holm (171) | Sig.
+
+    Cada par é orientado para que o primeiro modelo seja o de maior F1 (Δ >= 0)
+    e as linhas seguem |Δ| decrescente. ``p_holm_all`` é a correção de Holm sobre
+    o conjunto completo de pares.
+    """
+    linhas = []
+    for _, r in df.reindex(df["diff_f1"].abs().sort_values(ascending=False).index).iterrows():
+        a, b = NOMES[r["display_a"]], NOMES[r["display_b"]]
+        d, lo, hi = r["diff_f1"], r["ci_lower"], r["ci_upper"]
+        if d < 0:
+            a, b, d, lo, hi = b, a, -d, -hi, -lo
+        sig = "sim" if r["p_holm_all"] < 0.05 else "não"
+        linhas.append(
+            f"        \\texttt{{{a}}} & \\texttt{{{b}}} & {_num(d)} & "
+            f"[{_num(lo)};\\ {_num(hi)}] & {_p(r['p_value'])} & {_p(r['p_holm_all'])} & {sig} \\\\"
+        )
+    return "\n".join(linhas)
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--out", type=Path, default=None)
@@ -99,9 +130,13 @@ def main() -> None:
         + sup.nlargest(2, "span_f1_macro").display.tolist()
     )
 
+    destacados = pd.read_csv(paths.EVALUATION_DIR / "J_bootstrap_paired_highlighted.csv")
+    todos = pd.read_csv(paths.EVALUATION_DIR / "J_bootstrap_paired_all.csv")
     saidas = {
         "tab_resultados_gerais": tabela_geral(principal),
         "tab_f1_entidade": tabela_entidade(entidade, quatro),
+        "tab_bootstrap_paired": tabela_bootstrap(destacados),
+        "tab_bootstrap_todos": tabela_bootstrap(todos),
     }
     for nome, corpo in saidas.items():
         if args.out:

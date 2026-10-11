@@ -100,34 +100,29 @@ DISPLAY_NAMES = {
     "dccmpmgfinalisticas_GovBERT-BR__supervised": "GovBERT-BR",
 }
 
-# Highlighted pairs for Table 13 (Holm/Bonferroni family). Frontier comparisons +
-# the open-vs-closed narrative (p55c). "Best closed" is assumed GPT-5.2 a priori;
-# the all-91-pairs table + smallest-significant analysis cover the rest.
+# Pairs shown in the chapter-5 table (tab:bootstrap_paired). The inferential
+# family is the full set of pairs (Holm over all of them, see
+# ``evaluation_numbers.block_j_significance``), so this list is a reading aid
+# and choosing it after seeing the results does not inflate significance. Rule:
+# the contrasts behind the chapter's conclusions, named by role.
 HIGHLIGHTED_PAIRS = [
-    # top-2 leadership pair (open vs best closed) — decisive at temperature=0
+    # leadership: leader vs runner-up (open weights vs best proprietary)
     ("deepseek-v4-flash_few_shot", "gpt-4.1_few_shot"),
-    # closed frontier
-    ("gpt-5.2_few_shot", "gpt-5.1_few_shot"),
-    ("gpt-5.2_few_shot", "gpt-4.1_few_shot"),
-    ("gpt-4.1_few_shot", "gpt-4.1-mini_few_shot"),
-    ("gpt-4.1-mini_few_shot", "gpt-4.1-nano_few_shot"),
-    # open-weight vs best closed (p55c)
-    ("gpt-5.2_few_shot", "deepseek-v4-flash_few_shot"),
-    ("gpt-5.2_few_shot", "llama-3.3-70b_few_shot"),
-    ("gpt-5.2_few_shot", "qwen2.5-72b_few_shot"),
-    # open vs open
-    ("deepseek-v4-flash_few_shot", "llama-3.3-70b_few_shot"),
-    ("llama-3.3-70b_few_shot", "qwen2.5-72b_few_shot"),
-    # best LLM vs best supervised, and supervised internal
-    ("gpt-5.2_few_shot", "neuralmind_bert-base-portuguese-cased__supervised"),
-    ("deepseek-v4-flash_few_shot", "neuralmind_bert-base-portuguese-cased__supervised"),
-    ("neuralmind_bert-base-portuguese-cased__supervised", "bilstm-crf__supervised"),
-    # domain-pretrained encoders vs generic BERTimbau-base
-    ("raquelsilveira_legalbertpt_fp__supervised", "neuralmind_bert-base-portuguese-cased__supervised"),
-    ("alfaneo_bertimbaulaw-base-portuguese-cased__supervised", "neuralmind_bert-base-portuguese-cased__supervised"),
-    # best LLMs vs best domain-pretrained supervised
-    ("gpt-5.2_few_shot", "raquelsilveira_legalbertpt_fp__supervised"),
+    # best LLM vs best supervised, and vs the two generic encoders
     ("deepseek-v4-flash_few_shot", "raquelsilveira_legalbertpt_fp__supervised"),
+    ("deepseek-v4-flash_few_shot", "neuralmind_bert-large-portuguese-cased__supervised"),
+    ("deepseek-v4-flash_few_shot", "neuralmind_bert-base-portuguese-cased__supervised"),
+    # best proprietary LLM vs best supervised
+    ("gpt-4.1_few_shot", "raquelsilveira_legalbertpt_fp__supervised"),
+    # supervised: domain pre-training vs generic, scale, architecture
+    ("raquelsilveira_legalbertpt_fp__supervised", "neuralmind_bert-large-portuguese-cased__supervised"),
+    ("raquelsilveira_legalbertpt_fp__supervised", "neuralmind_bert-base-portuguese-cased__supervised"),
+    ("neuralmind_bert-base-portuguese-cased__supervised", "alfaneo_bertimbaulaw-base-portuguese-cased__supervised"),
+    ("neuralmind_bert-large-portuguese-cased__supervised", "neuralmind_bert-base-portuguese-cased__supervised"),
+    ("raquelsilveira_legalbertpt_fp__supervised", "bilstm-crf__supervised"),
+    # proprietary LLMs: newer generation and model size within a family
+    ("gpt-4.1_few_shot", "gpt-5.2_few_shot"),
+    ("gpt-4.1_few_shot", "gpt-4.1-mini_few_shot"),
 ]
 
 
