@@ -1180,50 +1180,93 @@ def block_m_alignment_failures(model_dfs: dict[str, pd.DataFrame], out_dir: Path
 # ----- Block E: cost-benefit (data unavailable) ---------------------------
 
 
+# Azure list prices, USD per 1M tokens (input, cached input, output), Global
+# Standard deployment, Brazil South. Source: Azure Retail Prices API
+# (prices.azure.com), queried 2026-10-11. Only models whose runs logged token
+# usage (``meta.prompt_tokens`` / ``meta.completion_tokens``) are priced.
+AZURE_PRICES_USD_PER_1M: dict[str, tuple[float, float, float]] = {
+    "deepseek-v4-flash_few_shot": (0.19, 0.028, 0.51),
+    "gpt-4.1_few_shot": (2.00, 0.50, 8.00),
+    "gpt-4.1-mini_few_shot": (0.40, 0.10, 1.60),
+    "gpt-4.1-nano_few_shot": (0.10, 0.025, 0.40),
+}
+AZURE_PRICES_DATE = "2026-10-11"
+
+
 def block_e_cost(model_dfs: dict[str, pd.DataFrame], out_dir: Path) -> None:
-    """Token usage estimates from the source texts.
+    """Inference cost per document from the token usage logged by the API.
 
-    We do **not** have logged input/output token counts from the API
-    calls (predictions JSON store only the structured output, not the
-    raw token counts). What we *can* compute deterministically is:
-
-    - Mean characters per document (≈ 4 chars / token rule of thumb gives
-      a rough estimate of input tokens).
-    - Mean output JSON length (predictions Pydantic-serialised).
-
-    Pricing (USD/1M tokens) must come from the user manually because it
-    depends on (a) the snapshot the deployment served at execution time
-    and (b) the provider tier. We emit a TEMPLATE CSV the user fills.
+    LLM rows price the real prompt/completion token counts at the Azure list
+    prices above. ``cost_*_no_cache`` bills every prompt token at the input
+    rate (an upper bound: cached tokens were not logged). ``cost_*_cached``
+    is an estimate that bills the shared prompt prefix — taken as the
+    smallest prompt of the run, i.e. instructions plus few-shot examples — at
+    the cached-input rate. Supervised rows report the local compute time of
+    one cross-validation fold (training plus inference on Apple Silicon), for
+    which there is no per-document fee.
     """
+    fewshot = set(FEWSHOT_RESULT_POSITIONS)
     rows = []
-    for m, df in model_dfs.items():
+    for m in model_dfs:
         if _is_supervised_model(m):
             continue
-        if "text" not in df.columns:
+        raw_path = paths.RAW_OUTPUT_DIR / f"models_results_decicontas_{m}.json"
+        if not raw_path.exists():
             continue
-        chars = df["text"].str.len()
-        if "pred" in df.columns:
-            pred_chars = df["pred"].apply(lambda x: len(json.dumps(x, ensure_ascii=False)) if x else 0)
-        else:
-            pred_chars = pd.Series([0] * len(df))
+        raw = json.loads(raw_path.read_text(encoding="utf-8"))
+        metas = [
+            r.get("meta") or {}
+            for i, r in enumerate(raw)
+            if i not in fewshot
+        ]
+        pt = [x["prompt_tokens"] for x in metas if x.get("prompt_tokens")]
+        ct = [x["completion_tokens"] for x in metas if x.get("completion_tokens") is not None]
+        row = {"model": m, "display": DISPLAY_NAMES.get(m, m), "paradigm": "LLM",
+               "n_docs": len(metas), "n_docs_with_tokens": len(pt)}
+        price = AZURE_PRICES_USD_PER_1M.get(m)
+        if pt and ct and price and len(pt) == len(metas):
+            p_in, p_cached, p_out = price
+            prefix = min(pt)
+            mean_pt, mean_ct = float(np.mean(pt)), float(np.mean(ct))
+            per_doc = (mean_pt * p_in + mean_ct * p_out) / 1e6
+            per_doc_cached = (
+                prefix * p_cached + (mean_pt - prefix) * p_in + mean_ct * p_out
+            ) / 1e6
+            row.update(
+                {
+                    "mean_prompt_tokens": mean_pt,
+                    "mean_completion_tokens": mean_ct,
+                    "shared_prefix_tokens": prefix,
+                    "price_input_per_1M": p_in,
+                    "price_cached_per_1M": p_cached,
+                    "price_output_per_1M": p_out,
+                    "cost_per_doc_no_cache": per_doc,
+                    "cost_corpus_no_cache": per_doc * len(metas),
+                    "cost_per_doc_cached": per_doc_cached,
+                    "cost_corpus_cached": per_doc_cached * len(metas),
+                    "price_date": AZURE_PRICES_DATE,
+                }
+            )
+        rows.append(row)
+    for m in model_dfs:
+        if not _is_supervised_model(m):
+            continue
+        safe = m.replace("__supervised", "")
+        folds = sorted((KFOLD_CORRECTED / "cv" / safe).glob("fold*.json"))
+        secs = [json.loads(f.read_text())["_elapsed_seconds"] for f in folds]
+        if not secs:
+            continue
         rows.append(
             {
                 "model": m,
                 "display": DISPLAY_NAMES.get(m, m),
-                "n_docs": len(df),
-                "mean_input_chars": float(chars.mean()),
-                "mean_output_chars": float(pred_chars.mean()),
-                "approx_mean_input_tokens": float(chars.mean() / 4),
-                "approx_mean_output_tokens": float(pred_chars.mean() / 4),
-                "total_input_chars": int(chars.sum()),
-                "total_output_chars": int(pred_chars.sum()),
-                "input_cost_per_1M_USD": "",  # FILL MANUALLY
-                "output_cost_per_1M_USD": "",  # FILL MANUALLY
-                "estimated_total_cost_USD": "",  # =approx_*_tokens * cost_per_1M / 1e6
+                "paradigm": "supervised",
+                "n_docs": 861,
+                "minutes_per_fold_train_and_infer": float(np.mean(secs)) / 60,
             }
         )
-    pd.DataFrame(rows).to_csv(out_dir / "E_cost_template.csv", index=False)
-    logger.info("wrote %s (pricing fields blank — fill manually)", out_dir / "E_cost_template.csv")
+    pd.DataFrame(rows).to_csv(out_dir / "E_cost.csv", index=False)
+    logger.info("wrote %s", out_dir / "E_cost.csv")
 
 
 # ----- Master orchestration + REPORT.md -----------------------------------
@@ -1350,13 +1393,15 @@ def write_report(out_dir: Path, j_summary: list[dict[str, Any]]) -> None:
     # ----- E. Cost ---------------------------------------------------------
     parts.append("## E. Custo-benefício\n")
     parts.append(
-        "Os JSONs de predição não armazenam contagens de tokens da API; "
-        "o template abaixo reporta caracteres médios e estimativa "
-        "aproximada de tokens (≈ 4 chars/token), com colunas em branco "
-        "para as tarifas USD/1M de cada provedor — preencher manualmente "
-        "consultando o histórico de billing.\n"
+        "Custo de inferência por documento a partir das contagens de tokens "
+        "registradas pela API (`meta`), aos preços de tabela do Azure (Global "
+        "Standard, Brazil South, API de preços de varejo, consulta em "
+        f"{AZURE_PRICES_DATE}). Sem `meta`, o modelo fica sem custo. `no_cache` "
+        "cobra todo o prompt pela tarifa de entrada; `cached` estima o prefixo "
+        "comum (instruções e exemplos) pela tarifa de cache. Supervisionados: "
+        "minutos por partição (treino e inferência) em Apple Silicon local.\n"
     )
-    parts.append(_md_table(pd.read_csv(out_dir / "E_cost_template.csv")) + "\n")
+    parts.append(_md_table(pd.read_csv(out_dir / "E_cost.csv")) + "\n")
 
     # ----- F + G. FC vs JSON (only if this cycle ran that experiment) ------
     if (out_dir / "F_fc_vs_json_overall.csv").exists():
