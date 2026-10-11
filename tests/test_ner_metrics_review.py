@@ -16,6 +16,7 @@ from research.ner_metrics import (
 )
 from research.release.evaluation_numbers import (
     _benjamini_hochberg,
+    _classify_pair,
     _holm_bonferroni,
     _keep_informative_only,
 )
@@ -151,3 +152,38 @@ class TestInformativeFilter:
         out = _keep_informative_only(df)
         assert len(out) == 1
         assert out.iloc[0]["golden"]
+
+
+class TestClassifyPair:
+    def _kinds(self, pred, gold):
+        from collections import Counter
+
+        return Counter(c["kind"] for c in _classify_pair(pred, gold))
+
+    def test_duplicate_is_not_a_second_match(self) -> None:
+        gold = [(0, 10, "MULTA")]
+        pred = [(0, 10, "MULTA"), (1, 10, "MULTA")]
+        k = self._kinds(pred, gold)
+        assert k["match"] == 1 and k["duplicate"] == 1
+
+    def test_every_failure_kind(self) -> None:
+        gold = [(0, 10, "MULTA"), (20, 30, "OBRIGACAO"), (40, 50, "RESSARCIMENTO"), (60, 70, "MULTA")]
+        pred = [
+            (0, 10, "MULTA"),  # match
+            (20, 30, "RECOMENDACAO"),  # type_error
+            (40, 43, "RESSARCIMENTO"),  # boundary (IoU 0.3)
+            (80, 90, "MULTA"),  # FP, no overlap
+        ]
+        k = self._kinds(pred, gold)
+        assert k == {
+            "match": 1, "type_error": 1, "boundary": 1, "FP": 1,
+            "FN_overlap": 2, "FN_no_pred": 1,
+        }
+
+    def test_counts_reconcile_with_pred_and_gold(self) -> None:
+        gold = [(0, 10, "MULTA"), (20, 30, "OBRIGACAO")]
+        pred = [(0, 10, "MULTA"), (2, 9, "MULTA"), (22, 24, "OBRIGACAO"), (50, 55, "MULTA")]
+        k = self._kinds(pred, gold)
+        fp_kinds = k["FP"] + k["duplicate"] + k["type_error"] + k["boundary"]
+        assert k["match"] + fp_kinds == len(pred)
+        assert k["match"] + k["FN_overlap"] + k["FN_no_pred"] == len(gold)

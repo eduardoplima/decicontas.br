@@ -411,20 +411,22 @@ Os JSONs de predição não armazenam contagens de tokens da API; o template aba
 
 | kind       |   count |
 |:-----------|--------:|
-| exact      |     365 |
+| match      |     354 |
 | FP         |      64 |
-| FN         |      60 |
 | boundary   |      46 |
+| FN_overlap |      46 |
+| FN_no_pred |      41 |
+| duplicate  |      11 |
 | type_error |       4 |
 
 **Matriz rótulo × tipo de erro:**
 
-| label         |   FN |   FP |   boundary |   exact |   type_error |
-|:--------------|-----:|-----:|-----------:|--------:|-------------:|
-| MULTA         |   24 |    6 |         10 |     183 |            0 |
-| OBRIGACAO     |   24 |   20 |         15 |      88 |            0 |
-| RECOMENDACAO  |    5 |   36 |          1 |      48 |            0 |
-| RESSARCIMENTO |    7 |    2 |         20 |      46 |            4 |
+| label         |   FN_no_pred |   FN_overlap |   FP |   boundary |   duplicate |   match |   type_error |
+|:--------------|-------------:|-------------:|-----:|-----------:|------------:|--------:|-------------:|
+| MULTA         |           13 |           15 |    6 |         10 |           8 |     175 |            0 |
+| OBRIGACAO     |           18 |           17 |   20 |         15 |           0 |      88 |            0 |
+| RECOMENDACAO  |            3 |            3 |   36 |          1 |           2 |      46 |            0 |
+| RESSARCIMENTO |            7 |           11 |    2 |         20 |           1 |      45 |            4 |
 
 **Pares de tipo errado (gold → pred):**
 

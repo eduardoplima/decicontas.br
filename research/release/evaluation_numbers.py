@@ -40,7 +40,9 @@ from research.fewshot import FEWSHOT_RESULT_POSITIONS
 from research.dataset_io import spans_to_token_units, token_offsets
 from research.ner_metrics import (
     ENTITY_LABELS,
+    bipartite_greedy_match,
     calculate_metrics,
+    compute_iou_raw,
     convert_pred_to_golden_format,
     count_alignment_failures,
     extract_spans_from_bio,
@@ -659,46 +661,54 @@ def block_h_prompting(out_dir: Path) -> None:
 
 
 def _classify_pair(pred_spans, gold_spans, iou_threshold: float = 0.5):
-    """Match pred to gold; categorize each as exact, type_error, boundary, FP, FN.
+    """Error taxonomy that reconciles with the headline span metric.
 
-    Strategy: per (pred, gold) pair compute IoU. For each pred, take the
-    gold span with highest overlap (regardless of label). If best IoU >=
-    threshold and labels match -> "exact". Same gold but labels differ ->
-    "type_error". IoU > 0 but < threshold -> "boundary". Else (no overlap
-    at all) -> "FP". Gold spans that never get any pred with IoU > 0 ->
-    "FN".
+    Pairing is the same one-to-one :func:`bipartite_greedy_match` used for
+    span F1, so ``match`` equals the true positives. Every unmatched
+    prediction is a false positive, split by why it failed against the gold
+    span it overlaps most (any label): ``FP`` (no overlap at all),
+    ``duplicate`` (IoU >= threshold, same label, but that gold is already
+    paired), ``type_error`` (IoU >= threshold, other label) and ``boundary``
+    (0 < IoU < threshold). Every unmatched gold is a false negative, split
+    into ``FN_no_pred`` (no prediction overlaps it) and ``FN_overlap`` (only
+    failed predictions touch it). Hence match + FP-kinds = |pred| and
+    match + FN-kinds = |gold|.
     """
-    used_gold: set[int] = set()
-    pred_classes: list[dict] = []
+    matched = bipartite_greedy_match(pred_spans, gold_spans, iou_threshold)
+    matched_pred = {pi for pi, _ in matched}
+    matched_gold = {gi for _, gi in matched}
+    out: list[dict] = []
+    for pi, gi in sorted(matched):
+        iou = compute_iou_raw(pred_spans[pi][:2], gold_spans[gi][:2])
+        out.append({"kind": "match", "label": gold_spans[gi][2], "iou": iou})
     for pi, p in enumerate(pred_spans):
-        best_gi = -1
-        best_iou = 0.0
-        for gi, g in enumerate(gold_spans):
-            inter = max(0, min(p[1], g[1]) - max(p[0], g[0]))
-            union = max(p[1], g[1]) - min(p[0], g[0])
-            iou = inter / union if union > 0 else 0.0
-            if iou > best_iou:
-                best_iou = iou
-                best_gi = gi
-        if best_iou == 0.0:
-            pred_classes.append({"kind": "FP", "label": p[2], "iou": 0.0})
+        if pi in matched_pred:
             continue
-        used_gold.add(best_gi)
+        best_iou, best_gi = 0.0, -1
+        for gi, g in enumerate(gold_spans):
+            iou = compute_iou_raw(p[:2], g[:2])
+            if iou > best_iou:
+                best_iou, best_gi = iou, gi
+        if best_iou == 0.0:
+            out.append({"kind": "FP", "label": p[2], "iou": 0.0})
+            continue
         gold_label = gold_spans[best_gi][2]
         if best_iou >= iou_threshold and p[2] == gold_label:
-            pred_classes.append({"kind": "exact", "label": gold_label, "iou": best_iou})
-        elif best_iou >= iou_threshold and p[2] != gold_label:
-            pred_classes.append(
+            out.append({"kind": "duplicate", "label": gold_label, "iou": best_iou})
+        elif best_iou >= iou_threshold:
+            out.append(
                 {"kind": "type_error", "label": gold_label, "pred_label": p[2], "iou": best_iou}
             )
-        else:  # 0 < iou < threshold
-            pred_classes.append({"kind": "boundary", "label": gold_label, "pred_label": p[2], "iou": best_iou})
-    fn_classes = [
-        {"kind": "FN", "label": gold_spans[gi][2], "iou": 0.0}
-        for gi in range(len(gold_spans))
-        if gi not in used_gold
-    ]
-    return pred_classes + fn_classes
+        else:
+            out.append(
+                {"kind": "boundary", "label": gold_label, "pred_label": p[2], "iou": best_iou}
+            )
+    for gi, g in enumerate(gold_spans):
+        if gi in matched_gold:
+            continue
+        touched = any(compute_iou_raw(p[:2], g[:2]) > 0 for p in pred_spans)
+        out.append({"kind": "FN_overlap" if touched else "FN_no_pred", "label": g[2], "iou": 0.0})
+    return out
 
 
 def block_i_errors(model_dfs: dict[str, pd.DataFrame], best_model: str, out_dir: Path) -> None:
