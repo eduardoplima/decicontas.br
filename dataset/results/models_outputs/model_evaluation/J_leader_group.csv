@@ -1,10 +1,10 @@
 model,display,span_f1,diff_vs_leader,p_raw,p_holm,in_leader_group
 deepseek-v4-flash_few_shot,DeepSeek-V4-Flash,0.7423222420016692,0.0,,,True
-gpt-4.1_few_shot,GPT-4.1,0.7170071078425144,0.02530136546362693,0.06,0.06,True
-gpt-5.1_few_shot,GPT-5.1,0.6910110208000456,0.05144255017097633,0.0026,0.0078,False
+gpt-4.1_few_shot,GPT-4.1,0.7170071078425144,0.02530136546362693,0.06,1.0,True
+gpt-5.1_few_shot,GPT-5.1,0.6910110208000456,0.05144255017097633,0.0026,0.18719999999999998,True
 gpt-4.1-mini_few_shot,GPT-4.1-mini,0.6837124174123413,0.058538960731529484,0.0,0.0,False
-raquelsilveira_legalbertpt_fp__supervised,LegalBert-pt,0.6603022006985311,0.0831939769549765,0.0082,0.0164,False
-neuralmind_bert-large-portuguese-cased__supervised,BERTimbau-large,0.6456955453291817,0.09658277839478069,0.0012,0.0048,False
+raquelsilveira_legalbertpt_fp__supervised,LegalBert-pt,0.6603022006985311,0.0831939769549765,0.0082,0.533,True
+neuralmind_bert-large-portuguese-cased__supervised,BERTimbau-large,0.6456955453291817,0.09658277839478069,0.0012,0.0924,True
 neuralmind_bert-base-portuguese-cased__supervised,BERTimbau-base,0.6219874921168804,0.1206034744321742,0.0,0.0,False
 alfaneo_jurisbert-base-portuguese-uncased__supervised,JurisBERT,0.61133420908531,0.13101424596685948,0.0,0.0,False
 bilstm-crf__supervised,BiLSTM-CRF,0.6008892824063705,0.14168455384704517,0.0,0.0,False

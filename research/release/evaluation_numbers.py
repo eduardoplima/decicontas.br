@@ -883,10 +883,10 @@ def block_j_significance(model_dfs: dict[str, pd.DataFrame], out_dir: Path) -> d
     df_highlighted.to_csv(out_dir / "J_bootstrap_paired_highlighted.csv", index=False)
 
     # Leader group (DS-p.55a): which models are statistically indistinguishable
-    # from the top-ranked model. The family is the 18 leader-vs-others
-    # comparisons (clean, pre-registered by construction), Holm-corrected —
-    # deliberately distinct from the highlighted-pairs family above. A model is
-    # in the leader group when its Holm-adjusted p-value is >= 0.05.
+    # from the top-ranked model. It reads the leader-vs-others rows of the same
+    # inferential family as everything else (Holm over all pairs), so a pair
+    # never gets two verdicts. A model is in the leader group when its
+    # Holm-adjusted p-value is >= 0.05.
     leader = max(model_counts, key=lambda m: model_counts[m]["f1"])
     leader_rows = []
     for _, row in df_pairs.iterrows():
@@ -901,12 +901,11 @@ def block_j_significance(model_dfs: dict[str, pd.DataFrame], out_dir: Path) -> d
                 "span_f1": model_counts[other]["f1"],
                 "diff_vs_leader": diff,
                 "p_raw": row["p_value"],
+                "p_holm": row["p_holm_all"],
             }
         )
-    holm_l, _ = _holm_bonferroni([r["p_raw"] for r in leader_rows])
-    for r, ph in zip(leader_rows, holm_l):
-        r["p_holm"] = ph
-        r["in_leader_group"] = ph >= 0.05
+    for r in leader_rows:
+        r["in_leader_group"] = r["p_holm"] >= 0.05
     leader_rows.insert(
         0,
         {
@@ -1420,8 +1419,8 @@ def write_report(out_dir: Path, j_summary: list[dict[str, Any]]) -> None:
     leader_path = out_dir / "J_leader_group.csv"
     if leader_path.exists():
         parts.append(
-            "**Grupo do líder (DS-p.55a).** Família: as comparações líder × demais "
-            "modelos, com correção de Holm; `in_leader_group=True` marca os modelos "
+            "**Grupo do líder (DS-p.55a).** Comparações líder × demais modelos, com "
+            "o `p_holm` da família completa de pares; `in_leader_group=True` marca os modelos "
             "estatisticamente indistinguíveis do líder a 5% — a fonte do marcador "
             "(†) na tabela geral de resultados:\n"
         )

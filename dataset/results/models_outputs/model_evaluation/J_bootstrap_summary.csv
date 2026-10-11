@@ -14,4 +14,4 @@ highlighted_n_sig_holm_all,3
 smallest_significant_abs_diff,0.03323759526790254
 smallest_significant_pair,GPT-4.1 vs GPT-4.1-mini
 leader_model,DeepSeek-V4-Flash
-leader_group_size_holm,2
+leader_group_size_holm,5

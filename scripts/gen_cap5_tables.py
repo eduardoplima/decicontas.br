@@ -41,8 +41,9 @@ NOMES = {
     "LegalBERTPT-br": "legal-bert-pt-br",
     "BiLSTM-CRF": "bilstm-crf",
 }
-# marcados com dagger no capítulo (grupo do líder sob Holm)
-DAGGER = {"DeepSeek-V4-Flash", "GPT-4.1"}
+# marcados com dagger no capítulo: grupo do líder sob Holm sobre todos os pares
+_LIDER = pd.read_csv(paths.EVALUATION_DIR / "J_leader_group.csv")
+DAGGER = set(_LIDER.loc[_LIDER["in_leader_group"], "display"])
 
 
 def v(x: float, negrito: bool = False) -> str:

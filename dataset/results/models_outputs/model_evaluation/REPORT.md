@@ -507,20 +507,20 @@ Os JSONs de predição não armazenam contagens de tokens da API; o template aba
 | smallest_significant_abs_diff  | 0.03323759526790254     |
 | smallest_significant_pair      | GPT-4.1 vs GPT-4.1-mini |
 | leader_model                   | DeepSeek-V4-Flash       |
-| leader_group_size_holm         | 2                       |
+| leader_group_size_holm         | 5                       |
 
 **p48a — Correção para múltiplas comparações.** A família inferencial é o conjunto completo dos pares (`p_holm_all`, `p_bonferroni_all`, `p_bh_all`), pré-especificado por construção; os pares destacados acima são uma seleção para leitura e herdam esses valores. As colunas `p_holm`/`p_bonferroni` (correção restrita aos destacados) são mantidas apenas como referência.
 
-**Grupo do líder (DS-p.55a).** Família: as comparações líder × demais modelos, com correção de Holm; `in_leader_group=True` marca os modelos estatisticamente indistinguíveis do líder a 5% — a fonte do marcador (†) na tabela geral de resultados:
+**Grupo do líder (DS-p.55a).** Comparações líder × demais modelos, com o `p_holm` da família completa de pares; `in_leader_group=True` marca os modelos estatisticamente indistinguíveis do líder a 5% — a fonte do marcador (†) na tabela geral de resultados:
 
 | model                                                  | display              |   span_f1 |   diff_vs_leader |    p_raw |   p_holm | in_leader_group   |
 |:-------------------------------------------------------|:---------------------|----------:|-----------------:|---------:|---------:|:------------------|
 | deepseek-v4-flash_few_shot                             | DeepSeek-V4-Flash    |    0.7423 |           0.0000 | nan      | nan      | True              |
-| gpt-4.1_few_shot                                       | GPT-4.1              |    0.7170 |           0.0253 |   0.0600 |   0.0600 | True              |
-| gpt-5.1_few_shot                                       | GPT-5.1              |    0.6910 |           0.0514 |   0.0026 |   0.0078 | False             |
+| gpt-4.1_few_shot                                       | GPT-4.1              |    0.7170 |           0.0253 |   0.0600 |   1.0000 | True              |
+| gpt-5.1_few_shot                                       | GPT-5.1              |    0.6910 |           0.0514 |   0.0026 |   0.1872 | True              |
 | gpt-4.1-mini_few_shot                                  | GPT-4.1-mini         |    0.6837 |           0.0585 |   0.0000 |   0.0000 | False             |
-| raquelsilveira_legalbertpt_fp__supervised              | LegalBert-pt         |    0.6603 |           0.0832 |   0.0082 |   0.0164 | False             |
-| neuralmind_bert-large-portuguese-cased__supervised     | BERTimbau-large      |    0.6457 |           0.0966 |   0.0012 |   0.0048 | False             |
+| raquelsilveira_legalbertpt_fp__supervised              | LegalBert-pt         |    0.6603 |           0.0832 |   0.0082 |   0.5330 | True              |
+| neuralmind_bert-large-portuguese-cased__supervised     | BERTimbau-large      |    0.6457 |           0.0966 |   0.0012 |   0.0924 | True              |
 | neuralmind_bert-base-portuguese-cased__supervised      | BERTimbau-base       |    0.6220 |           0.1206 |   0.0000 |   0.0000 | False             |
 | alfaneo_jurisbert-base-portuguese-uncased__supervised  | JurisBERT            |    0.6113 |           0.1310 |   0.0000 |   0.0000 | False             |
 | bilstm-crf__supervised                                 | BiLSTM-CRF           |    0.6009 |           0.1417 |   0.0000 |   0.0000 | False             |
