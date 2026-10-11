@@ -713,64 +713,64 @@ Os JSONs de predição não armazenam contagens de tokens da API; o template aba
 
 ## K. Sensibilidade ao limiar de IoU (p43a)
 
-Como as entidades são longas, IoU ≥ 0,5 é permissivo. Span F1 por modelo para IoU ∈ {0,3, 0,5, 0,7} e correspondência exata (1,0):
+Como as entidades são longas, IoU ≥ 0,5 é permissivo. Span F1 **macro** por modelo para IoU ∈ {0,3, 0,5, 0,7} e correspondência exata (1,0); o micro está em `K_iou_sensitivity_wide_micro.csv`:
 
 | display              |    0.3 |    0.5 |    0.7 |   exact |
 |:---------------------|-------:|-------:|-------:|--------:|
-| BERTimbau-base       | 0.7488 | 0.7217 | 0.6847 |  0.6182 |
-| BERTimbau-large      | 0.7442 | 0.7248 | 0.6836 |  0.6085 |
-| BERTimbauLaw         | 0.6947 | 0.6866 | 0.6486 |  0.5807 |
-| BiLSTM-CRF           | 0.7198 | 0.6735 | 0.6041 |  0.4499 |
-| DeepSeek-V4-Flash    | 0.8152 | 0.7696 | 0.7217 |  0.3174 |
-| GPT-4.1              | 0.7784 | 0.7365 | 0.6766 |  0.2236 |
-| GPT-4.1-mini         | 0.7343 | 0.6986 | 0.6366 |  0.2047 |
-| GPT-4.1-nano         | 0.4921 | 0.4341 | 0.3779 |  0.1265 |
-| GPT-5-mini           | 0.4356 | 0.4162 | 0.3922 |  0.0832 |
-| GPT-5.1              | 0.7321 | 0.7046 | 0.6555 |  0.2375 |
-| GPT-5.2              | 0.6620 | 0.6198 | 0.5654 |  0.1686 |
-| GovBERT-BR           | 0.7127 | 0.7044 | 0.6713 |  0.6077 |
-| JurisBERT            | 0.7119 | 0.6767 | 0.6365 |  0.5585 |
-| Legal-BERT-STF       | 0.7012 | 0.6773 | 0.6534 |  0.5870 |
-| Legal-BERTimbau-base | 0.7224 | 0.7018 | 0.6658 |  0.5758 |
-| LegalBERTPT-br       | 0.5197 | 0.5008 | 0.4882 |  0.4693 |
-| LegalBert-pt         | 0.7698 | 0.7391 | 0.7084 |  0.6445 |
-| Llama-3.3-70B        | 0.3910 | 0.3558 | 0.3173 |  0.0513 |
-| Qwen2.5-72B          | 0.6556 | 0.6243 | 0.5773 |  0.2290 |
+| BERTimbau-base       | 0.6544 | 0.6220 | 0.5862 |  0.5242 |
+| BERTimbau-large      | 0.6757 | 0.6457 | 0.6059 |  0.5431 |
+| BERTimbauLaw         | 0.5225 | 0.5063 | 0.4673 |  0.4188 |
+| BiLSTM-CRF           | 0.6383 | 0.6009 | 0.5414 |  0.3786 |
+| DeepSeek-V4-Flash    | 0.7959 | 0.7423 | 0.6987 |  0.3230 |
+| GPT-4.1              | 0.7661 | 0.7170 | 0.6536 |  0.2589 |
+| GPT-4.1-mini         | 0.7285 | 0.6837 | 0.6231 |  0.2565 |
+| GPT-4.1-nano         | 0.4538 | 0.3953 | 0.3406 |  0.1025 |
+| GPT-5-mini           | 0.5618 | 0.5310 | 0.4970 |  0.1193 |
+| GPT-5.1              | 0.7244 | 0.6910 | 0.6336 |  0.2687 |
+| GPT-5.2              | 0.6480 | 0.5945 | 0.5383 |  0.2036 |
+| GovBERT-BR           | 0.5626 | 0.5555 | 0.5155 |  0.4635 |
+| JurisBERT            | 0.6482 | 0.6113 | 0.5657 |  0.4932 |
+| Legal-BERT-STF       | 0.5671 | 0.5384 | 0.5233 |  0.4715 |
+| Legal-BERTimbau-base | 0.5822 | 0.5656 | 0.5349 |  0.4569 |
+| LegalBERTPT-br       | 0.2919 | 0.2836 | 0.2763 |  0.2680 |
+| LegalBert-pt         | 0.6999 | 0.6603 | 0.6319 |  0.5734 |
+| Llama-3.3-70B        | 0.3067 | 0.2856 | 0.2546 |  0.0600 |
+| Qwen2.5-72B          | 0.6238 | 0.5853 | 0.5402 |  0.2372 |
 
-**Estabilidade do ranking** (Spearman do ranking de cada limiar vs. IoU = 0,5):
+**Estabilidade do ranking** (Spearman do ranking de cada limiar vs. IoU = 0,5, no macro e no micro):
 
-| iou_threshold   |   spearman_vs_0.5 |
-|:----------------|------------------:|
-| 0.3             |            0.9544 |
-| 0.5             |            1.0000 |
-| 0.7             |            0.9789 |
-| exact           |            0.6123 |
+| iou_threshold   |   spearman_macro_vs_0.5 |   spearman_micro_vs_0.5 |
+|:----------------|------------------------:|------------------------:|
+| 0.3             |                  0.9947 |                  0.9544 |
+| 0.5             |                  1.0000 |                  1.0000 |
+| 0.7             |                  0.9930 |                  0.9789 |
+| exact           |                  0.3368 |                  0.6123 |
 
 ## L. Métrica restrita aos documentos informativos (p41b)
 
 Dos 861 documentos, 629 não têm entidade gold e só contribuem com falsos positivos. Restringindo aos 232 documentos com ≥ 1 entidade, vê-se quanto da precisão vinha do volume de negativos (queda de precisão = inflada pelos vazios):
 
-| model                                                  | display              |   n_docs_full |   n_docs_informative |   span_f1_full |   span_f1_informative |   delta_span_f1 |   span_precision_full |   span_precision_informative |   delta_span_precision |   span_recall_full |   span_recall_informative |
-|:-------------------------------------------------------|:---------------------|--------------:|---------------------:|---------------:|----------------------:|----------------:|----------------------:|-----------------------------:|-----------------------:|-------------------:|--------------------------:|
-| deepseek-v4-flash_few_shot                             | DeepSeek-V4-Flash    |           861 |                  231 |         0.7696 |                0.8147 |          0.0452 |                0.7390 |                       0.8271 |                 0.0881 |             0.8027 |                    0.8027 |
-| gpt-4.1_few_shot                                       | GPT-4.1              |           861 |                  231 |         0.7365 |                0.7987 |          0.0622 |                0.6578 |                       0.7640 |                 0.1062 |             0.8367 |                    0.8367 |
-| gpt-4.1-mini_few_shot                                  | GPT-4.1-mini         |           861 |                  231 |         0.6986 |                0.7742 |          0.0756 |                0.5962 |                       0.7154 |                 0.1192 |             0.8435 |                    0.8435 |
-| gpt-5.1_few_shot                                       | GPT-5.1              |           861 |                  231 |         0.7046 |                0.7729 |          0.0683 |                0.6211 |                       0.7357 |                 0.1145 |             0.8141 |                    0.8141 |
-| raquelsilveira_legalbertpt_fp__supervised              | LegalBert-pt         |           861 |                  231 |         0.7391 |                0.7477 |          0.0086 |                0.8475 |                       0.8705 |                 0.0230 |             0.6553 |                    0.6553 |
-| neuralmind_bert-large-portuguese-cased__supervised     | BERTimbau-large      |           861 |                  231 |         0.7248 |                0.7419 |          0.0171 |                0.7786 |                       0.8192 |                 0.0405 |             0.6780 |                    0.6780 |
-| neuralmind_bert-base-portuguese-cased__supervised      | BERTimbau-base       |           861 |                  231 |         0.7217 |                0.7380 |          0.0164 |                0.7898 |                       0.8300 |                 0.0403 |             0.6644 |                    0.6644 |
-| rufimelo_Legal-BERTimbau-base__supervised              | Legal-BERTimbau-base |           861 |                  231 |         0.7018 |                0.7091 |          0.0073 |                0.8101 |                       0.8298 |                 0.0197 |             0.6190 |                    0.6190 |
-| dccmpmgfinalisticas_GovBERT-BR__supervised             | GovBERT-BR           |           861 |                  231 |         0.7044 |                0.7083 |          0.0039 |                0.9011 |                       0.9140 |                 0.0129 |             0.5782 |                    0.5782 |
-| gpt-5.2_few_shot                                       | GPT-5.2              |           861 |                  231 |         0.6198 |                0.6990 |          0.0792 |                0.5057 |                       0.6204 |                 0.1147 |             0.8005 |                    0.8005 |
-| bilstm-crf__supervised                                 | BiLSTM-CRF           |           861 |                  231 |         0.6735 |                0.6977 |          0.0242 |                0.7774 |                       0.8452 |                 0.0677 |             0.5941 |                    0.5941 |
-| alfaneo_jurisbert-base-portuguese-uncased__supervised  | JurisBERT            |           861 |                  231 |         0.6767 |                0.6933 |          0.0166 |                0.7599 |                       0.8030 |                 0.0431 |             0.6100 |                    0.6100 |
-| alfaneo_bertimbaulaw-base-portuguese-cased__supervised | BERTimbauLaw         |           861 |                  231 |         0.6866 |                0.6903 |          0.0037 |                0.8547 |                       0.8664 |                 0.0117 |             0.5737 |                    0.5737 |
-| qwen2.5-72b_few_shot                                   | Qwen2.5-72B          |           861 |                  231 |         0.6243 |                0.6845 |          0.0603 |                0.5491 |                       0.6497 |                 0.1006 |             0.7234 |                    0.7234 |
-| dominguesm_legal-bert-base-cased-ptbr__supervised      | Legal-BERT-STF       |           861 |                  231 |         0.6773 |                0.6827 |          0.0054 |                0.8173 |                       0.8333 |                 0.0160 |             0.5782 |                    0.5782 |
-| gpt-5-mini_few_shot                                    | GPT-5-mini           |           861 |                  231 |         0.4162 |                0.6068 |          0.1906 |                0.2780 |                       0.4790 |                 0.2010 |             0.8277 |                    0.8277 |
-| ulysses-camara_legal-bert-pt-br__supervised            | LegalBERTPT-br       |           861 |                  231 |         0.5008 |                0.5032 |          0.0024 |                0.8196 |                       0.8325 |                 0.0129 |             0.3605 |                    0.3605 |
-| gpt-4.1-nano_few_shot                                  | GPT-4.1-nano         |           861 |                  231 |         0.4341 |                0.4867 |          0.0526 |                0.3544 |                       0.4303 |                 0.0759 |             0.5601 |                    0.5601 |
-| llama-3.3-70b_few_shot                                 | Llama-3.3-70B        |           861 |                  231 |         0.3558 |                0.3669 |          0.0112 |                0.6066 |                       0.6768 |                 0.0703 |             0.2517 |                    0.2517 |
+| model                                                  | display              |   n_docs_full |   n_docs_informative |   span_f1_macro_full |   span_f1_macro_informative |   delta_span_f1_macro |   span_f1_full |   span_f1_informative |   delta_span_f1 |   span_precision_full |   span_precision_informative |   delta_span_precision |   span_recall_full |   span_recall_informative |
+|:-------------------------------------------------------|:---------------------|--------------:|---------------------:|---------------------:|----------------------------:|----------------------:|---------------:|----------------------:|----------------:|----------------------:|-----------------------------:|-----------------------:|-------------------:|--------------------------:|
+| deepseek-v4-flash_few_shot                             | DeepSeek-V4-Flash    |           861 |                  231 |               0.7423 |                      0.8066 |                0.0643 |         0.7696 |                0.8147 |          0.0452 |                0.7390 |                       0.8271 |                 0.0881 |             0.8027 |                    0.8027 |
+| gpt-4.1_few_shot                                       | GPT-4.1              |           861 |                  231 |               0.7170 |                      0.8047 |                0.0877 |         0.7365 |                0.7987 |          0.0622 |                0.6578 |                       0.7640 |                 0.1062 |             0.8367 |                    0.8367 |
+| gpt-5.1_few_shot                                       | GPT-5.1              |           861 |                  231 |               0.6910 |                      0.7778 |                0.0868 |         0.7046 |                0.7729 |          0.0683 |                0.6211 |                       0.7357 |                 0.1145 |             0.8141 |                    0.8141 |
+| gpt-4.1-mini_few_shot                                  | GPT-4.1-mini         |           861 |                  231 |               0.6837 |                      0.7717 |                0.0880 |         0.6986 |                0.7742 |          0.0756 |                0.5962 |                       0.7154 |                 0.1192 |             0.8435 |                    0.8435 |
+| gpt-5.2_few_shot                                       | GPT-5.2              |           861 |                  231 |               0.5945 |                      0.6794 |                0.0848 |         0.6198 |                0.6990 |          0.0792 |                0.5057 |                       0.6204 |                 0.1147 |             0.8005 |                    0.8005 |
+| raquelsilveira_legalbertpt_fp__supervised              | LegalBert-pt         |           861 |                  231 |               0.6603 |                      0.6691 |                0.0088 |         0.7391 |                0.7477 |          0.0086 |                0.8475 |                       0.8705 |                 0.0230 |             0.6553 |                    0.6553 |
+| neuralmind_bert-large-portuguese-cased__supervised     | BERTimbau-large      |           861 |                  231 |               0.6457 |                      0.6681 |                0.0224 |         0.7248 |                0.7419 |          0.0171 |                0.7786 |                       0.8192 |                 0.0405 |             0.6780 |                    0.6780 |
+| gpt-5-mini_few_shot                                    | GPT-5-mini           |           861 |                  231 |               0.5310 |                      0.6514 |                0.1204 |         0.4162 |                0.6068 |          0.1906 |                0.2780 |                       0.4790 |                 0.2010 |             0.8277 |                    0.8277 |
+| qwen2.5-72b_few_shot                                   | Qwen2.5-72B          |           861 |                  231 |               0.5853 |                      0.6480 |                0.0628 |         0.6243 |                0.6845 |          0.0603 |                0.5491 |                       0.6497 |                 0.1006 |             0.7234 |                    0.7234 |
+| neuralmind_bert-base-portuguese-cased__supervised      | BERTimbau-base       |           861 |                  231 |               0.6220 |                      0.6389 |                0.0170 |         0.7217 |                0.7380 |          0.0164 |                0.7898 |                       0.8300 |                 0.0403 |             0.6644 |                    0.6644 |
+| bilstm-crf__supervised                                 | BiLSTM-CRF           |           861 |                  231 |               0.6009 |                      0.6330 |                0.0321 |         0.6735 |                0.6977 |          0.0242 |                0.7774 |                       0.8452 |                 0.0677 |             0.5941 |                    0.5941 |
+| alfaneo_jurisbert-base-portuguese-uncased__supervised  | JurisBERT            |           861 |                  231 |               0.6113 |                      0.6326 |                0.0213 |         0.6767 |                0.6933 |          0.0166 |                0.7599 |                       0.8030 |                 0.0431 |             0.6100 |                    0.6100 |
+| rufimelo_Legal-BERTimbau-base__supervised              | Legal-BERTimbau-base |           861 |                  231 |               0.5656 |                      0.5715 |                0.0059 |         0.7018 |                0.7091 |          0.0073 |                0.8101 |                       0.8298 |                 0.0197 |             0.6190 |                    0.6190 |
+| dccmpmgfinalisticas_GovBERT-BR__supervised             | GovBERT-BR           |           861 |                  231 |               0.5555 |                      0.5598 |                0.0043 |         0.7044 |                0.7083 |          0.0039 |                0.9011 |                       0.9140 |                 0.0129 |             0.5782 |                    0.5782 |
+| dominguesm_legal-bert-base-cased-ptbr__supervised      | Legal-BERT-STF       |           861 |                  231 |               0.5384 |                      0.5423 |                0.0038 |         0.6773 |                0.6827 |          0.0054 |                0.8173 |                       0.8333 |                 0.0160 |             0.5782 |                    0.5782 |
+| alfaneo_bertimbaulaw-base-portuguese-cased__supervised | BERTimbauLaw         |           861 |                  231 |               0.5063 |                      0.5085 |                0.0021 |         0.6866 |                0.6903 |          0.0037 |                0.8547 |                       0.8664 |                 0.0117 |             0.5737 |                    0.5737 |
+| gpt-4.1-nano_few_shot                                  | GPT-4.1-nano         |           861 |                  231 |               0.3953 |                      0.4277 |                0.0324 |         0.4341 |                0.4867 |          0.0526 |                0.3544 |                       0.4303 |                 0.0759 |             0.5601 |                    0.5601 |
+| llama-3.3-70b_few_shot                                 | Llama-3.3-70B        |           861 |                  231 |               0.2856 |                      0.3031 |                0.0175 |         0.3558 |                0.3669 |          0.0112 |                0.6066 |                       0.6768 |                 0.0703 |             0.2517 |                    0.2517 |
+| ulysses-camara_legal-bert-pt-br__supervised            | LegalBERTPT-br       |           861 |                  231 |               0.2836 |                      0.2850 |                0.0014 |         0.5008 |                0.5032 |          0.0024 |                0.8196 |                       0.8325 |                 0.0129 |             0.3605 |                    0.3605 |
 
 ## M. Taxa de falha de alinhamento string→offset (p34)
 

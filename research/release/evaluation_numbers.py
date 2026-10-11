@@ -574,6 +574,11 @@ def block_fg_structured(out_dir: Path) -> None:
                 "span_f1_ablation_run": fc["span_f1"],
                 "span_f1_leaderboard_run": main_flat["span_f1"],
                 "replication_delta_span_f1": abs(fc["span_f1"] - main_flat["span_f1"]),
+                "span_f1_macro_ablation_run": fc["span_f1_macro"],
+                "span_f1_macro_leaderboard_run": main_flat["span_f1_macro"],
+                "replication_delta_span_f1_macro": abs(
+                    fc["span_f1_macro"] - main_flat["span_f1_macro"]
+                ),
             }
         )
     if repl_rows:
@@ -1033,21 +1038,28 @@ def block_k_iou_sensitivity(model_dfs: dict[str, pd.DataFrame], out_dir: Path) -
     df_long.to_csv(out_dir / "K_iou_sensitivity.csv", index=False)
     logger.info("wrote %s", out_dir / "K_iou_sensitivity.csv")
 
-    # Wide pivot (model × threshold) on span F1 for quick reading.
-    wide = df_long.pivot(index="display", columns="iou_threshold", values="span_f1")[
-        [_IOU_LABEL[t] for t in IOU_SWEEP]
-    ]
+    # Wide pivots (model × threshold). Macro is the primary metric, so the
+    # unsuffixed file carries it; micro is kept alongside as the secondary one.
+    cols = [_IOU_LABEL[t] for t in IOU_SWEEP]
+    wide = df_long.pivot(index="display", columns="iou_threshold", values="span_f1_macro")[cols]
     wide.to_csv(out_dir / "K_iou_sensitivity_wide.csv")
+    wide_micro = df_long.pivot(index="display", columns="iou_threshold", values="span_f1")[cols]
+    wide_micro.to_csv(out_dir / "K_iou_sensitivity_wide_micro.csv")
 
     # Ranking stability: Spearman correlation of the per-threshold model
-    # ranking against the canonical IoU=0.5 ranking.
+    # ranking against the canonical IoU=0.5 ranking, for both aggregations.
     rank_corr_rows = []
-    base = wide["0.5"]
-    for t in IOU_SWEEP:
-        col = _IOU_LABEL[t]
-        rho = wide[col].corr(base, method="spearman")
+    for col in cols:
         rank_corr_rows.append(
-            {"iou_threshold": col, "spearman_vs_0.5": round(float(rho), 4)}
+            {
+                "iou_threshold": col,
+                "spearman_macro_vs_0.5": round(
+                    float(wide[col].corr(wide["0.5"], method="spearman")), 4
+                ),
+                "spearman_micro_vs_0.5": round(
+                    float(wide_micro[col].corr(wide_micro["0.5"], method="spearman")), 4
+                ),
+            }
         )
     pd.DataFrame(rank_corr_rows).to_csv(
         out_dir / "K_iou_ranking_stability.csv", index=False
@@ -1083,6 +1095,9 @@ def block_l_informative_subset(model_dfs: dict[str, pd.DataFrame], out_dir: Path
                 "display": DISPLAY_NAMES.get(m, m),
                 "n_docs_full": len(df),
                 "n_docs_informative": len(sub),
+                "span_f1_macro_full": full["span_f1_macro"],
+                "span_f1_macro_informative": info["span_f1_macro"],
+                "delta_span_f1_macro": info["span_f1_macro"] - full["span_f1_macro"],
                 "span_f1_full": full["span_f1"],
                 "span_f1_informative": info["span_f1"],
                 "delta_span_f1": info["span_f1"] - full["span_f1"],
@@ -1094,7 +1109,9 @@ def block_l_informative_subset(model_dfs: dict[str, pd.DataFrame], out_dir: Path
             }
         )
     df_out = (
-        pd.DataFrame(rows).sort_values("span_f1_informative", ascending=False).reset_index(drop=True)
+        pd.DataFrame(rows)
+        .sort_values("span_f1_macro_informative", ascending=False)
+        .reset_index(drop=True)
     )
     df_out.to_csv(out_dir / "L_informative_subset.csv", index=False)
     logger.info("wrote %s", out_dir / "L_informative_subset.csv")
@@ -1431,13 +1448,14 @@ def write_report(out_dir: Path, j_summary: list[dict[str, Any]]) -> None:
     # ----- K. IoU sensitivity ---------------------------------------------
     parts.append("## K. Sensibilidade ao limiar de IoU (p43a)\n")
     parts.append(
-        "Como as entidades são longas, IoU ≥ 0,5 é permissivo. Span F1 por modelo "
-        "para IoU ∈ {0,3, 0,5, 0,7} e correspondência exata (1,0):\n"
+        "Como as entidades são longas, IoU ≥ 0,5 é permissivo. Span F1 **macro** "
+        "por modelo para IoU ∈ {0,3, 0,5, 0,7} e correspondência exata (1,0); o "
+        "micro está em `K_iou_sensitivity_wide_micro.csv`:\n"
     )
     parts.append(_md_table(pd.read_csv(out_dir / "K_iou_sensitivity_wide.csv")) + "\n")
     parts.append(
         "**Estabilidade do ranking** (Spearman do ranking de cada limiar vs. "
-        "IoU = 0,5):\n"
+        "IoU = 0,5, no macro e no micro):\n"
     )
     parts.append(
         _md_table(pd.read_csv(out_dir / "K_iou_ranking_stability.csv")) + "\n"
