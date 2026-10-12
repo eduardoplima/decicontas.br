@@ -3,10 +3,11 @@
 Mede, sobre a mesma amostra de documentos sorteada com semente fixa, o tempo de
 parede de uma inferência por documento:
 
-* **LLMs** --- ``deepseek-v4-flash`` e ``gpt-4.1`` no Azure AI Foundry (Brazil),
-  com a mesma configuração da rodada canônica (\\ *few-shot*, ``function_calling``,
-  ``temperature=0``, ``seed=1007``). As chamadas são sequenciais e a primeira de
-  cada modelo é descartada como aquecimento. Registra também os *tokens* e o
+* **LLMs** --- os nove do experimento principal, cada um com a rota e a
+  configuração de ``MODEL_REGISTRY`` (Azure AI Foundry Brazil ou OpenRouter,
+  *few-shot*, ``function_calling``, ``temperature=0`` quando aplicável,
+  ``seed=1007``). As chamadas são sequenciais e a primeira de cada modelo é
+  descartada como aquecimento. Registra também os *tokens* e o
   ``finish_reason`` de cada chamada.
 * **Supervisionados** --- ``legalbert-pt-fp`` (tamanho *base*) e
   ``bertimbau-large``, com as janelas deslizantes do protocolo (512 subpalavras,
@@ -38,7 +39,10 @@ from research.release.check_alignment import master_to_release_index
 N_DOCS = 50
 SEED = 1007
 OUT_DIR = paths.RESULTS_ROOT / "latency"
-LLMS = {"deepseek-v4-flash": "DeepSeek-V4-Flash", "gpt-4.1": "gpt-4.1"}
+LLMS = [
+    "deepseek-v4-flash", "gpt-4.1", "gpt-4.1-mini", "gpt-4.1-nano",
+    "gpt-5-mini", "gpt-5.1", "gpt-5.2", "llama-3.3-70b", "qwen2.5-72b",
+]
 ENCODERS = {
     "legalbert-pt-fp": "raquelsilveira/legalbertpt_fp",
     "bertimbau-large": "neuralmind/bert-large-portuguese-cased",
@@ -61,21 +65,38 @@ def _write(path: Path, rows: list[dict]) -> None:
     print(f"gravado {path} ({len(rows)} linhas)")
 
 
-def measure_llm() -> None:
+def measure_llm(models: list[str]) -> None:
     from dotenv import load_dotenv
 
-    from research.release.run_llm_inference import _infer_one, load_corpus, make_extractor
+    from research.release.run_llm_inference import (
+        MODEL_REGISTRY,
+        _infer_one,
+        load_corpus,
+        make_extractor,
+    )
 
     load_dotenv(paths.REPO_ROOT / ".env")
     texts = load_corpus()
     positions = sample_positions()
+    out = OUT_DIR / "llm_latency.csv"
+    # Rows of models not re-measured in this call are kept.
     rows: list[dict] = []
-    for key, deployment in LLMS.items():
+    if out.exists():
+        with out.open(encoding="utf-8") as fh:
+            rows = [r for r in csv.DictReader(fh) if r["model"] not in models]
+    for key in models:
+        cfg = MODEL_REGISTRY[key]
         extractor = make_extractor(
-            None, structured="function_calling", azure_deployment=deployment,
+            cfg.get("openrouter"), structured=cfg.get("structured", "function_calling"),
+            provider_order=cfg.get("provider_order"),
+            azure_deployment=cfg.get("azure_foundry"), reasoning=cfg.get("reasoning", False),
             temperature=0, seed=SEED, include_raw=True,
         )
-        _infer_one("few_shot", texts[positions[0]], extractor, None, None)  # aquecimento
+        try:
+            _infer_one("few_shot", texts[positions[0]], extractor, None, None)  # aquecimento
+        except Exception as exc:  # noqa: BLE001 — modelo indisponível: segue para o próximo
+            print(f"{key}: aquecimento falhou, modelo ignorado: {exc}")
+            continue
         for pos in positions:
             for attempt in range(3):
                 t0 = time.perf_counter()
@@ -99,9 +120,9 @@ def measure_llm() -> None:
                     }
                 )
                 break
-        done = [r["seconds"] for r in rows if r["model"] == key]
+        done = [float(r["seconds"]) for r in rows if r["model"] == key]
         print(f"{key}: {len(done)} docs, mediana {np.median(done):.2f}s")
-    _write(OUT_DIR / "llm_latency.csv", rows)
+        _write(out, rows)  # grava a cada modelo: uma falha posterior não perde o já medido
 
 
 def measure_supervised() -> None:
@@ -171,8 +192,9 @@ def measure_supervised() -> None:
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--part", choices=["llm", "supervised"], required=True)
+    ap.add_argument("--models", nargs="+", default=LLMS, choices=LLMS)
     args = ap.parse_args()
-    measure_llm() if args.part == "llm" else measure_supervised()
+    measure_llm(args.models) if args.part == "llm" else measure_supervised()
 
 
 if __name__ == "__main__":
