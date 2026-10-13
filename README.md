@@ -93,21 +93,24 @@ Nine instruction-tuned LLMs under few-shot prompting with structured outputs, ag
 ten supervised baselines (BiLSTM-CRF, BERTimbau base/large, and seven Portuguese
 legal- or government-domain encoders). One protocol for all: span F1 with IoU ≥ 0.5
 over whitespace-token indices, paired document-level bootstrap (10,000 resamples) and
-Holm correction over a pre-selected family of seventeen contrasts.
+Holm correction over all 171 pairwise contrasts. LLM output strings are mapped to
+character offsets by an exact-first aligner (fuzzy fallback only for paraphrased strings).
 
 **Headline.** The best LLM, the open-weights **DeepSeek-V4-Flash** (macro span F1
-**0.742**), exceeds the strongest supervised baseline, the legal-domain
-**LegalBert-pt** (**0.660**), by +0.083, 95% CI [+0.021, +0.146], *p* = 0.008 — but
-the contrast does *not* survive Holm correction (*p*<sub>Holm</sub> = 0.066). Against
-the generic encoders the gap is significant after correction (BERTimbau-base, 0.622:
-+0.121, *p*<sub>Holm</sub> < 0.001). LegalBert-pt does not differ significantly from
-BERTimbau-large (0.646) or BERTimbau-base, and the other six domain-adapted encoders
-rank below both generic ones. The gap to GPT-4.1 (0.717) is +0.025, 95% CI
-[−0.001, +0.052], *p* = 0.060 — *not* significant, and not evidence of equivalence
-either. The advantage is larger on the minority classes: on `RECOMENDACAO` (52
-instances) DeepSeek-V4-Flash and GPT-4.1 both reach span F1 0.667 against at most
-0.400 for any supervised model. On micro span F1, LegalBert-pt (0.739) ranks second
-overall, just above GPT-4.1 (0.737).
+**0.784**), exceeds the strongest supervised baseline, the legal-domain
+**LegalBert-pt** (**0.660**), by +0.124, 95% CI [+0.066, +0.183], *p* < 0.001 — a
+contrast that survives Holm correction over all 171 pairs (*p*<sub>Holm</sub> = 0.017),
+as do the gaps to the generic encoders (BERTimbau-large, 0.646: +0.137; BERTimbau-base,
+0.622: +0.161; both *p*<sub>Holm</sub> < 0.001). LegalBert-pt does not differ
+significantly from BERTimbau-large or BERTimbau-base, and the other six domain-adapted
+encoders rank below both generic ones. The gap to GPT-4.1 (0.742) is +0.041, 95% CI
+[+0.013, +0.070], *p* = 0.002 — significant before but not after Holm correction
+(*p*<sub>Holm</sub> = 0.119), so the two share the leader group with GPT-5.1 (0.732).
+The advantage is larger on the minority classes: on `RECOMENDACAO` (52 instances) the
+leading LLMs reach span F1 0.708–0.714 against at most 0.400 for any supervised model.
+Under exact boundary matching the picture inverts (LegalBert-pt 0.573 vs
+DeepSeek-V4-Flash 0.375). On micro span F1, LegalBert-pt (0.739) ranks fourth overall,
+behind three LLMs.
 
 ![Precision vs recall, all 19 models](dataset/results/models_outputs/figures/exp1_precision_recall.png)
 
@@ -121,24 +124,24 @@ correcting insertions versus omissions was not measured.
 
 | Model | Type | Token F1 | Span P | Span R | Span F1 (micro) | Span F1 (macro) |
 |---|---|---:|---:|---:|---:|---:|
-| DeepSeek-V4-Flash | LLM | 0.834 | 0.739 | 0.803 | 0.770 | **0.742** |
-| GPT-4.1 | LLM | 0.817 | 0.658 | 0.837 | 0.737 | 0.717 |
-| GPT-5.1 | LLM | 0.782 | 0.621 | 0.814 | 0.705 | 0.691 |
-| GPT-4.1-mini | LLM | 0.794 | 0.596 | 0.844 | 0.699 | 0.684 |
+| DeepSeek-V4-Flash | LLM | 0.858 | 0.779 | 0.846 | 0.811 | **0.784** |
+| GPT-4.1 | LLM | 0.834 | 0.683 | 0.868 | 0.764 | 0.742 |
+| GPT-5.1 | LLM | 0.808 | 0.657 | 0.862 | 0.746 | 0.732 |
+| GPT-4.1-mini | LLM | 0.816 | 0.627 | 0.887 | 0.734 | 0.718 |
+| GPT-5.2 | LLM | 0.783 | 0.552 | 0.873 | 0.676 | 0.670 |
 | LegalBert-pt | supervised | 0.782 | 0.848 | 0.655 | 0.739 | 0.660 |
 | BERTimbau-large | supervised | 0.782 | 0.779 | 0.678 | 0.725 | 0.646 |
 | BERTimbau-base | supervised | 0.773 | 0.790 | 0.664 | 0.722 | 0.622 |
+| Qwen2.5-72B | LLM | 0.737 | 0.580 | 0.764 | 0.659 | 0.615 |
 | JurisBERT | supervised | 0.725 | 0.760 | 0.610 | 0.677 | 0.611 |
 | BiLSTM-CRF | supervised | 0.745 | 0.777 | 0.594 | 0.674 | 0.601 |
-| GPT-5.2 | LLM | 0.752 | 0.506 | 0.800 | 0.620 | 0.595 |
-| Qwen2.5-72B | LLM | 0.718 | 0.549 | 0.723 | 0.624 | 0.585 |
+| GPT-5-mini | LLM | 0.600 | 0.307 | 0.914 | 0.460 | 0.594 |
 | Legal-BERTimbau-base | supervised | 0.751 | 0.810 | 0.619 | 0.702 | 0.566 |
 | GovBERT-BR | supervised | 0.705 | 0.901 | 0.578 | 0.704 | 0.555 |
 | Legal-BERT-STF | supervised | 0.730 | 0.817 | 0.578 | 0.677 | 0.538 |
-| GPT-5-mini | LLM | 0.569 | 0.278 | 0.828 | 0.416 | 0.531 |
 | BERTimbauLaw | supervised | 0.726 | 0.855 | 0.574 | 0.687 | 0.506 |
-| GPT-4.1-nano | LLM | 0.581 | 0.354 | 0.560 | 0.434 | 0.395 |
-| Llama-3.3-70B | LLM | 0.409 | 0.607 | 0.252 | 0.356 | 0.286 |
+| GPT-4.1-nano | LLM | 0.607 | 0.379 | 0.599 | 0.464 | 0.439 |
+| Llama-3.3-70B | LLM | 0.412 | 0.612 | 0.254 | 0.359 | 0.287 |
 | LegalBERTPT-br | supervised | 0.537 | 0.820 | 0.361 | 0.501 | 0.284 |
 
 Source: [`model_evaluation/C_main_results.csv`](dataset/results/models_outputs/model_evaluation/C_main_results.csv).

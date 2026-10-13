@@ -48,7 +48,6 @@ import pandas as pd
 
 from research.dataset_io import char_span_to_token_span, spans_to_token_units, token_offsets
 from research.ner_metrics import (
-    DICT_LABELS,
     convert_pred_to_golden_format,
     count_alignment_failures,
     span_metrics_multi_iou,
@@ -124,16 +123,20 @@ def literal_occurrences(text: str, s: str) -> list[int]:
 
 
 def fuzzy_align(text: str, s: str, **aligner_kwargs: int) -> tuple[int, int] | None:
-    """``(start, end)`` the production aligner assigns to ``s`` in ``text``.
+    """``(start, end)`` the *legacy* fuzzy-first aligner assigns to ``s`` in ``text``.
 
     Delegates to :func:`research.ner_metrics.convert_pred_to_golden_format`
-    with a one-string prediction, so window, step, threshold and the
-    first-word anchoring are the real ones rather than a copy. Returns
+    with ``exact_first=False`` and a one-string prediction, so window, step,
+    threshold and the first-word anchoring are the real ones rather than a
+    copy. This is the aligner the audit prices; production now tries the
+    literal match first (:func:`research.ner_metrics.locate_span`). Returns
     ``None`` when no window reaches the floor (the string would be dropped
     before scoring).
     """
     located = convert_pred_to_golden_format(
-        {"text": text, "pred": {"multas": [{"descricao_multa": s}]}}, **aligner_kwargs
+        {"text": text, "pred": {"multas": [{"descricao_multa": s}]}},
+        exact_first=False,
+        **aligner_kwargs,
     )
     if not located:
         return None
@@ -303,69 +306,39 @@ def build_table(model_dfs: dict[str, pd.DataFrame]) -> pd.DataFrame:
 
 
 def literal_first_spans(row: pd.Series | dict[str, Any]) -> list[dict[str, Any]]:
-    """``pred_as_golden`` (character units) with literal strings at their own place.
+    """``pred_as_golden`` (character units) under the exact-first aligner.
 
-    Same walk as :func:`convert_pred_to_golden_format`, but a string that is
-    an exact substring of the document is placed at its first literal
-    occurrence; only the others go through the fuzzy aligner. Strings the
-    aligner cannot place are dropped exactly as in production, so the only
-    difference from the canonical spans is the artefact being priced.
+    This is the production aligner since the advisor review
+    (:func:`research.ner_metrics.locate_span`): a string that is an exact
+    substring of the document is placed at its literal occurrence (the one
+    nearest the legacy fuzzy anchor when it repeats); only the others go
+    through the fuzzy search, and strings it cannot place are dropped, so the
+    only difference from the legacy spans is the artefact being priced.
     """
-    text = row["text"] or ""
-    pred = row["pred"]
-    out: list[dict[str, Any]] = []
-    if not isinstance(pred, dict):
-        return out
-    for label_type, spans in pred.items():
-        for span in spans or []:
-            if not isinstance(span, dict):
-                continue
-            s = (
-                span.get("descricao_multa")
-                or span.get("descricao_obrigacao")
-                or span.get("descricao_ressarcimento")
-                or span.get("descricao_recomendacao")
-            )
-            if not s:
-                continue
-            occurrences = literal_occurrences(text, s)
-            bounds = (
-                (occurrences[0], occurrences[0] + len(s))
-                if occurrences
-                else fuzzy_align(text, s)
-            )
-            if bounds is None:
-                continue
-            out.append(
-                {
-                    "start": bounds[0],
-                    "end": bounds[1],
-                    "text": s,
-                    "labels": [DICT_LABELS[label_type]],
-                }
-            )
-    return out
+    return convert_pred_to_golden_format(row, exact_first=True)
 
 
 def rescore_literal_first(model_dfs: dict[str, pd.DataFrame]) -> pd.DataFrame:
-    """Span F1 with the production aligner vs. literal-first alignment.
+    """Span F1 under the legacy fuzzy-first aligner vs. the exact-first aligner.
 
-    ``model_dfs`` are the frames block K scores (token units, fuzzy aligner), so
-    the ``*_aligner`` columns reproduce ``K_iou_sensitivity.csv``; the
-    ``*_literal_first`` columns re-score the same predictions after
-    :func:`literal_first_spans`. Macro F1 is the dissertation's primary
-    aggregation; micro is kept alongside. ``exact`` is IoU = 1 on the token
-    grid, as in block K.
+    Both scorings are rebuilt here from the raw ``pred`` strings: the
+    ``*_aligner`` columns use the legacy aligner (``exact_first=False``, the
+    one the dissertation used before the advisor review) and the
+    ``*_literal_first`` columns use :func:`literal_first_spans`, i.e. the
+    production aligner, so they reproduce ``K_iou_sensitivity.csv``. Macro F1
+    is the dissertation's primary aggregation; micro is kept alongside.
+    ``exact`` is IoU = 1 on the token grid, as in block K.
     """
     rows: list[dict[str, Any]] = []
     for m, df in model_dfs.items():
-        current = span_metrics_multi_iou(df, [0.5, 1.0])
+        legacy_pred: list[list[dict]] = []
         cf_pred: list[list[dict]] = []
         for _, row in df.iterrows():
-            converted, _dropped = spans_to_token_units(
-                token_offsets(row["text"] or ""), literal_first_spans(row)
-            )
-            cf_pred.append(converted)
+            offsets = token_offsets(row["text"] or "")
+            legacy_spans = convert_pred_to_golden_format(row, exact_first=False)
+            legacy_pred.append(spans_to_token_units(offsets, legacy_spans)[0])
+            cf_pred.append(spans_to_token_units(offsets, literal_first_spans(row))[0])
+        current = span_metrics_multi_iou(df.assign(pred_as_golden=legacy_pred), [0.5, 1.0])
         counterfactual = span_metrics_multi_iou(df.assign(pred_as_golden=cf_pred), [0.5, 1.0])
         rows.append(
             {

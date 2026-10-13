@@ -90,25 +90,25 @@ Dos **567** grupos com confiança ≥ 0,95 inspecionados (anotador único), apen
 
 | model                                                  | display              |   token_f1 |   token_f1_macro |   token_precision |   token_recall |   span_f1 |   span_f1_macro |   span_precision |   span_recall |
 |:-------------------------------------------------------|:---------------------|-----------:|-----------------:|------------------:|---------------:|----------:|----------------:|-----------------:|--------------:|
-| deepseek-v4-flash_few_shot                             | DeepSeek-V4-Flash    |     0.8335 |           0.7961 |            0.8336 |         0.8334 |    0.7696 |          0.7423 |           0.7390 |        0.8027 |
+| deepseek-v4-flash_few_shot                             | DeepSeek-V4-Flash    |     0.8582 |           0.8206 |            0.8468 |         0.8698 |    0.8109 |          0.7837 |           0.7787 |        0.8458 |
+| gpt-4.1_few_shot                                       | GPT-4.1              |     0.8341 |           0.8065 |            0.7929 |         0.8797 |    0.7645 |          0.7424 |           0.6827 |        0.8685 |
+| gpt-5.1_few_shot                                       | GPT-5.1              |     0.8083 |           0.7812 |            0.7560 |         0.8683 |    0.7458 |          0.7322 |           0.6574 |        0.8617 |
 | raquelsilveira_legalbertpt_fp__supervised              | LegalBert-pt         |     0.7824 |           0.6861 |            0.9600 |         0.6602 |    0.7391 |          0.6603 |           0.8475 |        0.6553 |
-| gpt-4.1_few_shot                                       | GPT-4.1              |     0.8167 |           0.7902 |            0.7840 |         0.8522 |    0.7365 |          0.7170 |           0.6578 |        0.8367 |
+| gpt-4.1-mini_few_shot                                  | GPT-4.1-mini         |     0.8156 |           0.7853 |            0.7558 |         0.8858 |    0.7343 |          0.7175 |           0.6266 |        0.8866 |
 | neuralmind_bert-large-portuguese-cased__supervised     | BERTimbau-large      |     0.7815 |           0.6765 |            0.9444 |         0.6666 |    0.7248 |          0.6457 |           0.7786 |        0.6780 |
 | neuralmind_bert-base-portuguese-cased__supervised      | BERTimbau-base       |     0.7726 |           0.6444 |            0.9434 |         0.6542 |    0.7217 |          0.6220 |           0.7898 |        0.6644 |
-| gpt-5.1_few_shot                                       | GPT-5.1              |     0.7817 |           0.7549 |            0.7420 |         0.8259 |    0.7046 |          0.6910 |           0.6211 |        0.8141 |
 | dccmpmgfinalisticas_GovBERT-BR__supervised             | GovBERT-BR           |     0.7051 |           0.5313 |            0.9662 |         0.5551 |    0.7044 |          0.5555 |           0.9011 |        0.5782 |
 | rufimelo_Legal-BERTimbau-base__supervised              | Legal-BERTimbau-base |     0.7508 |           0.5847 |            0.9473 |         0.6219 |    0.7018 |          0.5656 |           0.8101 |        0.6190 |
-| gpt-4.1-mini_few_shot                                  | GPT-4.1-mini         |     0.7937 |           0.7639 |            0.7445 |         0.8499 |    0.6986 |          0.6837 |           0.5962 |        0.8435 |
 | alfaneo_bertimbaulaw-base-portuguese-cased__supervised | BERTimbauLaw         |     0.7255 |           0.5177 |            0.9670 |         0.5805 |    0.6866 |          0.5063 |           0.8547 |        0.5737 |
 | dominguesm_legal-bert-base-cased-ptbr__supervised      | Legal-BERT-STF       |     0.7305 |           0.5559 |            0.9629 |         0.5884 |    0.6773 |          0.5384 |           0.8173 |        0.5782 |
 | alfaneo_jurisbert-base-portuguese-uncased__supervised  | JurisBERT            |     0.7250 |           0.6182 |            0.9306 |         0.5939 |    0.6767 |          0.6113 |           0.7599 |        0.6100 |
+| gpt-5.2_few_shot                                       | GPT-5.2              |     0.7833 |           0.7682 |            0.7081 |         0.8763 |    0.6760 |          0.6700 |           0.5516 |        0.8730 |
 | bilstm-crf__supervised                                 | BiLSTM-CRF           |     0.7448 |           0.6117 |            0.8728 |         0.6496 |    0.6735 |          0.6009 |           0.7774 |        0.5941 |
-| qwen2.5-72b_few_shot                                   | Qwen2.5-72B          |     0.7177 |           0.6752 |            0.7026 |         0.7334 |    0.6243 |          0.5853 |           0.5491 |        0.7234 |
-| gpt-5.2_few_shot                                       | GPT-5.2              |     0.7515 |           0.7207 |            0.6901 |         0.8250 |    0.6198 |          0.5945 |           0.5057 |        0.8005 |
+| qwen2.5-72b_few_shot                                   | Qwen2.5-72B          |     0.7372 |           0.6920 |            0.7148 |         0.7611 |    0.6595 |          0.6147 |           0.5800 |        0.7642 |
 | ulysses-camara_legal-bert-pt-br__supervised            | LegalBERTPT-br       |     0.5368 |           0.2862 |            0.9751 |         0.3703 |    0.5008 |          0.2836 |           0.8196 |        0.3605 |
-| gpt-4.1-nano_few_shot                                  | GPT-4.1-nano         |     0.5809 |           0.5079 |            0.5644 |         0.5984 |    0.4341 |          0.3953 |           0.3544 |        0.5601 |
-| gpt-5-mini_few_shot                                    | GPT-5-mini           |     0.5694 |           0.6332 |            0.4274 |         0.8526 |    0.4162 |          0.5310 |           0.2780 |        0.8277 |
-| llama-3.3-70b_few_shot                                 | Llama-3.3-70B        |     0.4090 |           0.3009 |            0.7560 |         0.2804 |    0.3558 |          0.2856 |           0.6066 |        0.2517 |
+| gpt-4.1-nano_few_shot                                  | GPT-4.1-nano         |     0.6071 |           0.5462 |            0.5818 |         0.6348 |    0.4640 |          0.4391 |           0.3788 |        0.5986 |
+| gpt-5-mini_few_shot                                    | GPT-5-mini           |     0.5998 |           0.6709 |            0.4440 |         0.9237 |    0.4595 |          0.5942 |           0.3069 |        0.9138 |
+| llama-3.3-70b_few_shot                                 | Llama-3.3-70B        |     0.4121 |           0.3040 |            0.7593 |         0.2828 |    0.3590 |          0.2874 |           0.6120 |        0.2540 |
 
 **Variabilidade entre folds dos supervisionados (itens 17–19):**
 
@@ -129,7 +129,7 @@ Dos **567** grupos com confiança ≥ 0,95 inspecionados (anotador único), apen
 
 | ('paradigm', '')   |   ('token_f1', 'mean') |   ('token_f1', 'std') |   ('token_f1', 'min') |   ('token_f1', 'max') |   ('span_f1', 'mean') |   ('span_f1', 'std') |   ('span_f1', 'min') |   ('span_f1', 'max') |
 |:-------------------|-----------------------:|----------------------:|----------------------:|----------------------:|----------------------:|---------------------:|---------------------:|---------------------:|
-| few-shot           |                 0.6949 |                0.1438 |                0.4090 |                0.8335 |                0.5955 |               0.1540 |               0.3558 |               0.7696 |
+| few-shot           |                 0.7173 |                0.1480 |                0.4121 |                0.8582 |                0.6304 |               0.1613 |               0.3590 |               0.8109 |
 | supervised         |                 0.7255 |                0.0712 |                0.5368 |                0.7824 |                0.6807 |               0.0671 |               0.5008 |               0.7391 |
 
 ## D. F1 de Span por entidade × modelo
@@ -142,62 +142,62 @@ Dos **567** grupos com confiança ≥ 0,95 inspecionados (anotador único), apen
 | BERTimbau-large      |  0.8253 |      0.7175 |         0.3953 |          0.6446 |
 | BERTimbauLaw         |  0.8165 |      0.6927 |         0.0000 |          0.5161 |
 | BiLSTM-CRF           |  0.7570 |      0.6834 |         0.4000 |          0.5631 |
-| DeepSeek-V4-Flash    |  0.8434 |      0.7154 |         0.6667 |          0.7438 |
-| GPT-4.1              |  0.8098 |      0.6547 |         0.6667 |          0.7368 |
-| GPT-4.1-mini         |  0.7930 |      0.5886 |         0.6345 |          0.7188 |
-| GPT-4.1-nano         |  0.6854 |      0.2864 |         0.1023 |          0.5072 |
-| GPT-5-mini           |  0.7036 |      0.2249 |         0.5897 |          0.6056 |
-| GPT-5.1              |  0.7846 |      0.6053 |         0.6429 |          0.7313 |
-| GPT-5.2              |  0.7553 |      0.4895 |         0.5294 |          0.6040 |
+| DeepSeek-V4-Flash    |  0.8916 |      0.7398 |         0.7101 |          0.7934 |
+| GPT-4.1              |  0.8546 |      0.6547 |         0.7083 |          0.7519 |
+| GPT-4.1-mini         |  0.8497 |      0.5946 |         0.6759 |          0.7500 |
+| GPT-4.1-nano         |  0.7136 |      0.2864 |         0.1477 |          0.6087 |
+| GPT-5-mini           |  0.7932 |      0.2371 |         0.6282 |          0.7183 |
+| GPT-5.1              |  0.8481 |      0.6053 |         0.7143 |          0.7612 |
+| GPT-5.2              |  0.8059 |      0.5105 |         0.7059 |          0.6577 |
 | GovBERT-BR           |  0.8011 |      0.7016 |         0.0000 |          0.7193 |
 | JurisBERT            |  0.7455 |      0.6765 |         0.3457 |          0.6777 |
 | Legal-BERT-STF       |  0.7716 |      0.7071 |         0.1091 |          0.5660 |
 | Legal-BERTimbau-base |  0.7742 |      0.7429 |         0.0727 |          0.6727 |
 | LegalBERTPT-br       |  0.6814 |      0.4528 |         0.0000 |          0.0000 |
 | LegalBert-pt         |  0.8074 |      0.7570 |         0.3768 |          0.7000 |
-| Llama-3.3-70B        |  0.4214 |      0.3939 |         0.2963 |          0.0308 |
-| Qwen2.5-72B          |  0.7731 |      0.5188 |         0.3727 |          0.6765 |
+| Llama-3.3-70B        |  0.4286 |      0.3939 |         0.2963 |          0.0308 |
+| Qwen2.5-72B          |  0.8287 |      0.5392 |         0.3851 |          0.7059 |
 
 **Detalhe completo (precision, recall, F1, matched/gold/pred):**
 
 | model                                                  | display              | label         |   precision |   recall |     f1 |   matched |   total_gold |   total_pred |
 |:-------------------------------------------------------|:---------------------|:--------------|------------:|---------:|-------:|----------:|-------------:|-------------:|
-| gpt-4.1_few_shot                                       | GPT-4.1              | MULTA         |      0.7418 |   0.8916 | 0.8098 |       181 |          203 |          244 |
+| gpt-4.1_few_shot                                       | GPT-4.1              | MULTA         |      0.7828 |   0.9409 | 0.8546 |       191 |          203 |          244 |
 | gpt-4.1_few_shot                                       | GPT-4.1              | OBRIGACAO     |      0.5871 |   0.7398 | 0.6547 |        91 |          123 |          155 |
-| gpt-4.1_few_shot                                       | GPT-4.1              | RECOMENDACAO  |      0.5217 |   0.9231 | 0.6667 |        48 |           52 |           92 |
-| gpt-4.1_few_shot                                       | GPT-4.1              | RESSARCIMENTO |      0.7000 |   0.7778 | 0.7368 |        49 |           63 |           70 |
-| gpt-4.1-mini_few_shot                                  | GPT-4.1-mini         | MULTA         |      0.7109 |   0.8966 | 0.7930 |       182 |          203 |          256 |
-| gpt-4.1-mini_few_shot                                  | GPT-4.1-mini         | OBRIGACAO     |      0.4667 |   0.7967 | 0.5886 |        98 |          123 |          210 |
-| gpt-4.1-mini_few_shot                                  | GPT-4.1-mini         | RECOMENDACAO  |      0.4946 |   0.8846 | 0.6345 |        46 |           52 |           93 |
-| gpt-4.1-mini_few_shot                                  | GPT-4.1-mini         | RESSARCIMENTO |      0.7077 |   0.7302 | 0.7188 |        46 |           63 |           65 |
-| gpt-4.1-nano_few_shot                                  | GPT-4.1-nano         | MULTA         |      0.6547 |   0.7192 | 0.6854 |       146 |          203 |          223 |
+| gpt-4.1_few_shot                                       | GPT-4.1              | RECOMENDACAO  |      0.5543 |   0.9808 | 0.7083 |        51 |           52 |           92 |
+| gpt-4.1_few_shot                                       | GPT-4.1              | RESSARCIMENTO |      0.7143 |   0.7937 | 0.7519 |        50 |           63 |           70 |
+| gpt-4.1-mini_few_shot                                  | GPT-4.1-mini         | MULTA         |      0.7617 |   0.9606 | 0.8497 |       195 |          203 |          256 |
+| gpt-4.1-mini_few_shot                                  | GPT-4.1-mini         | OBRIGACAO     |      0.4714 |   0.8049 | 0.5946 |        99 |          123 |          210 |
+| gpt-4.1-mini_few_shot                                  | GPT-4.1-mini         | RECOMENDACAO  |      0.5269 |   0.9423 | 0.6759 |        49 |           52 |           93 |
+| gpt-4.1-mini_few_shot                                  | GPT-4.1-mini         | RESSARCIMENTO |      0.7385 |   0.7619 | 0.7500 |        48 |           63 |           65 |
+| gpt-4.1-nano_few_shot                                  | GPT-4.1-nano         | MULTA         |      0.6816 |   0.7488 | 0.7136 |       152 |          203 |          223 |
 | gpt-4.1-nano_few_shot                                  | GPT-4.1-nano         | OBRIGACAO     |      0.2073 |   0.4634 | 0.2864 |        57 |          123 |          275 |
-| gpt-4.1-nano_few_shot                                  | GPT-4.1-nano         | RECOMENDACAO  |      0.0726 |   0.1731 | 0.1023 |         9 |           52 |          124 |
-| gpt-4.1-nano_few_shot                                  | GPT-4.1-nano         | RESSARCIMENTO |      0.4667 |   0.5556 | 0.5072 |        35 |           63 |           75 |
-| gpt-5-mini_few_shot                                    | GPT-5-mini           | MULTA         |      0.6203 |   0.8128 | 0.7036 |       165 |          203 |          266 |
-| gpt-5-mini_few_shot                                    | GPT-5-mini           | OBRIGACAO     |      0.1285 |   0.9024 | 0.2249 |       111 |          123 |          864 |
-| gpt-5-mini_few_shot                                    | GPT-5-mini           | RECOMENDACAO  |      0.4423 |   0.8846 | 0.5897 |        46 |           52 |          104 |
-| gpt-5-mini_few_shot                                    | GPT-5-mini           | RESSARCIMENTO |      0.5443 |   0.6825 | 0.6056 |        43 |           63 |           79 |
-| gpt-5.1_few_shot                                       | GPT-5.1              | MULTA         |      0.7269 |   0.8522 | 0.7846 |       173 |          203 |          238 |
+| gpt-4.1-nano_few_shot                                  | GPT-4.1-nano         | RECOMENDACAO  |      0.1048 |   0.2500 | 0.1477 |        13 |           52 |          124 |
+| gpt-4.1-nano_few_shot                                  | GPT-4.1-nano         | RESSARCIMENTO |      0.5600 |   0.6667 | 0.6087 |        42 |           63 |           75 |
+| gpt-5-mini_few_shot                                    | GPT-5-mini           | MULTA         |      0.6992 |   0.9163 | 0.7932 |       186 |          203 |          266 |
+| gpt-5-mini_few_shot                                    | GPT-5-mini           | OBRIGACAO     |      0.1354 |   0.9512 | 0.2371 |       117 |          123 |          864 |
+| gpt-5-mini_few_shot                                    | GPT-5-mini           | RECOMENDACAO  |      0.4712 |   0.9423 | 0.6282 |        49 |           52 |          104 |
+| gpt-5-mini_few_shot                                    | GPT-5-mini           | RESSARCIMENTO |      0.6456 |   0.8095 | 0.7183 |        51 |           63 |           79 |
+| gpt-5.1_few_shot                                       | GPT-5.1              | MULTA         |      0.7857 |   0.9212 | 0.8481 |       187 |          203 |          238 |
 | gpt-5.1_few_shot                                       | GPT-5.1              | OBRIGACAO     |      0.5083 |   0.7480 | 0.6053 |        92 |          123 |          181 |
-| gpt-5.1_few_shot                                       | GPT-5.1              | RECOMENDACAO  |      0.5114 |   0.8654 | 0.6429 |        45 |           52 |           88 |
-| gpt-5.1_few_shot                                       | GPT-5.1              | RESSARCIMENTO |      0.6901 |   0.7778 | 0.7313 |        49 |           63 |           71 |
-| gpt-5.2_few_shot                                       | GPT-5.2              | MULTA         |      0.6605 |   0.8818 | 0.7553 |       179 |          203 |          271 |
-| gpt-5.2_few_shot                                       | GPT-5.2              | OBRIGACAO     |      0.3619 |   0.7561 | 0.4895 |        93 |          123 |          257 |
-| gpt-5.2_few_shot                                       | GPT-5.2              | RECOMENDACAO  |      0.4286 |   0.6923 | 0.5294 |        36 |           52 |           84 |
-| gpt-5.2_few_shot                                       | GPT-5.2              | RESSARCIMENTO |      0.5233 |   0.7143 | 0.6040 |        45 |           63 |           86 |
-| deepseek-v4-flash_few_shot                             | DeepSeek-V4-Flash    | MULTA         |      0.8255 |   0.8621 | 0.8434 |       175 |          203 |          212 |
-| deepseek-v4-flash_few_shot                             | DeepSeek-V4-Flash    | OBRIGACAO     |      0.7154 |   0.7154 | 0.7154 |        88 |          123 |          123 |
-| deepseek-v4-flash_few_shot                             | DeepSeek-V4-Flash    | RECOMENDACAO  |      0.5349 |   0.8846 | 0.6667 |        46 |           52 |           86 |
-| deepseek-v4-flash_few_shot                             | DeepSeek-V4-Flash    | RESSARCIMENTO |      0.7759 |   0.7143 | 0.7438 |        45 |           63 |           58 |
-| llama-3.3-70b_few_shot                                 | Llama-3.3-70B        | MULTA         |      0.7662 |   0.2906 | 0.4214 |        59 |          203 |           77 |
+| gpt-5.1_few_shot                                       | GPT-5.1              | RECOMENDACAO  |      0.5682 |   0.9615 | 0.7143 |        50 |           52 |           88 |
+| gpt-5.1_few_shot                                       | GPT-5.1              | RESSARCIMENTO |      0.7183 |   0.8095 | 0.7612 |        51 |           63 |           71 |
+| gpt-5.2_few_shot                                       | GPT-5.2              | MULTA         |      0.7048 |   0.9409 | 0.8059 |       191 |          203 |          271 |
+| gpt-5.2_few_shot                                       | GPT-5.2              | OBRIGACAO     |      0.3774 |   0.7886 | 0.5105 |        97 |          123 |          257 |
+| gpt-5.2_few_shot                                       | GPT-5.2              | RECOMENDACAO  |      0.5714 |   0.9231 | 0.7059 |        48 |           52 |           84 |
+| gpt-5.2_few_shot                                       | GPT-5.2              | RESSARCIMENTO |      0.5698 |   0.7778 | 0.6577 |        49 |           63 |           86 |
+| deepseek-v4-flash_few_shot                             | DeepSeek-V4-Flash    | MULTA         |      0.8726 |   0.9113 | 0.8916 |       185 |          203 |          212 |
+| deepseek-v4-flash_few_shot                             | DeepSeek-V4-Flash    | OBRIGACAO     |      0.7398 |   0.7398 | 0.7398 |        91 |          123 |          123 |
+| deepseek-v4-flash_few_shot                             | DeepSeek-V4-Flash    | RECOMENDACAO  |      0.5698 |   0.9423 | 0.7101 |        49 |           52 |           86 |
+| deepseek-v4-flash_few_shot                             | DeepSeek-V4-Flash    | RESSARCIMENTO |      0.8276 |   0.7619 | 0.7934 |        48 |           63 |           58 |
+| llama-3.3-70b_few_shot                                 | Llama-3.3-70B        | MULTA         |      0.7792 |   0.2956 | 0.4286 |        60 |          203 |           77 |
 | llama-3.3-70b_few_shot                                 | Llama-3.3-70B        | OBRIGACAO     |      0.5200 |   0.3171 | 0.3939 |        39 |          123 |           75 |
 | llama-3.3-70b_few_shot                                 | Llama-3.3-70B        | RECOMENDACAO  |      0.4138 |   0.2308 | 0.2963 |        12 |           52 |           29 |
 | llama-3.3-70b_few_shot                                 | Llama-3.3-70B        | RESSARCIMENTO |      0.5000 |   0.0159 | 0.0308 |         1 |           63 |            2 |
-| qwen2.5-72b_few_shot                                   | Qwen2.5-72B          | MULTA         |      0.7293 |   0.8227 | 0.7731 |       167 |          203 |          229 |
-| qwen2.5-72b_few_shot                                   | Qwen2.5-72B          | OBRIGACAO     |      0.4471 |   0.6179 | 0.5188 |        76 |          123 |          170 |
-| qwen2.5-72b_few_shot                                   | Qwen2.5-72B          | RECOMENDACAO  |      0.2752 |   0.5769 | 0.3727 |        30 |           52 |          109 |
-| qwen2.5-72b_few_shot                                   | Qwen2.5-72B          | RESSARCIMENTO |      0.6301 |   0.7302 | 0.6765 |        46 |           63 |           73 |
+| qwen2.5-72b_few_shot                                   | Qwen2.5-72B          | MULTA         |      0.7817 |   0.8818 | 0.8287 |       179 |          203 |          229 |
+| qwen2.5-72b_few_shot                                   | Qwen2.5-72B          | OBRIGACAO     |      0.4647 |   0.6423 | 0.5392 |        79 |          123 |          170 |
+| qwen2.5-72b_few_shot                                   | Qwen2.5-72B          | RECOMENDACAO  |      0.2844 |   0.5962 | 0.3851 |        31 |           52 |          109 |
+| qwen2.5-72b_few_shot                                   | Qwen2.5-72B          | RESSARCIMENTO |      0.6575 |   0.7619 | 0.7059 |        48 |           63 |           73 |
 | rufimelo_Legal-BERTimbau-base__supervised              | Legal-BERTimbau-base | MULTA         |      0.7800 |   0.7685 | 0.7742 |       156 |          203 |          200 |
 | rufimelo_Legal-BERTimbau-base__supervised              | Legal-BERTimbau-base | OBRIGACAO     |      0.8966 |   0.6341 | 0.7429 |        78 |          123 |           87 |
 | rufimelo_Legal-BERTimbau-base__supervised              | Legal-BERTimbau-base | RECOMENDACAO  |      0.6667 |   0.0385 | 0.0727 |         2 |           52 |            3 |
@@ -271,17 +271,17 @@ Custo de inferência por documento a partir das contagens de tokens registradas 
 
 | model             | method           |   token_f1 |   span_f1 |   span_f1_macro |   span_precision |   span_recall |
 |:------------------|:-----------------|-----------:|----------:|----------------:|-----------------:|--------------:|
-| deepseek-v4-flash | function_calling |     0.8397 |    0.7769 |          0.7469 |           0.7469 |        0.8095 |
-| deepseek-v4-flash | json_schema      |     0.8310 |    0.7650 |          0.7280 |           0.7384 |        0.7937 |
-| gpt-4.1           | function_calling |     0.8143 |    0.7422 |          0.7220 |           0.6655 |        0.8390 |
-| gpt-4.1           | json_schema      |     0.8227 |    0.7313 |          0.7049 |           0.6594 |        0.8209 |
+| deepseek-v4-flash | function_calling |     0.8629 |    0.8161 |          0.7883 |           0.7845 |        0.8503 |
+| deepseek-v4-flash | json_schema      |     0.8512 |    0.8000 |          0.7642 |           0.7722 |        0.8299 |
+| gpt-4.1           | function_calling |     0.8333 |    0.7763 |          0.7516 |           0.6960 |        0.8776 |
+| gpt-4.1           | json_schema      |     0.8450 |    0.7737 |          0.7502 |           0.6976 |        0.8685 |
 
 **Δ por modelo (FC − JS):**
 
 | model             |   delta_token_f1 |   delta_span_f1 |   delta_span_precision |   delta_span_recall |
 |:------------------|-----------------:|----------------:|-----------------------:|--------------------:|
-| deepseek-v4-flash |           0.0086 |          0.0119 |                 0.0085 |              0.0159 |
-| gpt-4.1           |          -0.0085 |          0.0109 |                 0.0061 |              0.0181 |
+| deepseek-v4-flash |           0.0118 |          0.0161 |                 0.0124 |              0.0204 |
+| gpt-4.1           |          -0.0117 |          0.0026 |                -0.0016 |              0.0091 |
 
 ## G. FC vs JSON Schema por entidade
 
@@ -289,28 +289,28 @@ Custo de inferência por documento a partir das contagens de tokens registradas 
 
 | model             | method           |   MULTA |   OBRIGACAO |   RECOMENDACAO |   RESSARCIMENTO |
 |:------------------|:-----------------|--------:|------------:|---------------:|----------------:|
-| deepseek-v4-flash | function_calling |  0.8544 |      0.7287 |         0.6667 |          0.7377 |
-| deepseek-v4-flash | json_schema      |  0.8454 |      0.7309 |         0.6308 |          0.7049 |
-| gpt-4.1           | function_calling |  0.8117 |      0.6691 |         0.6761 |          0.7313 |
-| gpt-4.1           | json_schema      |  0.8054 |      0.6716 |         0.6056 |          0.7368 |
+| deepseek-v4-flash | function_calling |  0.9029 |      0.7368 |         0.7101 |          0.8033 |
+| deepseek-v4-flash | json_schema      |  0.8937 |      0.7309 |         0.6615 |          0.7705 |
+| gpt-4.1           | function_calling |  0.8655 |      0.6764 |         0.7183 |          0.7463 |
+| gpt-4.1           | json_schema      |  0.8591 |      0.6716 |         0.7183 |          0.7519 |
 
 **Span Precision (modelo+método × entidade):**
 
 | model             | method           |   MULTA |   OBRIGACAO |   RECOMENDACAO |   RESSARCIMENTO |
 |:------------------|:-----------------|--------:|------------:|---------------:|----------------:|
-| deepseek-v4-flash | function_calling |  0.8421 |      0.7258 |         0.5349 |          0.7627 |
-| deepseek-v4-flash | json_schema      |  0.8294 |      0.7222 |         0.5256 |          0.7288 |
-| gpt-4.1           | function_calling |  0.7449 |      0.6053 |         0.5333 |          0.6901 |
-| gpt-4.1           | json_schema      |  0.7377 |      0.6207 |         0.4778 |          0.7000 |
+| deepseek-v4-flash | function_calling |  0.8900 |      0.7339 |         0.5698 |          0.8305 |
+| deepseek-v4-flash | json_schema      |  0.8768 |      0.7222 |         0.5513 |          0.7966 |
+| gpt-4.1           | function_calling |  0.7942 |      0.6118 |         0.5667 |          0.7042 |
+| gpt-4.1           | json_schema      |  0.7869 |      0.6207 |         0.5667 |          0.7143 |
 
 **Span Recall (modelo+método × entidade):**
 
 | model             | method           |   MULTA |   OBRIGACAO |   RECOMENDACAO |   RESSARCIMENTO |
 |:------------------|:-----------------|--------:|------------:|---------------:|----------------:|
-| deepseek-v4-flash | function_calling |  0.8670 |      0.7317 |         0.8846 |          0.7143 |
-| deepseek-v4-flash | json_schema      |  0.8621 |      0.7398 |         0.7885 |          0.6825 |
-| gpt-4.1           | function_calling |  0.8916 |      0.7480 |         0.9231 |          0.7778 |
-| gpt-4.1           | json_schema      |  0.8867 |      0.7317 |         0.8269 |          0.7778 |
+| deepseek-v4-flash | function_calling |  0.9163 |      0.7398 |         0.9423 |          0.7778 |
+| deepseek-v4-flash | json_schema      |  0.9113 |      0.7398 |         0.8269 |          0.7460 |
+| gpt-4.1           | function_calling |  0.9507 |      0.7561 |         0.9808 |          0.7937 |
+| gpt-4.1           | json_schema      |  0.9458 |      0.7317 |         0.9808 |          0.7937 |
 
 ## H. Técnicas de prompting
 
@@ -318,100 +318,100 @@ Custo de inferência por documento a partir das contagens de tokens registradas 
 
 | model             | technique   |   token_f1 |   span_f1 |   span_f1_macro |   span_precision |   span_recall |
 |:------------------|:------------|-----------:|----------:|----------------:|-----------------:|--------------:|
-| deepseek-v4-flash | cot         |     0.8296 |    0.7155 |          0.6806 |           0.6289 |        0.8299 |
-| deepseek-v4-flash | few_shot    |     0.8335 |    0.7696 |          0.7423 |           0.7390 |        0.8027 |
-| deepseek-v4-flash | two_stage   |     0.8322 |    0.7692 |          0.7334 |           0.7365 |        0.8050 |
-| gpt-4.1           | cot         |     0.8128 |    0.7363 |          0.7182 |           0.6560 |        0.8390 |
-| gpt-4.1           | few_shot    |     0.8167 |    0.7365 |          0.7170 |           0.6578 |        0.8367 |
-| gpt-4.1           | two_stage   |     0.8204 |    0.7450 |          0.7253 |           0.6685 |        0.8413 |
-| gpt-5.2           | cot         |     0.7937 |    0.6908 |          0.7038 |           0.5755 |        0.8639 |
-| gpt-5.2           | few_shot    |     0.7515 |    0.6198 |          0.5945 |           0.5057 |        0.8005 |
-| gpt-5.2           | two_stage   |     0.7830 |    0.6685 |          0.6381 |           0.5705 |        0.8073 |
-| llama-3.3-70b     | cot         |     0.3057 |    0.2643 |          0.1997 |           0.6218 |        0.1678 |
-| llama-3.3-70b     | few_shot    |     0.4090 |    0.3558 |          0.2856 |           0.6066 |        0.2517 |
-| llama-3.3-70b     | two_stage   |     0.1696 |    0.1315 |          0.1154 |           0.5410 |        0.0748 |
-| qwen2.5-72b       | cot         |     0.7534 |    0.6475 |          0.6022 |           0.5617 |        0.7642 |
-| qwen2.5-72b       | few_shot    |     0.7177 |    0.6243 |          0.5853 |           0.5491 |        0.7234 |
-| qwen2.5-72b       | two_stage   |     0.7419 |    0.6394 |          0.5874 |           0.5714 |        0.7256 |
+| deepseek-v4-flash | cot         |     0.8495 |    0.7527 |          0.7179 |           0.6615 |        0.8730 |
+| deepseek-v4-flash | few_shot    |     0.8582 |    0.8109 |          0.7837 |           0.7787 |        0.8458 |
+| deepseek-v4-flash | two_stage   |     0.8608 |    0.8126 |          0.7806 |           0.7780 |        0.8503 |
+| gpt-4.1           | cot         |     0.8279 |    0.7662 |          0.7450 |           0.6826 |        0.8730 |
+| gpt-4.1           | few_shot    |     0.8341 |    0.7645 |          0.7424 |           0.6827 |        0.8685 |
+| gpt-4.1           | two_stage   |     0.8362 |    0.7751 |          0.7519 |           0.6955 |        0.8753 |
+| gpt-5.2           | cot         |     0.8144 |    0.7199 |          0.7322 |           0.5997 |        0.9002 |
+| gpt-5.2           | few_shot    |     0.7833 |    0.6760 |          0.6700 |           0.5516 |        0.8730 |
+| gpt-5.2           | two_stage   |     0.8152 |    0.7324 |          0.7239 |           0.6250 |        0.8844 |
+| llama-3.3-70b     | cot         |     0.3090 |    0.2679 |          0.2017 |           0.6303 |        0.1701 |
+| llama-3.3-70b     | few_shot    |     0.4121 |    0.3590 |          0.2874 |           0.6120 |        0.2540 |
+| llama-3.3-70b     | two_stage   |     0.1722 |    0.1355 |          0.1237 |           0.5574 |        0.0771 |
+| qwen2.5-72b       | cot         |     0.7710 |    0.6782 |          0.6278 |           0.5883 |        0.8005 |
+| qwen2.5-72b       | few_shot    |     0.7372 |    0.6595 |          0.6147 |           0.5800 |        0.7642 |
+| qwen2.5-72b       | two_stage   |     0.7603 |    0.6753 |          0.6204 |           0.6036 |        0.7664 |
 
 **Span F1 pivotado (modelo × técnica):**
 
 | model             |    cot |   few_shot |   two_stage |
 |:------------------|-------:|-----------:|------------:|
-| deepseek-v4-flash | 0.7155 |     0.7696 |      0.7692 |
-| gpt-4.1           | 0.7363 |     0.7365 |      0.7450 |
-| gpt-5.2           | 0.6908 |     0.6198 |      0.6685 |
-| llama-3.3-70b     | 0.2643 |     0.3558 |      0.1315 |
-| qwen2.5-72b       | 0.6475 |     0.6243 |      0.6394 |
+| deepseek-v4-flash | 0.7527 |     0.8109 |      0.8126 |
+| gpt-4.1           | 0.7662 |     0.7645 |      0.7751 |
+| gpt-5.2           | 0.7199 |     0.6760 |      0.7324 |
+| llama-3.3-70b     | 0.2679 |     0.3590 |      0.1355 |
+| qwen2.5-72b       | 0.6782 |     0.6595 |      0.6753 |
 
 **Resumo agregado por técnica (média ± std, min, max):**
 
-| technique   | token_f1           | token_f1.1          | token_f1.2          | token_f1.3         | span_f1            | span_f1.1           | span_f1.2           | span_f1.3          |
-|:------------|:-------------------|:--------------------|:--------------------|:-------------------|:-------------------|:--------------------|:--------------------|:-------------------|
-| nan         | mean               | std                 | min                 | max                | mean               | std                 | min                 | max                |
-| cot         | 0.6990277113401667 | 0.2217071125876835  | 0.3056922224756443  | 0.8295863131692284 | 0.6108888340138181 | 0.19656323852847388 | 0.2642857142857143  | 0.7363184079601991 |
-| few_shot    | 0.7056914764518479 | 0.17240971462222462 | 0.4090397488300456  | 0.8335160596093718 | 0.6211939011439622 | 0.16261709688499038 | 0.3557692307692307  | 0.7695652173913043 |
-| two_stage   | 0.6694442739073965 | 0.2816232299402566  | 0.16964188329394655 | 0.8322383187104673 | 0.5907180065589496 | 0.26219820327993754 | 0.13147410358565736 | 0.7692307692307693 |
+| technique   | token_f1           | token_f1.1          | token_f1.2          | token_f1.3         | span_f1            | span_f1.1          | span_f1.2           | span_f1.3          |
+|:------------|:-------------------|:--------------------|:--------------------|:-------------------|:-------------------|:-------------------|:--------------------|:-------------------|
+| nan         | mean               | std                 | min                 | max                | mean               | std                | min                 | max                |
+| cot         | 0.7143538578719015 | 0.22842559702563064 | 0.30897431724227725 | 0.8495299028595951 | 0.6369526908774199 | 0.2091032949763975 | 0.26785714285714285 | 0.7661691542288556 |
+| few_shot    | 0.7249607947981642 | 0.1810418305776049  | 0.4120588148279637  | 0.8581557442717513 | 0.653967556497254  | 0.1763289423368148 | 0.3589743589743589  | 0.8108695652173912 |
+| two_stage   | 0.6889482757043968 | 0.2912451213309452  | 0.17219457260144586 | 0.8608133606327031 | 0.6261690648870253 | 0.2790261067963767 | 0.13545816733067728 | 0.8125677139761647 |
 
 **Por entidade — span F1 (modelo+técnica × entidade):** essencial para a narrativa de queda do DeepSeek-V3 com CoT, ganho do gpt-5.4-nano e do Gemini.
 
 | model             | technique   |   MULTA |   OBRIGACAO |   RECOMENDACAO |   RESSARCIMENTO |
 |:------------------|:------------|--------:|------------:|---------------:|----------------:|
-| deepseek-v4-flash | cot         |  0.8524 |      0.7059 |         0.4593 |          0.7049 |
-| deepseek-v4-flash | few_shot    |  0.8434 |      0.7154 |         0.6667 |          0.7438 |
-| deepseek-v4-flash | two_stage   |  0.8482 |      0.7417 |         0.6667 |          0.6769 |
-| gpt-4.1           | cot         |  0.8108 |      0.6528 |         0.6667 |          0.7424 |
-| gpt-4.1           | few_shot    |  0.8098 |      0.6547 |         0.6667 |          0.7368 |
-| gpt-4.1           | two_stage   |  0.8135 |      0.6739 |         0.6713 |          0.7424 |
-| gpt-5.2           | cot         |  0.8044 |      0.5233 |         0.6906 |          0.7969 |
-| gpt-5.2           | few_shot    |  0.7553 |      0.4895 |         0.5294 |          0.6040 |
-| gpt-5.2           | two_stage   |  0.7894 |      0.5638 |         0.5036 |          0.6957 |
-| llama-3.3-70b     | cot         |  0.3373 |      0.2971 |         0.1644 |          0.0000 |
-| llama-3.3-70b     | few_shot    |  0.4214 |      0.3939 |         0.2963 |          0.0308 |
-| llama-3.3-70b     | two_stage   |  0.1478 |      0.1497 |         0.1333 |          0.0308 |
-| qwen2.5-72b       | cot         |  0.8018 |      0.5581 |         0.3580 |          0.6906 |
-| qwen2.5-72b       | few_shot    |  0.7731 |      0.5188 |         0.3727 |          0.6765 |
-| qwen2.5-72b       | two_stage   |  0.7925 |      0.5467 |         0.3973 |          0.6131 |
+| deepseek-v4-flash | cot         |  0.9095 |      0.7132 |         0.4785 |          0.7705 |
+| deepseek-v4-flash | few_shot    |  0.8916 |      0.7398 |         0.7101 |          0.7934 |
+| deepseek-v4-flash | two_stage   |  0.8916 |      0.7667 |         0.7101 |          0.7538 |
+| gpt-4.1           | cot         |  0.8604 |      0.6528 |         0.7092 |          0.7576 |
+| gpt-4.1           | few_shot    |  0.8546 |      0.6547 |         0.7083 |          0.7519 |
+| gpt-4.1           | two_stage   |  0.8629 |      0.6739 |         0.7133 |          0.7576 |
+| gpt-5.2           | cot         |  0.8578 |      0.5233 |         0.7194 |          0.8281 |
+| gpt-5.2           | few_shot    |  0.8059 |      0.5105 |         0.7059 |          0.6577 |
+| gpt-5.2           | two_stage   |  0.8470 |      0.5757 |         0.7194 |          0.7536 |
+| llama-3.3-70b     | cot         |  0.3454 |      0.2971 |         0.1644 |          0.0000 |
+| llama-3.3-70b     | few_shot    |  0.4286 |      0.3939 |         0.2963 |          0.0308 |
+| llama-3.3-70b     | two_stage   |  0.1478 |      0.1497 |         0.1667 |          0.0308 |
+| qwen2.5-72b       | cot         |  0.8519 |      0.5714 |         0.3827 |          0.7050 |
+| qwen2.5-72b       | few_shot    |  0.8287 |      0.5392 |         0.3851 |          0.7059 |
+| qwen2.5-72b       | two_stage   |  0.8392 |      0.5744 |         0.4110 |          0.6569 |
 
 **Span Precision por entidade (mesmo eixo):**
 
 | model             | technique   |   MULTA |   OBRIGACAO |   RECOMENDACAO |   RESSARCIMENTO |
 |:------------------|:------------|--------:|------------:|---------------:|----------------:|
-| deepseek-v4-flash | cot         |  0.8249 |      0.6443 |         0.3057 |          0.7288 |
-| deepseek-v4-flash | few_shot    |  0.8255 |      0.7154 |         0.5349 |          0.7759 |
-| deepseek-v4-flash | two_stage   |  0.8302 |      0.7607 |         0.5349 |          0.6567 |
-| gpt-4.1           | cot         |  0.7469 |      0.5697 |         0.5281 |          0.7101 |
-| gpt-4.1           | few_shot    |  0.7418 |      0.5871 |         0.5217 |          0.7000 |
-| gpt-4.1           | two_stage   |  0.7479 |      0.6078 |         0.5275 |          0.7101 |
-| gpt-5.2           | cot         |  0.7328 |      0.3840 |         0.5517 |          0.7846 |
-| gpt-5.2           | few_shot    |  0.6605 |      0.3619 |         0.4286 |          0.5233 |
-| gpt-5.2           | two_stage   |  0.7177 |      0.4439 |         0.4023 |          0.6400 |
-| llama-3.3-70b     | cot         |  0.9130 |      0.5000 |         0.2857 |          0.0000 |
-| llama-3.3-70b     | few_shot    |  0.7662 |      0.5200 |         0.4138 |          0.5000 |
-| llama-3.3-70b     | two_stage   |  0.6296 |      0.4583 |         0.5000 |          0.5000 |
-| qwen2.5-72b       | cot         |  0.7458 |      0.4719 |         0.2636 |          0.6316 |
-| qwen2.5-72b       | few_shot    |  0.7293 |      0.4471 |         0.2752 |          0.6301 |
-| qwen2.5-72b       | two_stage   |  0.7522 |      0.4759 |         0.3085 |          0.5676 |
+| deepseek-v4-flash | cot         |  0.8802 |      0.6510 |         0.3185 |          0.7966 |
+| deepseek-v4-flash | few_shot    |  0.8726 |      0.7398 |         0.5698 |          0.8276 |
+| deepseek-v4-flash | two_stage   |  0.8726 |      0.7863 |         0.5698 |          0.7313 |
+| gpt-4.1           | cot         |  0.7925 |      0.5697 |         0.5618 |          0.7246 |
+| gpt-4.1           | few_shot    |  0.7828 |      0.5871 |         0.5543 |          0.7143 |
+| gpt-4.1           | two_stage   |  0.7934 |      0.6078 |         0.5604 |          0.7246 |
+| gpt-5.2           | cot         |  0.7814 |      0.3840 |         0.5747 |          0.8154 |
+| gpt-5.2           | few_shot    |  0.7048 |      0.3774 |         0.5714 |          0.5698 |
+| gpt-5.2           | two_stage   |  0.7702 |      0.4533 |         0.5747 |          0.6933 |
+| llama-3.3-70b     | cot         |  0.9348 |      0.5000 |         0.2857 |          0.0000 |
+| llama-3.3-70b     | few_shot    |  0.7792 |      0.5200 |         0.4138 |          0.5000 |
+| llama-3.3-70b     | two_stage   |  0.6296 |      0.4583 |         0.6250 |          0.5000 |
+| qwen2.5-72b       | cot         |  0.7924 |      0.4831 |         0.2818 |          0.6447 |
+| qwen2.5-72b       | few_shot    |  0.7817 |      0.4647 |         0.2844 |          0.6575 |
+| qwen2.5-72b       | two_stage   |  0.7965 |      0.5000 |         0.3191 |          0.6081 |
 
 **Span Recall por entidade:**
 
 | model             | technique   |   MULTA |   OBRIGACAO |   RECOMENDACAO |   RESSARCIMENTO |
 |:------------------|:------------|--------:|------------:|---------------:|----------------:|
-| deepseek-v4-flash | cot         |  0.8818 |      0.7805 |         0.9231 |          0.6825 |
-| deepseek-v4-flash | few_shot    |  0.8621 |      0.7154 |         0.8846 |          0.7143 |
-| deepseek-v4-flash | two_stage   |  0.8670 |      0.7236 |         0.8846 |          0.6984 |
-| gpt-4.1           | cot         |  0.8867 |      0.7642 |         0.9038 |          0.7778 |
-| gpt-4.1           | few_shot    |  0.8916 |      0.7398 |         0.9231 |          0.7778 |
-| gpt-4.1           | two_stage   |  0.8916 |      0.7561 |         0.9231 |          0.7778 |
-| gpt-5.2           | cot         |  0.8916 |      0.8211 |         0.9231 |          0.8095 |
-| gpt-5.2           | few_shot    |  0.8818 |      0.7561 |         0.6923 |          0.7143 |
-| gpt-5.2           | two_stage   |  0.8768 |      0.7724 |         0.6731 |          0.7619 |
-| llama-3.3-70b     | cot         |  0.2069 |      0.2114 |         0.1154 |          0.0000 |
-| llama-3.3-70b     | few_shot    |  0.2906 |      0.3171 |         0.2308 |          0.0159 |
-| llama-3.3-70b     | two_stage   |  0.0837 |      0.0894 |         0.0769 |          0.0159 |
-| qwen2.5-72b       | cot         |  0.8670 |      0.6829 |         0.5577 |          0.7619 |
-| qwen2.5-72b       | few_shot    |  0.8227 |      0.6179 |         0.5769 |          0.7302 |
-| qwen2.5-72b       | two_stage   |  0.8374 |      0.6423 |         0.5577 |          0.6667 |
+| deepseek-v4-flash | cot         |  0.9409 |      0.7886 |         0.9615 |          0.7460 |
+| deepseek-v4-flash | few_shot    |  0.9113 |      0.7398 |         0.9423 |          0.7619 |
+| deepseek-v4-flash | two_stage   |  0.9113 |      0.7480 |         0.9423 |          0.7778 |
+| gpt-4.1           | cot         |  0.9409 |      0.7642 |         0.9615 |          0.7937 |
+| gpt-4.1           | few_shot    |  0.9409 |      0.7398 |         0.9808 |          0.7937 |
+| gpt-4.1           | two_stage   |  0.9458 |      0.7561 |         0.9808 |          0.7937 |
+| gpt-5.2           | cot         |  0.9507 |      0.8211 |         0.9615 |          0.8413 |
+| gpt-5.2           | few_shot    |  0.9409 |      0.7886 |         0.9231 |          0.7778 |
+| gpt-5.2           | two_stage   |  0.9409 |      0.7886 |         0.9615 |          0.8254 |
+| llama-3.3-70b     | cot         |  0.2118 |      0.2114 |         0.1154 |          0.0000 |
+| llama-3.3-70b     | few_shot    |  0.2956 |      0.3171 |         0.2308 |          0.0159 |
+| llama-3.3-70b     | two_stage   |  0.0837 |      0.0894 |         0.0962 |          0.0159 |
+| qwen2.5-72b       | cot         |  0.9212 |      0.6992 |         0.5962 |          0.7778 |
+| qwen2.5-72b       | few_shot    |  0.8818 |      0.6423 |         0.5962 |          0.7619 |
+| qwen2.5-72b       | two_stage   |  0.8867 |      0.6748 |         0.5769 |          0.7143 |
 
 ## I. Análise de erros do melhor modelo
 
@@ -421,22 +421,21 @@ Custo de inferência por documento a partir das contagens de tokens registradas 
 
 | kind       |   count |
 |:-----------|--------:|
-| match      |     354 |
+| match      |     373 |
 | FP         |      64 |
-| boundary   |      46 |
-| FN_overlap |      46 |
-| FN_no_pred |      41 |
-| duplicate  |      11 |
+| FN_no_pred |      38 |
+| boundary   |      38 |
+| FN_overlap |      30 |
 | type_error |       4 |
 
 **Matriz rótulo × tipo de erro:**
 
-| label         |   FN_no_pred |   FN_overlap |   FP |   boundary |   duplicate |   match |   type_error |
-|:--------------|-------------:|-------------:|-----:|-----------:|------------:|--------:|-------------:|
-| MULTA         |           13 |           15 |    6 |         10 |           8 |     175 |            0 |
-| OBRIGACAO     |           18 |           17 |   20 |         15 |           0 |      88 |            0 |
-| RECOMENDACAO  |            3 |            3 |   36 |          1 |           2 |      46 |            0 |
-| RESSARCIMENTO |            7 |           11 |    2 |         20 |           1 |      45 |            4 |
+| label         |   FN_no_pred |   FN_overlap |   FP |   boundary |   match |   type_error |
+|:--------------|-------------:|-------------:|-----:|-----------:|--------:|-------------:|
+| MULTA         |            6 |           12 |    6 |         11 |     185 |            0 |
+| OBRIGACAO     |           22 |           10 |   20 |         12 |      91 |            0 |
+| RECOMENDACAO  |            3 |            0 |   36 |          0 |      49 |            0 |
+| RESSARCIMENTO |            7 |            8 |    2 |         15 |      48 |            4 |
 
 **Pares de tipo errado (gold → pred):**
 
@@ -449,8 +448,8 @@ Custo de inferência por documento a partir das contagens de tokens registradas 
 |   bin_low |   bin_high |   count |
 |----------:|-----------:|--------:|
 |    0.0000 |     0.2000 |  4.0000 |
-|    0.2000 |     0.4000 | 31.0000 |
-|    0.4000 |     0.5000 | 11.0000 |
+|    0.2000 |     0.4000 | 21.0000 |
+|    0.4000 |     0.5000 | 13.0000 |
 |    0.5000 |     0.7000 |  0.0000 |
 |    0.7000 |     0.9000 |  0.0000 |
 |    0.9000 |     1.0000 |  0.0000 |
@@ -463,41 +462,41 @@ Custo de inferência por documento a partir das contagens de tokens registradas 
 
 | model                                                  | display              |   span_f1_point |   span_f1_micro |   span_f1_mean |   span_f1_std |   ci_lower |   ci_upper |   ci_width |
 |:-------------------------------------------------------|:---------------------|----------------:|----------------:|---------------:|--------------:|-----------:|-----------:|-----------:|
-| deepseek-v4-flash_few_shot                             | DeepSeek-V4-Flash    |          0.7423 |          0.7696 |         0.7419 |        0.0231 |     0.6963 |     0.7872 |     0.0908 |
-| gpt-4.1_few_shot                                       | GPT-4.1              |          0.7170 |          0.7365 |         0.7166 |        0.0226 |     0.6719 |     0.7611 |     0.0892 |
-| gpt-5.1_few_shot                                       | GPT-5.1              |          0.6910 |          0.7046 |         0.6905 |        0.0225 |     0.6460 |     0.7343 |     0.0883 |
-| gpt-4.1-mini_few_shot                                  | GPT-4.1-mini         |          0.6837 |          0.6986 |         0.6834 |        0.0224 |     0.6388 |     0.7270 |     0.0881 |
+| deepseek-v4-flash_few_shot                             | DeepSeek-V4-Flash    |          0.7837 |          0.8109 |         0.7826 |        0.0216 |     0.7386 |     0.8234 |     0.0849 |
+| gpt-4.1_few_shot                                       | GPT-4.1              |          0.7424 |          0.7645 |         0.7414 |        0.0224 |     0.6964 |     0.7843 |     0.0879 |
+| gpt-5.1_few_shot                                       | GPT-5.1              |          0.7322 |          0.7458 |         0.7311 |        0.0223 |     0.6871 |     0.7737 |     0.0866 |
+| gpt-4.1-mini_few_shot                                  | GPT-4.1-mini         |          0.7175 |          0.7343 |         0.7166 |        0.0224 |     0.6717 |     0.7598 |     0.0881 |
+| gpt-5.2_few_shot                                       | GPT-5.2              |          0.6700 |          0.6760 |         0.6691 |        0.0239 |     0.6208 |     0.7143 |     0.0934 |
 | raquelsilveira_legalbertpt_fp__supervised              | LegalBert-pt         |          0.6603 |          0.7391 |         0.6587 |        0.0274 |     0.6040 |     0.7112 |     0.1072 |
 | neuralmind_bert-large-portuguese-cased__supervised     | BERTimbau-large      |          0.6457 |          0.7248 |         0.6453 |        0.0274 |     0.5923 |     0.6988 |     0.1065 |
 | neuralmind_bert-base-portuguese-cased__supervised      | BERTimbau-base       |          0.6220 |          0.7217 |         0.6213 |        0.0268 |     0.5695 |     0.6742 |     0.1047 |
+| qwen2.5-72b_few_shot                                   | Qwen2.5-72B          |          0.6147 |          0.6595 |         0.6138 |        0.0236 |     0.5671 |     0.6588 |     0.0917 |
 | alfaneo_jurisbert-base-portuguese-uncased__supervised  | JurisBERT            |          0.6113 |          0.6767 |         0.6109 |        0.0284 |     0.5560 |     0.6667 |     0.1108 |
 | bilstm-crf__supervised                                 | BiLSTM-CRF           |          0.6009 |          0.6735 |         0.6002 |        0.0291 |     0.5424 |     0.6572 |     0.1148 |
-| gpt-5.2_few_shot                                       | GPT-5.2              |          0.5945 |          0.6198 |         0.5946 |        0.0259 |     0.5430 |     0.6447 |     0.1017 |
-| qwen2.5-72b_few_shot                                   | Qwen2.5-72B          |          0.5853 |          0.6243 |         0.5848 |        0.0232 |     0.5394 |     0.6293 |     0.0899 |
+| gpt-5-mini_few_shot                                    | GPT-5-mini           |          0.5942 |          0.4595 |         0.5932 |        0.0202 |     0.5520 |     0.6314 |     0.0794 |
 | rufimelo_Legal-BERTimbau-base__supervised              | Legal-BERTimbau-base |          0.5656 |          0.7018 |         0.5653 |        0.0239 |     0.5187 |     0.6126 |     0.0939 |
 | dccmpmgfinalisticas_GovBERT-BR__supervised             | GovBERT-BR           |          0.5555 |          0.7044 |         0.5551 |        0.0207 |     0.5134 |     0.5948 |     0.0814 |
 | dominguesm_legal-bert-base-cased-ptbr__supervised      | Legal-BERT-STF       |          0.5384 |          0.6773 |         0.5372 |        0.0269 |     0.4835 |     0.5895 |     0.1060 |
-| gpt-5-mini_few_shot                                    | GPT-5-mini           |          0.5310 |          0.4162 |         0.5309 |        0.0228 |     0.4846 |     0.5744 |     0.0898 |
 | alfaneo_bertimbaulaw-base-portuguese-cased__supervised | BERTimbauLaw         |          0.5063 |          0.6866 |         0.5060 |        0.0245 |     0.4568 |     0.5521 |     0.0953 |
-| gpt-4.1-nano_few_shot                                  | GPT-4.1-nano         |          0.3953 |          0.4341 |         0.3958 |        0.0251 |     0.3464 |     0.4458 |     0.0994 |
-| llama-3.3-70b_few_shot                                 | Llama-3.3-70B        |          0.2856 |          0.3558 |         0.2853 |        0.0275 |     0.2312 |     0.3396 |     0.1084 |
+| gpt-4.1-nano_few_shot                                  | GPT-4.1-nano         |          0.4391 |          0.4640 |         0.4394 |        0.0240 |     0.3916 |     0.4869 |     0.0954 |
+| llama-3.3-70b_few_shot                                 | Llama-3.3-70B        |          0.2874 |          0.3590 |         0.2871 |        0.0276 |     0.2330 |     0.3418 |     0.1088 |
 | ulysses-camara_legal-bert-pt-br__supervised            | LegalBERTPT-br       |          0.2836 |          0.5008 |         0.2836 |        0.0190 |     0.2456 |     0.3206 |     0.0751 |
 
 **Itens 43–46 — Pares destacados:**
 
 | model_a                                            | model_b                                                | display_a         | display_b         |   f1_a |   f1_b |   diff_f1 |   ci_lower |   ci_upper |   p_value | significant_95   |   p_holm_all |   p_bonferroni_all |   p_bh_all | sig_holm_all_5pct   |   p_holm |   p_bonferroni | sig_holm_5pct   | sig_bonferroni_5pct   |   family_size |
 |:---------------------------------------------------|:-------------------------------------------------------|:------------------|:------------------|-------:|-------:|----------:|-----------:|-----------:|----------:|:-----------------|-------------:|-------------------:|-----------:|:--------------------|---------:|---------------:|:----------------|:----------------------|--------------:|
-| gpt-4.1_few_shot                                   | gpt-5.2_few_shot                                       | GPT-4.1           | GPT-5.2           | 0.7170 | 0.5945 |    0.1221 |     0.0803 |     0.1652 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |   0.0000 |         0.0000 | True            | True                  |            12 |
-| deepseek-v4-flash_few_shot                         | neuralmind_bert-base-portuguese-cased__supervised      | DeepSeek-V4-Flash | BERTimbau-base    | 0.7423 | 0.6220 |    0.1206 |     0.0642 |     0.1765 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |   0.0000 |         0.0000 | True            | True                  |            12 |
+| deepseek-v4-flash_few_shot                         | neuralmind_bert-base-portuguese-cased__supervised      | DeepSeek-V4-Flash | BERTimbau-base    | 0.7837 | 0.6220 |    0.1613 |     0.1036 |     0.2163 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |   0.0000 |         0.0000 | True            | True                  |            12 |
+| deepseek-v4-flash_few_shot                         | neuralmind_bert-large-portuguese-cased__supervised     | DeepSeek-V4-Flash | BERTimbau-large   | 0.7837 | 0.6457 |    0.1372 |     0.0750 |     0.1978 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |   0.0000 |         0.0000 | True            | True                  |            12 |
+| deepseek-v4-flash_few_shot                         | raquelsilveira_legalbertpt_fp__supervised              | DeepSeek-V4-Flash | LegalBert-pt      | 0.7837 | 0.6603 |    0.1239 |     0.0655 |     0.1834 |    0.0002 | True             |       0.0168 |             0.0342 |     0.0004 | True                |   0.0016 |         0.0024 | True            | True                  |            12 |
 | neuralmind_bert-base-portuguese-cased__supervised  | alfaneo_bertimbaulaw-base-portuguese-cased__supervised | BERTimbau-base    | BERTimbauLaw      | 0.6220 | 0.5063 |    0.1154 |     0.0618 |     0.1699 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |   0.0000 |         0.0000 | True            | True                  |            12 |
-| deepseek-v4-flash_few_shot                         | neuralmind_bert-large-portuguese-cased__supervised     | DeepSeek-V4-Flash | BERTimbau-large   | 0.7423 | 0.6457 |    0.0966 |     0.0360 |     0.1571 |    0.0012 | True             |       0.0924 |             0.2052 |     0.0021 | False               |   0.0108 |         0.0144 | True            | True                  |            12 |
-| deepseek-v4-flash_few_shot                         | raquelsilveira_legalbertpt_fp__supervised              | DeepSeek-V4-Flash | LegalBert-pt      | 0.7423 | 0.6603 |    0.0832 |     0.0211 |     0.1457 |    0.0082 | True             |       0.5330 |             1.0000 |     0.0131 | False               |   0.0656 |         0.0984 | False           | False                 |            12 |
-| bilstm-crf__supervised                             | raquelsilveira_legalbertpt_fp__supervised              | BiLSTM-CRF        | LegalBert-pt      | 0.6009 | 0.6603 |   -0.0585 |    -0.1272 |     0.0104 |    0.0964 | False            |       1.0000 |             1.0000 |     0.1257 | False               |   0.3856 |         1.0000 | False           | False                 |            12 |
-| gpt-4.1_few_shot                                   | raquelsilveira_legalbertpt_fp__supervised              | GPT-4.1           | LegalBert-pt      | 0.7170 | 0.6603 |    0.0579 |    -0.0014 |     0.1197 |    0.0566 | False            |       1.0000 |             1.0000 |     0.0762 | False               |   0.3396 |         0.6792 | False           | False                 |            12 |
-| neuralmind_bert-base-portuguese-cased__supervised  | raquelsilveira_legalbertpt_fp__supervised              | BERTimbau-base    | LegalBert-pt      | 0.6220 | 0.6603 |   -0.0374 |    -0.0955 |     0.0220 |    0.2194 | False            |       1.0000 |             1.0000 |     0.2642 | False               |   0.6582 |         1.0000 | False           | False                 |            12 |
-| gpt-4.1_few_shot                                   | gpt-4.1-mini_few_shot                                  | GPT-4.1           | GPT-4.1-mini      | 0.7170 | 0.6837 |    0.0332 |     0.0082 |     0.0604 |    0.0084 | True             |       0.5376 |             1.0000 |     0.0133 | False               |   0.0656 |         0.1008 | False           | False                 |            12 |
-| gpt-4.1_few_shot                                   | deepseek-v4-flash_few_shot                             | GPT-4.1           | DeepSeek-V4-Flash | 0.7170 | 0.7423 |   -0.0253 |    -0.0517 |     0.0009 |    0.0600 | False            |       1.0000 |             1.0000 |     0.0802 | False               |   0.3396 |         0.7200 | False           | False                 |            12 |
-| neuralmind_bert-base-portuguese-cased__supervised  | neuralmind_bert-large-portuguese-cased__supervised     | BERTimbau-base    | BERTimbau-large   | 0.6220 | 0.6457 |   -0.0240 |    -0.0701 |     0.0215 |    0.2954 | False            |       1.0000 |             1.0000 |     0.3390 | False               |   0.6582 |         1.0000 | False           | False                 |            12 |
+| gpt-4.1_few_shot                                   | raquelsilveira_legalbertpt_fp__supervised              | GPT-4.1           | LegalBert-pt      | 0.7424 | 0.6603 |    0.0827 |     0.0264 |     0.1409 |    0.0048 | True             |       0.2784 |             0.8208 |     0.0072 | False               |   0.0288 |         0.0576 | True            | False                 |            12 |
+| gpt-4.1_few_shot                                   | gpt-5.2_few_shot                                       | GPT-4.1           | GPT-5.2           | 0.7424 | 0.6700 |    0.0723 |     0.0389 |     0.1089 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |   0.0000 |         0.0000 | True            | True                  |            12 |
+| bilstm-crf__supervised                             | raquelsilveira_legalbertpt_fp__supervised              | BiLSTM-CRF        | LegalBert-pt      | 0.6009 | 0.6603 |   -0.0585 |    -0.1272 |     0.0104 |    0.0964 | False            |       1.0000 |             1.0000 |     0.1202 | False               |   0.3856 |         1.0000 | False           | False                 |            12 |
+| gpt-4.1_few_shot                                   | deepseek-v4-flash_few_shot                             | GPT-4.1           | DeepSeek-V4-Flash | 0.7424 | 0.7837 |   -0.0412 |    -0.0700 |    -0.0134 |    0.0018 | True             |       0.1188 |             0.3078 |     0.0029 | False               |   0.0126 |         0.0216 | True            | True                  |            12 |
+| neuralmind_bert-base-portuguese-cased__supervised  | raquelsilveira_legalbertpt_fp__supervised              | BERTimbau-base    | LegalBert-pt      | 0.6220 | 0.6603 |   -0.0374 |    -0.0955 |     0.0220 |    0.2194 | False            |       1.0000 |             1.0000 |     0.2570 | False               |   0.6582 |         1.0000 | False           | False                 |            12 |
+| gpt-4.1_few_shot                                   | gpt-4.1-mini_few_shot                                  | GPT-4.1           | GPT-4.1-mini      | 0.7424 | 0.7175 |    0.0248 |     0.0005 |     0.0510 |    0.0458 | True             |       1.0000 |             1.0000 |     0.0593 | False               |   0.2290 |         0.5496 | False           | False                 |            12 |
+| neuralmind_bert-base-portuguese-cased__supervised  | neuralmind_bert-large-portuguese-cased__supervised     | BERTimbau-base    | BERTimbau-large   | 0.6220 | 0.6457 |   -0.0240 |    -0.0701 |     0.0215 |    0.2954 | False            |       1.0000 |             1.0000 |     0.3323 | False               |   0.6582 |         1.0000 | False           | False                 |            12 |
 | neuralmind_bert-large-portuguese-cased__supervised | raquelsilveira_legalbertpt_fp__supervised              | BERTimbau-large   | LegalBert-pt      | 0.6457 | 0.6603 |   -0.0134 |    -0.0716 |     0.0473 |    0.6440 | False            |       1.0000 |             1.0000 |     0.6756 | False               |   0.6582 |         1.0000 | False           | False                 |            12 |
 
 **Itens 47–48 — Resumo:**
@@ -507,19 +506,19 @@ Custo de inferência por documento a partir das contagens de tokens registradas 
 | resampling_unit                | document                |
 | n_docs_resampled               | 861                     |
 | n_total_pairs                  | 171                     |
-| n_significant_5pct_uncorrected | 125                     |
-| n_sig_holm_all                 | 92                      |
-| n_sig_bonferroni_all           | 89                      |
-| n_sig_bh_all                   | 124                     |
+| n_significant_5pct_uncorrected | 133                     |
+| n_sig_holm_all                 | 99                      |
+| n_sig_bonferroni_all           | 96                      |
+| n_sig_bh_all                   | 128                     |
 | highlighted_family_size        | 12                      |
-| highlighted_n_sig_uncorrected  | 6                       |
-| highlighted_n_sig_holm         | 4                       |
-| highlighted_n_sig_bonferroni   | 4                       |
-| highlighted_n_sig_holm_all     | 3                       |
-| smallest_significant_abs_diff  | 0.03323759526790254     |
+| highlighted_n_sig_uncorrected  | 8                       |
+| highlighted_n_sig_holm         | 7                       |
+| highlighted_n_sig_bonferroni   | 6                       |
+| highlighted_n_sig_holm_all     | 5                       |
+| smallest_significant_abs_diff  | 0.024783537259267553    |
 | smallest_significant_pair      | GPT-4.1 vs GPT-4.1-mini |
 | leader_model                   | DeepSeek-V4-Flash       |
-| leader_group_size_holm         | 5                       |
+| leader_group_size_holm         | 3                       |
 
 **p48a — Correção para múltiplas comparações.** A família inferencial é o conjunto completo dos pares (`p_holm_all`, `p_bonferroni_all`, `p_bh_all`), pré-especificado por construção; os pares destacados acima são uma seleção para leitura e herdam esses valores. As colunas `p_holm`/`p_bonferroni` (correção restrita aos destacados) são mantidas apenas como referência.
 
@@ -527,201 +526,201 @@ Custo de inferência por documento a partir das contagens de tokens registradas 
 
 | model                                                  | display              |   span_f1 |   diff_vs_leader |    p_raw |   p_holm | in_leader_group   |
 |:-------------------------------------------------------|:---------------------|----------:|-----------------:|---------:|---------:|:------------------|
-| deepseek-v4-flash_few_shot                             | DeepSeek-V4-Flash    |    0.7423 |           0.0000 | nan      | nan      | True              |
-| gpt-4.1_few_shot                                       | GPT-4.1              |    0.7170 |           0.0253 |   0.0600 |   1.0000 | True              |
-| gpt-5.1_few_shot                                       | GPT-5.1              |    0.6910 |           0.0514 |   0.0026 |   0.1872 | True              |
-| gpt-4.1-mini_few_shot                                  | GPT-4.1-mini         |    0.6837 |           0.0585 |   0.0000 |   0.0000 | False             |
-| raquelsilveira_legalbertpt_fp__supervised              | LegalBert-pt         |    0.6603 |           0.0832 |   0.0082 |   0.5330 | True              |
-| neuralmind_bert-large-portuguese-cased__supervised     | BERTimbau-large      |    0.6457 |           0.0966 |   0.0012 |   0.0924 | True              |
-| neuralmind_bert-base-portuguese-cased__supervised      | BERTimbau-base       |    0.6220 |           0.1206 |   0.0000 |   0.0000 | False             |
-| alfaneo_jurisbert-base-portuguese-uncased__supervised  | JurisBERT            |    0.6113 |           0.1310 |   0.0000 |   0.0000 | False             |
-| bilstm-crf__supervised                                 | BiLSTM-CRF           |    0.6009 |           0.1417 |   0.0000 |   0.0000 | False             |
-| gpt-5.2_few_shot                                       | GPT-5.2              |    0.5945 |           0.1474 |   0.0000 |   0.0000 | False             |
-| qwen2.5-72b_few_shot                                   | Qwen2.5-72B          |    0.5853 |           0.1571 |   0.0000 |   0.0000 | False             |
-| rufimelo_Legal-BERTimbau-base__supervised              | Legal-BERTimbau-base |    0.5656 |           0.1766 |   0.0000 |   0.0000 | False             |
-| dccmpmgfinalisticas_GovBERT-BR__supervised             | GovBERT-BR           |    0.5555 |           0.1868 |   0.0000 |   0.0000 | False             |
-| dominguesm_legal-bert-base-cased-ptbr__supervised      | Legal-BERT-STF       |    0.5384 |           0.2047 |   0.0000 |   0.0000 | False             |
-| gpt-5-mini_few_shot                                    | GPT-5-mini           |    0.5310 |           0.2110 |   0.0000 |   0.0000 | False             |
-| alfaneo_bertimbaulaw-base-portuguese-cased__supervised | BERTimbauLaw         |    0.5063 |           0.2360 |   0.0000 |   0.0000 | False             |
-| gpt-4.1-nano_few_shot                                  | GPT-4.1-nano         |    0.3953 |           0.3461 |   0.0000 |   0.0000 | False             |
-| llama-3.3-70b_few_shot                                 | Llama-3.3-70B        |    0.2856 |           0.4566 |   0.0000 |   0.0000 | False             |
-| ulysses-camara_legal-bert-pt-br__supervised            | LegalBERTPT-br       |    0.2836 |           0.4583 |   0.0000 |   0.0000 | False             |
+| deepseek-v4-flash_few_shot                             | DeepSeek-V4-Flash    |    0.7837 |           0.0000 | nan      | nan      | True              |
+| gpt-4.1_few_shot                                       | GPT-4.1              |    0.7424 |           0.0412 |   0.0018 |   0.1188 | True              |
+| gpt-5.1_few_shot                                       | GPT-5.1              |    0.7322 |           0.0515 |   0.0024 |   0.1560 | True              |
+| gpt-4.1-mini_few_shot                                  | GPT-4.1-mini         |    0.7175 |           0.0659 |   0.0000 |   0.0000 | False             |
+| gpt-5.2_few_shot                                       | GPT-5.2              |    0.6700 |           0.1135 |   0.0000 |   0.0000 | False             |
+| raquelsilveira_legalbertpt_fp__supervised              | LegalBert-pt         |    0.6603 |           0.1239 |   0.0002 |   0.0168 | False             |
+| neuralmind_bert-large-portuguese-cased__supervised     | BERTimbau-large      |    0.6457 |           0.1372 |   0.0000 |   0.0000 | False             |
+| neuralmind_bert-base-portuguese-cased__supervised      | BERTimbau-base       |    0.6220 |           0.1613 |   0.0000 |   0.0000 | False             |
+| qwen2.5-72b_few_shot                                   | Qwen2.5-72B          |    0.6147 |           0.1687 |   0.0000 |   0.0000 | False             |
+| alfaneo_jurisbert-base-portuguese-uncased__supervised  | JurisBERT            |    0.6113 |           0.1717 |   0.0000 |   0.0000 | False             |
+| bilstm-crf__supervised                                 | BiLSTM-CRF           |    0.6009 |           0.1823 |   0.0000 |   0.0000 | False             |
+| gpt-5-mini_few_shot                                    | GPT-5-mini           |    0.5942 |           0.1894 |   0.0000 |   0.0000 | False             |
+| rufimelo_Legal-BERTimbau-base__supervised              | Legal-BERTimbau-base |    0.5656 |           0.2173 |   0.0000 |   0.0000 | False             |
+| dccmpmgfinalisticas_GovBERT-BR__supervised             | GovBERT-BR           |    0.5555 |           0.2275 |   0.0000 |   0.0000 | False             |
+| dominguesm_legal-bert-base-cased-ptbr__supervised      | Legal-BERT-STF       |    0.5384 |           0.2454 |   0.0000 |   0.0000 | False             |
+| alfaneo_bertimbaulaw-base-portuguese-cased__supervised | BERTimbauLaw         |    0.5063 |           0.2766 |   0.0000 |   0.0000 | False             |
+| gpt-4.1-nano_few_shot                                  | GPT-4.1-nano         |    0.4391 |           0.3431 |   0.0000 |   0.0000 | False             |
+| llama-3.3-70b_few_shot                                 | Llama-3.3-70B        |    0.2874 |           0.4954 |   0.0000 |   0.0000 | False             |
+| ulysses-camara_legal-bert-pt-br__supervised            | LegalBERTPT-br       |    0.2836 |           0.4990 |   0.0000 |   0.0000 | False             |
 
 **Tabela completa dos pares (ordenada por |Δ|):**
 
 | model_a                                                | model_b                                                | display_a            | display_b            |   f1_a |   f1_b |   diff_f1 |   ci_lower |   ci_upper |   p_value | significant_95   |   p_holm_all |   p_bonferroni_all |   p_bh_all | sig_holm_all_5pct   |
 |:-------------------------------------------------------|:-------------------------------------------------------|:---------------------|:---------------------|-------:|-------:|----------:|-----------:|-----------:|----------:|:-----------------|-------------:|-------------------:|-----------:|:--------------------|
-| deepseek-v4-flash_few_shot                             | ulysses-camara_legal-bert-pt-br__supervised            | DeepSeek-V4-Flash    | LegalBERTPT-br       | 0.7423 | 0.2836 |    0.4583 |     0.4068 |     0.5087 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| deepseek-v4-flash_few_shot                             | llama-3.3-70b_few_shot                                 | DeepSeek-V4-Flash    | Llama-3.3-70B        | 0.7423 | 0.2856 |    0.4566 |     0.3947 |     0.5160 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1_few_shot                                       | ulysses-camara_legal-bert-pt-br__supervised            | GPT-4.1              | LegalBERTPT-br       | 0.7170 | 0.2836 |    0.4330 |     0.3835 |     0.4810 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1_few_shot                                       | llama-3.3-70b_few_shot                                 | GPT-4.1              | Llama-3.3-70B        | 0.7170 | 0.2856 |    0.4313 |     0.3692 |     0.4925 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-5.1_few_shot                                       | ulysses-camara_legal-bert-pt-br__supervised            | GPT-5.1              | LegalBERTPT-br       | 0.6910 | 0.2836 |    0.4069 |     0.3558 |     0.4555 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-5.1_few_shot                                       | llama-3.3-70b_few_shot                                 | GPT-5.1              | Llama-3.3-70B        | 0.6910 | 0.2856 |    0.4051 |     0.3395 |     0.4679 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1-mini_few_shot                                  | ulysses-camara_legal-bert-pt-br__supervised            | GPT-4.1-mini         | LegalBERTPT-br       | 0.6837 | 0.2836 |    0.3998 |     0.3483 |     0.4487 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1-mini_few_shot                                  | llama-3.3-70b_few_shot                                 | GPT-4.1-mini         | Llama-3.3-70B        | 0.6837 | 0.2856 |    0.3980 |     0.3325 |     0.4608 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| deepseek-v4-flash_few_shot                             | ulysses-camara_legal-bert-pt-br__supervised            | DeepSeek-V4-Flash    | LegalBERTPT-br       | 0.7837 | 0.2836 |    0.4990 |     0.4439 |     0.5517 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| deepseek-v4-flash_few_shot                             | llama-3.3-70b_few_shot                                 | DeepSeek-V4-Flash    | Llama-3.3-70B        | 0.7837 | 0.2874 |    0.4954 |     0.4301 |     0.5570 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-4.1_few_shot                                       | ulysses-camara_legal-bert-pt-br__supervised            | GPT-4.1              | LegalBERTPT-br       | 0.7424 | 0.2836 |    0.4578 |     0.4065 |     0.5081 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-4.1_few_shot                                       | llama-3.3-70b_few_shot                                 | GPT-4.1              | Llama-3.3-70B        | 0.7424 | 0.2874 |    0.4543 |     0.3898 |     0.5178 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-5.1_few_shot                                       | ulysses-camara_legal-bert-pt-br__supervised            | GPT-5.1              | LegalBERTPT-br       | 0.7322 | 0.2836 |    0.4475 |     0.3952 |     0.4989 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-5.1_few_shot                                       | llama-3.3-70b_few_shot                                 | GPT-5.1              | Llama-3.3-70B        | 0.7322 | 0.2874 |    0.4440 |     0.3754 |     0.5086 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-4.1-mini_few_shot                                  | ulysses-camara_legal-bert-pt-br__supervised            | GPT-4.1-mini         | LegalBERTPT-br       | 0.7175 | 0.2836 |    0.4331 |     0.3797 |     0.4853 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-4.1-mini_few_shot                                  | llama-3.3-70b_few_shot                                 | GPT-4.1-mini         | Llama-3.3-70B        | 0.7175 | 0.2874 |    0.4295 |     0.3606 |     0.4948 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-5.2_few_shot                                       | ulysses-camara_legal-bert-pt-br__supervised            | GPT-5.2              | LegalBERTPT-br       | 0.6700 | 0.2836 |    0.3855 |     0.3277 |     0.4420 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-5.2_few_shot                                       | llama-3.3-70b_few_shot                                 | GPT-5.2              | Llama-3.3-70B        | 0.6700 | 0.2874 |    0.3820 |     0.3113 |     0.4505 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
 | raquelsilveira_legalbertpt_fp__supervised              | ulysses-camara_legal-bert-pt-br__supervised            | LegalBert-pt         | LegalBERTPT-br       | 0.6603 | 0.2836 |    0.3751 |     0.3156 |     0.4303 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| llama-3.3-70b_few_shot                                 | raquelsilveira_legalbertpt_fp__supervised              | Llama-3.3-70B        | LegalBert-pt         | 0.2856 | 0.6603 |   -0.3734 |    -0.4476 |    -0.2978 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| llama-3.3-70b_few_shot                                 | raquelsilveira_legalbertpt_fp__supervised              | Llama-3.3-70B        | LegalBert-pt         | 0.2874 | 0.6603 |   -0.3716 |    -0.4459 |    -0.2964 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
 | neuralmind_bert-large-portuguese-cased__supervised     | ulysses-camara_legal-bert-pt-br__supervised            | BERTimbau-large      | LegalBERTPT-br       | 0.6457 | 0.2836 |    0.3617 |     0.3082 |     0.4148 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| llama-3.3-70b_few_shot                                 | neuralmind_bert-large-portuguese-cased__supervised     | Llama-3.3-70B        | BERTimbau-large      | 0.2856 | 0.6457 |   -0.3600 |    -0.4286 |    -0.2910 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1-nano_few_shot                                  | deepseek-v4-flash_few_shot                             | GPT-4.1-nano         | DeepSeek-V4-Flash    | 0.3953 | 0.7423 |   -0.3461 |    -0.4053 |    -0.2853 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| llama-3.3-70b_few_shot                                 | neuralmind_bert-large-portuguese-cased__supervised     | Llama-3.3-70B        | BERTimbau-large      | 0.2874 | 0.6457 |   -0.3582 |    -0.4266 |    -0.2891 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-4.1-nano_few_shot                                  | deepseek-v4-flash_few_shot                             | GPT-4.1-nano         | DeepSeek-V4-Flash    | 0.4391 | 0.7837 |   -0.3431 |    -0.4004 |    -0.2849 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
 | neuralmind_bert-base-portuguese-cased__supervised      | ulysses-camara_legal-bert-pt-br__supervised            | BERTimbau-base       | LegalBERTPT-br       | 0.6220 | 0.2836 |    0.3377 |     0.2860 |     0.3904 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| llama-3.3-70b_few_shot                                 | neuralmind_bert-base-portuguese-cased__supervised      | Llama-3.3-70B        | BERTimbau-base       | 0.2856 | 0.6220 |   -0.3360 |    -0.4004 |    -0.2697 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| llama-3.3-70b_few_shot                                 | neuralmind_bert-base-portuguese-cased__supervised      | Llama-3.3-70B        | BERTimbau-base       | 0.2874 | 0.6220 |   -0.3342 |    -0.3982 |    -0.2683 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| qwen2.5-72b_few_shot                                   | ulysses-camara_legal-bert-pt-br__supervised            | Qwen2.5-72B          | LegalBERTPT-br       | 0.6147 | 0.2836 |    0.3303 |     0.2696 |     0.3882 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
 | alfaneo_jurisbert-base-portuguese-uncased__supervised  | ulysses-camara_legal-bert-pt-br__supervised            | JurisBERT            | LegalBERTPT-br       | 0.6113 | 0.2836 |    0.3273 |     0.2766 |     0.3780 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| llama-3.3-70b_few_shot                                 | alfaneo_jurisbert-base-portuguese-uncased__supervised  | Llama-3.3-70B        | JurisBERT            | 0.2856 | 0.6113 |   -0.3256 |    -0.3898 |    -0.2613 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1_few_shot                                       | gpt-4.1-nano_few_shot                                  | GPT-4.1              | GPT-4.1-nano         | 0.7170 | 0.3953 |    0.3208 |     0.2614 |     0.3780 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| llama-3.3-70b_few_shot                                 | qwen2.5-72b_few_shot                                   | Llama-3.3-70B        | Qwen2.5-72B          | 0.2874 | 0.6147 |   -0.3267 |    -0.3986 |    -0.2532 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| llama-3.3-70b_few_shot                                 | alfaneo_jurisbert-base-portuguese-uncased__supervised  | Llama-3.3-70B        | JurisBERT            | 0.2874 | 0.6113 |   -0.3238 |    -0.3877 |    -0.2593 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
 | bilstm-crf__supervised                                 | ulysses-camara_legal-bert-pt-br__supervised            | BiLSTM-CRF           | LegalBERTPT-br       | 0.6009 | 0.2836 |    0.3166 |     0.2615 |     0.3714 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| llama-3.3-70b_few_shot                                 | bilstm-crf__supervised                                 | Llama-3.3-70B        | BiLSTM-CRF           | 0.2856 | 0.6009 |   -0.3149 |    -0.3819 |    -0.2459 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-5.2_few_shot                                       | ulysses-camara_legal-bert-pt-br__supervised            | GPT-5.2              | LegalBERTPT-br       | 0.5945 | 0.2836 |    0.3110 |     0.2531 |     0.3670 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-5.2_few_shot                                       | llama-3.3-70b_few_shot                                 | GPT-5.2              | Llama-3.3-70B        | 0.5945 | 0.2856 |    0.3092 |     0.2380 |     0.3791 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| qwen2.5-72b_few_shot                                   | ulysses-camara_legal-bert-pt-br__supervised            | Qwen2.5-72B          | LegalBERTPT-br       | 0.5853 | 0.2836 |    0.3012 |     0.2439 |     0.3575 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| llama-3.3-70b_few_shot                                 | qwen2.5-72b_few_shot                                   | Llama-3.3-70B        | Qwen2.5-72B          | 0.2856 | 0.5853 |   -0.2995 |    -0.3687 |    -0.2295 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1-nano_few_shot                                  | gpt-5.1_few_shot                                       | GPT-4.1-nano         | GPT-5.1              | 0.3953 | 0.6910 |   -0.2947 |    -0.3514 |    -0.2366 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1-mini_few_shot                                  | gpt-4.1-nano_few_shot                                  | GPT-4.1-mini         | GPT-4.1-nano         | 0.6837 | 0.3953 |    0.2876 |     0.2304 |     0.3432 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| llama-3.3-70b_few_shot                                 | bilstm-crf__supervised                                 | Llama-3.3-70B        | BiLSTM-CRF           | 0.2874 | 0.6009 |   -0.3131 |    -0.3804 |    -0.2435 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-5-mini_few_shot                                    | ulysses-camara_legal-bert-pt-br__supervised            | GPT-5-mini           | LegalBERTPT-br       | 0.5942 | 0.2836 |    0.3096 |     0.2534 |     0.3633 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-5-mini_few_shot                                    | llama-3.3-70b_few_shot                                 | GPT-5-mini           | Llama-3.3-70B        | 0.5942 | 0.2874 |    0.3060 |     0.2369 |     0.3724 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-4.1_few_shot                                       | gpt-4.1-nano_few_shot                                  | GPT-4.1              | GPT-4.1-nano         | 0.7424 | 0.4391 |    0.3020 |     0.2468 |     0.3568 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-4.1-nano_few_shot                                  | gpt-5.1_few_shot                                       | GPT-4.1-nano         | GPT-5.1              | 0.4391 | 0.7322 |   -0.2917 |    -0.3477 |    -0.2354 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
 | rufimelo_Legal-BERTimbau-base__supervised              | ulysses-camara_legal-bert-pt-br__supervised            | Legal-BERTimbau-base | LegalBERTPT-br       | 0.5656 | 0.2836 |    0.2817 |     0.2360 |     0.3279 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| llama-3.3-70b_few_shot                                 | rufimelo_Legal-BERTimbau-base__supervised              | Llama-3.3-70B        | Legal-BERTimbau-base | 0.2856 | 0.5656 |   -0.2799 |    -0.3445 |    -0.2131 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| llama-3.3-70b_few_shot                                 | rufimelo_Legal-BERTimbau-base__supervised              | Llama-3.3-70B        | Legal-BERTimbau-base | 0.2874 | 0.5656 |   -0.2781 |    -0.3428 |    -0.2110 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-4.1-mini_few_shot                                  | gpt-4.1-nano_few_shot                                  | GPT-4.1-mini         | GPT-4.1-nano         | 0.7175 | 0.4391 |    0.2772 |     0.2237 |     0.3307 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| deepseek-v4-flash_few_shot                             | alfaneo_bertimbaulaw-base-portuguese-cased__supervised | DeepSeek-V4-Flash    | BERTimbauLaw         | 0.7837 | 0.5063 |    0.2766 |     0.2186 |     0.3351 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
 | ulysses-camara_legal-bert-pt-br__supervised            | dccmpmgfinalisticas_GovBERT-BR__supervised             | LegalBERTPT-br       | GovBERT-BR           | 0.2836 | 0.5555 |   -0.2715 |    -0.3078 |    -0.2349 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| llama-3.3-70b_few_shot                                 | dccmpmgfinalisticas_GovBERT-BR__supervised             | Llama-3.3-70B        | GovBERT-BR           | 0.2856 | 0.5555 |   -0.2698 |    -0.3286 |    -0.2085 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1-nano_few_shot                                  | raquelsilveira_legalbertpt_fp__supervised              | GPT-4.1-nano         | LegalBert-pt         | 0.3953 | 0.6603 |   -0.2629 |    -0.3255 |    -0.1984 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| llama-3.3-70b_few_shot                                 | dccmpmgfinalisticas_GovBERT-BR__supervised             | Llama-3.3-70B        | GovBERT-BR           | 0.2874 | 0.5555 |   -0.2680 |    -0.3270 |    -0.2069 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
 | ulysses-camara_legal-bert-pt-br__supervised            | dominguesm_legal-bert-base-cased-ptbr__supervised      | LegalBERTPT-br       | Legal-BERT-STF       | 0.2836 | 0.5384 |   -0.2536 |    -0.3061 |    -0.2026 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| llama-3.3-70b_few_shot                                 | dominguesm_legal-bert-base-cased-ptbr__supervised      | Llama-3.3-70B        | Legal-BERT-STF       | 0.2856 | 0.5384 |   -0.2519 |    -0.3202 |    -0.1807 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1-nano_few_shot                                  | neuralmind_bert-large-portuguese-cased__supervised     | GPT-4.1-nano         | BERTimbau-large      | 0.3953 | 0.6457 |   -0.2495 |    -0.3145 |    -0.1834 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-5-mini_few_shot                                    | ulysses-camara_legal-bert-pt-br__supervised            | GPT-5-mini           | LegalBERTPT-br       | 0.5310 | 0.2836 |    0.2473 |     0.1922 |     0.3003 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-5-mini_few_shot                                    | llama-3.3-70b_few_shot                                 | GPT-5-mini           | Llama-3.3-70B        | 0.5310 | 0.2856 |    0.2456 |     0.1786 |     0.3116 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| deepseek-v4-flash_few_shot                             | alfaneo_bertimbaulaw-base-portuguese-cased__supervised | DeepSeek-V4-Flash    | BERTimbauLaw         | 0.7423 | 0.5063 |    0.2360 |     0.1822 |     0.2894 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1-nano_few_shot                                  | neuralmind_bert-base-portuguese-cased__supervised      | GPT-4.1-nano         | BERTimbau-base       | 0.3953 | 0.6220 |   -0.2255 |    -0.2880 |    -0.1632 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| llama-3.3-70b_few_shot                                 | dominguesm_legal-bert-base-cased-ptbr__supervised      | Llama-3.3-70B        | Legal-BERT-STF       | 0.2874 | 0.5384 |   -0.2501 |    -0.3186 |    -0.1791 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| deepseek-v4-flash_few_shot                             | dominguesm_legal-bert-base-cased-ptbr__supervised      | DeepSeek-V4-Flash    | Legal-BERT-STF       | 0.7837 | 0.5384 |    0.2454 |     0.1883 |     0.3012 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-4.1_few_shot                                       | alfaneo_bertimbaulaw-base-portuguese-cased__supervised | GPT-4.1              | BERTimbauLaw         | 0.7424 | 0.5063 |    0.2355 |     0.1774 |     0.2950 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-4.1-nano_few_shot                                  | gpt-5.2_few_shot                                       | GPT-4.1-nano         | GPT-5.2              | 0.4391 | 0.6700 |   -0.2297 |    -0.2775 |    -0.1811 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| deepseek-v4-flash_few_shot                             | dccmpmgfinalisticas_GovBERT-BR__supervised             | DeepSeek-V4-Flash    | GovBERT-BR           | 0.7837 | 0.5555 |    0.2275 |     0.1753 |     0.2796 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-5.1_few_shot                                       | alfaneo_bertimbaulaw-base-portuguese-cased__supervised | GPT-5.1              | BERTimbauLaw         | 0.7322 | 0.5063 |    0.2251 |     0.1668 |     0.2849 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
 | alfaneo_bertimbaulaw-base-portuguese-cased__supervised | ulysses-camara_legal-bert-pt-br__supervised            | BERTimbauLaw         | LegalBERTPT-br       | 0.5063 | 0.2836 |    0.2224 |     0.1798 |     0.2638 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| llama-3.3-70b_few_shot                                 | alfaneo_bertimbaulaw-base-portuguese-cased__supervised | Llama-3.3-70B        | BERTimbauLaw         | 0.2856 | 0.5063 |   -0.2206 |    -0.2855 |    -0.1551 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1-nano_few_shot                                  | alfaneo_jurisbert-base-portuguese-uncased__supervised  | GPT-4.1-nano         | JurisBERT            | 0.3953 | 0.6113 |   -0.2151 |    -0.2823 |    -0.1469 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-5-mini_few_shot                                    | deepseek-v4-flash_few_shot                             | GPT-5-mini           | DeepSeek-V4-Flash    | 0.5310 | 0.7423 |   -0.2110 |    -0.2537 |    -0.1688 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1_few_shot                                       | alfaneo_bertimbaulaw-base-portuguese-cased__supervised | GPT-4.1              | BERTimbauLaw         | 0.7170 | 0.5063 |    0.2107 |     0.1558 |     0.2650 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| deepseek-v4-flash_few_shot                             | dominguesm_legal-bert-base-cased-ptbr__supervised      | DeepSeek-V4-Flash    | Legal-BERT-STF       | 0.7423 | 0.5384 |    0.2047 |     0.1429 |     0.2660 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1-nano_few_shot                                  | bilstm-crf__supervised                                 | GPT-4.1-nano         | BiLSTM-CRF           | 0.3953 | 0.6009 |   -0.2044 |    -0.2710 |    -0.1353 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1-nano_few_shot                                  | gpt-5.2_few_shot                                       | GPT-4.1-nano         | GPT-5.2              | 0.3953 | 0.5945 |   -0.1987 |    -0.2456 |    -0.1508 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1-nano_few_shot                                  | qwen2.5-72b_few_shot                                   | GPT-4.1-nano         | Qwen2.5-72B          | 0.3953 | 0.5853 |   -0.1890 |    -0.2426 |    -0.1348 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| deepseek-v4-flash_few_shot                             | dccmpmgfinalisticas_GovBERT-BR__supervised             | DeepSeek-V4-Flash    | GovBERT-BR           | 0.7423 | 0.5555 |    0.1868 |     0.1358 |     0.2393 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1_few_shot                                       | gpt-5-mini_few_shot                                    | GPT-4.1              | GPT-5-mini           | 0.7170 | 0.5310 |    0.1857 |     0.1460 |     0.2257 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-5.1_few_shot                                       | alfaneo_bertimbaulaw-base-portuguese-cased__supervised | GPT-5.1              | BERTimbauLaw         | 0.6910 | 0.5063 |    0.1845 |     0.1302 |     0.2387 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1_few_shot                                       | dominguesm_legal-bert-base-cased-ptbr__supervised      | GPT-4.1              | Legal-BERT-STF       | 0.7170 | 0.5384 |    0.1794 |     0.1176 |     0.2398 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1-mini_few_shot                                  | alfaneo_bertimbaulaw-base-portuguese-cased__supervised | GPT-4.1-mini         | BERTimbauLaw         | 0.6837 | 0.5063 |    0.1774 |     0.1205 |     0.2331 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| deepseek-v4-flash_few_shot                             | rufimelo_Legal-BERTimbau-base__supervised              | DeepSeek-V4-Flash    | Legal-BERTimbau-base | 0.7423 | 0.5656 |    0.1766 |     0.1213 |     0.2299 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1-nano_few_shot                                  | rufimelo_Legal-BERTimbau-base__supervised              | GPT-4.1-nano         | Legal-BERTimbau-base | 0.3953 | 0.5656 |   -0.1695 |    -0.2320 |    -0.1066 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1_few_shot                                       | dccmpmgfinalisticas_GovBERT-BR__supervised             | GPT-4.1              | GovBERT-BR           | 0.7170 | 0.5555 |    0.1615 |     0.1109 |     0.2121 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-5-mini_few_shot                                    | gpt-5.1_few_shot                                       | GPT-5-mini           | GPT-5.1              | 0.5310 | 0.6910 |   -0.1596 |    -0.2027 |    -0.1178 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1-nano_few_shot                                  | dccmpmgfinalisticas_GovBERT-BR__supervised             | GPT-4.1-nano         | GovBERT-BR           | 0.3953 | 0.5555 |   -0.1593 |    -0.2145 |    -0.1031 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| deepseek-v4-flash_few_shot                             | qwen2.5-72b_few_shot                                   | DeepSeek-V4-Flash    | Qwen2.5-72B          | 0.7423 | 0.5853 |    0.1571 |     0.1131 |     0.2028 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-5.1_few_shot                                       | dominguesm_legal-bert-base-cased-ptbr__supervised      | GPT-5.1              | Legal-BERT-STF       | 0.6910 | 0.5384 |    0.1533 |     0.0933 |     0.2138 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-4.1-nano_few_shot                                  | raquelsilveira_legalbertpt_fp__supervised              | GPT-4.1-nano         | LegalBert-pt         | 0.4391 | 0.6603 |   -0.2193 |    -0.2776 |    -0.1586 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| llama-3.3-70b_few_shot                                 | alfaneo_bertimbaulaw-base-portuguese-cased__supervised | Llama-3.3-70B        | BERTimbauLaw         | 0.2874 | 0.5063 |   -0.2188 |    -0.2838 |    -0.1524 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| deepseek-v4-flash_few_shot                             | rufimelo_Legal-BERTimbau-base__supervised              | DeepSeek-V4-Flash    | Legal-BERTimbau-base | 0.7837 | 0.5656 |    0.2173 |     0.1631 |     0.2692 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-4.1-mini_few_shot                                  | alfaneo_bertimbaulaw-base-portuguese-cased__supervised | GPT-4.1-mini         | BERTimbauLaw         | 0.7175 | 0.5063 |    0.2107 |     0.1504 |     0.2712 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-4.1-nano_few_shot                                  | neuralmind_bert-large-portuguese-cased__supervised     | GPT-4.1-nano         | BERTimbau-large      | 0.4391 | 0.6457 |   -0.2059 |    -0.2691 |    -0.1423 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-4.1_few_shot                                       | dominguesm_legal-bert-base-cased-ptbr__supervised      | GPT-4.1              | Legal-BERT-STF       | 0.7424 | 0.5384 |    0.2042 |     0.1471 |     0.2616 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-5.1_few_shot                                       | dominguesm_legal-bert-base-cased-ptbr__supervised      | GPT-5.1              | Legal-BERT-STF       | 0.7322 | 0.5384 |    0.1939 |     0.1350 |     0.2525 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-5-mini_few_shot                                    | deepseek-v4-flash_few_shot                             | GPT-5-mini           | DeepSeek-V4-Flash    | 0.5942 | 0.7837 |   -0.1894 |    -0.2245 |    -0.1545 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-4.1_few_shot                                       | dccmpmgfinalisticas_GovBERT-BR__supervised             | GPT-4.1              | GovBERT-BR           | 0.7424 | 0.5555 |    0.1863 |     0.1359 |     0.2364 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| deepseek-v4-flash_few_shot                             | bilstm-crf__supervised                                 | DeepSeek-V4-Flash    | BiLSTM-CRF           | 0.7837 | 0.6009 |    0.1823 |     0.1202 |     0.2441 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-4.1-nano_few_shot                                  | neuralmind_bert-base-portuguese-cased__supervised      | GPT-4.1-nano         | BERTimbau-base       | 0.4391 | 0.6220 |   -0.1819 |    -0.2415 |    -0.1221 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-4.1-mini_few_shot                                  | dominguesm_legal-bert-base-cased-ptbr__supervised      | GPT-4.1-mini         | Legal-BERT-STF       | 0.7175 | 0.5384 |    0.1794 |     0.1224 |     0.2361 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-4.1_few_shot                                       | rufimelo_Legal-BERTimbau-base__supervised              | GPT-4.1              | Legal-BERTimbau-base | 0.7424 | 0.5656 |    0.1762 |     0.1193 |     0.2300 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-5.1_few_shot                                       | dccmpmgfinalisticas_GovBERT-BR__supervised             | GPT-5.1              | GovBERT-BR           | 0.7322 | 0.5555 |    0.1760 |     0.1237 |     0.2267 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-4.1-nano_few_shot                                  | qwen2.5-72b_few_shot                                   | GPT-4.1-nano         | Qwen2.5-72B          | 0.4391 | 0.6147 |   -0.1744 |    -0.2296 |    -0.1194 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| deepseek-v4-flash_few_shot                             | alfaneo_jurisbert-base-portuguese-uncased__supervised  | DeepSeek-V4-Flash    | JurisBERT            | 0.7837 | 0.6113 |    0.1717 |     0.1109 |     0.2323 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-4.1-nano_few_shot                                  | alfaneo_jurisbert-base-portuguese-uncased__supervised  | GPT-4.1-nano         | JurisBERT            | 0.4391 | 0.6113 |   -0.1715 |    -0.2381 |    -0.1027 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| deepseek-v4-flash_few_shot                             | qwen2.5-72b_few_shot                                   | DeepSeek-V4-Flash    | Qwen2.5-72B          | 0.7837 | 0.6147 |    0.1687 |     0.1278 |     0.2126 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-5.1_few_shot                                       | rufimelo_Legal-BERTimbau-base__supervised              | GPT-5.1              | Legal-BERTimbau-base | 0.7322 | 0.5656 |    0.1658 |     0.1076 |     0.2208 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-5.2_few_shot                                       | alfaneo_bertimbaulaw-base-portuguese-cased__supervised | GPT-5.2              | BERTimbauLaw         | 0.6700 | 0.5063 |    0.1631 |     0.1029 |     0.2235 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-4.1-mini_few_shot                                  | dccmpmgfinalisticas_GovBERT-BR__supervised             | GPT-4.1-mini         | GovBERT-BR           | 0.7175 | 0.5555 |    0.1615 |     0.1087 |     0.2119 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| deepseek-v4-flash_few_shot                             | neuralmind_bert-base-portuguese-cased__supervised      | DeepSeek-V4-Flash    | BERTimbau-base       | 0.7837 | 0.6220 |    0.1613 |     0.1036 |     0.2163 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-4.1-nano_few_shot                                  | bilstm-crf__supervised                                 | GPT-4.1-nano         | BiLSTM-CRF           | 0.4391 | 0.6009 |   -0.1608 |    -0.2278 |    -0.0924 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-4.1-nano_few_shot                                  | ulysses-camara_legal-bert-pt-br__supervised            | GPT-4.1-nano         | LegalBERTPT-br       | 0.4391 | 0.2836 |    0.1559 |     0.1013 |     0.2120 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-4.1-nano_few_shot                                  | gpt-5-mini_few_shot                                    | GPT-4.1-nano         | GPT-5-mini           | 0.4391 | 0.5942 |   -0.1537 |    -0.2060 |    -0.1011 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
 | alfaneo_bertimbaulaw-base-portuguese-cased__supervised | raquelsilveira_legalbertpt_fp__supervised              | BERTimbauLaw         | LegalBert-pt         | 0.5063 | 0.6603 |   -0.1528 |    -0.2130 |    -0.0910 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1-mini_few_shot                                  | gpt-5-mini_few_shot                                    | GPT-4.1-mini         | GPT-5-mini           | 0.6837 | 0.5310 |    0.1525 |     0.1135 |     0.1928 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1_few_shot                                       | rufimelo_Legal-BERTimbau-base__supervised              | GPT-4.1              | Legal-BERTimbau-base | 0.7170 | 0.5656 |    0.1513 |     0.0941 |     0.2065 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-5.2_few_shot                                       | deepseek-v4-flash_few_shot                             | GPT-5.2              | DeepSeek-V4-Flash    | 0.5945 | 0.7423 |   -0.1474 |    -0.1958 |    -0.1001 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1-mini_few_shot                                  | dominguesm_legal-bert-base-cased-ptbr__supervised      | GPT-4.1-mini         | Legal-BERT-STF       | 0.6837 | 0.5384 |    0.1462 |     0.0860 |     0.2060 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| deepseek-v4-flash_few_shot                             | bilstm-crf__supervised                                 | DeepSeek-V4-Flash    | BiLSTM-CRF           | 0.7423 | 0.6009 |    0.1417 |     0.0821 |     0.1999 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1-nano_few_shot                                  | dominguesm_legal-bert-base-cased-ptbr__supervised      | GPT-4.1-nano         | Legal-BERT-STF       | 0.3953 | 0.5384 |   -0.1414 |    -0.2109 |    -0.0714 |    0.0002 | True             |       0.0172 |             0.0342 |     0.0004 | True                |
+| gpt-4.1-nano_few_shot                                  | llama-3.3-70b_few_shot                                 | GPT-4.1-nano         | Llama-3.3-70B        | 0.4391 | 0.2874 |    0.1523 |     0.0804 |     0.2217 |    0.0002 | True             |       0.0168 |             0.0342 |     0.0004 | True                |
+| gpt-4.1-mini_few_shot                                  | rufimelo_Legal-BERTimbau-base__supervised              | GPT-4.1-mini         | Legal-BERTimbau-base | 0.7175 | 0.5656 |    0.1514 |     0.0960 |     0.2030 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-4.1_few_shot                                       | gpt-5-mini_few_shot                                    | GPT-4.1              | GPT-5-mini           | 0.7424 | 0.5942 |    0.1483 |     0.1148 |     0.1824 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-4.1_few_shot                                       | bilstm-crf__supervised                                 | GPT-4.1              | BiLSTM-CRF           | 0.7424 | 0.6009 |    0.1412 |     0.0788 |     0.2036 |    0.0002 | True             |       0.0168 |             0.0342 |     0.0004 | True                |
 | neuralmind_bert-large-portuguese-cased__supervised     | alfaneo_bertimbaulaw-base-portuguese-cased__supervised | BERTimbau-large      | BERTimbauLaw         | 0.6457 | 0.5063 |    0.1394 |     0.0839 |     0.1964 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-5.1_few_shot                                       | dccmpmgfinalisticas_GovBERT-BR__supervised             | GPT-5.1              | GovBERT-BR           | 0.6910 | 0.5555 |    0.1354 |     0.0845 |     0.1858 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1-nano_few_shot                                  | gpt-5-mini_few_shot                                    | GPT-4.1-nano         | GPT-5-mini           | 0.3953 | 0.5310 |   -0.1351 |    -0.1868 |    -0.0814 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1_few_shot                                       | qwen2.5-72b_few_shot                                   | GPT-4.1              | Qwen2.5-72B          | 0.7170 | 0.5853 |    0.1318 |     0.0892 |     0.1751 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| deepseek-v4-flash_few_shot                             | alfaneo_jurisbert-base-portuguese-uncased__supervised  | DeepSeek-V4-Flash    | JurisBERT            | 0.7423 | 0.6113 |    0.1310 |     0.0745 |     0.1892 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1-mini_few_shot                                  | dccmpmgfinalisticas_GovBERT-BR__supervised             | GPT-4.1-mini         | GovBERT-BR           | 0.6837 | 0.5555 |    0.1283 |     0.0777 |     0.1791 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-5-mini_few_shot                                    | raquelsilveira_legalbertpt_fp__supervised              | GPT-5-mini           | LegalBert-pt         | 0.5310 | 0.6603 |   -0.1278 |    -0.1926 |    -0.0629 |    0.0004 | True             |       0.0328 |             0.0684 |     0.0008 | True                |
-| gpt-5.1_few_shot                                       | rufimelo_Legal-BERTimbau-base__supervised              | GPT-5.1              | Legal-BERTimbau-base | 0.6910 | 0.5656 |    0.1252 |     0.0682 |     0.1814 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1_few_shot                                       | gpt-5.2_few_shot                                       | GPT-4.1              | GPT-5.2              | 0.7170 | 0.5945 |    0.1221 |     0.0803 |     0.1652 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-5-mini_few_shot                                    | gpt-5.1_few_shot                                       | GPT-5-mini           | GPT-5.1              | 0.5942 | 0.7322 |   -0.1379 |    -0.1735 |    -0.1037 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| deepseek-v4-flash_few_shot                             | neuralmind_bert-large-portuguese-cased__supervised     | DeepSeek-V4-Flash    | BERTimbau-large      | 0.7837 | 0.6457 |    0.1372 |     0.0750 |     0.1978 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-5.2_few_shot                                       | dominguesm_legal-bert-base-cased-ptbr__supervised      | GPT-5.2              | Legal-BERT-STF       | 0.6700 | 0.5384 |    0.1319 |     0.0727 |     0.1908 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-5.1_few_shot                                       | bilstm-crf__supervised                                 | GPT-5.1              | BiLSTM-CRF           | 0.7322 | 0.6009 |    0.1309 |     0.0657 |     0.1950 |    0.0002 | True             |       0.0168 |             0.0342 |     0.0004 | True                |
+| gpt-4.1_few_shot                                       | alfaneo_jurisbert-base-portuguese-uncased__supervised  | GPT-4.1              | JurisBERT            | 0.7424 | 0.6113 |    0.1305 |     0.0686 |     0.1930 |    0.0002 | True             |       0.0168 |             0.0342 |     0.0004 | True                |
+| gpt-4.1_few_shot                                       | qwen2.5-72b_few_shot                                   | GPT-4.1              | Qwen2.5-72B          | 0.7424 | 0.6147 |    0.1276 |     0.0852 |     0.1697 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-4.1-nano_few_shot                                  | rufimelo_Legal-BERTimbau-base__supervised              | GPT-4.1-nano         | Legal-BERTimbau-base | 0.4391 | 0.5656 |   -0.1258 |    -0.1857 |    -0.0662 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| deepseek-v4-flash_few_shot                             | raquelsilveira_legalbertpt_fp__supervised              | DeepSeek-V4-Flash    | LegalBert-pt         | 0.7837 | 0.6603 |    0.1239 |     0.0655 |     0.1834 |    0.0002 | True             |       0.0168 |             0.0342 |     0.0004 | True                |
+| gpt-4.1-mini_few_shot                                  | gpt-5-mini_few_shot                                    | GPT-4.1-mini         | GPT-5-mini           | 0.7175 | 0.5942 |    0.1235 |     0.0911 |     0.1571 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
 | raquelsilveira_legalbertpt_fp__supervised              | dominguesm_legal-bert-base-cased-ptbr__supervised      | LegalBert-pt         | Legal-BERT-STF       | 0.6603 | 0.5384 |    0.1215 |     0.0638 |     0.1799 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| deepseek-v4-flash_few_shot                             | neuralmind_bert-base-portuguese-cased__supervised      | DeepSeek-V4-Flash    | BERTimbau-base       | 0.7423 | 0.6220 |    0.1206 |     0.0642 |     0.1765 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1-mini_few_shot                                  | rufimelo_Legal-BERTimbau-base__supervised              | GPT-4.1-mini         | Legal-BERTimbau-base | 0.6837 | 0.5656 |    0.1181 |     0.0640 |     0.1706 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1_few_shot                                       | bilstm-crf__supervised                                 | GPT-4.1              | BiLSTM-CRF           | 0.7170 | 0.6009 |    0.1164 |     0.0560 |     0.1763 |    0.0002 | True             |       0.0172 |             0.0342 |     0.0004 | True                |
+| gpt-5.1_few_shot                                       | alfaneo_jurisbert-base-portuguese-uncased__supervised  | GPT-5.1              | JurisBERT            | 0.7322 | 0.6113 |    0.1202 |     0.0571 |     0.1829 |    0.0004 | True             |       0.0300 |             0.0684 |     0.0007 | True                |
+| gpt-4.1_few_shot                                       | neuralmind_bert-base-portuguese-cased__supervised      | GPT-4.1              | BERTimbau-base       | 0.7424 | 0.6220 |    0.1201 |     0.0627 |     0.1755 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-5.1_few_shot                                       | qwen2.5-72b_few_shot                                   | GPT-5.1              | Qwen2.5-72B          | 0.7322 | 0.6147 |    0.1172 |     0.0745 |     0.1614 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-4.1-mini_few_shot                                  | bilstm-crf__supervised                                 | GPT-4.1-mini         | BiLSTM-CRF           | 0.7175 | 0.6009 |    0.1164 |     0.0499 |     0.1809 |    0.0008 | True             |       0.0576 |             0.1368 |     0.0014 | False               |
+| gpt-4.1-nano_few_shot                                  | dccmpmgfinalisticas_GovBERT-BR__supervised             | GPT-4.1-nano         | GovBERT-BR           | 0.4391 | 0.5555 |   -0.1156 |    -0.1687 |    -0.0606 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
 | neuralmind_bert-base-portuguese-cased__supervised      | alfaneo_bertimbaulaw-base-portuguese-cased__supervised | BERTimbau-base       | BERTimbauLaw         | 0.6220 | 0.5063 |    0.1154 |     0.0618 |     0.1699 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-5-mini_few_shot                                    | neuralmind_bert-large-portuguese-cased__supervised     | GPT-5-mini           | BERTimbau-large      | 0.5310 | 0.6457 |   -0.1144 |    -0.1771 |    -0.0516 |    0.0002 | True             |       0.0172 |             0.0342 |     0.0004 | True                |
-| gpt-4.1-nano_few_shot                                  | ulysses-camara_legal-bert-pt-br__supervised            | GPT-4.1-nano         | LegalBERTPT-br       | 0.3953 | 0.2836 |    0.1122 |     0.0591 |     0.1678 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1-nano_few_shot                                  | llama-3.3-70b_few_shot                                 | GPT-4.1-nano         | Llama-3.3-70B        | 0.3953 | 0.2856 |    0.1105 |     0.0386 |     0.1805 |    0.0022 | True             |       0.1628 |             0.3762 |     0.0038 | False               |
-| gpt-4.1-nano_few_shot                                  | alfaneo_bertimbaulaw-base-portuguese-cased__supervised | GPT-4.1-nano         | BERTimbauLaw         | 0.3953 | 0.5063 |   -0.1101 |    -0.1643 |    -0.0534 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| neuralmind_bert-large-portuguese-cased__supervised     | dominguesm_legal-bert-base-cased-ptbr__supervised      | BERTimbau-large      | Legal-BERT-STF       | 0.6457 | 0.5384 |    0.1081 |     0.0464 |     0.1718 |    0.0010 | True             |       0.0790 |             0.1710 |     0.0018 | False               |
-| gpt-4.1_few_shot                                       | alfaneo_jurisbert-base-portuguese-uncased__supervised  | GPT-4.1              | JurisBERT            | 0.7170 | 0.6113 |    0.1057 |     0.0465 |     0.1648 |    0.0006 | True             |       0.0486 |             0.1026 |     0.0011 | True                |
-| gpt-5.1_few_shot                                       | qwen2.5-72b_few_shot                                   | GPT-5.1              | Qwen2.5-72B          | 0.6910 | 0.5853 |    0.1056 |     0.0618 |     0.1498 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| alfaneo_jurisbert-base-portuguese-uncased__supervised  | alfaneo_bertimbaulaw-base-portuguese-cased__supervised | JurisBERT            | BERTimbauLaw         | 0.6113 | 0.5063 |    0.1049 |     0.0527 |     0.1558 |    0.0002 | True             |       0.0172 |             0.0342 |     0.0004 | True                |
+| gpt-5.2_few_shot                                       | dccmpmgfinalisticas_GovBERT-BR__supervised             | GPT-5.2              | GovBERT-BR           | 0.6700 | 0.5555 |    0.1140 |     0.0606 |     0.1674 |    0.0002 | True             |       0.0168 |             0.0342 |     0.0004 | True                |
+| gpt-5.2_few_shot                                       | deepseek-v4-flash_few_shot                             | GPT-5.2              | DeepSeek-V4-Flash    | 0.6700 | 0.7837 |   -0.1135 |    -0.1551 |    -0.0738 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-5.1_few_shot                                       | neuralmind_bert-base-portuguese-cased__supervised      | GPT-5.1              | BERTimbau-base       | 0.7322 | 0.6220 |    0.1098 |     0.0520 |     0.1660 |    0.0002 | True             |       0.0168 |             0.0342 |     0.0004 | True                |
+| neuralmind_bert-large-portuguese-cased__supervised     | dominguesm_legal-bert-base-cased-ptbr__supervised      | BERTimbau-large      | Legal-BERT-STF       | 0.6457 | 0.5384 |    0.1081 |     0.0464 |     0.1718 |    0.0010 | True             |       0.0700 |             0.1710 |     0.0017 | False               |
+| qwen2.5-72b_few_shot                                   | alfaneo_bertimbaulaw-base-portuguese-cased__supervised | Qwen2.5-72B          | BERTimbauLaw         | 0.6147 | 0.5063 |    0.1079 |     0.0444 |     0.1706 |    0.0008 | True             |       0.0576 |             0.1368 |     0.0014 | False               |
+| gpt-4.1-mini_few_shot                                  | alfaneo_jurisbert-base-portuguese-uncased__supervised  | GPT-4.1-mini         | JurisBERT            | 0.7175 | 0.6113 |    0.1057 |     0.0457 |     0.1669 |    0.0012 | True             |       0.0828 |             0.2052 |     0.0020 | False               |
+| alfaneo_jurisbert-base-portuguese-uncased__supervised  | alfaneo_bertimbaulaw-base-portuguese-cased__supervised | JurisBERT            | BERTimbauLaw         | 0.6113 | 0.5063 |    0.1049 |     0.0527 |     0.1558 |    0.0002 | True             |       0.0168 |             0.0342 |     0.0004 | True                |
+| gpt-5.2_few_shot                                       | rufimelo_Legal-BERTimbau-base__supervised              | GPT-5.2              | Legal-BERTimbau-base | 0.6700 | 0.5656 |    0.1038 |     0.0459 |     0.1578 |    0.0004 | True             |       0.0300 |             0.0684 |     0.0007 | True                |
 | raquelsilveira_legalbertpt_fp__supervised              | dccmpmgfinalisticas_GovBERT-BR__supervised             | LegalBert-pt         | GovBERT-BR           | 0.6603 | 0.5555 |    0.1036 |     0.0508 |     0.1546 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1-mini_few_shot                                  | qwen2.5-72b_few_shot                                   | GPT-4.1-mini         | Qwen2.5-72B          | 0.6837 | 0.5853 |    0.0985 |     0.0595 |     0.1384 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| deepseek-v4-flash_few_shot                             | neuralmind_bert-large-portuguese-cased__supervised     | DeepSeek-V4-Flash    | BERTimbau-large      | 0.7423 | 0.6457 |    0.0966 |     0.0360 |     0.1571 |    0.0012 | True             |       0.0924 |             0.2052 |     0.0021 | False               |
-| gpt-5.1_few_shot                                       | gpt-5.2_few_shot                                       | GPT-5.1              | GPT-5.2              | 0.6910 | 0.5945 |    0.0959 |     0.0526 |     0.1402 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-4.1_few_shot                                       | neuralmind_bert-base-portuguese-cased__supervised      | GPT-4.1              | BERTimbau-base       | 0.7170 | 0.6220 |    0.0953 |     0.0378 |     0.1522 |    0.0020 | True             |       0.1500 |             0.3420 |     0.0035 | False               |
-| bilstm-crf__supervised                                 | alfaneo_bertimbaulaw-base-portuguese-cased__supervised | BiLSTM-CRF           | BERTimbauLaw         | 0.6009 | 0.5063 |    0.0943 |     0.0333 |     0.1544 |    0.0030 | True             |       0.2130 |             0.5130 |     0.0051 | False               |
-| rufimelo_Legal-BERTimbau-base__supervised              | raquelsilveira_legalbertpt_fp__supervised              | Legal-BERTimbau-base | LegalBert-pt         | 0.5656 | 0.6603 |   -0.0934 |    -0.1493 |    -0.0352 |    0.0012 | True             |       0.0924 |             0.2052 |     0.0021 | False               |
-| gpt-5-mini_few_shot                                    | neuralmind_bert-base-portuguese-cased__supervised      | GPT-5-mini           | BERTimbau-base       | 0.5310 | 0.6220 |   -0.0904 |    -0.1549 |    -0.0271 |    0.0052 | True             |       0.3536 |             0.8892 |     0.0086 | False               |
-| gpt-5.1_few_shot                                       | bilstm-crf__supervised                                 | GPT-5.1              | BiLSTM-CRF           | 0.6910 | 0.6009 |    0.0902 |     0.0274 |     0.1513 |    0.0064 | True             |       0.4288 |             1.0000 |     0.0104 | False               |
-| neuralmind_bert-large-portuguese-cased__supervised     | dccmpmgfinalisticas_GovBERT-BR__supervised             | BERTimbau-large      | GovBERT-BR           | 0.6457 | 0.5555 |    0.0902 |     0.0413 |     0.1401 |    0.0006 | True             |       0.0486 |             0.1026 |     0.0011 | True                |
-| gpt-4.1-mini_few_shot                                  | gpt-5.2_few_shot                                       | GPT-4.1-mini         | GPT-5.2              | 0.6837 | 0.5945 |    0.0888 |     0.0463 |     0.1328 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| gpt-5.2_few_shot                                       | alfaneo_bertimbaulaw-base-portuguese-cased__supervised | GPT-5.2              | BERTimbauLaw         | 0.5945 | 0.5063 |    0.0886 |     0.0346 |     0.1425 |    0.0010 | True             |       0.0790 |             0.1710 |     0.0018 | False               |
-| neuralmind_bert-base-portuguese-cased__supervised      | dominguesm_legal-bert-base-cased-ptbr__supervised      | BERTimbau-base       | Legal-BERT-STF       | 0.6220 | 0.5384 |    0.0841 |     0.0289 |     0.1416 |    0.0044 | True             |       0.3080 |             0.7524 |     0.0074 | False               |
-| deepseek-v4-flash_few_shot                             | raquelsilveira_legalbertpt_fp__supervised              | DeepSeek-V4-Flash    | LegalBert-pt         | 0.7423 | 0.6603 |    0.0832 |     0.0211 |     0.1457 |    0.0082 | True             |       0.5330 |             1.0000 |     0.0131 | False               |
-| gpt-4.1-mini_few_shot                                  | bilstm-crf__supervised                                 | GPT-4.1-mini         | BiLSTM-CRF           | 0.6837 | 0.6009 |    0.0831 |     0.0178 |     0.1461 |    0.0132 | True             |       0.8052 |             1.0000 |     0.0203 | False               |
-| rufimelo_Legal-BERTimbau-base__supervised              | neuralmind_bert-large-portuguese-cased__supervised     | Legal-BERTimbau-base | BERTimbau-large      | 0.5656 | 0.6457 |   -0.0801 |    -0.1375 |    -0.0239 |    0.0046 | True             |       0.3174 |             0.7866 |     0.0076 | False               |
-| gpt-5-mini_few_shot                                    | alfaneo_jurisbert-base-portuguese-uncased__supervised  | GPT-5-mini           | JurisBERT            | 0.5310 | 0.6113 |   -0.0800 |    -0.1417 |    -0.0191 |    0.0140 | True             |       0.8260 |             1.0000 |     0.0212 | False               |
-| gpt-5.1_few_shot                                       | alfaneo_jurisbert-base-portuguese-uncased__supervised  | GPT-5.1              | JurisBERT            | 0.6910 | 0.6113 |    0.0796 |     0.0197 |     0.1392 |    0.0108 | True             |       0.6696 |             1.0000 |     0.0168 | False               |
-| qwen2.5-72b_few_shot                                   | alfaneo_bertimbaulaw-base-portuguese-cased__supervised | Qwen2.5-72B          | BERTimbauLaw         | 0.5853 | 0.5063 |    0.0789 |     0.0194 |     0.1386 |    0.0096 | True             |       0.6048 |             1.0000 |     0.0151 | False               |
-| qwen2.5-72b_few_shot                                   | raquelsilveira_legalbertpt_fp__supervised              | Qwen2.5-72B          | LegalBert-pt         | 0.5853 | 0.6603 |   -0.0739 |    -0.1392 |    -0.0080 |    0.0296 | True             |       1.0000 |             1.0000 |     0.0414 | False               |
-| alfaneo_jurisbert-base-portuguese-uncased__supervised  | dominguesm_legal-bert-base-cased-ptbr__supervised      | JurisBERT            | Legal-BERT-STF       | 0.6113 | 0.5384 |    0.0737 |     0.0152 |     0.1330 |    0.0152 | True             |       0.8816 |             1.0000 |     0.0228 | False               |
-| gpt-4.1-mini_few_shot                                  | alfaneo_jurisbert-base-portuguese-uncased__supervised  | GPT-4.1-mini         | JurisBERT            | 0.6837 | 0.6113 |    0.0725 |     0.0157 |     0.1302 |    0.0136 | True             |       0.8160 |             1.0000 |     0.0208 | False               |
-| gpt-4.1_few_shot                                       | neuralmind_bert-large-portuguese-cased__supervised     | GPT-4.1              | BERTimbau-large      | 0.7170 | 0.6457 |    0.0713 |     0.0102 |     0.1313 |    0.0220 | True             |       1.0000 |             1.0000 |     0.0322 | False               |
-| gpt-5-mini_few_shot                                    | bilstm-crf__supervised                                 | GPT-5-mini           | BiLSTM-CRF           | 0.5310 | 0.6009 |   -0.0693 |    -0.1321 |    -0.0052 |    0.0332 | True             |       1.0000 |             1.0000 |     0.0458 | False               |
-| gpt-5.1_few_shot                                       | neuralmind_bert-base-portuguese-cased__supervised      | GPT-5.1              | BERTimbau-base       | 0.6910 | 0.6220 |    0.0692 |     0.0111 |     0.1262 |    0.0212 | True             |       1.0000 |             1.0000 |     0.0313 | False               |
-| neuralmind_bert-base-portuguese-cased__supervised      | dccmpmgfinalisticas_GovBERT-BR__supervised             | BERTimbau-base       | GovBERT-BR           | 0.6220 | 0.5555 |    0.0662 |     0.0194 |     0.1137 |    0.0074 | True             |       0.4884 |             1.0000 |     0.0119 | False               |
-| gpt-5.2_few_shot                                       | raquelsilveira_legalbertpt_fp__supervised              | GPT-5.2              | LegalBert-pt         | 0.5945 | 0.6603 |   -0.0642 |    -0.1304 |     0.0008 |    0.0522 | False            |       1.0000 |             1.0000 |     0.0708 | False               |
-| gpt-5-mini_few_shot                                    | gpt-5.2_few_shot                                       | GPT-5-mini           | GPT-5.2              | 0.5310 | 0.5945 |   -0.0637 |    -0.1049 |    -0.0223 |    0.0024 | True             |       0.1752 |             0.4104 |     0.0041 | False               |
-| bilstm-crf__supervised                                 | dominguesm_legal-bert-base-cased-ptbr__supervised      | BiLSTM-CRF           | Legal-BERT-STF       | 0.6009 | 0.5384 |    0.0630 |     0.0000 |     0.1264 |    0.0500 | True             |       1.0000 |             1.0000 |     0.0684 | False               |
-| gpt-4.1-mini_few_shot                                  | neuralmind_bert-base-portuguese-cased__supervised      | GPT-4.1-mini         | BERTimbau-base       | 0.6837 | 0.6220 |    0.0621 |     0.0058 |     0.1180 |    0.0292 | True             |       1.0000 |             1.0000 |     0.0413 | False               |
-| qwen2.5-72b_few_shot                                   | neuralmind_bert-large-portuguese-cased__supervised     | Qwen2.5-72B          | BERTimbau-large      | 0.5853 | 0.6457 |   -0.0605 |    -0.1246 |     0.0040 |    0.0676 | False            |       1.0000 |             1.0000 |     0.0889 | False               |
-| rufimelo_Legal-BERTimbau-base__supervised              | alfaneo_bertimbaulaw-base-portuguese-cased__supervised | Legal-BERTimbau-base | BERTimbauLaw         | 0.5656 | 0.5063 |    0.0593 |     0.0069 |     0.1131 |    0.0260 | True             |       1.0000 |             1.0000 |     0.0376 | False               |
-| gpt-4.1-mini_few_shot                                  | deepseek-v4-flash_few_shot                             | GPT-4.1-mini         | DeepSeek-V4-Flash    | 0.6837 | 0.7423 |   -0.0585 |    -0.0912 |    -0.0270 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
-| bilstm-crf__supervised                                 | raquelsilveira_legalbertpt_fp__supervised              | BiLSTM-CRF           | LegalBert-pt         | 0.6009 | 0.6603 |   -0.0585 |    -0.1272 |     0.0104 |    0.0964 | False            |       1.0000 |             1.0000 |     0.1257 | False               |
-| gpt-4.1_few_shot                                       | raquelsilveira_legalbertpt_fp__supervised              | GPT-4.1              | LegalBert-pt         | 0.7170 | 0.6603 |    0.0579 |    -0.0014 |     0.1197 |    0.0566 | False            |       1.0000 |             1.0000 |     0.0762 | False               |
-| gpt-5.2_few_shot                                       | dominguesm_legal-bert-base-cased-ptbr__supervised      | GPT-5.2              | Legal-BERT-STF       | 0.5945 | 0.5384 |    0.0574 |    -0.0124 |     0.1250 |    0.1086 | False            |       1.0000 |             1.0000 |     0.1396 | False               |
-| rufimelo_Legal-BERTimbau-base__supervised              | neuralmind_bert-base-portuguese-cased__supervised      | Legal-BERTimbau-base | BERTimbau-base       | 0.5656 | 0.6220 |   -0.0560 |    -0.1029 |    -0.0112 |    0.0154 | True             |       0.8816 |             1.0000 |     0.0229 | False               |
-| alfaneo_jurisbert-base-portuguese-uncased__supervised  | dccmpmgfinalisticas_GovBERT-BR__supervised             | JurisBERT            | GovBERT-BR           | 0.6113 | 0.5555 |    0.0558 |     0.0055 |     0.1084 |    0.0298 | True             |       1.0000 |             1.0000 |     0.0414 | False               |
-| gpt-5-mini_few_shot                                    | qwen2.5-72b_few_shot                                   | GPT-5-mini           | Qwen2.5-72B          | 0.5310 | 0.5853 |   -0.0539 |    -0.1001 |    -0.0064 |    0.0262 | True             |       1.0000 |             1.0000 |     0.0376 | False               |
-| gpt-5.1_few_shot                                       | deepseek-v4-flash_few_shot                             | GPT-5.1              | DeepSeek-V4-Flash    | 0.6910 | 0.7423 |   -0.0514 |    -0.0856 |    -0.0177 |    0.0026 | True             |       0.1872 |             0.4446 |     0.0044 | False               |
-| gpt-5.2_few_shot                                       | neuralmind_bert-large-portuguese-cased__supervised     | GPT-5.2              | BERTimbau-large      | 0.5945 | 0.6457 |   -0.0508 |    -0.1169 |     0.0149 |    0.1298 | False            |       1.0000 |             1.0000 |     0.1632 | False               |
-| alfaneo_bertimbaulaw-base-portuguese-cased__supervised | dccmpmgfinalisticas_GovBERT-BR__supervised             | BERTimbauLaw         | GovBERT-BR           | 0.5063 | 0.5555 |   -0.0491 |    -0.0941 |    -0.0051 |    0.0282 | True             |       1.0000 |             1.0000 |     0.0402 | False               |
-| alfaneo_jurisbert-base-portuguese-uncased__supervised  | raquelsilveira_legalbertpt_fp__supervised              | JurisBERT            | LegalBert-pt         | 0.6113 | 0.6603 |   -0.0478 |    -0.1139 |     0.0191 |    0.1628 | False            |       1.0000 |             1.0000 |     0.2003 | False               |
-| qwen2.5-72b_few_shot                                   | dominguesm_legal-bert-base-cased-ptbr__supervised      | Qwen2.5-72B          | Legal-BERT-STF       | 0.5853 | 0.5384 |    0.0476 |    -0.0172 |     0.1139 |    0.1578 | False            |       1.0000 |             1.0000 |     0.1955 | False               |
-| rufimelo_Legal-BERTimbau-base__supervised              | alfaneo_jurisbert-base-portuguese-uncased__supervised  | Legal-BERTimbau-base | JurisBERT            | 0.5656 | 0.6113 |   -0.0456 |    -0.1025 |     0.0117 |    0.1234 | False            |       1.0000 |             1.0000 |     0.1563 | False               |
-| gpt-5.1_few_shot                                       | neuralmind_bert-large-portuguese-cased__supervised     | GPT-5.1              | BERTimbau-large      | 0.6910 | 0.6457 |    0.0451 |    -0.0144 |     0.1045 |    0.1432 | False            |       1.0000 |             1.0000 |     0.1787 | False               |
-| bilstm-crf__supervised                                 | dccmpmgfinalisticas_GovBERT-BR__supervised             | BiLSTM-CRF           | GovBERT-BR           | 0.6009 | 0.5555 |    0.0451 |    -0.0078 |     0.0979 |    0.0970 | False            |       1.0000 |             1.0000 |     0.1257 | False               |
-| neuralmind_bert-large-portuguese-cased__supervised     | bilstm-crf__supervised                                 | BERTimbau-large      | BiLSTM-CRF           | 0.6457 | 0.6009 |    0.0451 |    -0.0108 |     0.1016 |    0.1114 | False            |       1.0000 |             1.0000 |     0.1422 | False               |
-| gpt-5.2_few_shot                                       | dccmpmgfinalisticas_GovBERT-BR__supervised             | GPT-5.2              | GovBERT-BR           | 0.5945 | 0.5555 |    0.0395 |    -0.0182 |     0.0959 |    0.1746 | False            |       1.0000 |             1.0000 |     0.2133 | False               |
-| gpt-4.1-mini_few_shot                                  | neuralmind_bert-large-portuguese-cased__supervised     | GPT-4.1-mini         | BERTimbau-large      | 0.6837 | 0.6457 |    0.0380 |    -0.0223 |     0.0986 |    0.2142 | False            |       1.0000 |             1.0000 |     0.2598 | False               |
-| neuralmind_bert-base-portuguese-cased__supervised      | raquelsilveira_legalbertpt_fp__supervised              | BERTimbau-base       | LegalBert-pt         | 0.6220 | 0.6603 |   -0.0374 |    -0.0955 |     0.0220 |    0.2194 | False            |       1.0000 |             1.0000 |     0.2642 | False               |
-| qwen2.5-72b_few_shot                                   | neuralmind_bert-base-portuguese-cased__supervised      | Qwen2.5-72B          | BERTimbau-base       | 0.5853 | 0.6220 |   -0.0365 |    -0.0993 |     0.0271 |    0.2672 | False            |       1.0000 |             1.0000 |     0.3151 | False               |
-| rufimelo_Legal-BERTimbau-base__supervised              | bilstm-crf__supervised                                 | Legal-BERTimbau-base | BiLSTM-CRF           | 0.5656 | 0.6009 |   -0.0350 |    -0.0992 |     0.0298 |    0.2842 | False            |       1.0000 |             1.0000 |     0.3284 | False               |
-| neuralmind_bert-large-portuguese-cased__supervised     | alfaneo_jurisbert-base-portuguese-uncased__supervised  | BERTimbau-large      | JurisBERT            | 0.6457 | 0.6113 |    0.0344 |    -0.0216 |     0.0915 |    0.2404 | False            |       1.0000 |             1.0000 |     0.2875 | False               |
-| gpt-5-mini_few_shot                                    | rufimelo_Legal-BERTimbau-base__supervised              | GPT-5-mini           | Legal-BERTimbau-base | 0.5310 | 0.5656 |   -0.0344 |    -0.0967 |     0.0273 |    0.2748 | False            |       1.0000 |             1.0000 |     0.3197 | False               |
-| gpt-4.1_few_shot                                       | gpt-4.1-mini_few_shot                                  | GPT-4.1              | GPT-4.1-mini         | 0.7170 | 0.6837 |    0.0332 |     0.0082 |     0.0604 |    0.0084 | True             |       0.5376 |             1.0000 |     0.0133 | False               |
-| gpt-5.1_few_shot                                       | raquelsilveira_legalbertpt_fp__supervised              | GPT-5.1              | LegalBert-pt         | 0.6910 | 0.6603 |    0.0318 |    -0.0282 |     0.0927 |    0.2998 | False            |       1.0000 |             1.0000 |     0.3406 | False               |
-| alfaneo_bertimbaulaw-base-portuguese-cased__supervised | dominguesm_legal-bert-base-cased-ptbr__supervised      | BERTimbauLaw         | Legal-BERT-STF       | 0.5063 | 0.5384 |   -0.0312 |    -0.0881 |     0.0231 |    0.2642 | False            |       1.0000 |             1.0000 |     0.3137 | False               |
-| qwen2.5-72b_few_shot                                   | dccmpmgfinalisticas_GovBERT-BR__supervised             | Qwen2.5-72B          | GovBERT-BR           | 0.5853 | 0.5555 |    0.0297 |    -0.0271 |     0.0867 |    0.3008 | False            |       1.0000 |             1.0000 |     0.3406 | False               |
-| gpt-5.2_few_shot                                       | rufimelo_Legal-BERTimbau-base__supervised              | GPT-5.2              | Legal-BERTimbau-base | 0.5945 | 0.5656 |    0.0293 |    -0.0325 |     0.0890 |    0.3440 | False            |       1.0000 |             1.0000 |     0.3870 | False               |
-| rufimelo_Legal-BERTimbau-base__supervised              | dominguesm_legal-bert-base-cased-ptbr__supervised      | Legal-BERTimbau-base | Legal-BERT-STF       | 0.5656 | 0.5384 |    0.0281 |    -0.0235 |     0.0795 |    0.2746 | False            |       1.0000 |             1.0000 |     0.3197 | False               |
-| gpt-5.2_few_shot                                       | neuralmind_bert-base-portuguese-cased__supervised      | GPT-5.2              | BERTimbau-base       | 0.5945 | 0.6220 |   -0.0268 |    -0.0950 |     0.0396 |    0.4372 | False            |       1.0000 |             1.0000 |     0.4792 | False               |
-| gpt-4.1_few_shot                                       | gpt-5.1_few_shot                                       | GPT-4.1              | GPT-5.1              | 0.7170 | 0.6910 |    0.0261 |    -0.0016 |     0.0545 |    0.0636 | False            |       1.0000 |             1.0000 |     0.0843 | False               |
-| qwen2.5-72b_few_shot                                   | alfaneo_jurisbert-base-portuguese-uncased__supervised  | Qwen2.5-72B          | JurisBERT            | 0.5853 | 0.6113 |   -0.0261 |    -0.0928 |     0.0393 |    0.4504 | False            |       1.0000 |             1.0000 |     0.4906 | False               |
-| gpt-4.1_few_shot                                       | deepseek-v4-flash_few_shot                             | GPT-4.1              | DeepSeek-V4-Flash    | 0.7170 | 0.7423 |   -0.0253 |    -0.0517 |     0.0009 |    0.0600 | False            |       1.0000 |             1.0000 |     0.0802 | False               |
-| gpt-5-mini_few_shot                                    | alfaneo_bertimbaulaw-base-portuguese-cased__supervised | GPT-5-mini           | BERTimbauLaw         | 0.5310 | 0.5063 |    0.0249 |    -0.0300 |     0.0804 |    0.3746 | False            |       1.0000 |             1.0000 |     0.4187 | False               |
-| gpt-4.1-mini_few_shot                                  | raquelsilveira_legalbertpt_fp__supervised              | GPT-4.1-mini         | LegalBert-pt         | 0.6837 | 0.6603 |    0.0247 |    -0.0342 |     0.0851 |    0.4166 | False            |       1.0000 |             1.0000 |     0.4596 | False               |
-| gpt-5-mini_few_shot                                    | dccmpmgfinalisticas_GovBERT-BR__supervised             | GPT-5-mini           | GovBERT-BR           | 0.5310 | 0.5555 |   -0.0242 |    -0.0809 |     0.0304 |    0.3958 | False            |       1.0000 |             1.0000 |     0.4395 | False               |
-| neuralmind_bert-base-portuguese-cased__supervised      | neuralmind_bert-large-portuguese-cased__supervised     | BERTimbau-base       | BERTimbau-large      | 0.6220 | 0.6457 |   -0.0240 |    -0.0701 |     0.0215 |    0.2954 | False            |       1.0000 |             1.0000 |     0.3390 | False               |
+| gpt-4.1-mini_few_shot                                  | qwen2.5-72b_few_shot                                   | GPT-4.1-mini         | Qwen2.5-72B          | 0.7175 | 0.6147 |    0.1028 |     0.0628 |     0.1428 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-4.1-nano_few_shot                                  | dominguesm_legal-bert-base-cased-ptbr__supervised      | GPT-4.1-nano         | Legal-BERT-STF       | 0.4391 | 0.5384 |   -0.0978 |    -0.1628 |    -0.0321 |    0.0052 | True             |       0.2964 |             0.8892 |     0.0077 | False               |
+| gpt-4.1_few_shot                                       | neuralmind_bert-large-portuguese-cased__supervised     | GPT-4.1              | BERTimbau-large      | 0.7424 | 0.6457 |    0.0961 |     0.0350 |     0.1566 |    0.0026 | True             |       0.1664 |             0.4446 |     0.0041 | False               |
+| gpt-4.1-mini_few_shot                                  | neuralmind_bert-base-portuguese-cased__supervised      | GPT-4.1-mini         | BERTimbau-base       | 0.7175 | 0.6220 |    0.0953 |     0.0396 |     0.1505 |    0.0016 | True             |       0.1072 |             0.2736 |     0.0026 | False               |
+| bilstm-crf__supervised                                 | alfaneo_bertimbaulaw-base-portuguese-cased__supervised | BiLSTM-CRF           | BERTimbauLaw         | 0.6009 | 0.5063 |    0.0943 |     0.0333 |     0.1544 |    0.0030 | True             |       0.1860 |             0.5130 |     0.0047 | False               |
+| rufimelo_Legal-BERTimbau-base__supervised              | raquelsilveira_legalbertpt_fp__supervised              | Legal-BERTimbau-base | LegalBert-pt         | 0.5656 | 0.6603 |   -0.0934 |    -0.1493 |    -0.0352 |    0.0012 | True             |       0.0828 |             0.2052 |     0.0020 | False               |
+| neuralmind_bert-large-portuguese-cased__supervised     | dccmpmgfinalisticas_GovBERT-BR__supervised             | BERTimbau-large      | GovBERT-BR           | 0.6457 | 0.5555 |    0.0902 |     0.0413 |     0.1401 |    0.0006 | True             |       0.0438 |             0.1026 |     0.0010 | True                |
+| gpt-5-mini_few_shot                                    | alfaneo_bertimbaulaw-base-portuguese-cased__supervised | GPT-5-mini           | BERTimbauLaw         | 0.5942 | 0.5063 |    0.0872 |     0.0259 |     0.1485 |    0.0038 | True             |       0.2318 |             0.6498 |     0.0059 | False               |
+| gpt-5.1_few_shot                                       | neuralmind_bert-large-portuguese-cased__supervised     | GPT-5.1              | BERTimbau-large      | 0.7322 | 0.6457 |    0.0858 |     0.0260 |     0.1455 |    0.0056 | True             |       0.3136 |             0.9576 |     0.0083 | False               |
+| neuralmind_bert-base-portuguese-cased__supervised      | dominguesm_legal-bert-base-cased-ptbr__supervised      | BERTimbau-base       | Legal-BERT-STF       | 0.6220 | 0.5384 |    0.0841 |     0.0289 |     0.1416 |    0.0044 | True             |       0.2640 |             0.7524 |     0.0067 | False               |
+| gpt-4.1_few_shot                                       | raquelsilveira_legalbertpt_fp__supervised              | GPT-4.1              | LegalBert-pt         | 0.7424 | 0.6603 |    0.0827 |     0.0264 |     0.1409 |    0.0048 | True             |       0.2784 |             0.8208 |     0.0072 | False               |
+| rufimelo_Legal-BERTimbau-base__supervised              | neuralmind_bert-large-portuguese-cased__supervised     | Legal-BERTimbau-base | BERTimbau-large      | 0.5656 | 0.6457 |   -0.0801 |    -0.1375 |    -0.0239 |    0.0046 | True             |       0.2714 |             0.7866 |     0.0070 | False               |
+| qwen2.5-72b_few_shot                                   | dominguesm_legal-bert-base-cased-ptbr__supervised      | Qwen2.5-72B          | Legal-BERT-STF       | 0.6147 | 0.5384 |    0.0766 |     0.0123 |     0.1408 |    0.0202 | True             |       1.0000 |             1.0000 |     0.0283 | False               |
+| gpt-5-mini_few_shot                                    | gpt-5.2_few_shot                                       | GPT-5-mini           | GPT-5.2              | 0.5942 | 0.6700 |   -0.0759 |    -0.1094 |    -0.0409 |    0.0002 | True             |       0.0168 |             0.0342 |     0.0004 | True                |
+| alfaneo_jurisbert-base-portuguese-uncased__supervised  | dominguesm_legal-bert-base-cased-ptbr__supervised      | JurisBERT            | Legal-BERT-STF       | 0.6113 | 0.5384 |    0.0737 |     0.0152 |     0.1330 |    0.0152 | True             |       0.8056 |             1.0000 |     0.0218 | False               |
+| gpt-5.1_few_shot                                       | raquelsilveira_legalbertpt_fp__supervised              | GPT-5.1              | LegalBert-pt         | 0.7322 | 0.6603 |    0.0724 |     0.0160 |     0.1303 |    0.0118 | True             |       0.6372 |             1.0000 |     0.0171 | False               |
+| gpt-4.1_few_shot                                       | gpt-5.2_few_shot                                       | GPT-4.1              | GPT-5.2              | 0.7424 | 0.6700 |    0.0723 |     0.0389 |     0.1089 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-4.1-mini_few_shot                                  | neuralmind_bert-large-portuguese-cased__supervised     | GPT-4.1-mini         | BERTimbau-large      | 0.7175 | 0.6457 |    0.0713 |     0.0104 |     0.1320 |    0.0224 | True             |       1.0000 |             1.0000 |     0.0309 | False               |
+| gpt-5.2_few_shot                                       | bilstm-crf__supervised                                 | GPT-5.2              | BiLSTM-CRF           | 0.6700 | 0.6009 |    0.0689 |     0.0013 |     0.1371 |    0.0454 | True             |       1.0000 |             1.0000 |     0.0593 | False               |
+| gpt-4.1-nano_few_shot                                  | alfaneo_bertimbaulaw-base-portuguese-cased__supervised | GPT-4.1-nano         | BERTimbauLaw         | 0.4391 | 0.5063 |   -0.0665 |    -0.1213 |    -0.0105 |    0.0206 | True             |       1.0000 |             1.0000 |     0.0286 | False               |
+| neuralmind_bert-base-portuguese-cased__supervised      | dccmpmgfinalisticas_GovBERT-BR__supervised             | BERTimbau-base       | GovBERT-BR           | 0.6220 | 0.5555 |    0.0662 |     0.0194 |     0.1137 |    0.0074 | True             |       0.4070 |             1.0000 |     0.0108 | False               |
+| gpt-4.1-mini_few_shot                                  | deepseek-v4-flash_few_shot                             | GPT-4.1-mini         | DeepSeek-V4-Flash    | 0.7175 | 0.7837 |   -0.0659 |    -0.0984 |    -0.0347 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| gpt-5-mini_few_shot                                    | raquelsilveira_legalbertpt_fp__supervised              | GPT-5-mini           | LegalBert-pt         | 0.5942 | 0.6603 |   -0.0656 |    -0.1214 |    -0.0081 |    0.0258 | True             |       1.0000 |             1.0000 |     0.0353 | False               |
+| bilstm-crf__supervised                                 | dominguesm_legal-bert-base-cased-ptbr__supervised      | BiLSTM-CRF           | Legal-BERT-STF       | 0.6009 | 0.5384 |    0.0630 |     0.0000 |     0.1264 |    0.0500 | True             |       1.0000 |             1.0000 |     0.0643 | False               |
+| gpt-5.1_few_shot                                       | gpt-5.2_few_shot                                       | GPT-5.1              | GPT-5.2              | 0.7322 | 0.6700 |    0.0620 |     0.0280 |     0.0985 |    0.0000 | True             |       0.0000 |             0.0000 |     0.0000 | True                |
+| rufimelo_Legal-BERTimbau-base__supervised              | alfaneo_bertimbaulaw-base-portuguese-cased__supervised | Legal-BERTimbau-base | BERTimbauLaw         | 0.5656 | 0.5063 |    0.0593 |     0.0069 |     0.1131 |    0.0260 | True             |       1.0000 |             1.0000 |     0.0353 | False               |
+| qwen2.5-72b_few_shot                                   | dccmpmgfinalisticas_GovBERT-BR__supervised             | Qwen2.5-72B          | GovBERT-BR           | 0.6147 | 0.5555 |    0.0588 |     0.0017 |     0.1148 |    0.0440 | True             |       1.0000 |             1.0000 |     0.0579 | False               |
+| bilstm-crf__supervised                                 | raquelsilveira_legalbertpt_fp__supervised              | BiLSTM-CRF           | LegalBert-pt         | 0.6009 | 0.6603 |   -0.0585 |    -0.1272 |     0.0104 |    0.0964 | False            |       1.0000 |             1.0000 |     0.1202 | False               |
+| gpt-5.2_few_shot                                       | alfaneo_jurisbert-base-portuguese-uncased__supervised  | GPT-5.2              | JurisBERT            | 0.6700 | 0.6113 |    0.0582 |    -0.0049 |     0.1201 |    0.0704 | False            |       1.0000 |             1.0000 |     0.0892 | False               |
+| gpt-4.1-mini_few_shot                                  | raquelsilveira_legalbertpt_fp__supervised              | GPT-4.1-mini         | LegalBert-pt         | 0.7175 | 0.6603 |    0.0579 |     0.0035 |     0.1146 |    0.0386 | True             |       1.0000 |             1.0000 |     0.0512 | False               |
+| rufimelo_Legal-BERTimbau-base__supervised              | neuralmind_bert-base-portuguese-cased__supervised      | Legal-BERTimbau-base | BERTimbau-base       | 0.5656 | 0.6220 |   -0.0560 |    -0.1029 |    -0.0112 |    0.0154 | True             |       0.8056 |             1.0000 |     0.0219 | False               |
+| gpt-5-mini_few_shot                                    | dominguesm_legal-bert-base-cased-ptbr__supervised      | GPT-5-mini           | Legal-BERT-STF       | 0.5942 | 0.5384 |    0.0560 |    -0.0041 |     0.1145 |    0.0662 | False            |       1.0000 |             1.0000 |     0.0845 | False               |
+| alfaneo_jurisbert-base-portuguese-uncased__supervised  | dccmpmgfinalisticas_GovBERT-BR__supervised             | JurisBERT            | GovBERT-BR           | 0.6113 | 0.5555 |    0.0558 |     0.0055 |     0.1084 |    0.0298 | True             |       1.0000 |             1.0000 |     0.0398 | False               |
+| gpt-5.2_few_shot                                       | qwen2.5-72b_few_shot                                   | GPT-5.2              | Qwen2.5-72B          | 0.6700 | 0.6147 |    0.0553 |     0.0099 |     0.1006 |    0.0174 | True             |       0.8874 |             1.0000 |     0.0246 | False               |
+| gpt-5-mini_few_shot                                    | neuralmind_bert-large-portuguese-cased__supervised     | GPT-5-mini           | BERTimbau-large      | 0.5942 | 0.6457 |   -0.0522 |    -0.1134 |     0.0079 |    0.0906 | False            |       1.0000 |             1.0000 |     0.1139 | False               |
+| gpt-5.1_few_shot                                       | deepseek-v4-flash_few_shot                             | GPT-5.1              | DeepSeek-V4-Flash    | 0.7322 | 0.7837 |   -0.0515 |    -0.0852 |    -0.0180 |    0.0024 | True             |       0.1560 |             0.4104 |     0.0038 | False               |
+| alfaneo_bertimbaulaw-base-portuguese-cased__supervised | dccmpmgfinalisticas_GovBERT-BR__supervised             | BERTimbauLaw         | GovBERT-BR           | 0.5063 | 0.5555 |   -0.0491 |    -0.0941 |    -0.0051 |    0.0282 | True             |       1.0000 |             1.0000 |     0.0380 | False               |
+| qwen2.5-72b_few_shot                                   | rufimelo_Legal-BERTimbau-base__supervised              | Qwen2.5-72B          | Legal-BERTimbau-base | 0.6147 | 0.5656 |    0.0486 |    -0.0119 |     0.1062 |    0.1092 | False            |       1.0000 |             1.0000 |     0.1343 | False               |
+| alfaneo_jurisbert-base-portuguese-uncased__supervised  | raquelsilveira_legalbertpt_fp__supervised              | JurisBERT            | LegalBert-pt         | 0.6113 | 0.6603 |   -0.0478 |    -0.1139 |     0.0191 |    0.1628 | False            |       1.0000 |             1.0000 |     0.1933 | False               |
+| gpt-5.2_few_shot                                       | neuralmind_bert-base-portuguese-cased__supervised      | GPT-5.2              | BERTimbau-base       | 0.6700 | 0.6220 |    0.0478 |    -0.0123 |     0.1071 |    0.1218 | False            |       1.0000 |             1.0000 |     0.1477 | False               |
+| gpt-4.1-mini_few_shot                                  | gpt-5.2_few_shot                                       | GPT-4.1-mini         | GPT-5.2              | 0.7175 | 0.6700 |    0.0475 |     0.0150 |     0.0830 |    0.0028 | True             |       0.1764 |             0.4788 |     0.0044 | False               |
+| rufimelo_Legal-BERTimbau-base__supervised              | alfaneo_jurisbert-base-portuguese-uncased__supervised  | Legal-BERTimbau-base | JurisBERT            | 0.5656 | 0.6113 |   -0.0456 |    -0.1025 |     0.0117 |    0.1234 | False            |       1.0000 |             1.0000 |     0.1486 | False               |
+| bilstm-crf__supervised                                 | dccmpmgfinalisticas_GovBERT-BR__supervised             | BiLSTM-CRF           | GovBERT-BR           | 0.6009 | 0.5555 |    0.0451 |    -0.0078 |     0.0979 |    0.0970 | False            |       1.0000 |             1.0000 |     0.1202 | False               |
+| neuralmind_bert-large-portuguese-cased__supervised     | bilstm-crf__supervised                                 | BERTimbau-large      | BiLSTM-CRF           | 0.6457 | 0.6009 |    0.0451 |    -0.0108 |     0.1016 |    0.1114 | False            |       1.0000 |             1.0000 |     0.1361 | False               |
+| qwen2.5-72b_few_shot                                   | raquelsilveira_legalbertpt_fp__supervised              | Qwen2.5-72B          | LegalBert-pt         | 0.6147 | 0.6603 |   -0.0449 |    -0.1069 |     0.0189 |    0.1666 | False            |       1.0000 |             1.0000 |     0.1965 | False               |
+| gpt-4.1_few_shot                                       | deepseek-v4-flash_few_shot                             | GPT-4.1              | DeepSeek-V4-Flash    | 0.7424 | 0.7837 |   -0.0412 |    -0.0700 |    -0.0134 |    0.0018 | True             |       0.1188 |             0.3078 |     0.0029 | False               |
+| gpt-5-mini_few_shot                                    | dccmpmgfinalisticas_GovBERT-BR__supervised             | GPT-5-mini           | GovBERT-BR           | 0.5942 | 0.5555 |    0.0381 |    -0.0120 |     0.0897 |    0.1378 | False            |       1.0000 |             1.0000 |     0.1648 | False               |
+| neuralmind_bert-base-portuguese-cased__supervised      | raquelsilveira_legalbertpt_fp__supervised              | BERTimbau-base       | LegalBert-pt         | 0.6220 | 0.6603 |   -0.0374 |    -0.0955 |     0.0220 |    0.2194 | False            |       1.0000 |             1.0000 |     0.2570 | False               |
+| rufimelo_Legal-BERTimbau-base__supervised              | bilstm-crf__supervised                                 | Legal-BERTimbau-base | BiLSTM-CRF           | 0.5656 | 0.6009 |   -0.0350 |    -0.0992 |     0.0298 |    0.2842 | False            |       1.0000 |             1.0000 |     0.3218 | False               |
+| neuralmind_bert-large-portuguese-cased__supervised     | alfaneo_jurisbert-base-portuguese-uncased__supervised  | BERTimbau-large      | JurisBERT            | 0.6457 | 0.6113 |    0.0344 |    -0.0216 |     0.0915 |    0.2404 | False            |       1.0000 |             1.0000 |     0.2796 | False               |
+| qwen2.5-72b_few_shot                                   | neuralmind_bert-large-portuguese-cased__supervised     | Qwen2.5-72B          | BERTimbau-large      | 0.6147 | 0.6457 |   -0.0315 |    -0.0970 |     0.0326 |    0.3526 | False            |       1.0000 |             1.0000 |     0.3890 | False               |
+| alfaneo_bertimbaulaw-base-portuguese-cased__supervised | dominguesm_legal-bert-base-cased-ptbr__supervised      | BERTimbauLaw         | Legal-BERT-STF       | 0.5063 | 0.5384 |   -0.0312 |    -0.0881 |     0.0231 |    0.2642 | False            |       1.0000 |             1.0000 |     0.3053 | False               |
+| gpt-5-mini_few_shot                                    | neuralmind_bert-base-portuguese-cased__supervised      | GPT-5-mini           | BERTimbau-base       | 0.5942 | 0.6220 |   -0.0281 |    -0.0887 |     0.0302 |    0.3616 | False            |       1.0000 |             1.0000 |     0.3964 | False               |
+| rufimelo_Legal-BERTimbau-base__supervised              | dominguesm_legal-bert-base-cased-ptbr__supervised      | Legal-BERTimbau-base | Legal-BERT-STF       | 0.5656 | 0.5384 |    0.0281 |    -0.0235 |     0.0795 |    0.2746 | False            |       1.0000 |             1.0000 |     0.3130 | False               |
+| gpt-5-mini_few_shot                                    | rufimelo_Legal-BERTimbau-base__supervised              | GPT-5-mini           | Legal-BERTimbau-base | 0.5942 | 0.5656 |    0.0279 |    -0.0298 |     0.0832 |    0.3316 | False            |       1.0000 |             1.0000 |     0.3682 | False               |
+| gpt-4.1_few_shot                                       | gpt-4.1-mini_few_shot                                  | GPT-4.1              | GPT-4.1-mini         | 0.7424 | 0.7175 |    0.0248 |     0.0005 |     0.0510 |    0.0458 | True             |       1.0000 |             1.0000 |     0.0593 | False               |
+| neuralmind_bert-base-portuguese-cased__supervised      | neuralmind_bert-large-portuguese-cased__supervised     | BERTimbau-base       | BERTimbau-large      | 0.6220 | 0.6457 |   -0.0240 |    -0.0701 |     0.0215 |    0.2954 | False            |       1.0000 |             1.0000 |     0.3323 | False               |
+| gpt-5.2_few_shot                                       | neuralmind_bert-large-portuguese-cased__supervised     | GPT-5.2              | BERTimbau-large      | 0.6700 | 0.6457 |    0.0238 |    -0.0394 |     0.0868 |    0.4640 | False            |       1.0000 |             1.0000 |     0.5020 | False               |
 | neuralmind_bert-base-portuguese-cased__supervised      | bilstm-crf__supervised                                 | BERTimbau-base       | BiLSTM-CRF           | 0.6220 | 0.6009 |    0.0211 |    -0.0417 |     0.0844 |    0.5204 | False            |       1.0000 |             1.0000 |     0.5562 | False               |
-| qwen2.5-72b_few_shot                                   | rufimelo_Legal-BERTimbau-base__supervised              | Qwen2.5-72B          | Legal-BERTimbau-base | 0.5853 | 0.5656 |    0.0196 |    -0.0408 |     0.0780 |    0.5200 | False            |       1.0000 |             1.0000 |     0.5562 | False               |
-| dominguesm_legal-bert-base-cased-ptbr__supervised      | dccmpmgfinalisticas_GovBERT-BR__supervised             | Legal-BERT-STF       | GovBERT-BR           | 0.5384 | 0.5555 |   -0.0179 |    -0.0671 |     0.0321 |    0.4668 | False            |       1.0000 |             1.0000 |     0.5052 | False               |
-| gpt-5.2_few_shot                                       | alfaneo_jurisbert-base-portuguese-uncased__supervised  | GPT-5.2              | JurisBERT            | 0.5945 | 0.6113 |   -0.0163 |    -0.0828 |     0.0488 |    0.6292 | False            |       1.0000 |             1.0000 |     0.6642 | False               |
-| qwen2.5-72b_few_shot                                   | bilstm-crf__supervised                                 | Qwen2.5-72B          | BiLSTM-CRF           | 0.5853 | 0.6009 |   -0.0154 |    -0.0881 |     0.0564 |    0.6904 | False            |       1.0000 |             1.0000 |     0.7069 | False               |
+| gpt-5-mini_few_shot                                    | qwen2.5-72b_few_shot                                   | GPT-5-mini           | Qwen2.5-72B          | 0.5942 | 0.6147 |   -0.0207 |    -0.0609 |     0.0207 |    0.3154 | False            |       1.0000 |             1.0000 |     0.3525 | False               |
+| dominguesm_legal-bert-base-cased-ptbr__supervised      | dccmpmgfinalisticas_GovBERT-BR__supervised             | Legal-BERT-STF       | GovBERT-BR           | 0.5384 | 0.5555 |   -0.0179 |    -0.0671 |     0.0321 |    0.4668 | False            |       1.0000 |             1.0000 |     0.5020 | False               |
+| gpt-5-mini_few_shot                                    | alfaneo_jurisbert-base-portuguese-uncased__supervised  | GPT-5-mini           | JurisBERT            | 0.5942 | 0.6113 |   -0.0177 |    -0.0808 |     0.0450 |    0.5852 | False            |       1.0000 |             1.0000 |     0.6215 | False               |
+| gpt-4.1-mini_few_shot                                  | gpt-5.1_few_shot                                       | GPT-4.1-mini         | GPT-5.1              | 0.7175 | 0.7322 |   -0.0145 |    -0.0408 |     0.0102 |    0.2708 | False            |       1.0000 |             1.0000 |     0.3108 | False               |
+| qwen2.5-72b_few_shot                                   | bilstm-crf__supervised                                 | Qwen2.5-72B          | BiLSTM-CRF           | 0.6147 | 0.6009 |    0.0136 |    -0.0617 |     0.0867 |    0.7220 | False            |       1.0000 |             1.0000 |     0.7483 | False               |
 | neuralmind_bert-large-portuguese-cased__supervised     | raquelsilveira_legalbertpt_fp__supervised              | BERTimbau-large      | LegalBert-pt         | 0.6457 | 0.6603 |   -0.0134 |    -0.0716 |     0.0473 |    0.6440 | False            |       1.0000 |             1.0000 |     0.6756 | False               |
-| bilstm-crf__supervised                                 | alfaneo_jurisbert-base-portuguese-uncased__supervised  | BiLSTM-CRF           | JurisBERT            | 0.6009 | 0.6113 |   -0.0107 |    -0.0745 |     0.0525 |    0.7416 | False            |       1.0000 |             1.0000 |     0.7548 | False               |
-| neuralmind_bert-base-portuguese-cased__supervised      | alfaneo_jurisbert-base-portuguese-uncased__supervised  | BERTimbau-base       | JurisBERT            | 0.6220 | 0.6113 |    0.0104 |    -0.0395 |     0.0598 |    0.6898 | False            |       1.0000 |             1.0000 |     0.7069 | False               |
-| rufimelo_Legal-BERTimbau-base__supervised              | dccmpmgfinalisticas_GovBERT-BR__supervised             | Legal-BERTimbau-base | GovBERT-BR           | 0.5656 | 0.5555 |    0.0102 |    -0.0303 |     0.0519 |    0.6290 | False            |       1.0000 |             1.0000 |     0.6642 | False               |
-| gpt-5.2_few_shot                                       | qwen2.5-72b_few_shot                                   | GPT-5.2              | Qwen2.5-72B          | 0.5945 | 0.5853 |    0.0097 |    -0.0371 |     0.0569 |    0.6816 | False            |       1.0000 |             1.0000 |     0.7064 | False               |
-| gpt-4.1-mini_few_shot                                  | gpt-5.1_few_shot                                       | GPT-4.1-mini         | GPT-5.1              | 0.6837 | 0.6910 |   -0.0071 |    -0.0384 |     0.0236 |    0.6618 | False            |       1.0000 |             1.0000 |     0.6900 | False               |
-| gpt-5-mini_few_shot                                    | dominguesm_legal-bert-base-cased-ptbr__supervised      | GPT-5-mini           | Legal-BERT-STF       | 0.5310 | 0.5384 |   -0.0063 |    -0.0754 |     0.0608 |    0.8752 | False            |       1.0000 |             1.0000 |     0.8803 | False               |
-| gpt-5.2_few_shot                                       | bilstm-crf__supervised                                 | GPT-5.2              | BiLSTM-CRF           | 0.5945 | 0.6009 |   -0.0057 |    -0.0759 |     0.0644 |    0.8702 | False            |       1.0000 |             1.0000 |     0.8803 | False               |
-| llama-3.3-70b_few_shot                                 | ulysses-camara_legal-bert-pt-br__supervised            | Llama-3.3-70B        | LegalBERTPT-br       | 0.2856 | 0.2836 |    0.0018 |    -0.0528 |     0.0587 |    0.9646 | False            |       1.0000 |             1.0000 |     0.9646 | False               |
+| bilstm-crf__supervised                                 | alfaneo_jurisbert-base-portuguese-uncased__supervised  | BiLSTM-CRF           | JurisBERT            | 0.6009 | 0.6113 |   -0.0107 |    -0.0745 |     0.0525 |    0.7416 | False            |       1.0000 |             1.0000 |     0.7594 | False               |
+| neuralmind_bert-base-portuguese-cased__supervised      | alfaneo_jurisbert-base-portuguese-uncased__supervised  | BERTimbau-base       | JurisBERT            | 0.6220 | 0.6113 |    0.0104 |    -0.0395 |     0.0598 |    0.6898 | False            |       1.0000 |             1.0000 |     0.7192 | False               |
+| gpt-5.2_few_shot                                       | raquelsilveira_legalbertpt_fp__supervised              | GPT-5.2              | LegalBert-pt         | 0.6700 | 0.6603 |    0.0104 |    -0.0477 |     0.0694 |    0.7302 | False            |       1.0000 |             1.0000 |     0.7522 | False               |
+| gpt-4.1_few_shot                                       | gpt-5.1_few_shot                                       | GPT-4.1              | GPT-5.1              | 0.7424 | 0.7322 |    0.0103 |    -0.0130 |     0.0338 |    0.3798 | False            |       1.0000 |             1.0000 |     0.4137 | False               |
+| rufimelo_Legal-BERTimbau-base__supervised              | dccmpmgfinalisticas_GovBERT-BR__supervised             | Legal-BERTimbau-base | GovBERT-BR           | 0.5656 | 0.5555 |    0.0102 |    -0.0303 |     0.0519 |    0.6290 | False            |       1.0000 |             1.0000 |     0.6639 | False               |
+| qwen2.5-72b_few_shot                                   | neuralmind_bert-base-portuguese-cased__supervised      | Qwen2.5-72B          | BERTimbau-base       | 0.6147 | 0.6220 |   -0.0075 |    -0.0717 |     0.0564 |    0.8352 | False            |       1.0000 |             1.0000 |     0.8451 | False               |
+| gpt-5-mini_few_shot                                    | bilstm-crf__supervised                                 | GPT-5-mini           | BiLSTM-CRF           | 0.5942 | 0.6009 |   -0.0071 |    -0.0729 |     0.0594 |    0.8306 | False            |       1.0000 |             1.0000 |     0.8451 | False               |
+| llama-3.3-70b_few_shot                                 | ulysses-camara_legal-bert-pt-br__supervised            | Llama-3.3-70B        | LegalBERTPT-br       | 0.2874 | 0.2836 |    0.0036 |    -0.0511 |     0.0604 |    0.9084 | False            |       1.0000 |             1.0000 |     0.9137 | False               |
+| qwen2.5-72b_few_shot                                   | alfaneo_jurisbert-base-portuguese-uncased__supervised  | Qwen2.5-72B          | JurisBERT            | 0.6147 | 0.6113 |    0.0029 |    -0.0662 |     0.0701 |    0.9310 | False            |       1.0000 |             1.0000 |     0.9310 | False               |
 
 ## K. Sensibilidade ao limiar de IoU (p43a)
 
@@ -733,30 +732,30 @@ Como as entidades são longas, IoU ≥ 0,5 é permissivo. Span F1 **macro** por 
 | BERTimbau-large      | 0.6757 | 0.6457 | 0.6059 |  0.5431 |
 | BERTimbauLaw         | 0.5225 | 0.5063 | 0.4673 |  0.4188 |
 | BiLSTM-CRF           | 0.6383 | 0.6009 | 0.5414 |  0.3786 |
-| DeepSeek-V4-Flash    | 0.7959 | 0.7423 | 0.6987 |  0.3230 |
-| GPT-4.1              | 0.7661 | 0.7170 | 0.6536 |  0.2589 |
-| GPT-4.1-mini         | 0.7285 | 0.6837 | 0.6231 |  0.2565 |
-| GPT-4.1-nano         | 0.4538 | 0.3953 | 0.3406 |  0.1025 |
-| GPT-5-mini           | 0.5618 | 0.5310 | 0.4970 |  0.1193 |
-| GPT-5.1              | 0.7244 | 0.6910 | 0.6336 |  0.2687 |
-| GPT-5.2              | 0.6480 | 0.5945 | 0.5383 |  0.2036 |
+| DeepSeek-V4-Flash    | 0.8246 | 0.7837 | 0.7449 |  0.3753 |
+| GPT-4.1              | 0.7891 | 0.7424 | 0.6863 |  0.2992 |
+| GPT-4.1-mini         | 0.7563 | 0.7175 | 0.6639 |  0.3086 |
+| GPT-4.1-nano         | 0.4939 | 0.4391 | 0.3804 |  0.1158 |
+| GPT-5-mini           | 0.6173 | 0.5942 | 0.5645 |  0.1525 |
+| GPT-5.1              | 0.7631 | 0.7322 | 0.6782 |  0.3160 |
+| GPT-5.2              | 0.7054 | 0.6700 | 0.6169 |  0.2409 |
 | GovBERT-BR           | 0.5626 | 0.5555 | 0.5155 |  0.4635 |
 | JurisBERT            | 0.6482 | 0.6113 | 0.5657 |  0.4932 |
 | Legal-BERT-STF       | 0.5671 | 0.5384 | 0.5233 |  0.4715 |
 | Legal-BERTimbau-base | 0.5822 | 0.5656 | 0.5349 |  0.4569 |
 | LegalBERTPT-br       | 0.2919 | 0.2836 | 0.2763 |  0.2680 |
 | LegalBert-pt         | 0.6999 | 0.6603 | 0.6319 |  0.5734 |
-| Llama-3.3-70B        | 0.3067 | 0.2856 | 0.2546 |  0.0600 |
-| Qwen2.5-72B          | 0.6238 | 0.5853 | 0.5402 |  0.2372 |
+| Llama-3.3-70B        | 0.3067 | 0.2874 | 0.2564 |  0.0705 |
+| Qwen2.5-72B          | 0.6528 | 0.6147 | 0.5731 |  0.2803 |
 
 **Estabilidade do ranking** (Spearman do ranking de cada limiar vs. IoU = 0,5, no macro e no micro):
 
 | iou_threshold   |   spearman_macro_vs_0.5 |   spearman_micro_vs_0.5 |
 |:----------------|------------------------:|------------------------:|
-| 0.3             |                  0.9947 |                  0.9544 |
+| 0.3             |                  0.9982 |                  0.9509 |
 | 0.5             |                  1.0000 |                  1.0000 |
-| 0.7             |                  0.9930 |                  0.9789 |
-| exact           |                  0.3368 |                  0.6123 |
+| 0.7             |                  0.9930 |                  0.9860 |
+| exact           |                  0.2123 |                  0.4439 |
 
 ## L. Métrica restrita aos documentos informativos (p41b)
 
@@ -764,15 +763,15 @@ Dos 861 documentos, 629 não têm entidade gold e só contribuem com falsos posi
 
 | model                                                  | display              |   n_docs_full |   n_docs_informative |   span_f1_macro_full |   span_f1_macro_informative |   delta_span_f1_macro |   span_f1_full |   span_f1_informative |   delta_span_f1 |   span_precision_full |   span_precision_informative |   delta_span_precision |   span_recall_full |   span_recall_informative |
 |:-------------------------------------------------------|:---------------------|--------------:|---------------------:|---------------------:|----------------------------:|----------------------:|---------------:|----------------------:|----------------:|----------------------:|-----------------------------:|-----------------------:|-------------------:|--------------------------:|
-| deepseek-v4-flash_few_shot                             | DeepSeek-V4-Flash    |           861 |                  231 |               0.7423 |                      0.8066 |                0.0643 |         0.7696 |                0.8147 |          0.0452 |                0.7390 |                       0.8271 |                 0.0881 |             0.8027 |                    0.8027 |
-| gpt-4.1_few_shot                                       | GPT-4.1              |           861 |                  231 |               0.7170 |                      0.8047 |                0.0877 |         0.7365 |                0.7987 |          0.0622 |                0.6578 |                       0.7640 |                 0.1062 |             0.8367 |                    0.8367 |
-| gpt-5.1_few_shot                                       | GPT-5.1              |           861 |                  231 |               0.6910 |                      0.7778 |                0.0868 |         0.7046 |                0.7729 |          0.0683 |                0.6211 |                       0.7357 |                 0.1145 |             0.8141 |                    0.8141 |
-| gpt-4.1-mini_few_shot                                  | GPT-4.1-mini         |           861 |                  231 |               0.6837 |                      0.7717 |                0.0880 |         0.6986 |                0.7742 |          0.0756 |                0.5962 |                       0.7154 |                 0.1192 |             0.8435 |                    0.8435 |
-| gpt-5.2_few_shot                                       | GPT-5.2              |           861 |                  231 |               0.5945 |                      0.6794 |                0.0848 |         0.6198 |                0.6990 |          0.0792 |                0.5057 |                       0.6204 |                 0.1147 |             0.8005 |                    0.8005 |
+| deepseek-v4-flash_few_shot                             | DeepSeek-V4-Flash    |           861 |                  231 |               0.7837 |                      0.8518 |                0.0681 |         0.8109 |                0.8585 |          0.0476 |                0.7787 |                       0.8715 |                 0.0928 |             0.8458 |                    0.8458 |
+| gpt-4.1_few_shot                                       | GPT-4.1              |           861 |                  231 |               0.7424 |                      0.8337 |                0.0914 |         0.7645 |                0.8290 |          0.0645 |                0.6827 |                       0.7930 |                 0.1103 |             0.8685 |                    0.8685 |
+| gpt-5.1_few_shot                                       | GPT-5.1              |           861 |                  231 |               0.7322 |                      0.8247 |                0.0925 |         0.7458 |                0.8181 |          0.0723 |                0.6574 |                       0.7787 |                 0.1212 |             0.8617 |                    0.8617 |
+| gpt-4.1-mini_few_shot                                  | GPT-4.1-mini         |           861 |                  231 |               0.7175 |                      0.8093 |                0.0918 |         0.7343 |                0.8137 |          0.0795 |                0.6266 |                       0.7519 |                 0.1253 |             0.8866 |                    0.8866 |
+| gpt-5.2_few_shot                                       | GPT-5.2              |           861 |                  231 |               0.6700 |                      0.7701 |                0.1000 |         0.6760 |                0.7624 |          0.0863 |                0.5516 |                       0.6766 |                 0.1250 |             0.8730 |                    0.8730 |
+| gpt-5-mini_few_shot                                    | GPT-5-mini           |           861 |                  231 |               0.5942 |                      0.7239 |                0.1297 |         0.4595 |                0.6700 |          0.2105 |                0.3069 |                       0.5289 |                 0.2219 |             0.9138 |                    0.9138 |
+| qwen2.5-72b_few_shot                                   | Qwen2.5-72B          |           861 |                  231 |               0.6147 |                      0.6800 |                0.0653 |         0.6595 |                0.7232 |          0.0637 |                0.5800 |                       0.6864 |                 0.1063 |             0.7642 |                    0.7642 |
 | raquelsilveira_legalbertpt_fp__supervised              | LegalBert-pt         |           861 |                  231 |               0.6603 |                      0.6691 |                0.0088 |         0.7391 |                0.7477 |          0.0086 |                0.8475 |                       0.8705 |                 0.0230 |             0.6553 |                    0.6553 |
 | neuralmind_bert-large-portuguese-cased__supervised     | BERTimbau-large      |           861 |                  231 |               0.6457 |                      0.6681 |                0.0224 |         0.7248 |                0.7419 |          0.0171 |                0.7786 |                       0.8192 |                 0.0405 |             0.6780 |                    0.6780 |
-| gpt-5-mini_few_shot                                    | GPT-5-mini           |           861 |                  231 |               0.5310 |                      0.6514 |                0.1204 |         0.4162 |                0.6068 |          0.1906 |                0.2780 |                       0.4790 |                 0.2010 |             0.8277 |                    0.8277 |
-| qwen2.5-72b_few_shot                                   | Qwen2.5-72B          |           861 |                  231 |               0.5853 |                      0.6480 |                0.0628 |         0.6243 |                0.6845 |          0.0603 |                0.5491 |                       0.6497 |                 0.1006 |             0.7234 |                    0.7234 |
 | neuralmind_bert-base-portuguese-cased__supervised      | BERTimbau-base       |           861 |                  231 |               0.6220 |                      0.6389 |                0.0170 |         0.7217 |                0.7380 |          0.0164 |                0.7898 |                       0.8300 |                 0.0403 |             0.6644 |                    0.6644 |
 | bilstm-crf__supervised                                 | BiLSTM-CRF           |           861 |                  231 |               0.6009 |                      0.6330 |                0.0321 |         0.6735 |                0.6977 |          0.0242 |                0.7774 |                       0.8452 |                 0.0677 |             0.5941 |                    0.5941 |
 | alfaneo_jurisbert-base-portuguese-uncased__supervised  | JurisBERT            |           861 |                  231 |               0.6113 |                      0.6326 |                0.0213 |         0.6767 |                0.6933 |          0.0166 |                0.7599 |                       0.8030 |                 0.0431 |             0.6100 |                    0.6100 |
@@ -780,8 +779,8 @@ Dos 861 documentos, 629 não têm entidade gold e só contribuem com falsos posi
 | dccmpmgfinalisticas_GovBERT-BR__supervised             | GovBERT-BR           |           861 |                  231 |               0.5555 |                      0.5598 |                0.0043 |         0.7044 |                0.7083 |          0.0039 |                0.9011 |                       0.9140 |                 0.0129 |             0.5782 |                    0.5782 |
 | dominguesm_legal-bert-base-cased-ptbr__supervised      | Legal-BERT-STF       |           861 |                  231 |               0.5384 |                      0.5423 |                0.0038 |         0.6773 |                0.6827 |          0.0054 |                0.8173 |                       0.8333 |                 0.0160 |             0.5782 |                    0.5782 |
 | alfaneo_bertimbaulaw-base-portuguese-cased__supervised | BERTimbauLaw         |           861 |                  231 |               0.5063 |                      0.5085 |                0.0021 |         0.6866 |                0.6903 |          0.0037 |                0.8547 |                       0.8664 |                 0.0117 |             0.5737 |                    0.5737 |
-| gpt-4.1-nano_few_shot                                  | GPT-4.1-nano         |           861 |                  231 |               0.3953 |                      0.4277 |                0.0324 |         0.4341 |                0.4867 |          0.0526 |                0.3544 |                       0.4303 |                 0.0759 |             0.5601 |                    0.5601 |
-| llama-3.3-70b_few_shot                                 | Llama-3.3-70B        |           861 |                  231 |               0.2856 |                      0.3031 |                0.0175 |         0.3558 |                0.3669 |          0.0112 |                0.6066 |                       0.6768 |                 0.0703 |             0.2517 |                    0.2517 |
+| gpt-4.1-nano_few_shot                                  | GPT-4.1-nano         |           861 |                  231 |               0.4391 |                      0.4755 |                0.0363 |         0.4640 |                0.5202 |          0.0562 |                0.3788 |                       0.4599 |                 0.0812 |             0.5986 |                    0.5986 |
+| llama-3.3-70b_few_shot                                 | Llama-3.3-70B        |           861 |                  231 |               0.2874 |                      0.3049 |                0.0175 |         0.3590 |                0.3702 |          0.0113 |                0.6120 |                       0.6829 |                 0.0709 |             0.2540 |                    0.2540 |
 | ulysses-camara_legal-bert-pt-br__supervised            | LegalBERTPT-br       |           861 |                  231 |               0.2836 |                      0.2850 |                0.0014 |         0.5008 |                0.5032 |          0.0024 |                0.8196 |                       0.8325 |                 0.0129 |             0.3605 |                    0.3605 |
 
 ## M. Taxa de falha de alinhamento string→offset (p34)

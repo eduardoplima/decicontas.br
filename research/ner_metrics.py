@@ -172,16 +172,97 @@ def bio_to_char_spans(
     return spans
 
 
+def _span_text_of(span: dict[str, Any]) -> str | None:
+    """The predicted entity string carried by a ``NERDecisao`` item (any class)."""
+    return (
+        span.get("descricao_multa")
+        or span.get("descricao_obrigacao")
+        or span.get("descricao_ressarcimento")
+        or span.get("descricao_recomendacao")
+    )
+
+
+def _literal_occurrences(text: str, span_text: str) -> list[int]:
+    """Start offsets of every literal occurrence of ``span_text`` in ``text``."""
+    out: list[int] = []
+    pos = text.find(span_text)
+    while pos >= 0:
+        out.append(pos)
+        pos = text.find(span_text, pos + 1)
+    return out
+
+
+def _fuzzy_anchor(
+    text: str, span_text: str, window_size: int, step_size: int, min_score: int
+) -> int | None:
+    """Legacy fuzzy anchor: ``window.find(first word)`` inside the best-scoring window.
+
+    Returns ``None`` when no window reaches ``min_score``. The anchor is negative
+    when the first word is absent from the winning window (e.g. strings longer
+    than the window); callers drop those spans, as the legacy aligner did.
+    """
+    words = span_text.split()
+    first_word = words[0] if words else None
+    best_score, best_pos = 0, -1
+    for start in range(0, len(text), step_size):
+        window = text[start : start + window_size]
+        score = fuzz.partial_ratio(span_text, window)
+        if score > best_score and score >= min_score:
+            best_score = score
+            best_pos = start + window.find(first_word) if first_word is not None else start
+    return best_pos if best_score >= min_score else None
+
+
+def locate_span(
+    text: str,
+    span_text: str,
+    window_size: int = 500,
+    step_size: int = 100,
+    min_score: int = 80,
+    exact_first: bool = True,
+) -> tuple[int, int] | None:
+    """Locate a predicted entity string in its document; ``(start, end)`` or ``None``.
+
+    Strings that are not literal substrings go through the legacy fuzzy search:
+    a sliding window of ``window_size`` characters (step ``step_size``) scored
+    with ``rapidfuzz.fuzz.partial_ratio`` and gated at ``min_score``; the span
+    starts at the first occurrence of the string's first word inside the
+    winning window and ends ``len(span_text)`` characters later. With
+    ``exact_first=False`` every string takes that path (the legacy aligner).
+
+    Exact-first (the default since the advisor review): a string that occurs
+    literally in the document is placed at that occurrence — the only one when
+    it is unique; when it repeats, the occurrence nearest the legacy fuzzy
+    anchor. Only strings that are not literal substrings fall back to the
+    fuzzy search, so paraphrased outputs are scored exactly as before.
+    """
+    if exact_first:
+        occurrences = _literal_occurrences(text, span_text)
+        if len(occurrences) == 1:
+            return occurrences[0], occurrences[0] + len(span_text)
+        if len(occurrences) > 1:
+            anchor = _fuzzy_anchor(text, span_text, window_size, step_size, min_score)
+            reference = anchor if anchor is not None and anchor >= 0 else 0
+            start = min(occurrences, key=lambda pos: (abs(pos - reference), pos))
+            return start, start + len(span_text)
+    anchor = _fuzzy_anchor(text, span_text, window_size, step_size, min_score)
+    if anchor is None or anchor < 0:
+        return None
+    return anchor, anchor + len(span_text)
+
+
 def convert_pred_to_golden_format(
     row: pd.Series | dict[str, Any],
     window_size: int = 500,
     step_size: int = 100,
     min_score: int = 80,
+    exact_first: bool = True,
 ) -> list[dict[str, Any]]:
-    """Locate predicted NER span strings inside the source text with fuzzy matching.
+    """Locate predicted NER span strings inside the source text (see :func:`locate_span`).
 
     Produces entries in the same shape as Label Studio's `golden` field:
-    `{"start", "end", "text", "labels"}`.
+    `{"start", "end", "text", "labels"}`. Strings that cannot be located are
+    dropped (see :func:`count_alignment_failures` for the failure rate).
     """
     pred_spans: list[dict[str, Any]] = []
     text = row["text"]
@@ -190,33 +271,20 @@ def convert_pred_to_golden_format(
         for span in spans or []:
             if not isinstance(span, dict):
                 continue
-            span_text = (
-                span.get("descricao_multa")
-                or span.get("descricao_obrigacao")
-                or span.get("descricao_ressarcimento")
-                or span.get("descricao_recomendacao")
-            )
+            span_text = _span_text_of(span)
             if not span_text:
                 continue
-            best_score, best_pos, best_substring = 0, -1, ""
-            for start in range(0, len(text), step_size):
-                window = text[start : start + window_size]
-                score = fuzz.partial_ratio(span_text, window)
-                if score > best_score and score >= min_score:
-                    best_score = score
-                    best_pos = (
-                        start + window.find(span_text.split()[0]) if span_text.split() else start
-                    )
-                    best_substring = span_text
-            if best_score >= min_score and best_pos >= 0:
-                pred_spans.append(
-                    {
-                        "start": best_pos,
-                        "end": best_pos + len(best_substring),
-                        "text": best_substring,
-                        "labels": [DICT_LABELS[label_type]],
-                    }
-                )
+            located = locate_span(text, span_text, window_size, step_size, min_score, exact_first)
+            if located is None:
+                continue
+            pred_spans.append(
+                {
+                    "start": located[0],
+                    "end": located[1],
+                    "text": span_text,
+                    "labels": [DICT_LABELS[label_type]],
+                }
+            )
     return pred_spans
 
 
@@ -421,15 +489,15 @@ def count_alignment_failures(
     window_size: int = 500,
     step_size: int = 100,
     min_score: int = 80,
+    exact_first: bool = True,
 ) -> tuple[int, int, int]:
     """Count how many predicted span strings fail to align to the source text.
 
-    Mirrors the fuzzy-matching logic of :func:`convert_pred_to_golden_format`
-    (``rapidfuzz.fuzz.partial_ratio`` over a sliding window, ``min_score``
-    gate) but, instead of silently dropping unlocatable strings, returns
+    Uses the same :func:`locate_span` as :func:`convert_pred_to_golden_format`
+    but, instead of silently dropping unlocatable strings, returns
     ``(n_total, n_aligned, n_failed)`` so the alignment failure rate can be
     reported per model (p34). A "failure" is a non-empty predicted
-    ``descricao_*`` string that no window matches at or above ``min_score``.
+    ``descricao_*`` string that the aligner cannot place in the document.
     """
     text = row["text"]
     pred = row["pred"]
@@ -440,25 +508,11 @@ def count_alignment_failures(
         for span in spans or []:
             if not isinstance(span, dict):
                 continue
-            span_text = (
-                span.get("descricao_multa")
-                or span.get("descricao_obrigacao")
-                or span.get("descricao_ressarcimento")
-                or span.get("descricao_recomendacao")
-            )
+            span_text = _span_text_of(span)
             if not span_text:
                 continue
             n_total += 1
-            best_score, best_pos = 0, -1
-            for start in range(0, len(text), step_size):
-                window = text[start : start + window_size]
-                score = fuzz.partial_ratio(span_text, window)
-                if score > best_score and score >= min_score:
-                    best_score = score
-                    best_pos = (
-                        start + window.find(span_text.split()[0]) if span_text.split() else start
-                    )
-            if best_score >= min_score and best_pos >= 0:
+            if locate_span(text, span_text, window_size, step_size, min_score, exact_first) is not None:
                 n_aligned += 1
     return n_total, n_aligned, n_total - n_aligned
 

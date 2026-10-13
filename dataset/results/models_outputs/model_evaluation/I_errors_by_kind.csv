@@ -1,8 +1,7 @@
 kind,count
-match,354
+match,373
 FP,64
-boundary,46
-FN_overlap,46
-FN_no_pred,41
-duplicate,11
+FN_no_pred,38
+boundary,38
+FN_overlap,30
 type_error,4
