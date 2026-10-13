@@ -1,0 +1,10 @@
+model,n_strings,literal,literal_pct,literal_unique,literal_unique_pct,fuzzy_only,fuzzy_only_pct,not_found,not_found_pct,aligner_same_bounds,aligner_same_bounds_pct,aligner_diff_bounds,aligner_diff_token_bounds
+gpt-4.1-nano_few_shot,707,432,61.1,432,61.1,265,37.48,10,1.41,350,81.02,82,82
+qwen2.5-72b_few_shot,584,387,66.27,387,66.27,194,33.22,3,0.51,319,82.43,68,67
+gpt-5-mini_few_shot,1315,1267,96.35,1265,96.2,46,3.5,2,0.15,1056,83.35,211,203
+gpt-4.1_few_shot,561,482,85.92,482,85.92,79,14.08,0,0.0,404,83.82,78,77
+gpt-4.1-mini_few_shot,624,595,95.35,593,95.03,29,4.65,0,0.0,486,81.68,109,105
+gpt-5.1_few_shot,578,566,97.92,566,97.92,12,2.08,0,0.0,447,78.98,119,113
+gpt-5.2_few_shot,698,662,94.84,661,94.7,36,5.16,0,0.0,524,79.15,138,134
+deepseek-v4-flash_few_shot,479,395,82.46,395,82.46,84,17.54,0,0.0,323,81.77,72,71
+llama-3.3-70b_few_shot,183,76,41.53,76,41.53,107,58.47,0,0.0,59,77.63,17,17
