@@ -1,0 +1,4 @@
+reference,best_llm,best_supervised,diff_macro,ci_lower,ci_upper,p_value
+anotador1,DeepSeek-V4-Flash,LegalBert-pt,0.12343205448209948,0.06546230386074463,0.18342018640654384,0.0002
+anotador2,DeepSeek-V4-Flash,LegalBert-pt,0.09283586953308043,0.02681951103478998,0.16336745919858356,0.0064
+anotador3,DeepSeek-V4-Flash,LegalBert-pt,0.07002094727289798,9.56904235016997e-05,0.14413228895523786,0.0496

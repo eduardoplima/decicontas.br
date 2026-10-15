@@ -21,8 +21,13 @@ com o mesmo pareamento. Como o pareamento exige rótulo igual, ele se decompõe
 exatamente por classe, e a média dos quatro F1 reproduz o macro do CSV
 agregado (a checagem é impressa ao final).
 
+Com ``--bootstrap``, grava ``reference_sensitivity_contrast_ci.csv``: o IC de
+95% do contraste central de cada referência, por bootstrap pareado por
+documento do F1 macro (o mesmo de ``research.release.bootstrap_significance``).
+
 Uso:
     uv run python scripts/reference_sensitivity.py
+    uv run python scripts/reference_sensitivity.py --bootstrap
     uv run python scripts/reference_sensitivity.py --per-class
     uv run python scripts/reference_sensitivity.py --per-class --models \\
         deepseek-v4-flash_few_shot raquelsilveira_legalbertpt_fp__supervised
@@ -35,6 +40,7 @@ import json
 import logging
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 from scipy.stats import spearmanr
 
@@ -42,6 +48,7 @@ from research.dataset_io import collapse_label
 from research.ner_metrics import bipartite_greedy_match
 from research.release import paths
 from research.release.annotator_agreement import ANNOTATOR_IDS, load_annotator
+from research.release.bootstrap_significance import paired_bootstrap_diff_macro
 from research.release.evaluation_numbers import (
     DISPLAY_NAMES,
     MODELS,
@@ -86,31 +93,53 @@ def reference_token_spans() -> dict[str, dict[int, list[tuple[int, int, str]]]]:
     return out
 
 
-def per_class_counts(
+def per_doc_class_counts(
     pred_by_doc: dict[int, list], gold_by_doc: dict[int, list]
-) -> dict[str, dict[str, int]]:
-    """``{classe: {tp, fp, fn}}`` das predições contra uma referência.
+) -> dict[str, dict[str, np.ndarray]]:
+    """``{classe: {tp, fp, fn}}`` por documento, na ordem crescente do índice.
 
     Pareamento guloso bipartido com IoU >= 0,5 e rótulo igual, documento a
-    documento. É a única função que pareia; ``score_against`` e
-    ``per_class_scores`` só agregam estas contagens, de modo que o macro
-    reportado e a decomposição por classe nunca podem divergir.
+    documento. É a única função que pareia; ``per_class_counts`` soma estas
+    contagens e o bootstrap pareado reamostra suas posições, de modo que o
+    macro reportado, a decomposição por classe e os intervalos nunca podem
+    divergir. Dois modelos pontuados contra a mesma referência compartilham a
+    ordem das posições, o que o bootstrap pareado exige.
     """
-    per_class = {lab: {"tp": 0, "fp": 0, "fn": 0} for lab in ENTITY_LABELS}
-    for idx, gold in gold_by_doc.items():
+    order = sorted(gold_by_doc)
+    n = len(order)
+    counts = {
+        lab: {k: np.zeros(n, dtype=np.int32) for k in ("tp", "fp", "fn")}
+        for lab in ENTITY_LABELS
+    }
+    for pos, idx in enumerate(order):
+        gold = gold_by_doc[idx]
         pred = pred_by_doc.get(idx, [])
         matched = bipartite_greedy_match(pred, gold, iou_threshold=IOU)
         matched_p = {p for p, _ in matched}
         matched_g = {g for _, g in matched}
         for p_i, _ in matched:
-            per_class[pred[p_i][2]]["tp"] += 1
+            counts[pred[p_i][2]]["tp"][pos] += 1
         for i, sp in enumerate(pred):
             if i not in matched_p:
-                per_class[sp[2]]["fp"] += 1
+                counts[sp[2]]["fp"][pos] += 1
         for i, sp in enumerate(gold):
             if i not in matched_g:
-                per_class[sp[2]]["fn"] += 1
-    return per_class
+                counts[sp[2]]["fn"][pos] += 1
+    return counts
+
+
+def per_class_counts(
+    pred_by_doc: dict[int, list], gold_by_doc: dict[int, list]
+) -> dict[str, dict[str, int]]:
+    """``{classe: {tp, fp, fn}}`` das predições contra uma referência.
+
+    Soma de :func:`per_doc_class_counts`; ``score_against`` e
+    ``per_class_scores`` só agregam estas contagens.
+    """
+    per_doc = per_doc_class_counts(pred_by_doc, gold_by_doc)
+    return {
+        lab: {k: int(arr.sum()) for k, arr in c.items()} for lab, c in per_doc.items()
+    }
 
 
 def score_against(pred_by_doc: dict[int, list], gold_by_doc: dict[int, list]) -> dict:
@@ -256,6 +285,41 @@ def per_class_scores(models: list[str] | None = None) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def contrast_cis(scores: pd.DataFrame) -> pd.DataFrame:
+    """IC de 95% do contraste central (melhor LLM × melhor supervisionado) por referência.
+
+    Bootstrap pareado por documento do F1 macro (B = 10.000, semente 42),
+    o mesmo de :mod:`research.release.bootstrap_significance`. Os dois modelos
+    de cada referência são os de maior macro em ``scores`` (o DataFrame de
+    :func:`run`), de modo que o contraste é o da tabela de resumo. A diferença
+    reportada é a observada; o IC vem dos percentis das reamostragens.
+    """
+    refs = reference_token_spans()
+    rows = []
+    for ref_name in ANNOTATOR_IDS:
+        sub = scores[scores.reference == ref_name].set_index("model")
+        best_llm = sub[~sub.is_supervised].span_f1_macro.idxmax()
+        best_sup = sub[sub.is_supervised].span_f1_macro.idxmax()
+        preds = predictions_by_doc([best_llm, best_sup])
+        gold = refs[ref_name]
+        cc_llm = per_doc_class_counts(preds[best_llm], gold)
+        cc_sup = per_doc_class_counts(preds[best_sup], gold)
+        res = paired_bootstrap_diff_macro(cc_llm, cc_sup)
+        rows.append(
+            {
+                "reference": ref_name,
+                "best_llm": DISPLAY_NAMES.get(best_llm, best_llm),
+                "best_supervised": DISPLAY_NAMES.get(best_sup, best_sup),
+                "diff_macro": sub.loc[best_llm, "span_f1_macro"]
+                - sub.loc[best_sup, "span_f1_macro"],
+                "ci_lower": res["ci_lower"],
+                "ci_upper": res["ci_upper"],
+                "p_value": res["p_value"],
+            }
+        )
+    return pd.DataFrame(rows)
+
+
 def check_macro_recomposition(per_class: pd.DataFrame, scores: pd.DataFrame) -> float:
     """Maior |média dos F1 por classe − span_f1_macro| sobre (referência, modelo).
 
@@ -285,9 +349,20 @@ def main() -> None:
         metavar="MODEL",
         help="restringe o CSV por classe a estes modelos (chaves dos JSONs); padrão: todos",
     )
+    p.add_argument(
+        "--bootstrap",
+        action="store_true",
+        help="grava também reference_sensitivity_contrast_ci.csv (IC do contraste central)",
+    )
     args = p.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(message)s")
     scores = run(args.out_dir)
+    if args.bootstrap:
+        cis = contrast_cis(scores)
+        out_path = args.out_dir / "reference_sensitivity_contrast_ci.csv"
+        cis.to_csv(out_path, index=False)
+        print("\n=== Contraste central por referência, IC 95% (bootstrap pareado) ===")
+        print(cis.round(4).to_string(index=False))
     if not args.per_class:
         return
 
