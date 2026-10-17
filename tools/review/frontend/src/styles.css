@@ -1,0 +1,41 @@
+:root { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; color: #222; }
+body { margin: 0; background: #fafafa; }
+.app { display: flex; flex-direction: column; height: 100vh; }
+header { display: flex; align-items: center; gap: 24px; padding: 8px 16px; background: #fff; border-bottom: 1px solid #ddd; }
+header h1 { font-size: 16px; margin: 0; }
+nav button { margin-right: 4px; }
+button { padding: 4px 10px; border: 1px solid #bbb; border-radius: 4px; background: #fff; cursor: pointer; }
+button.active { background: #333; color: #fff; }
+button.yes.on { background: #2e7d32; color: #fff; border-color: #2e7d32; }
+button.no.on { background: #c62828; color: #fff; border-color: #c62828; }
+button.finish { background: #1565c0; color: #fff; border-color: #1565c0; margin-left: auto; }
+.totals { margin-left: auto; color: #555; }
+.done { color: #2e7d32; }
+.error { color: #c62828; padding: 4px 16px; }
+.hint { color: #777; font-size: 12px; }
+.docs { display: flex; flex: 1; min-height: 0; }
+aside { width: 220px; overflow: auto; border-right: 1px solid #ddd; background: #fff; padding: 8px; }
+aside ul { list-style: none; margin: 8px 0 0; padding: 0; }
+aside li { display: flex; justify-content: space-between; padding: 3px 6px; cursor: pointer; border-radius: 4px; }
+aside li.active { background: #e3f2fd; }
+.badge { color: #777; font-size: 12px; }
+main { flex: 1; overflow: auto; padding: 12px 20px; }
+.toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.text { white-space: pre-wrap; line-height: 1.5; background: #fff; border: 1px solid #ddd; padding: 12px; border-radius: 4px; max-height: 45vh; overflow: auto; }
+mark { padding: 0 2px; border-radius: 2px; }
+mark.yes { background: #c8e6c9; }
+mark.no { background: #ffcdd2; text-decoration: line-through; }
+mark.pending { background: #fff59d; }
+table.mentions { margin-top: 10px; border-collapse: collapse; width: 100%; }
+table.mentions td { padding: 4px 8px; border-bottom: 1px solid #eee; }
+table.mentions tr.pending td.name { font-weight: 600; }
+table.mentions td.sources { color: #777; font-size: 12px; }
+.manual { margin-top: 10px; display: flex; gap: 8px; align-items: center; }
+.manual input { flex: 1; max-width: 480px; padding: 4px 8px; }
+.persons { flex: 1; overflow: auto; padding: 12px 20px; }
+.person { background: #fff; border: 1px solid #ddd; border-radius: 4px; padding: 8px 12px; margin-bottom: 8px; }
+.person .head { display: flex; align-items: center; gap: 10px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.chip { border: 1px solid #ccc; border-radius: 12px; padding: 2px 8px; font-size: 13px; cursor: pointer; }
+.chip.sel { background: #e3f2fd; border-color: #1565c0; }
+.chip small { color: #777; margin-left: 4px; }

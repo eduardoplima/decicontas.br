@@ -36,21 +36,21 @@ APPLIED_DECISIONS = frozenset({"accept", "custom"})
 
 # Residual fragments left by ``accept`` decisions whose cleanlab group did not
 # cover the whole span, adjudicated by hand and removed. Keyed by
-# ``(document_id, char_start, char_end, label)`` so that a change upstream stops
-# matching and is re-flagged by :func:`find_suspicious_spans` instead of being
-# dropped silently.
+# ``(document_id, first_token, last_token, label)`` — token indices are the
+# unit of the dataset and survive edits to the text, while a change in the
+# labels upstream stops matching and is re-flagged by
+# :func:`find_suspicious_spans` instead of being dropped silently.
 #
-#   90  "Ramalho Cortez, dos termos desta Decisao." — tail of a summons
-#       ("Intime-se ... na pessoa da sua atual gestora, Sra. Lyane Ramalho
-#       Cortez, dos termos desta Decisao"), not a registrable recommendation,
-#       and it names a private individual.
-#   371 "no item" — leftover of a MULTA the reviewer deleted. The decision
-#       *excludes* a fine ("excluindo a multa imposta no item a"), so the
-#       document carries no MULTA at all.
+#   90  tokens 338–343, "<surname>, dos termos desta Decisao." — tail of a
+#       summons ("Intime-se ... na pessoa da sua atual gestora, Sra. ..., dos
+#       termos desta Decisao"), not a registrable recommendation.
+#   371 tokens 44–45, "no item" — leftover of a MULTA the reviewer deleted. The
+#       decision *excludes* a fine ("excluindo a multa imposta no item a"), so
+#       the document carries no MULTA at all.
 ADJUDICATED_SPAN_DELETIONS: frozenset[tuple[int, int, int, str]] = frozenset(
     {
-        (90, 2162, 2203, "RECOMENDACAO"),
-        (371, 309, 316, "MULTA"),
+        (90, 338, 343, "RECOMENDACAO"),
+        (371, 44, 45, "MULTA"),
     }
 )
 
@@ -160,10 +160,12 @@ def apply_corrections(
             key = (doc.document_id, idx)
             if key in overrides:
                 tok.bio = overrides[key]
+        first = {t.char_start: i for i, t in enumerate(new_tokens)}
+        last = {t.char_end: i for i, t in enumerate(new_tokens)}
         new_spans = [
             sp
             for sp in _spans_from_bio(new_tokens)
-            if (doc.document_id, sp.char_start, sp.char_end, sp.label)
+            if (doc.document_id, first[sp.char_start], last[sp.char_end], sp.label)
             not in ADJUDICATED_SPAN_DELETIONS
         ]
         # Re-derive BIO from the reconstructed spans. ``_spans_from_bio`` is

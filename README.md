@@ -91,6 +91,10 @@ uses.
 > string `id`; `decicontas.json` uses `entities` with `start`/`end` and an integer
 > `id`. Same annotations, different field names — pick one and stay with it.
 
+> **Personal data.** The names of natural persons who are parties to the proceedings
+> are pseudonymised (synthetic names; see the DATASHEET, Section 2); the names of the
+> Court's members are real. Do not use the corpus to profile the people it names.
+
 ## Results
 
 Nine instruction-tuned LLMs under few-shot prompting with structured outputs, against
@@ -207,11 +211,11 @@ uv run python -m research.kfold.orchestrate
 decicontas.br/
 ├── data/                 # → shortcut to dataset/release/
 ├── dataset/
-│   ├── raw/              # scraped corpora + Label Studio imports (provenance)
+│   ├── raw/              # source extracts, restricted to the annotated decisions (provenance)
 │   ├── labeled_data/     # original Label Studio export
 │   ├── errors/           # cleanlab audit decisions
 │   ├── release/          # publishable bundles + DATASHEET.md + MANIFEST.json
-│   └── results/          # models_outputs/ (canonical) + old_experiments/ (archived)
+│   └── results/          # models_outputs/ — every number and figure cited
 ├── notebooks/            # exploratory analysis, baselines, LLM evaluation
 ├── paper/                # camera-ready of the JURIX 2026 paper + README figure
 ├── research/             # the package the notebooks and scripts import
@@ -232,6 +236,20 @@ decicontas.br/
 
 The 861 come from an 866-document Label Studio export, minus five documents reused
 during prompt curation. All five carry no entities.
+
+Releases (git tags; `CITATION.cff` carries the current one):
+
+- **v1.0.0** — initial release (2026-09-05; last patch 2026-10-15): 441 entities.
+- **v1.1.0** — 2026-10-17: annotation-scope guideline applied to both bundles —
+  recommendations and notices addressed to the Court's own units are not entities;
+  411 entities (22 `RECOMENDACAO`).
+- **v1.2.0** — 2026-10-17: names of the natural persons who are parties to the
+  proceedings pseudonymised (synthetic names, one token per token; the names of the
+  Court's members are kept). Annotations, token counts and every reported metric are
+  unchanged; the few-shot exemplars and the stored LLM predictions follow the same map.
+  All results in the JURIX 2026 paper and in the dissertation refer to this release.
+- Planned — adjudication of the annotator-study disagreements and decisions validated
+  through the Court's human-in-the-loop registry pipeline.
 
 ## Paper
 

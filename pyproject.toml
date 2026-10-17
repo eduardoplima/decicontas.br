@@ -37,6 +37,7 @@ dependencies = [
     # Stats / significance
     "scipy>=1.13",
     "accelerate>=1.1.0",
+    "faker>=40.43.0",
 ]
 
 [dependency-groups]
@@ -44,6 +45,10 @@ dev = [
     "ruff>=0.7",
     "pytest>=8.0",
     "pytest-mock>=3.12",
+]
+review = [
+    "fastapi>=0.143.3",
+    "uvicorn>=0.54.0",
 ]
 
 [build-system]

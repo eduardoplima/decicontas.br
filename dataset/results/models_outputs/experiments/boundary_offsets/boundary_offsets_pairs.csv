@@ -199,7 +199,7 @@ deepseek-v4-flash_few_shot,594,62,-1,MULTA,;,,False
 deepseek-v4-flash_few_shot,594,0,-1,MULTA,;,,True
 deepseek-v4-flash_few_shot,594,-15,-1,OBRIGACAO,;,confirmação da ,False
 deepseek-v4-flash_few_shot,594,0,-1,RECOMENDACAO,;,,True
-deepseek-v4-flash_few_shot,608,-360,-1,MULTA,;,"multa no valor de R$ 5.000,00 (cinco mil reais) em razão das inadimplências ocorridas no exercício de 2017 até a data de sua saída do cargo de gestor da então SEARH; ao Sr. Marco Antônio Medeiros, responsável pelo Jurisdicionado no período de 17/06/2018 a 31/12/2018, multa no valor de R$ 5.000,00 (cinco mil reais) em razão das omissões neste período; à Sra. ",False
+deepseek-v4-flash_few_shot,608,-360,-1,MULTA,;,"multa no valor de R$ 5.000,00 (cinco mil reais) em razão das inadimplências ocorridas no exercício de 2017 até a data de sua saída do cargo de gestor da então SEARH; ao Sr. Bryan Edgardo Ferrazzi, responsável pelo Jurisdicionado no período de 17/06/2018 a 31/12/2018, multa no valor de R$ 5.000,00 (cinco mil reais) em razão das omissões neste período; à Sra. ",False
 deepseek-v4-flash_few_shot,608,0,-1,OBRIGACAO,;,,True
 deepseek-v4-flash_few_shot,617,0,-1,MULTA,.,,True
 deepseek-v4-flash_few_shot,628,-13,-1,OBRIGACAO,;,renovação da ,False
@@ -224,7 +224,7 @@ deepseek-v4-flash_few_shot,778,-23,0,RESSARCIMENTO,,condenação do gestor a ,Fa
 deepseek-v4-flash_few_shot,778,-38,-1,MULTA,;,condenação do gestor ao pagamento das ,False
 deepseek-v4-flash_few_shot,779,0,0,OBRIGACAO,,,True
 deepseek-v4-flash_few_shot,784,-13,-1,OBRIGACAO,;,expedição de ,False
-deepseek-v4-flash_few_shot,784,-187,-1,RESSARCIMENTO,;,"desaprovação das contas com relação ao senhor Francisco Erasmo de Morais, com fincas no artigo 75, inciso IV, combinado com o §4º, inciso I, da Lei Complementar nº 464/2012, devendo este ",False
+deepseek-v4-flash_few_shot,784,-187,-1,RESSARCIMENTO,;,"desaprovação das contas com relação ao senhor Bartolomé Martín de Coelho, com fincas no artigo 75, inciso IV, combinado com o §4º, inciso I, da Lei Complementar nº 464/2012, devendo este ",False
 deepseek-v4-flash_few_shot,785,0,83,OBRIGACAO,,,False
 deepseek-v4-flash_few_shot,786,0,-146,RESSARCIMENTO,", sem prejuízo da multa individual equivalente a 30% (trinta por cento) sobre o montante total atualizado deste débito (art. 102, I da LC 121/94);",,False
 deepseek-v4-flash_few_shot,790,-14,-1,RESSARCIMENTO,.,condenação ao ,False
@@ -234,7 +234,7 @@ deepseek-v4-flash_few_shot,794,-9,-1,RESSARCIMENTO,;,dever de ,False
 deepseek-v4-flash_few_shot,794,0,-1,RECOMENDACAO,.,,True
 deepseek-v4-flash_few_shot,794,0,-1,MULTA,;,,True
 deepseek-v4-flash_few_shot,795,0,-1,MULTA,.,,True
-deepseek-v4-flash_few_shot,796,-79,0,RESSARCIMENTO,,"condenação do espólio/herdeiros do senhor Genildo de Freitas Melo, ao dever de ",False
+deepseek-v4-flash_few_shot,796,-79,0,RESSARCIMENTO,,"condenação do espólio/herdeiros do senhor Melchor de Carnera Sola, ao dever de ",False
 deepseek-v4-flash_few_shot,799,0,-1,RESSARCIMENTO,;,,True
 deepseek-v4-flash_few_shot,799,0,-1,MULTA,;,,True
 deepseek-v4-flash_few_shot,799,0,-1,MULTA,;,,True
@@ -273,11 +273,11 @@ deepseek-v4-flash_few_shot,810,0,0,MULTA,,,True
 deepseek-v4-flash_few_shot,810,0,-1,MULTA,;,,True
 deepseek-v4-flash_few_shot,811,0,-1,MULTA,;,,True
 deepseek-v4-flash_few_shot,813,0,0,MULTA,,,True
-deepseek-v4-flash_few_shot,813,-54,16,RESSARCIMENTO,,"vel Flávio Vieira Veras, ex-prefeito de Macau-RN,  ao ",False
-deepseek-v4-flash_few_shot,814,-77,0,RESSARCIMENTO,,"imputando ao gestor responsável, o Senhor Paulo Gomes Júnior, a obrigação de ",False
+deepseek-v4-flash_few_shot,813,-54,16,RESSARCIMENTO,,"vel Régulo Sgarbi Baeza, ex-prefeito de Macau-RN,  ao ",False
+deepseek-v4-flash_few_shot,814,-77,0,RESSARCIMENTO,,"imputando ao gestor responsável, o Senhor Vítor Duque Júnior, a obrigação de ",False
 deepseek-v4-flash_few_shot,818,-8,-1,MULTA,;,aplicar ,False
 deepseek-v4-flash_few_shot,818,0,-1,OBRIGACAO,.,,True
-deepseek-v4-flash_few_shot,818,-61,-1,RESSARCIMENTO,;,"condenar o senhor José Pereira Sobrinho, gestor municipal, a ",False
+deepseek-v4-flash_few_shot,818,-61,-1,RESSARCIMENTO,;,"condenar o senhor Elmo Soprano Sobrinho, gestor municipal, a ",False
 deepseek-v4-flash_few_shot,819,0,-189,MULTA,"; c) Para que a câmara municipal em destaque apresente em licitações futuras os envelopes relativos as habilitações e propostas dos licitantes, bem como numere as paginas de doto o certame;",,False
 deepseek-v4-flash_few_shot,820,-13,-1,MULTA,;,aplicação de ,False
 deepseek-v4-flash_few_shot,820,0,-1,RESSARCIMENTO,;,,True
@@ -286,9 +286,9 @@ deepseek-v4-flash_few_shot,820,2,-1,MULTA,;,,True
 deepseek-v4-flash_few_shot,820,2,-1,MULTA,;,,True
 deepseek-v4-flash_few_shot,821,-21,0,RESSARCIMENTO,,imputando o dever de ,False
 deepseek-v4-flash_few_shot,823,0,-1,MULTA,;,,True
-deepseek-v4-flash_few_shot,823,-29,-1,RESSARCIMENTO,;,"Francisco de Assis Alves, ao ",False
+deepseek-v4-flash_few_shot,823,-29,-1,RESSARCIMENTO,;,"Bartolomé de Marín Ribes, ao ",False
 deepseek-v4-flash_few_shot,824,0,-1,MULTA,;,,True
-deepseek-v4-flash_few_shot,824,-24,-1,RESSARCIMENTO,.,"José Balduíno Bispo, ao ",False
+deepseek-v4-flash_few_shot,824,-24,-1,RESSARCIMENTO,.,"Elmo Ferrante Palau, ao ",False
 deepseek-v4-flash_few_shot,825,0,-2,MULTA,4.,,True
 deepseek-v4-flash_few_shot,825,0,-1,RESSARCIMENTO,.,,True
 deepseek-v4-flash_few_shot,827,0,-1,RESSARCIMENTO,.,,True
@@ -301,10 +301,10 @@ deepseek-v4-flash_few_shot,829,0,-1,MULTA,;,,True
 deepseek-v4-flash_few_shot,829,0,-1,MULTA,;,,True
 deepseek-v4-flash_few_shot,830,-306,395,MULTA,,"otal de até 1.000,00 (um mil) Unidades Fiscais de Referência do Rio Grande do Norte (UFIRN), ou outra unidade que venha a ser instituída, conforme art. 102, II, “a” da Lei Complementar n.º 121/1994, pelo atraso da publicação do Relatório de Gestão Fiscal do exercício 2010 (2º semestre); c.2) Aplicação de ",False
 deepseek-v4-flash_few_shot,830,0,-1,RESSARCIMENTO,;,,True
-deepseek-v4-flash_few_shot,833,-51,-94,RESSARCIMENTO,". Após o trânsito em julgado, encaminhe-se cópia desta decisão ao Ministério Público Estadual.","condenação do responsável José Robson de Souza, ao ",False
-deepseek-v4-flash_few_shot,833,-51,-1,RESSARCIMENTO,;,"condenação do responsável José Robson de Souza, ao ",False
+deepseek-v4-flash_few_shot,833,-51,-94,RESSARCIMENTO,". Após o trânsito em julgado, encaminhe-se cópia desta decisão ao Ministério Público Estadual.","condenação do responsável Elmo Blanes de Rivas, ao ",False
+deepseek-v4-flash_few_shot,833,-51,-1,RESSARCIMENTO,;,"condenação do responsável Elmo Blanes de Rivas, ao ",False
 deepseek-v4-flash_few_shot,834,0,-1,MULTA,;,,True
-deepseek-v4-flash_few_shot,834,-63,-1,RESSARCIMENTO,;,condenação do responsável Laércio José de Oliveira ao dever de ,False
+deepseek-v4-flash_few_shot,834,-63,-1,RESSARCIMENTO,;,condenação do responsável Alfonso Elmo de Trujillo ao dever de ,False
 deepseek-v4-flash_few_shot,835,-9,-2,RESSARCIMENTO,s;,dever de ,False
 deepseek-v4-flash_few_shot,835,-9,-1,RESSARCIMENTO,;,dever de ,False
 deepseek-v4-flash_few_shot,835,2,-1,MULTA,;,,True
@@ -322,24 +322,24 @@ deepseek-v4-flash_few_shot,836,0,-1,MULTA,;,,True
 deepseek-v4-flash_few_shot,836,0,-1,RESSARCIMENTO,;,,True
 deepseek-v4-flash_few_shot,836,0,-1,MULTA,;,,True
 deepseek-v4-flash_few_shot,837,0,-1,MULTA,;,,True
-deepseek-v4-flash_few_shot,837,-56,-1,RESSARCIMENTO,.,"condenando o responsável Lidiano Bezerra da Nóbrega, ao ",False
+deepseek-v4-flash_few_shot,837,-56,-1,RESSARCIMENTO,.,"condenando o responsável Eutimio Mazzini da Pastine, ao ",False
 deepseek-v4-flash_few_shot,838,-13,-1,MULTA,;,Aplicação da ,False
 deepseek-v4-flash_few_shot,838,-13,-1,MULTA,.,Aplicação de ,False
 deepseek-v4-flash_few_shot,838,0,-1,RESSARCIMENTO,;,,True
 deepseek-v4-flash_few_shot,839,0,-1,MULTA,;,,True
-deepseek-v4-flash_few_shot,839,-59,-1,RESSARCIMENTO,;,condenando o responsável Luiz Gonzaga Cavalcante Dantas ao ,False
+deepseek-v4-flash_few_shot,839,-59,-1,RESSARCIMENTO,;,condenando o responsável Milo Aloisio Migliaccio Parejo ao ,False
 deepseek-v4-flash_few_shot,849,0,-1,MULTA,;,,True
 deepseek-v4-flash_few_shot,849,0,-1,MULTA,;,,True
 deepseek-v4-flash_few_shot,849,0,-1,MULTA,;,,True
 deepseek-v4-flash_few_shot,850,-9,13,RESSARCIMENTO,,dever de ,False
 deepseek-v4-flash_few_shot,850,0,-3,MULTA,; e,,False
 deepseek-v4-flash_few_shot,851,0,-1,MULTA,;,,True
-deepseek-v4-flash_few_shot,851,-60,-1,RESSARCIMENTO,.,"condenando o responsável Ionas Carvalho de Araújo Filho, ao ",False
+deepseek-v4-flash_few_shot,851,-60,-1,RESSARCIMENTO,.,"condenando o responsável Josué Salandra de Onisto Filho, ao ",False
 deepseek-v4-flash_few_shot,852,0,-4,MULTA,"; e,",,False
 deepseek-v4-flash_few_shot,852,0,-1,MULTA,.,,True
 deepseek-v4-flash_few_shot,852,-2,-1,RESSARCIMENTO,;,O ,False
-deepseek-v4-flash_few_shot,855,-254,-2,MULTA, ;,"ao Sr. Carlos Antônio Alves da Cruz: a) no valor de R$13.500,00 (treze mil e quinhentos reais), o que equivale a 30% (trinta por cento) dos seus vencimentos anuais, devido à ausência de divulgação no envio do RGF, referente ao 1º semestre de 2012; b) no ",False
-deepseek-v4-flash_few_shot,855,-35,-1,MULTA,.,ao Sr. Alexis Lima Maurício: a) no ,False
+deepseek-v4-flash_few_shot,855,-254,-2,MULTA, ;,"ao Sr. Glauco Edgardo Ribes da Toso: a) no valor de R$13.500,00 (treze mil e quinhentos reais), o que equivale a 30% (trinta por cento) dos seus vencimentos anuais, devido à ausência de divulgação no envio do RGF, referente ao 1º semestre de 2012; b) no ",False
+deepseek-v4-flash_few_shot,855,-35,-1,MULTA,.,ao Sr. Antony Diez Catalano: a) no ,False
 deepseek-v4-flash_few_shot,857,-19,-85,RESSARCIMENTO,", mantendo-se a condenação de multa de 10% (dez por cento) do valor do ressarcimento.",reduzir o valor do ,False
 deepseek-v4-flash_few_shot,858,0,-218,MULTA," A(s) multa(s) imposta(s), por decisão deste Tribunal de Contas do Estado, somente poderá(ão) ser quitada(s) mediante pagamento de guias bancárias, conforme determina os arts. 3º e 4º da Resolução nº 013/2015 - TCE-RN.",,False
 deepseek-v4-flash_few_shot,858,0,-1,RESSARCIMENTO,;,,True
@@ -544,7 +544,7 @@ gpt-4.1_few_shot,594,10,-1,OBRIGACAO,;,,False
 gpt-4.1_few_shot,594,49,-1,MULTA,;,,False
 gpt-4.1_few_shot,594,-11,-1,OBRIGACAO,;,conceder o ,False
 gpt-4.1_few_shot,594,0,-1,OBRIGACAO,;,,True
-gpt-4.1_few_shot,608,-360,0,MULTA,,"multa no valor de R$ 5.000,00 (cinco mil reais) em razão das inadimplências ocorridas no exercício de 2017 até a data de sua saída do cargo de gestor da então SEARH; ao Sr. Marco Antônio Medeiros, responsável pelo Jurisdicionado no período de 17/06/2018 a 31/12/2018, multa no valor de R$ 5.000,00 (cinco mil reais) em razão das omissões neste período; à Sra. ",False
+gpt-4.1_few_shot,608,-360,0,MULTA,,"multa no valor de R$ 5.000,00 (cinco mil reais) em razão das inadimplências ocorridas no exercício de 2017 até a data de sua saída do cargo de gestor da então SEARH; ao Sr. Bryan Edgardo Ferrazzi, responsável pelo Jurisdicionado no período de 17/06/2018 a 31/12/2018, multa no valor de R$ 5.000,00 (cinco mil reais) em razão das omissões neste período; à Sra. ",False
 gpt-4.1_few_shot,608,-8,0,OBRIGACAO,,assinar ,False
 gpt-4.1_few_shot,617,0,0,MULTA,,,True
 gpt-4.1_few_shot,628,-13,0,OBRIGACAO,,renovação da ,False
@@ -571,7 +571,7 @@ gpt-4.1_few_shot,778,-23,0,RESSARCIMENTO,,condenação do gestor a ,False
 gpt-4.1_few_shot,778,-38,-1,MULTA,;,condenação do gestor ao pagamento das ,False
 gpt-4.1_few_shot,779,0,0,OBRIGACAO,,,True
 gpt-4.1_few_shot,784,-13,-1,OBRIGACAO,;,expedição de ,False
-gpt-4.1_few_shot,784,-141,-1,RESSARCIMENTO,;,"Francisco Erasmo de Morais, com fincas no artigo 75, inciso IV, combinado com o §4º, inciso I, da Lei Complementar nº 464/2012, devendo este ",False
+gpt-4.1_few_shot,784,-141,-1,RESSARCIMENTO,;,"Bartolomé Martín de Coelho, com fincas no artigo 75, inciso IV, combinado com o §4º, inciso I, da Lei Complementar nº 464/2012, devendo este ",False
 gpt-4.1_few_shot,785,0,83,OBRIGACAO,,,False
 gpt-4.1_few_shot,786,0,-146,RESSARCIMENTO,", sem prejuízo da multa individual equivalente a 30% (trinta por cento) sobre o montante total atualizado deste débito (art. 102, I da LC 121/94);",,False
 gpt-4.1_few_shot,788,-30,-1,RESSARCIMENTO,",",redimensionar a condenação de ,False
@@ -583,7 +583,7 @@ gpt-4.1_few_shot,794,-13,0,MULTA,,aplicação de ,False
 gpt-4.1_few_shot,794,-9,0,RESSARCIMENTO,,dever de ,False
 gpt-4.1_few_shot,794,0,0,RECOMENDACAO,,,True
 gpt-4.1_few_shot,795,-13,0,MULTA,,aplicação de ,False
-gpt-4.1_few_shot,796,-79,0,RESSARCIMENTO,,"condenação do espólio/herdeiros do senhor Genildo de Freitas Melo, ao dever de ",False
+gpt-4.1_few_shot,796,-79,0,RESSARCIMENTO,,"condenação do espólio/herdeiros do senhor Melchor de Carnera Sola, ao dever de ",False
 gpt-4.1_few_shot,799,0,-1,RESSARCIMENTO,;,,True
 gpt-4.1_few_shot,799,-13,-1,MULTA,;,aplicação de ,False
 gpt-4.1_few_shot,799,-13,-1,MULTA,;,aplicação de ,False
@@ -623,10 +623,10 @@ gpt-4.1_few_shot,810,0,-1,MULTA,;,,True
 gpt-4.1_few_shot,811,0,-1,MULTA,;,,True
 gpt-4.1_few_shot,813,-10,0,MULTA,,aplicando ,False
 gpt-4.1_few_shot,813,46,42,RESSARCIMENTO,,,False
-gpt-4.1_few_shot,814,-77,0,RESSARCIMENTO,,"imputando ao gestor responsável, o Senhor Paulo Gomes Júnior, a obrigação de ",False
+gpt-4.1_few_shot,814,-77,0,RESSARCIMENTO,,"imputando ao gestor responsável, o Senhor Vítor Duque Júnior, a obrigação de ",False
 gpt-4.1_few_shot,818,-8,-1,MULTA,;,aplicar ,False
 gpt-4.1_few_shot,818,0,0,OBRIGACAO,,,True
-gpt-4.1_few_shot,818,-61,-75,RESSARCIMENTO,", acrescido da multa de 50% (cinqüenta por cento) sobre o respectivo valor;","condenar o senhor José Pereira Sobrinho, gestor municipal, a ",False
+gpt-4.1_few_shot,818,-61,-75,RESSARCIMENTO,", acrescido da multa de 50% (cinqüenta por cento) sobre o respectivo valor;","condenar o senhor Elmo Soprano Sobrinho, gestor municipal, a ",False
 gpt-4.1_few_shot,820,-13,-1,MULTA,;,aplicação de ,False
 gpt-4.1_few_shot,820,-2,-1,RESSARCIMENTO,;,O ,False
 gpt-4.1_few_shot,820,2,-1,MULTA,;,,True
@@ -634,9 +634,9 @@ gpt-4.1_few_shot,820,2,-1,MULTA,;,,True
 gpt-4.1_few_shot,820,2,-1,MULTA,;,,True
 gpt-4.1_few_shot,821,-21,0,RESSARCIMENTO,,imputando o dever de ,False
 gpt-4.1_few_shot,823,-13,-1,MULTA,;,aplicação de ,False
-gpt-4.1_few_shot,823,-54,-1,RESSARCIMENTO,;,"condenando o responsável Francisco de Assis Alves, ao ",False
+gpt-4.1_few_shot,823,-54,-1,RESSARCIMENTO,;,"condenando o responsável Bartolomé de Marín Ribes, ao ",False
 gpt-4.1_few_shot,824,-13,-1,MULTA,;,aplicação de ,False
-gpt-4.1_few_shot,824,-49,-1,RESSARCIMENTO,.,"condenando o responsável José Balduíno Bispo, ao ",False
+gpt-4.1_few_shot,824,-49,-1,RESSARCIMENTO,.,"condenando o responsável Elmo Ferrante Palau, ao ",False
 gpt-4.1_few_shot,825,0,0,RESSARCIMENTO,,,True
 gpt-4.1_few_shot,825,-13,0,MULTA,,aplicação de ,False
 gpt-4.1_few_shot,827,0,0,RESSARCIMENTO,,,True
@@ -653,10 +653,10 @@ gpt-4.1_few_shot,830,-13,-1,MULTA,;,aplicação de ,False
 gpt-4.1_few_shot,830,-13,-1,MULTA,;,Aplicação de ,False
 gpt-4.1_few_shot,830,-13,-1,MULTA,;,Aplicação de ,False
 gpt-4.1_few_shot,830,0,-1,RESSARCIMENTO,;,,True
-gpt-4.1_few_shot,833,-51,-94,RESSARCIMENTO,". Após o trânsito em julgado, encaminhe-se cópia desta decisão ao Ministério Público Estadual.","condenação do responsável José Robson de Souza, ao ",False
-gpt-4.1_few_shot,833,-51,-1,RESSARCIMENTO,;,"condenação do responsável José Robson de Souza, ao ",False
+gpt-4.1_few_shot,833,-51,-94,RESSARCIMENTO,". Após o trânsito em julgado, encaminhe-se cópia desta decisão ao Ministério Público Estadual.","condenação do responsável Elmo Blanes de Rivas, ao ",False
+gpt-4.1_few_shot,833,-51,-1,RESSARCIMENTO,;,"condenação do responsável Elmo Blanes de Rivas, ao ",False
 gpt-4.1_few_shot,834,-13,-1,MULTA,;,aplicação de ,False
-gpt-4.1_few_shot,834,-63,-1,RESSARCIMENTO,;,condenação do responsável Laércio José de Oliveira ao dever de ,False
+gpt-4.1_few_shot,834,-63,-1,RESSARCIMENTO,;,condenação do responsável Alfonso Elmo de Trujillo ao dever de ,False
 gpt-4.1_few_shot,835,-9,-1,RESSARCIMENTO,;,dever de ,False
 gpt-4.1_few_shot,835,-9,-1,RESSARCIMENTO,;,dever de ,False
 gpt-4.1_few_shot,835,2,-1,MULTA,;,,True
@@ -674,26 +674,26 @@ gpt-4.1_few_shot,836,0,0,MULTA,,,True
 gpt-4.1_few_shot,836,0,0,RESSARCIMENTO,,,True
 gpt-4.1_few_shot,836,0,0,MULTA,,,True
 gpt-4.1_few_shot,837,-13,-1,MULTA,;,aplicação de ,False
-gpt-4.1_few_shot,837,-56,-1,RESSARCIMENTO,.,"condenando o responsável Lidiano Bezerra da Nóbrega, ao ",False
+gpt-4.1_few_shot,837,-56,-1,RESSARCIMENTO,.,"condenando o responsável Eutimio Mazzini da Pastine, ao ",False
 gpt-4.1_few_shot,838,-13,-1,MULTA,;,Aplicação da ,False
 gpt-4.1_few_shot,838,-13,-1,MULTA,.,Aplicação de ,False
 gpt-4.1_few_shot,838,0,-1,RESSARCIMENTO,;,,True
 gpt-4.1_few_shot,839,-13,-1,MULTA,;,aplicação de ,False
-gpt-4.1_few_shot,839,-59,-1,RESSARCIMENTO,;,condenando o responsável Luiz Gonzaga Cavalcante Dantas ao ,False
+gpt-4.1_few_shot,839,-59,-1,RESSARCIMENTO,;,condenando o responsável Milo Aloisio Migliaccio Parejo ao ,False
 gpt-4.1_few_shot,849,-13,-1,MULTA,;,aplicação de ,False
-gpt-4.1_few_shot,849,-65,-1,RESSARCIMENTO,;,imposição à Sra. Iracema Pereira de Lima Campelo da obrigação de ,False
+gpt-4.1_few_shot,849,-65,-1,RESSARCIMENTO,;,imposição à Sra. Adelina Soprano de Diez Sabater da obrigação de ,False
 gpt-4.1_few_shot,849,-13,-81,MULTA,", devendo os agentes ser remunerados com base no subsídio fixado na Lei anterior;",aplicação de ,False
 gpt-4.1_few_shot,849,0,0,RECOMENDACAO,,,True
 gpt-4.1_few_shot,849,-13,-1,MULTA,;,imputação de ,False
 gpt-4.1_few_shot,849,-13,-1,MULTA,;,aplicação de ,False
 gpt-4.1_few_shot,850,0,-3,MULTA,; e,,False
 gpt-4.1_few_shot,851,-13,-1,MULTA,;,aplicação de ,False
-gpt-4.1_few_shot,851,-60,-1,RESSARCIMENTO,.,"condenando o responsável Ionas Carvalho de Araújo Filho, ao ",False
+gpt-4.1_few_shot,851,-60,-1,RESSARCIMENTO,.,"condenando o responsável Josué Salandra de Onisto Filho, ao ",False
 gpt-4.1_few_shot,852,0,-4,MULTA,"; e,",,False
 gpt-4.1_few_shot,852,0,0,MULTA,,,True
 gpt-4.1_few_shot,852,-2,-1,RESSARCIMENTO,;,O ,False
-gpt-4.1_few_shot,855,-254,-2,MULTA, ;,"ao Sr. Carlos Antônio Alves da Cruz: a) no valor de R$13.500,00 (treze mil e quinhentos reais), o que equivale a 30% (trinta por cento) dos seus vencimentos anuais, devido à ausência de divulgação no envio do RGF, referente ao 1º semestre de 2012; b) no ",False
-gpt-4.1_few_shot,855,-35,0,MULTA,,ao Sr. Alexis Lima Maurício: a) no ,False
+gpt-4.1_few_shot,855,-254,-2,MULTA, ;,"ao Sr. Glauco Edgardo Ribes da Toso: a) no valor de R$13.500,00 (treze mil e quinhentos reais), o que equivale a 30% (trinta por cento) dos seus vencimentos anuais, devido à ausência de divulgação no envio do RGF, referente ao 1º semestre de 2012; b) no ",False
+gpt-4.1_few_shot,855,-35,0,MULTA,,ao Sr. Antony Diez Catalano: a) no ,False
 gpt-4.1_few_shot,857,-19,-85,RESSARCIMENTO,", mantendo-se a condenação de multa de 10% (dez por cento) do valor do ressarcimento.",reduzir o valor do ,False
 gpt-4.1_few_shot,858,0,-219,MULTA,". A(s) multa(s) imposta(s), por decisão deste Tribunal de Contas do Estado, somente poderá(ão) ser quitada(s) mediante pagamento de guias bancárias, conforme determina os arts. 3º e 4º da Resolução nº 013/2015 - TCE-RN.",,False
 gpt-4.1_few_shot,858,0,-196,RESSARCIMENTO,", sem prejuízo do pagamento da correlata sanção de multa a qual fixo no percentual de 10 % (dez por cento) do valor do referido débito, delimitada pelo inciso I do art. 102 desta mesma legislação;",,False

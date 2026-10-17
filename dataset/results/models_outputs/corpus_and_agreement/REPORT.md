@@ -41,15 +41,15 @@ Aproximação declarada para dispositivo × fundamentação: sem segmentação e
 | MULTA         |   1 | 1.multa                 |       2 |         0.0099 |
 | MULTA         |   1 | valor                   |       2 |         0.0099 |
 | MULTA         |   1 | 06                      |       1 |         0.0049 |
-| MULTA         |   1 | saint                   |       1 |         0.0049 |
-| MULTA         |   1 | ciro                    |       1 |         0.0049 |
+| MULTA         |   1 | carlo                   |       1 |         0.0049 |
+| MULTA         |   1 | joel                    |       1 |         0.0049 |
 | MULTA         |   1 | condenando              |       1 |         0.0049 |
-| MULTA         |   1 | claudio                 |       1 |         0.0049 |
-| MULTA         |   1 | tatiana                 |       1 |         0.0049 |
-| MULTA         |   1 | cinthia                 |       1 |         0.0049 |
+| MULTA         |   1 | osvaldo                 |       1 |         0.0049 |
+| MULTA         |   1 | obdulia                 |       1 |         0.0049 |
+| MULTA         |   1 | heloisa                 |       1 |         0.0049 |
 | MULTA         |   1 | clécio                  |       1 |         0.0049 |
-| MULTA         |   1 | manoel                  |       1 |         0.0049 |
-| MULTA         |   1 | henrique                |       1 |         0.0049 |
+| MULTA         |   1 | alonso                  |       1 |         0.0049 |
+| MULTA         |   1 | reynaldo                |       1 |         0.0049 |
 | MULTA         |   2 | multa no                |     115 |         0.5665 |
 | MULTA         |   2 | multa de                |      15 |         0.0739 |
 | MULTA         |   2 | multa ao                |      10 |         0.0493 |
@@ -60,10 +60,10 @@ Aproximação declarada para dispositivo × fundamentação: sem segmentação e
 | MULTA         |   2 | 1.multa no              |       2 |         0.0099 |
 | MULTA         |   2 | valor de                |       2 |         0.0099 |
 | MULTA         |   2 | 06 multas               |       1 |         0.0049 |
-| MULTA         |   2 | saint clay              |       1 |         0.0049 |
-| MULTA         |   2 | ciro gustavo            |       1 |         0.0049 |
+| MULTA         |   2 | carlo ruiz              |       1 |         0.0049 |
+| MULTA         |   2 | joel benigno            |       1 |         0.0049 |
 | MULTA         |   2 | condenando a            |       1 |         0.0049 |
-| MULTA         |   2 | claudio henrique        |       1 |         0.0049 |
+| MULTA         |   2 | osvaldo reynaldo        |       1 |         0.0049 |
 | MULTA         |   2 | multa da                |       1 |         0.0049 |
 | OBRIGACAO     |   1 | determinação            |      68 |         0.5528 |
 | OBRIGACAO     |   1 | determinar              |      10 |         0.0813 |
@@ -72,7 +72,7 @@ Aproximação declarada para dispositivo × fundamentação: sem segmentação e
 | OBRIGACAO     |   1 | determinando            |       3 |         0.0244 |
 | OBRIGACAO     |   1 | deve,                   |       2 |         0.0163 |
 | OBRIGACAO     |   1 | notificação             |       2 |         0.0163 |
-| OBRIGACAO     |   1 | joão                    |       2 |         0.0163 |
+| OBRIGACAO     |   1 | galo                    |       2 |         0.0163 |
 | OBRIGACAO     |   1 | medida                  |       2 |         0.0163 |
 | OBRIGACAO     |   1 | representação           |       2 |         0.0163 |
 | OBRIGACAO     |   1 | fixação                 |       2 |         0.0163 |
@@ -88,7 +88,7 @@ Aproximação declarada para dispositivo × fundamentação: sem segmentação e
 | OBRIGACAO     |   2 | determinação à          |       3 |         0.0244 |
 | OBRIGACAO     |   2 | deve, ainda,            |       2 |         0.0163 |
 | OBRIGACAO     |   2 | notificação ao          |       2 |         0.0163 |
-| OBRIGACAO     |   2 | joão maria              |       2 |         0.0163 |
+| OBRIGACAO     |   2 | galo chelo              |       2 |         0.0163 |
 | OBRIGACAO     |   2 | medida de               |       2 |         0.0163 |
 | OBRIGACAO     |   2 | determinação para,      |       2 |         0.0163 |
 | OBRIGACAO     |   2 | representação ao        |       2 |         0.0163 |
@@ -97,7 +97,7 @@ Aproximação declarada para dispositivo × fundamentação: sem segmentação e
 | OBRIGACAO     |   2 | decide também,          |       2 |         0.0163 |
 | RESSARCIMENTO |   1 | ressarcimento           |      49 |         0.7778 |
 | RESSARCIMENTO |   1 | ressarcir               |      10 |         0.1587 |
-| RESSARCIMENTO |   1 | maria                   |       1 |         0.0159 |
+| RESSARCIMENTO |   1 | chelo                   |       1 |         0.0159 |
 | RESSARCIMENTO |   1 | devolução               |       1 |         0.0159 |
 | RESSARCIMENTO |   1 | restituição             |       1 |         0.0159 |
 | RESSARCIMENTO |   1 | ressarcimentos          |       1 |         0.0159 |
@@ -108,7 +108,7 @@ Aproximação declarada para dispositivo × fundamentação: sem segmentação e
 | RESSARCIMENTO |   2 | ressarcimento no        |       2 |         0.0317 |
 | RESSARCIMENTO |   2 | ressarcimento dos       |       2 |         0.0317 |
 | RESSARCIMENTO |   2 | ressarcimento aos       |       2 |         0.0317 |
-| RESSARCIMENTO |   2 | maria izabel            |       1 |         0.0159 |
+| RESSARCIMENTO |   2 | chelo fuster            |       1 |         0.0159 |
 | RESSARCIMENTO |   2 | ressarcir aos           |       1 |         0.0159 |
 | RESSARCIMENTO |   2 | ressarcir integralmente |       1 |         0.0159 |
 | RESSARCIMENTO |   2 | ressarcimento em        |       1 |         0.0159 |
@@ -155,11 +155,11 @@ Radicais buscados nos 5 primeiros tokens do span (colunas `*_rate` = fração do
 
 | metric                          |      value |
 |:--------------------------------|-----------:|
-| decicontas_types                |  3997.0000 |
+| decicontas_types                |  4034.0000 |
 | lener_types                     | 14404.0000 |
-| jaccard_top5000                 |     0.2868 |
-| decicontas_top5000_oov_in_lener |     0.3320 |
-| lener_top5000_oov_in_decicontas |     0.5990 |
+| jaccard_top5000                 |     0.2737 |
+| decicontas_top5000_oov_in_lener |     0.3632 |
+| lener_top5000_oov_in_decicontas |     0.6118 |
 | lener_docs                      | 10395.0000 |
 | decicontas_docs                 |   861.0000 |
 

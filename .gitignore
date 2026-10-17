@@ -51,3 +51,7 @@ figures/
 
 # dissertation material — never publish
 docs/
+
+# review tool frontend (built locally)
+tools/review/frontend/node_modules/
+tools/review/frontend/dist/

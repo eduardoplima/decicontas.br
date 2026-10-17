@@ -94,9 +94,12 @@ def test_adjudicated_deletions_all_still_apply() -> None:
     raw = {d.document_id: d for d in load_dataset(pathlib.Path(MASTER)).documents}
     for doc_id, start, end, label in ADJUDICATED_SPAN_DELETIONS:
         assert doc_id in raw, f"adjudicated document {doc_id} is gone"
-        assert end <= len(raw[doc_id].text), f"offsets out of range for doc {doc_id}"
+        tokens = docs[doc_id].tokens
+        assert end < len(tokens), f"token index out of range for doc {doc_id}"
+        first = {t.char_start: i for i, t in enumerate(tokens)}
+        last = {t.char_end: i for i, t in enumerate(tokens)}
         present = {
-            (s.char_start, s.char_end, s.label) for s in docs[doc_id].ner_spans
+            (first[s.char_start], last[s.char_end], s.label) for s in docs[doc_id].ner_spans
         }
         assert (start, end, label) not in present
 

@@ -11,8 +11,8 @@ abstract: >-
   in JSON, JSONL, CoNLL-2003 and BRAT formats, together with the evaluation and
   training pipelines used to produce the reported results.
 type: dataset
-version: 1.0.0
-date-released: "2026-09-05"
+version: 1.2.0
+date-released: "2026-10-17"
 license: CC-BY-4.0
 repository-code: "https://github.com/eduardoplima/decicontas.br"
 authors:
