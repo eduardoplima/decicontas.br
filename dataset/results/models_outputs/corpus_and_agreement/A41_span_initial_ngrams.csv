@@ -125,40 +125,34 @@ RESSARCIMENTO,3,ressarcimento dos cofres,1,0.0159
 RESSARCIMENTO,3,ressarcimento em favor,1,0.0159
 RESSARCIMENTO,3,ressarcir a quantia,1,0.0159
 RESSARCIMENTO,3,devolução ao erário,1,0.0159
-RECOMENDACAO,1,recomende,26,0.5
-RECOMENDACAO,1,recomendação,14,0.2692
-RECOMENDACAO,1,recomendar,7,0.1346
-RECOMENDACAO,1,decide,2,0.0385
-RECOMENDACAO,1,como,1,0.0192
-RECOMENDACAO,1,imediata,1,0.0192
-RECOMENDACAO,1,corpo,1,0.0192
-RECOMENDACAO,2,recomende à,26,0.5
-RECOMENDACAO,2,recomendação ao,5,0.0962
-RECOMENDACAO,2,recomendar ao,4,0.0769
-RECOMENDACAO,2,recomendação à,4,0.0769
-RECOMENDACAO,2,recomendação de,2,0.0385
-RECOMENDACAO,2,recomendar à,2,0.0385
-RECOMENDACAO,2,recomendar a,1,0.0192
-RECOMENDACAO,2,recomendação aos,1,0.0192
-RECOMENDACAO,2,como também,1,0.0192
-RECOMENDACAO,2,decide recomendar,1,0.0192
-RECOMENDACAO,2,decide também,1,0.0192
-RECOMENDACAO,2,"recomendação que,",1,0.0192
-RECOMENDACAO,2,recomendação para,1,0.0192
-RECOMENDACAO,2,imediata da,1,0.0192
-RECOMENDACAO,2,corpo de,1,0.0192
-RECOMENDACAO,3,recomende à secretaria,26,0.5
-RECOMENDACAO,3,recomendação ao atual,3,0.0577
-RECOMENDACAO,3,recomendação à atual,2,0.0385
-RECOMENDACAO,3,recomendar à secretaria,2,0.0385
-RECOMENDACAO,3,recomendar a secretaria,1,0.0192
-RECOMENDACAO,3,recomendação ao consórcio,1,0.0192
-RECOMENDACAO,3,recomendação ao referido,1,0.0192
-RECOMENDACAO,3,recomendação aos chefes,1,0.0192
-RECOMENDACAO,3,"recomendar ao responsável,",1,0.0192
-RECOMENDACAO,3,recomendar ao controle,1,0.0192
-RECOMENDACAO,3,como também para,1,0.0192
-RECOMENDACAO,3,recomendar ao chefe,1,0.0192
-RECOMENDACAO,3,decide recomendar ao,1,0.0192
-RECOMENDACAO,3,decide também recomendar,1,0.0192
-RECOMENDACAO,3,"recomendação que, nos",1,0.0192
+RECOMENDACAO,1,recomendação,14,0.6364
+RECOMENDACAO,1,recomendar,4,0.1818
+RECOMENDACAO,1,decide,2,0.0909
+RECOMENDACAO,1,como,1,0.0455
+RECOMENDACAO,1,corpo,1,0.0455
+RECOMENDACAO,2,recomendação ao,5,0.2273
+RECOMENDACAO,2,recomendar ao,4,0.1818
+RECOMENDACAO,2,recomendação à,4,0.1818
+RECOMENDACAO,2,recomendação de,2,0.0909
+RECOMENDACAO,2,recomendação aos,1,0.0455
+RECOMENDACAO,2,como também,1,0.0455
+RECOMENDACAO,2,decide recomendar,1,0.0455
+RECOMENDACAO,2,decide também,1,0.0455
+RECOMENDACAO,2,"recomendação que,",1,0.0455
+RECOMENDACAO,2,recomendação para,1,0.0455
+RECOMENDACAO,2,corpo de,1,0.0455
+RECOMENDACAO,3,recomendação ao atual,3,0.1364
+RECOMENDACAO,3,recomendação à atual,2,0.0909
+RECOMENDACAO,3,recomendação ao consórcio,1,0.0455
+RECOMENDACAO,3,recomendação ao referido,1,0.0455
+RECOMENDACAO,3,recomendação aos chefes,1,0.0455
+RECOMENDACAO,3,"recomendar ao responsável,",1,0.0455
+RECOMENDACAO,3,recomendar ao controle,1,0.0455
+RECOMENDACAO,3,como também para,1,0.0455
+RECOMENDACAO,3,recomendar ao chefe,1,0.0455
+RECOMENDACAO,3,decide recomendar ao,1,0.0455
+RECOMENDACAO,3,decide também recomendar,1,0.0455
+RECOMENDACAO,3,"recomendação que, nos",1,0.0455
+RECOMENDACAO,3,"recomendação de que,",1,0.0455
+RECOMENDACAO,3,recomendação de que,1,0.0455
+RECOMENDACAO,3,recomendação para que,1,0.0455

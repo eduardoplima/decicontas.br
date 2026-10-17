@@ -110,6 +110,15 @@ def _check_llm(
             continue
         if len(token_offsets(llm_text)) != len(doc["tokens"]):
             problems.append(f"{name}: doc {doc_id} token count differs from the release")
+        embedded = sorted(
+            (int(g["start"]), int(g["end"]), g["labels"][0]) for g in rows[position].get("golden") or []
+        )
+        released = sorted((e["start"], e["end"], e["label"]) for e in doc["entities"])
+        if embedded != released:
+            problems.append(
+                f"{name}: doc {doc_id} embedded gold differs from the release "
+                "(run rescore_llms / rescore_experiments)"
+            )
         if llm_text != doc["text"]:
             leading = len(doc["text"]) - len(doc["text"].lstrip())
             if leading and not llm_text.startswith(doc["text"][:leading]):

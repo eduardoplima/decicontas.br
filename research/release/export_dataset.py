@@ -22,8 +22,10 @@ import hashlib
 import json
 import logging
 from pathlib import Path
+from typing import NamedTuple
 
-from research.dataset_io import load_dataset
+from research.annotation_scope import apply_scope
+from research.dataset_io import Document, load_dataset
 from research.release.apply_corrections import apply_corrections, load_corrections
 from research.release.exporters import write_all_formats
 from research.release.stats import (
@@ -42,6 +44,20 @@ DEFAULT_RELEASE_DIR = REPO_ROOT / "dataset" / "release"
 
 
 logger = logging.getLogger("research.release.export_dataset")
+
+
+class ReleaseBundles(NamedTuple):
+    """The two released versions: the original annotation and the reviewed one."""
+
+    before: list[Document]
+    after: list[Document]
+
+
+def build_bundles(labeled_path: Path, corrections_path: Path) -> ReleaseBundles:
+    """Both bundles exactly as :func:`export_release` writes them, within the annotation scope."""
+    documents = load_dataset(labeled_path, exclude_fewshot=True).documents
+    corrected = apply_corrections(documents, load_corrections(corrections_path))
+    return ReleaseBundles(before=apply_scope(documents), after=apply_scope(corrected))
 
 
 def _sha256(path: Path) -> str:
@@ -101,13 +117,21 @@ of Rio Grande do Norte (TCE/RN). Four entity classes are annotated:
 - **`decicontas-before-correction/`** — the canonical 861-document split
   (5 documents used as few-shot examples in LLM prompts have been removed
   to avoid evaluation contamination). Annotations are the original gold
-  labels from the Label Studio export.
+  labels from the Label Studio export, within the annotation scope below.
 - **`decicontas/`** — the same 861 documents with
   reviewer-validated corrections applied. The corrections were sourced
   from a Cleanlab error-detection pass: every group flagged by the
   ensemble with confidence ≥ 0.95 was reviewed entity-by-entity in a
   custom admin UI; groups below that threshold were left at the
   original gold annotation.
+
+## Annotation scope
+
+Entities are deliberations addressed to the audited bodies. Recommendations
+and notices that a ruling addresses to the Tribunal's own units — the
+external-control secretariat (SECEX) or the legal counsel (CONJU) — are
+internal management acts that the CGAD sub-registries do not record, so
+neither version annotates them (`research/annotation_scope.py`).
 
 ## Formats
 
@@ -193,20 +217,15 @@ def export_release(
     corrections_path: Path = DEFAULT_CORRECTIONS,
     release_dir: Path = DEFAULT_RELEASE_DIR,
 ) -> dict:
-    logger.info("loading master dataset from %s", labeled_path)
-    dataset = load_dataset(labeled_path, exclude_fewshot=True)
-    documents = dataset.documents
-    logger.info("loaded %d docs (after few-shot filter)", len(documents))
-
-    logger.info("loading corrections from %s", corrections_path)
-    overrides = load_corrections(corrections_path)
+    logger.info("building bundles from %s and %s", labeled_path, corrections_path)
+    bundles = build_bundles(labeled_path, corrections_path)
+    documents, corrected_documents = bundles.before, bundles.after
     corrections_meta = _summarise_corrections(corrections_path)
     logger.info(
-        "applying %d token-level overrides from %d decided groups",
-        len(overrides),
+        "%d docs; %d decided groups",
+        len(documents),
         corrections_meta.get("groups_decided") or 0,
     )
-    corrected_documents = apply_corrections(documents, overrides)
 
     before_dir = release_dir / "decicontas-before-correction"
     after_dir = release_dir / "decicontas"

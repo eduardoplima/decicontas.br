@@ -38,6 +38,7 @@ import pandas as pd
 
 from research.fewshot import FEWSHOT_RESULT_POSITIONS
 from research.dataset_io import spans_to_token_units, token_offsets
+from research.annotation_scope import filter_frame
 from research.ner_metrics import (
     ENTITY_LABELS,
     bipartite_greedy_match,
@@ -321,6 +322,15 @@ def _is_supervised_model(name: str) -> bool:
     return name.endswith("__supervised")
 
 
+def load_scored(path: Path, *, supervised: bool) -> pd.DataFrame:
+    """One result file as every metric sees it: token-unit spans, without the
+    few-shot rows and without the predictions on out-of-scope clauses
+    (:mod:`research.annotation_scope`). Block M and the literal-copy audit
+    read the raw ``pred`` strings instead."""
+    df = _load_supervised_df(path) if supervised else _load_llm_df(path)
+    return filter_frame(_drop_fewshot(df))
+
+
 def load_all_models(input_dir: Path) -> dict[str, pd.DataFrame]:
     out: dict[str, pd.DataFrame] = {}
     for m in MODELS:
@@ -328,12 +338,7 @@ def load_all_models(input_dir: Path) -> dict[str, pd.DataFrame]:
         if not path.exists():
             logger.warning("missing %s", path)
             continue
-        if _is_supervised_model(m):
-            df = _load_supervised_df(path)
-        else:
-            df = _load_llm_df(path)
-        df = _drop_fewshot(df)
-        out[m] = df
+        out[m] = load_scored(path, supervised=_is_supervised_model(m))
     return out
 
 
@@ -503,8 +508,7 @@ def block_fg_structured(out_dir: Path) -> None:
     overall_rows = []
     per_entity_rows = []
     for jf in sorted(src.glob("*.json")):
-        df = _load_llm_df(jf)
-        df = _drop_fewshot(df)
+        df = load_scored(jf, supervised=False)
         result = _per_entity_metrics(df)
         flat = result["flat"]
         name = jf.stem.replace("models_results_decicontas_", "")
@@ -569,7 +573,7 @@ def block_fg_structured(out_dir: Path) -> None:
             fc = pivot_overall.loc[(model, "function_calling")]
         except KeyError:
             continue
-        main_flat = _per_entity_metrics(_drop_fewshot(_load_llm_df(main_path)))["flat"]
+        main_flat = _per_entity_metrics(load_scored(main_path, supervised=False))["flat"]
         repl_rows.append(
             {
                 "model": model,
@@ -614,8 +618,7 @@ def block_h_prompting(out_dir: Path) -> None:
     overall_rows = []
     per_entity_rows = []
     for jf in sorted(src.glob("*.json")):
-        df = _load_llm_df(jf)
-        df = _drop_fewshot(df)
+        df = load_scored(jf, supervised=False)
         result = _per_entity_metrics(df)
         flat = result["flat"]
         model, technique = _parse_technique(jf.stem)
@@ -1081,18 +1084,18 @@ def block_k_iou_sensitivity(model_dfs: dict[str, pd.DataFrame], out_dir: Path) -
 
 
 def _keep_informative_only(df: pd.DataFrame) -> pd.DataFrame:
-    """Keep only documents carrying at least one gold entity (drops the 629
-    empty documents that can only contribute false positives)."""
+    """Keep only documents carrying at least one gold entity (drops the empty
+    documents, which can only contribute false positives)."""
     return df[df["golden"].apply(len) > 0].reset_index(drop=True)
 
 
 def block_l_informative_subset(model_dfs: dict[str, pd.DataFrame], out_dir: Path) -> None:
-    """Re-score every model on the 232 informative documents only (p41b).
+    """Re-score every model on the informative documents only (p41b).
 
-    Of the 861 documents, 629 carry no gold entity and contribute only false
-    positives. Restricting to the 232 documents with ≥ 1 gold entity shows how
-    much of each model's precision came from the volume of easy negatives
-    rather than from accurate span delimitation.
+    Most documents carry no gold entity and contribute only false positives.
+    Restricting to the documents with ≥ 1 gold entity shows how much of each
+    model's precision came from the volume of easy negatives rather than from
+    accurate span delimitation.
     """
     rows: list[dict] = []
     for m, df in model_dfs.items():
@@ -1333,7 +1336,12 @@ def write_report(out_dir: Path, j_summary: list[dict[str, Any]]) -> None:
         "nula) e o BIO passou a ser re-derivado dos spans reconstruídos. Antes "
         "disso o release publicava 459 entidades no campo `entities` e apenas "
         "442 sob IOB2 estrito em `ner_tags`, e trazia fragmentos espúrios de "
-        "até um caractere.\n"
+        "até um caractere.\n\n"
+        "5. **Escopo da anotação.** Deliberações dirigidas a unidades do próprio "
+        "Tribunal (recomendações e cientificações à SECEX ou à CONJU) não são "
+        "entidades: o gold não as anota e as predições que caem sobre elas são "
+        "descartadas antes da pontuação, para todos os modelos "
+        "(`research.annotation_scope`; contagens em `C_scope_filter.csv`).\n"
     )
     # ----- A. Corpus -------------------------------------------------------
     parts.append("## A. Caracterização do corpus\n")
@@ -1518,13 +1526,16 @@ def write_report(out_dir: Path, j_summary: list[dict[str, Any]]) -> None:
 
     # ----- L. Informative subset ------------------------------------------
     parts.append("## L. Métrica restrita aos documentos informativos (p41b)\n")
+    l_df = pd.read_csv(out_dir / "L_informative_subset.csv")
+    n_full = int(l_df["n_docs_full"].iloc[0])
+    n_inf = int(l_df["n_docs_informative"].iloc[0])
     parts.append(
-        "Dos 861 documentos, 629 não têm entidade gold e só contribuem com falsos "
-        "positivos. Restringindo aos 232 documentos com ≥ 1 entidade, vê-se quanto "
-        "da precisão vinha do volume de negativos (queda de precisão = inflada "
-        "pelos vazios):\n"
+        f"Dos {n_full} documentos, {n_full - n_inf} não têm entidade gold e só "
+        f"contribuem com falsos positivos. Restringindo aos {n_inf} documentos com "
+        "≥ 1 entidade, vê-se quanto da precisão vinha do volume de negativos "
+        "(queda de precisão = inflada pelos vazios):\n"
     )
-    parts.append(_md_table(pd.read_csv(out_dir / "L_informative_subset.csv")) + "\n")
+    parts.append(_md_table(l_df) + "\n")
 
     # ----- M. Alignment failures ------------------------------------------
     m_path = out_dir / "M_alignment_failures.csv"
@@ -1543,6 +1554,17 @@ def write_report(out_dir: Path, j_summary: list[dict[str, Any]]) -> None:
     logger.info("wrote %s", out_dir / "REPORT.md")
 
 
+def block_c_scope_filter(model_dfs: dict[str, pd.DataFrame], out_dir: Path) -> None:
+    """Predictions discarded by the annotation-scope filter, per model (``n_dropped``),
+    and how many of those overlapped a gold entity (``n_dropped_on_gold``)."""
+    rows = [
+        {"model": m, "display": DISPLAY_NAMES.get(m, m), **df.attrs.get("scope_filter", {})}
+        for m, df in model_dfs.items()
+    ]
+    pd.DataFrame(rows).to_csv(out_dir / "C_scope_filter.csv", index=False)
+    logger.info("wrote %s", out_dir / "C_scope_filter.csv")
+
+
 def run() -> None:
     OUTPUT_ROOT.mkdir(parents=True, exist_ok=True)
     block_a_corpus(OUTPUT_ROOT)
@@ -1550,6 +1572,7 @@ def run() -> None:
 
     logger.info("loading model predictions from %s", CORRECTED_OUTPUT_DIR)
     model_dfs = load_all_models(CORRECTED_OUTPUT_DIR)
+    block_c_scope_filter(model_dfs, OUTPUT_ROOT)
 
     metrics_by_model = block_cd_main_results(model_dfs, OUTPUT_ROOT)
 

@@ -21,6 +21,7 @@ Behaviour mirrors the notebook exactly:
 from __future__ import annotations
 
 import argparse
+import functools
 import json
 import logging
 from itertools import combinations
@@ -31,6 +32,7 @@ import numpy as np
 import pandas as pd
 
 from research.dataset_io import spans_to_token_units, token_offsets
+from research.annotation_scope import clause_regions, filter_spans
 from research.fewshot import FEWSHOT_RESULT_POSITIONS
 from research.ner_metrics import bipartite_greedy_match, convert_pred_to_golden_format
 
@@ -227,10 +229,8 @@ def _load_from_bio_layout(
     return pd.DataFrame(rows)
 
 
-def gold_spans_by_master_position(
-    gold_path: Path | None = None,
-) -> dict[int, list[dict]]:
-    """Canonical gold as token-index spans, keyed by master row position.
+def _release_by_master_position(gold_path: Path | None = None) -> list[tuple[int, dict]]:
+    """Release documents paired with their master row position.
 
     The supervised layouts are indexed by the 866-row master export; the
     release holds the 861 documents that survive the few-shot filter.
@@ -242,8 +242,15 @@ def gold_spans_by_master_position(
     )
     skipped = set(FEWSHOT_RESULT_POSITIONS)
     positions = [p for p in range(866) if p not in skipped]
+    return list(zip(positions, release))
+
+
+def gold_spans_by_master_position(
+    gold_path: Path | None = None,
+) -> dict[int, list[dict]]:
+    """Canonical gold as token-index spans, keyed by master row position."""
     out: dict[int, list[dict]] = {}
-    for position, doc in zip(positions, release):
+    for position, doc in _release_by_master_position(gold_path):
         spans, _ = spans_to_token_units(
             [tuple(o) for o in doc["token_offsets"]],
             [
@@ -253,6 +260,29 @@ def gold_spans_by_master_position(
         )
         out[position] = spans
     return out
+
+
+@functools.lru_cache(maxsize=1)
+def clause_regions_by_master_position() -> dict[int, list[tuple[int, int]]]:
+    """Out-of-scope clauses as token ranges, keyed by master row position."""
+    out: dict[int, list[tuple[int, int]]] = {}
+    for position, doc in _release_by_master_position():
+        regions = clause_regions(doc["text"], [tuple(o) for o in doc["token_offsets"]])
+        if regions:
+            out[position] = regions
+    return out
+
+
+def apply_scope_filter(
+    df: pd.DataFrame, regions_by_position: dict[int, list[tuple[int, int]]]
+) -> pd.DataFrame:
+    """Drop the predictions that touch an out-of-scope clause; rows are master positions."""
+    df = df.copy()
+    df["pred_as_golden"] = [
+        filter_spans(preds or [], regions_by_position.get(i, []))[0]
+        for i, preds in enumerate(df["pred_as_golden"])
+    ]
+    return df
 
 
 def load_model_predictions(
@@ -281,13 +311,15 @@ def load_model_predictions(
             and "true_labels" in raw[0]
             and "pred_labels" in raw[0]
         ):
-            return _load_from_bio_layout(raw, model_name, gold_by_position)
-        if isinstance(raw, dict) and "true_labels" in raw and "pred_labels" in raw:
-            return _load_from_bio_layout(raw, model_name, gold_by_position)
-        df = pd.DataFrame(raw)
-        if {"golden"} <= set(df.columns):
-            return _load_from_llm_layout(df, model_name)
-        raise ValueError(f"Unrecognised layout in {path}. Columns: {list(df.columns)}")
+            frame = _load_from_bio_layout(raw, model_name, gold_by_position)
+        elif isinstance(raw, dict) and "true_labels" in raw and "pred_labels" in raw:
+            frame = _load_from_bio_layout(raw, model_name, gold_by_position)
+        else:
+            df = pd.DataFrame(raw)
+            if not {"golden"} <= set(df.columns):
+                raise ValueError(f"Unrecognised layout in {path}. Columns: {list(df.columns)}")
+            frame = _load_from_llm_layout(df, model_name)
+        return apply_scope_filter(frame, clause_regions_by_master_position())
     raise FileNotFoundError(
         f"No predictions for '{model_name}' under {input_dir}"
     )

@@ -47,6 +47,7 @@ from typing import Any
 import pandas as pd
 
 from research.dataset_io import char_span_to_token_span, spans_to_token_units, token_offsets
+from research.annotation_scope import clause_regions, filter_spans
 from research.ner_metrics import (
     convert_pred_to_golden_format,
     count_alignment_failures,
@@ -335,9 +336,14 @@ def rescore_literal_first(model_dfs: dict[str, pd.DataFrame]) -> pd.DataFrame:
         cf_pred: list[list[dict]] = []
         for _, row in df.iterrows():
             offsets = token_offsets(row["text"] or "")
+            regions = clause_regions(row["text"] or "", offsets)
             legacy_spans = convert_pred_to_golden_format(row, exact_first=False)
-            legacy_pred.append(spans_to_token_units(offsets, legacy_spans)[0])
-            cf_pred.append(spans_to_token_units(offsets, literal_first_spans(row))[0])
+            legacy_pred.append(
+                filter_spans(spans_to_token_units(offsets, legacy_spans)[0], regions)[0]
+            )
+            cf_pred.append(
+                filter_spans(spans_to_token_units(offsets, literal_first_spans(row))[0], regions)[0]
+            )
         current = span_metrics_multi_iou(df.assign(pred_as_golden=legacy_pred), [0.5, 1.0])
         counterfactual = span_metrics_multi_iou(df.assign(pred_as_golden=cf_pred), [0.5, 1.0])
         rows.append(

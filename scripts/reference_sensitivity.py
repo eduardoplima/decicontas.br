@@ -45,6 +45,7 @@ import pandas as pd
 from scipy.stats import spearmanr
 
 from research.dataset_io import collapse_label
+from research.annotation_scope import clause_regions, inside
 from research.ner_metrics import bipartite_greedy_match
 from research.release import paths
 from research.release.annotator_agreement import ANNOTATOR_IDS, load_annotator
@@ -52,10 +53,8 @@ from research.release.bootstrap_significance import paired_bootstrap_diff_macro
 from research.release.evaluation_numbers import (
     DISPLAY_NAMES,
     MODELS,
-    _load_llm_df,
-    _load_supervised_df,
     _is_supervised_model,
-    _drop_fewshot,
+    load_scored,
 )
 
 logger = logging.getLogger("reference_sensitivity")
@@ -70,13 +69,20 @@ def reference_token_spans() -> dict[str, dict[int, list[tuple[int, int, str]]]]:
 
     Os três anotadores cobrem os mesmos 861 documentos; a ordem do release
     (ordenada por id) define o índice usado para casar com as predições, que
-    já vêm sem as cinco posições de few-shot.
+    já vêm sem as cinco posições de few-shot. Como referência de pontuação,
+    cada anotação segue o mesmo escopo do gold (:mod:`research.annotation_scope`);
+    o estudo de concordância (``annotator_agreement``) usa as anotações como
+    foram feitas.
     """
     release = sorted(
         json.loads(paths.CORRECTED_GOLD_JSON.read_text(encoding="utf-8")),
         key=lambda d: d["id"],
     )
     id_to_index = {doc["id"]: i for i, doc in enumerate(release)}
+    regions = {
+        i: clause_regions(doc["text"], [tuple(o) for o in doc["token_offsets"]])
+        for i, doc in enumerate(release)
+    }
 
     out: dict[str, dict[int, list[tuple[int, int, str]]]] = {}
     for name in ANNOTATOR_IDS:
@@ -87,7 +93,9 @@ def reference_token_spans() -> dict[str, dict[int, list[tuple[int, int, str]]]]:
             if idx is None:
                 continue
             per_doc[idx] = [
-                (s, e, collapse_label(lab)) for s, e, lab in rec["token_spans"]
+                (s, e, collapse_label(lab))
+                for s, e, lab in rec["token_spans"]
+                if not inside((s, e), regions[idx])
             ]
         out[name] = per_doc
     return out
@@ -181,8 +189,7 @@ def predictions_by_doc(
         if not path.exists():
             logger.warning("faltando %s", path)
             continue
-        df = _load_supervised_df(path) if _is_supervised_model(model) else _load_llm_df(path)
-        df = _drop_fewshot(df)
+        df = load_scored(path, supervised=_is_supervised_model(model))
         out[model] = {
             i: [(a["start"], a["end"], a["labels"][0]) for a in (row or [])]
             for i, row in enumerate(df["pred_as_golden"])

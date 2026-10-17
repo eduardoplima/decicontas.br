@@ -30,6 +30,7 @@ from pathlib import Path
 import pandas as pd
 
 from research.dataset_io import char_span_to_token_span, collapse_label, token_offsets
+from research.annotation_scope import clause_regions, overlaps
 from research.fewshot import FEWSHOT_RESULT_POSITIONS
 from research.ner_metrics import bipartite_greedy_match, convert_pred_to_golden_format
 from research.release import paths
@@ -96,7 +97,10 @@ def analyse_model(model: str) -> tuple[dict, pd.DataFrame]:
         gold_t = to_tokens(gold_c, offsets)
         pred_t = to_tokens(pred_c, offsets)
         keep_g = [i for i, t in enumerate(gold_t) if t is not None]
-        keep_p = [i for i, t in enumerate(pred_t) if t is not None]
+        regions = clause_regions(text, offsets)
+        keep_p = [
+            i for i, t in enumerate(pred_t) if t is not None and not overlaps(t, regions)
+        ]
         g_tok = [gold_t[i] for i in keep_g]
         p_tok = [pred_t[i] for i in keep_p]
         n_pred += len(p_tok)

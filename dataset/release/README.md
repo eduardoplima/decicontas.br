@@ -11,13 +11,21 @@ of Rio Grande do Norte (TCE/RN). Four entity classes are annotated:
 - **`decicontas-before-correction/`** — the canonical 861-document split
   (5 documents used as few-shot examples in LLM prompts have been removed
   to avoid evaluation contamination). Annotations are the original gold
-  labels from the Label Studio export.
+  labels from the Label Studio export, within the annotation scope below.
 - **`decicontas/`** — the same 861 documents with
   reviewer-validated corrections applied. The corrections were sourced
   from a Cleanlab error-detection pass: every group flagged by the
   ensemble with confidence ≥ 0.95 was reviewed entity-by-entity in a
   custom admin UI; groups below that threshold were left at the
   original gold annotation.
+
+## Annotation scope
+
+Entities are deliberations addressed to the audited bodies. Recommendations
+and notices that a ruling addresses to the Tribunal's own units — the
+external-control secretariat (SECEX) or the legal counsel (CONJU) — are
+internal management acts that the CGAD sub-registries do not record, so
+neither version annotates them (`research/annotation_scope.py`).
 
 ## Formats
 
@@ -64,22 +72,22 @@ threshold and were not reviewed; they keep their original gold labels in
 
 ```
 documents:                861
-documents with entity:    229
+documents with entity:    196
 tokens:                   116844
 characters:               754555
-entities per label:       {'MULTA': 202, 'OBRIGACAO': 119, 'RESSARCIMENTO': 62, 'RECOMENDACAO': 56}
-documents per label:      {'MULTA': 139, 'OBRIGACAO': 88, 'RESSARCIMENTO': 56, 'RECOMENDACAO': 51}
+entities per label:       {'MULTA': 202, 'OBRIGACAO': 119, 'RESSARCIMENTO': 62, 'RECOMENDACAO': 21}
+documents per label:      {'MULTA': 139, 'OBRIGACAO': 88, 'RESSARCIMENTO': 56, 'RECOMENDACAO': 16}
 ```
 
 ### After corrections (`decicontas/`)
 
 ```
 documents:                861
-documents with entity:    231
+documents with entity:    202
 tokens:                   116844
 characters:               754555
-entities per label:       {'MULTA': 203, 'OBRIGACAO': 123, 'RESSARCIMENTO': 63, 'RECOMENDACAO': 52}
-documents per label:      {'MULTA': 140, 'OBRIGACAO': 92, 'RESSARCIMENTO': 57, 'RECOMENDACAO': 47}
+entities per label:       {'MULTA': 203, 'OBRIGACAO': 123, 'RESSARCIMENTO': 63, 'RECOMENDACAO': 22}
+documents per label:      {'MULTA': 140, 'OBRIGACAO': 92, 'RESSARCIMENTO': 57, 'RECOMENDACAO': 17}
 ```
 
 ## Reproducibility

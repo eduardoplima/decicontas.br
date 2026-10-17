@@ -36,7 +36,7 @@ Cada instância é o texto integral de uma decisão colegiada (acórdão ou deci
 
 **Quantas instâncias há no total (de cada tipo, se apropriado)?**
 
-861 documentos, totalizando 116.844 *tokens* e 754.555 caracteres. Desses, 231 documentos (26,8%) contêm ao menos uma entidade anotada e 630 (73,2%) são vazios — verdadeiros negativos, integralmente lidos e julgados sem comando registrável (arquivamentos, julgamentos de regularidade plena). Na versão corrigida há 441 entidades: 203 MULTA, 123 OBRIGACAO, 63 RESSARCIMENTO e 52 RECOMENDACAO (na versão antes das correções: 439 entidades — 202/119/62/56).
+861 documentos, totalizando 116.844 *tokens* e 754.555 caracteres. Desses, 202 documentos (23,5%) contêm ao menos uma entidade anotada e 659 (76,5%) são vazios — verdadeiros negativos, integralmente lidos e julgados sem comando registrável (arquivamentos, julgamentos de regularidade plena). Na versão corrigida há 411 entidades: 203 MULTA, 123 OBRIGACAO, 63 RESSARCIMENTO e 22 RECOMENDACAO (na versão antes das correções: 404 entidades — 202/119/62/21).
 
 **O dataset contém todas as instâncias possíveis ou é uma amostra (não necessariamente aleatória) de um conjunto maior?**
 
@@ -48,7 +48,7 @@ Texto bruto (não processado) da decisão, acompanhado dos artefatos derivados: 
 
 **Há um rótulo ou alvo associado a cada instância?**
 
-Sim. Cada *token* recebe um dos nove rótulos BIO: `O`, `B-/I-MULTA`, `B-/I-OBRIGACAO`, `B-/I-RESSARCIMENTO`, `B-/I-RECOMENDACAO`. As quatro categorias correspondem aos subcadastros do CGAD: MULTA (sanção pecuniária), OBRIGACAO (determinação vinculante de fazer/não fazer), RESSARCIMENTO (devolução de valores ao erário) e RECOMENDACAO (orientação não vinculante). O esquema é *flat* — sem aninhamento nem sobreposição de *spans* (nas 441 entidades não há um único par sobreposto).
+Sim. Cada *token* recebe um dos nove rótulos BIO: `O`, `B-/I-MULTA`, `B-/I-OBRIGACAO`, `B-/I-RESSARCIMENTO`, `B-/I-RECOMENDACAO`. As quatro categorias correspondem aos subcadastros do CGAD: MULTA (sanção pecuniária), OBRIGACAO (determinação vinculante de fazer/não fazer), RESSARCIMENTO (devolução de valores ao erário) e RECOMENDACAO (orientação não vinculante dirigida ao jurisdicionado). Deliberações dirigidas a unidades do próprio Tribunal — recomendações e cientificações à Secretaria de Controle Externo (SECEX) ou à Consultoria Jurídica (CONJU) — são atos de gestão interna que o CGAD não registra e não são anotadas. O esquema é *flat* — sem aninhamento nem sobreposição de *spans* (nas 411 entidades não há um único par sobreposto).
 
 **Falta alguma informação em instâncias individuais?**
 
@@ -64,7 +64,7 @@ Não há *split* fixo. O protocolo da dissertação usa validação cruzada de 5
 
 **Há erros, fontes de ruído ou redundâncias conhecidas no dataset?**
 
-Sim, e são documentadas. O padrão-ouro reflete o julgamento de um único anotador; dois mecanismos independentes quantificam e mitigam o ruído decorrente. Primeiro, um estudo de concordância inter-anotadores: duas anotadoras adicionais re-anotaram independentemente os 861 documentos do corpus, com κ de Cohen token-level par-a-par de 0,842–0,899 (κ de Fleiss 0,865, faixa "quase perfeita" de Landis & Koch) e F1 de *span* par-a-par (IoU ≥ 0,5) de 0,776–0,838; as três anotações e as planilhas de divergência são distribuídas em `dataset/annotators/` e `dataset/results/models_outputs/corpus_and_agreement/`. Segundo, foi conduzida uma auditoria de erros de anotação com a biblioteca Cleanlab (*confident learning*), que confronta cada rótulo com predições fora da amostra de um *ensemble* de modelos. Dos 794 grupos sinalizados, os 567 com confiança de *ensemble* ≥ 0,95 foram revisados um a um em interface própria (6 aceitos, 544 rejeitados, 17 correções customizadas; 961 tokens com rótulo alterado, de 4.199 decisões registradas); os 227 grupos abaixo do limiar **não** foram revisados e mantêm o rótulo original — ruído residual de anotação pode persistir nesses casos. As duas versões (antes/depois das correções) são distribuídas para permitir a quantificação desse efeito. Não há documentos duplicados no release.
+Sim, e são documentadas. O padrão-ouro reflete o julgamento de um único anotador; dois mecanismos independentes quantificam e mitigam o ruído decorrente. Primeiro, um estudo de concordância inter-anotadores: duas anotadoras adicionais re-anotaram independentemente os 861 documentos do corpus, com κ de Cohen token-level par-a-par de 0,864–0,899 (κ de Fleiss 0,879, faixa "quase perfeita" de Landis & Koch) e F1 de *span* par-a-par (IoU ≥ 0,5) de 0,824–0,838; as três anotações e as planilhas de divergência são distribuídas em `dataset/annotators/` e `dataset/results/models_outputs/corpus_and_agreement/`. Segundo, foi conduzida uma auditoria de erros de anotação com a biblioteca Cleanlab (*confident learning*), que confronta cada rótulo com predições fora da amostra de um *ensemble* de modelos. Dos 794 grupos sinalizados, os 567 com confiança de *ensemble* ≥ 0,95 foram revisados um a um em interface própria (6 aceitos, 544 rejeitados, 17 correções customizadas; 961 tokens com rótulo alterado, de 4.199 decisões registradas); os 227 grupos abaixo do limiar **não** foram revisados e mantêm o rótulo original — ruído residual de anotação pode persistir nesses casos. As duas versões (antes/depois das correções) são distribuídas para permitir a quantificação desse efeito. Não há documentos duplicados no release.
 
 **O dataset é autocontido ou depende de recursos externos (sites, tweets, outros datasets)?**
 
@@ -92,7 +92,7 @@ Os textos originais continham CPFs (identificador governamental brasileiro) de p
 
 **Algum outro comentário?**
 
-A distribuição de entidades é fortemente assimétrica (MULTA responde por ~46% das entidades) e os *spans* são longos (mediana de ~300 caracteres para MULTA), características que condicionam a escolha de métricas e esquemas de rotulagem (ver Seção 5).
+A distribuição de entidades é fortemente assimétrica (MULTA responde por ~49% das entidades) e os *spans* são longos (mediana de ~300 caracteres para MULTA), características que condicionam a escolha de métricas e esquemas de rotulagem (ver Seção 5).
 
 ---
 
@@ -154,7 +154,7 @@ Nenhum.
 
 Sim:
 
-1. **Rotulagem manual** — os 866 documentos importados foram anotados no nível de *span* no Label Studio, com registro dos limites de início e fim de cada entidade, seguindo diretrizes de delimitação ancoradas no dispositivo da decisão (o comando, não sua fundamentação). Rótulos finos usados durante a anotação foram colapsados nas quatro categorias de avaliação: `MULTA_FIXA`/`MULTA_PERCENTUAL` → `MULTA`; `OBRIGACAO_MULTA` → `OBRIGACAO`.
+1. **Rotulagem manual** — os 866 documentos importados foram anotados no nível de *span* no Label Studio, com registro dos limites de início e fim de cada entidade, seguindo diretrizes de delimitação ancoradas no dispositivo da decisão (o comando, não sua fundamentação) e restritas às deliberações dirigidas aos jurisdicionados (`research/domain_rules.py` codifica a exclusão das dirigidas a unidades do próprio Tribunal). Rótulos finos usados durante a anotação foram colapsados nas quatro categorias de avaliação: `MULTA_FIXA`/`MULTA_PERCENTUAL` → `MULTA`; `OBRIGACAO_MULTA` → `OBRIGACAO`.
 2. **Tokenização** — por espaço em branco (`re.finditer(r'\S+', text)`), única em todo o *pipeline* (anotação → auditoria → treino → avaliação), implementada em `research/dataset_io.py`, fonte única de verdade para índices de *tokens*.
 3. **Projeção BIO** — os *spans* de caracteres são projetados para rótulos BIO por *token* (9 classes).
 4. **Remoção de instâncias** — os 5 documentos usados como exemplares *few-shot* nos *prompts* (IDs 6, 782, 790, 817 e 852 do export original) foram removidos, resultando em 861 documentos.
@@ -191,7 +191,7 @@ Além de REN: extração estruturada de atributos das decisões (valores, prazos
 
 **Há algo na composição do dataset ou na forma como foi coletado e pré-processado/limpo/rotulado que possa impactar usos futuros?**
 
-Sim, quatro pontos: (i) **desbalanceamento** — MULTA concentra ~46% das entidades e 73,0% dos documentos são vazios; o micro-F1 é dominado pela classe majoritária e pela capacidade de abstenção, recomendando-se o macro-F1 de *span* e a análise do subconjunto informativo; (ii) **padrão-ouro de anotador único** — o estudo de concordância com duas anotadoras independentes (F1 de *span* par-a-par 0,776–0,838) fornece um teto humano de referência, mas as divergências não foram adjudicadas (em especial na classe RECOMENDACAO, a de menor concordância frente ao padrão-ouro) e os 227 grupos abaixo do limiar de revisão da auditoria mantêm o rótulo original; (iii) **recorte institucional e temporal** — um único tribunal (TCE/RN), com 86,9% das decisões de 2024; a transferência para outras Cortes de Contas, com formulários decisórios distintos, deve ser validada empiricamente; (iv) **mascaramento de CPFs** — modelos treinados no corpus não verão CPFs reais, o que afeta usos que dependam desse padrão numérico. O vocabulário do corpus também é distante do de corpora judiciais (Jaccard de 0,29 com o LeNER-Br nos 5.000 tipos mais frequentes), o que limita comparações diretas.
+Sim, quatro pontos: (i) **desbalanceamento** — MULTA concentra ~49% das entidades e 76,5% dos documentos são vazios; o micro-F1 é dominado pela classe majoritária e pela capacidade de abstenção, recomendando-se o macro-F1 de *span* e a análise do subconjunto informativo; (ii) **padrão-ouro de anotador único** — o estudo de concordância com duas anotadoras independentes (F1 de *span* par-a-par 0,776–0,838) fornece um teto humano de referência, mas as divergências não foram adjudicadas (em especial na classe RECOMENDACAO, a de menor concordância frente ao padrão-ouro) e os 227 grupos abaixo do limiar de revisão da auditoria mantêm o rótulo original; (iii) **recorte institucional e temporal** — um único tribunal (TCE/RN), com 86,9% das decisões de 2024; a transferência para outras Cortes de Contas, com formulários decisórios distintos, deve ser validada empiricamente; (iv) **mascaramento de CPFs** — modelos treinados no corpus não verão CPFs reais, o que afeta usos que dependam desse padrão numérico. O vocabulário do corpus também é distante do de corpora judiciais (Jaccard de 0,29 com o LeNER-Br nos 5.000 tipos mais frequentes), o que limita comparações diretas.
 
 **Há tarefas para as quais o dataset não deve ser usado?**
 

@@ -1,5 +1,5 @@
 metric,value
-fleiss_kappa_token,0.8651960840879714
-mean_pairwise_kappa_token,0.8655818578246747
-mean_pairwise_span_f1_micro,0.8120797001503924
+fleiss_kappa_token,0.8791564130108486
+mean_pairwise_kappa_token,0.879252215464934
+mean_pairwise_span_f1_micro,0.8301422965073136
 n_documents,861.0

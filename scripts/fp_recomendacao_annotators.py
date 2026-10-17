@@ -5,11 +5,11 @@ A taxonomia de erros do Capítulo 5 (``block_i_errors`` em
 (``FP``) a predição que fica sem par no pareamento um-para-um com o gold
 (IoU >= 0,5 e mesmo rótulo, guloso por IoU) e que não se sobrepõe a entidade
 alguma do gold, de qualquer classe. Para Recomendação, o deepseek-v4-flash
-(few-shot) tem 36 desses casos em 45 erros. Como as Anotadoras 2 e 3 foram
-mais restritivas que o gold nessa classe (33 e 28 spans contra 52), cabe
-perguntar se os trechos extraídos em excesso foram registrados por elas --- o
-que apontaria ambiguidade da diretriz --- ou ignorados pelas duas --- o que
-confirmaria o excesso como erro do modelo.
+(few-shot) é o modelo analisado. Cabe perguntar se os trechos de Recomendação
+extraídos em excesso foram registrados pelas Anotadoras 2 e 3 --- o que
+apontaria ambiguidade da diretriz --- ou ignorados pelas duas --- o que
+confirmaria o excesso como erro do modelo. As contagens saem do CSV gravado,
+não deste texto.
 
 Este script reproduz a classificação de ``block_i_errors`` para o modelo,
 recupera o span (índices de token) de cada FP espúrio de Recomendação e o
@@ -52,8 +52,7 @@ from research.release.annotator_agreement import load_annotator
 from research.release.evaluation_numbers import (
     DISPLAY_NAMES,
     _classify_pair,
-    _drop_fewshot,
-    _load_llm_df,
+    load_scored,
 )
 
 logger = logging.getLogger("fp_recomendacao_annotators")
@@ -97,9 +96,9 @@ def annotator_token_spans(name: str, release: list[dict]) -> dict[int, list[Span
 
 
 def model_frame(model: str) -> pd.DataFrame:
-    """Predições e gold do modelo em índices de token, sem os few-shot."""
+    """Predições e gold do modelo como a avaliação os vê (sem few-shot, com o filtro de escopo)."""
     path = paths.OUTPUT_CORRECTED_DIR / f"models_results_decicontas_{model}.json"
-    return _drop_fewshot(_load_llm_df(path))
+    return load_scored(path, supervised=False)
 
 
 def spurious_false_positives(pred: list[Span], gold: list[Span]) -> list[int]:

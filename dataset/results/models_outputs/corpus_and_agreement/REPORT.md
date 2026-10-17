@@ -6,19 +6,19 @@ Gerado por `research.release.corpus_analysis` a partir de `dataset/release/decic
 
 | n_entities   |   n_docs |   pct_all_docs |   pct_informative_docs |
 |:-------------|---------:|---------------:|-----------------------:|
-| 0            |      630 |         0.7317 |               nan      |
-| 1            |      115 |         0.1336 |                 0.4978 |
-| 2            |       77 |         0.0894 |                 0.3333 |
-| 3+           |       39 |         0.0453 |                 0.1688 |
+| 0            |      659 |         0.7654 |               nan      |
+| 1            |       87 |         0.1010 |                 0.4307 |
+| 2            |       76 |         0.0883 |                 0.3762 |
+| 3+           |       39 |         0.0453 |                 0.1931 |
 
 ## (b) Coocorrência de classes no mesmo documento
 
 | label         |   MULTA |   OBRIGACAO |   RESSARCIMENTO |   RECOMENDACAO |
 |:--------------|--------:|------------:|----------------:|---------------:|
 | MULTA         |     140 |          58 |              37 |              3 |
-| OBRIGACAO     |      58 |          92 |               2 |              7 |
+| OBRIGACAO     |      58 |          92 |               2 |              6 |
 | RESSARCIMENTO |      37 |           2 |              57 |              2 |
-| RECOMENDACAO  |       3 |           7 |               2 |             47 |
+| RECOMENDACAO  |       3 |           6 |               2 |             17 |
 
 ## (c) Posição relativa dos spans no documento
 
@@ -29,7 +29,7 @@ Aproximação declarada para dispositivo × fundamentação: sem segmentação e
 | MULTA         |     203 | 0.5329 |   0.4980 | 0.3589 | 0.6951 |                0.2709 |
 | OBRIGACAO     |     123 | 0.6736 |   0.7187 | 0.6191 | 0.7476 |                0.7154 |
 | RESSARCIMENTO |      63 | 0.6144 |   0.5866 | 0.4595 | 0.7879 |                0.4286 |
-| RECOMENDACAO  |      52 | 0.6155 |   0.6256 | 0.5509 | 0.6750 |                0.2885 |
+| RECOMENDACAO  |      22 | 0.5989 |   0.5922 | 0.4375 | 0.7616 |                0.3636 |
 
 ## (d) N-gramas iniciais dos spans por classe
 
@@ -116,28 +116,22 @@ Aproximação declarada para dispositivo × fundamentação: sem segmentação e
 | RESSARCIMENTO |   2 | devolução ao            |       1 |         0.0159 |
 | RESSARCIMENTO |   2 | restituição aos         |       1 |         0.0159 |
 | RESSARCIMENTO |   2 | ressarcimento das       |       1 |         0.0159 |
-| RECOMENDACAO  |   1 | recomende               |      26 |         0.5000 |
-| RECOMENDACAO  |   1 | recomendação            |      14 |         0.2692 |
-| RECOMENDACAO  |   1 | recomendar              |       7 |         0.1346 |
-| RECOMENDACAO  |   1 | decide                  |       2 |         0.0385 |
-| RECOMENDACAO  |   1 | como                    |       1 |         0.0192 |
-| RECOMENDACAO  |   1 | imediata                |       1 |         0.0192 |
-| RECOMENDACAO  |   1 | corpo                   |       1 |         0.0192 |
-| RECOMENDACAO  |   2 | recomende à             |      26 |         0.5000 |
-| RECOMENDACAO  |   2 | recomendação ao         |       5 |         0.0962 |
-| RECOMENDACAO  |   2 | recomendar ao           |       4 |         0.0769 |
-| RECOMENDACAO  |   2 | recomendação à          |       4 |         0.0769 |
-| RECOMENDACAO  |   2 | recomendação de         |       2 |         0.0385 |
-| RECOMENDACAO  |   2 | recomendar à            |       2 |         0.0385 |
-| RECOMENDACAO  |   2 | recomendar a            |       1 |         0.0192 |
-| RECOMENDACAO  |   2 | recomendação aos        |       1 |         0.0192 |
-| RECOMENDACAO  |   2 | como também             |       1 |         0.0192 |
-| RECOMENDACAO  |   2 | decide recomendar       |       1 |         0.0192 |
-| RECOMENDACAO  |   2 | decide também           |       1 |         0.0192 |
-| RECOMENDACAO  |   2 | recomendação que,       |       1 |         0.0192 |
-| RECOMENDACAO  |   2 | recomendação para       |       1 |         0.0192 |
-| RECOMENDACAO  |   2 | imediata da             |       1 |         0.0192 |
-| RECOMENDACAO  |   2 | corpo de                |       1 |         0.0192 |
+| RECOMENDACAO  |   1 | recomendação            |      14 |         0.6364 |
+| RECOMENDACAO  |   1 | recomendar              |       4 |         0.1818 |
+| RECOMENDACAO  |   1 | decide                  |       2 |         0.0909 |
+| RECOMENDACAO  |   1 | como                    |       1 |         0.0455 |
+| RECOMENDACAO  |   1 | corpo                   |       1 |         0.0455 |
+| RECOMENDACAO  |   2 | recomendação ao         |       5 |         0.2273 |
+| RECOMENDACAO  |   2 | recomendar ao           |       4 |         0.1818 |
+| RECOMENDACAO  |   2 | recomendação à          |       4 |         0.1818 |
+| RECOMENDACAO  |   2 | recomendação de         |       2 |         0.0909 |
+| RECOMENDACAO  |   2 | recomendação aos        |       1 |         0.0455 |
+| RECOMENDACAO  |   2 | como também             |       1 |         0.0455 |
+| RECOMENDACAO  |   2 | decide recomendar       |       1 |         0.0455 |
+| RECOMENDACAO  |   2 | decide também           |       1 |         0.0455 |
+| RECOMENDACAO  |   2 | recomendação que,       |       1 |         0.0455 |
+| RECOMENDACAO  |   2 | recomendação para       |       1 |         0.0455 |
+| RECOMENDACAO  |   2 | corpo de                |       1 |         0.0455 |
 
 ## (d') Verbos/marcadores performativos
 
@@ -148,7 +142,7 @@ Radicais buscados nos 5 primeiros tokens do span (colunas `*_rate` = fração do
 | determin |              146 |     0.1696 |             0 |       0.0000 |                82 |           0.6667 |                     0 |               0.0000 |                    0 |              0.0000 |
 | julg     |              860 |     0.9988 |             0 |       0.0000 |                 0 |           0.0000 |                     0 |               0.0000 |                    0 |              0.0000 |
 | aplic    |              229 |     0.2660 |             1 |       0.0049 |                 0 |           0.0000 |                     0 |               0.0000 |                    0 |              0.0000 |
-| recomend |               87 |     0.1010 |             0 |       0.0000 |                 0 |           0.0000 |                     0 |               0.0000 |                   49 |              0.9423 |
+| recomend |               87 |     0.1010 |             0 |       0.0000 |                 0 |           0.0000 |                     0 |               0.0000 |                   20 |              0.9091 |
 | conden   |               51 |     0.0592 |             1 |       0.0049 |                 0 |           0.0000 |                     0 |               0.0000 |                    0 |              0.0000 |
 | imput    |               49 |     0.0569 |             0 |       0.0000 |                 0 |           0.0000 |                     0 |               0.0000 |                    0 |              0.0000 |
 | mult     |              204 |     0.2369 |           166 |       0.8177 |                 0 |           0.0000 |                     0 |               0.0000 |                    0 |              0.0000 |

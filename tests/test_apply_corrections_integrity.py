@@ -101,21 +101,36 @@ def test_adjudicated_deletions_all_still_apply() -> None:
         assert (start, end, label) not in present
 
 
-@requires_corpus
-def test_released_gold_matches_the_pipeline() -> None:
-    """The shipped release must be what the pipeline currently produces."""
+def _assert_release_matches(release_path: pathlib.Path, documents) -> None:
     import json
 
-    release_path = paths.CORRECTED_GOLD_JSON
     if not release_path.exists():
         pytest.skip("release not exported yet")
     released = {d["id"]: d for d in json.loads(release_path.read_text(encoding="utf-8"))}
-    for doc in _corrected():
+    for doc in documents:
         shipped = released.get(doc.document_id)
         assert shipped is not None, f"document {doc.document_id} missing from release"
         expected = sorted((s.char_start, s.char_end, s.label) for s in doc.ner_spans)
         actual = sorted((e["start"], e["end"], e["label"]) for e in shipped["entities"])
         assert actual == expected, f"document {doc.document_id} differs from release"
+
+
+@requires_corpus
+def test_released_gold_matches_the_pipeline() -> None:
+    """The shipped release must be what the pipeline currently produces."""
+    from research.release.export_dataset import build_bundles
+
+    bundles = build_bundles(pathlib.Path(MASTER), pathlib.Path(CORRECTIONS))
+    _assert_release_matches(paths.CORRECTED_GOLD_JSON, bundles.after)
+
+
+@requires_corpus
+def test_released_original_annotation_matches_the_pipeline() -> None:
+    """Same guarantee for the pre-review bundle."""
+    from research.release.export_dataset import build_bundles
+
+    bundles = build_bundles(pathlib.Path(MASTER), pathlib.Path(CORRECTIONS))
+    _assert_release_matches(paths.RELEASE_PRE_DIR / "decicontas.json", bundles.before)
 
 
 def test_min_plausible_span_is_a_tripwire_not_a_filter() -> None:

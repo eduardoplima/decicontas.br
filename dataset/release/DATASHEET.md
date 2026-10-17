@@ -36,7 +36,7 @@ Each instance is the full text of a collegiate decision (*acórdão* or *decisã
 
 **How many instances are there in total (of each type, if appropriate)?**
 
-861 documents, totalling 116,844 tokens and 754,555 characters. Of these, 231 documents (26.8%) contain at least one annotated entity and 630 (73.2%) are empty — true negatives, read in full and judged to carry no registrable command (filings, clean-account judgments). The corrected version holds 441 entities: 203 MULTA, 123 OBRIGACAO, 63 RESSARCIMENTO and 52 RECOMENDACAO (before corrections: 439 entities — 202/119/62/56).
+861 documents, totalling 116,844 tokens and 754,555 characters. Of these, 202 documents (23.5%) contain at least one annotated entity and 659 (76.5%) are empty — true negatives, read in full and judged to carry no registrable command (filings, clean-account judgments). The corrected version holds 411 entities: 203 MULTA, 123 OBRIGACAO, 63 RESSARCIMENTO and 22 RECOMENDACAO (before corrections: 404 entities — 202/119/62/21).
 
 **Does the dataset contain all possible instances or is it a sample (not necessarily random) of a larger set?**
 
@@ -48,7 +48,7 @@ Raw (unprocessed) decision text, accompanied by derived artefacts: token list, p
 
 **Is there a label or target associated with each instance?**
 
-Yes. Each token receives one of nine BIO labels: `O`, `B-/I-MULTA`, `B-/I-OBRIGACAO`, `B-/I-RESSARCIMENTO`, `B-/I-RECOMENDACAO`. The four categories map onto the CGAD subregistries: MULTA (pecuniary sanction), OBRIGACAO (binding order to do or refrain from doing), RESSARCIMENTO (reimbursement to the treasury) and RECOMENDACAO (non-binding guidance). The scheme is flat — no nesting and no overlapping spans (across the 441 entities there is not a single overlapping pair).
+Yes. Each token receives one of nine BIO labels: `O`, `B-/I-MULTA`, `B-/I-OBRIGACAO`, `B-/I-RESSARCIMENTO`, `B-/I-RECOMENDACAO`. The four categories map onto the CGAD subregistries: MULTA (pecuniary sanction), OBRIGACAO (binding order to do or refrain from doing), RESSARCIMENTO (reimbursement to the treasury) and RECOMENDACAO (non-binding guidance addressed to the audited body). Deliberations addressed to the Tribunal's own units — recommendations and notices to the external-control secretariat (SECEX) or the legal counsel (CONJU) — are internal management acts that the CGAD does not record, and are not annotated. The scheme is flat — no nesting and no overlapping spans (across the 411 entities there is not a single overlapping pair).
 
 **Is any information missing from individual instances?**
 
@@ -66,7 +66,7 @@ There is no fixed split. The dissertation protocol uses 5-fold cross-validation 
 
 Yes, and they are documented. The gold standard reflects the judgement of a single annotator; two independent mechanisms quantify and mitigate the resulting noise.
 
-First, an inter-annotator agreement study: two additional annotators independently re-annotated all 861 documents, yielding pairwise token-level Cohen's κ of 0.842–0.899 (Fleiss' κ 0.865, the "almost perfect" band of Landis & Koch) and pairwise span F1 (IoU ≥ 0.5) of 0.776–0.838. The three annotations and the divergence tables are distributed under `dataset/annotators/` and `dataset/results/models_outputs/corpus_and_agreement/`.
+First, an inter-annotator agreement study: two additional annotators independently re-annotated all 861 documents, yielding pairwise token-level Cohen's κ of 0.864–0.899 (Fleiss' κ 0.879, the "almost perfect" band of Landis & Koch) and pairwise span F1 (IoU ≥ 0.5) of 0.824–0.838. The three annotations and the divergence tables are distributed under `dataset/annotators/` and `dataset/results/models_outputs/corpus_and_agreement/`.
 
 Second, an annotation-error audit with the cleanlab library (*confident learning*), which confronts each label with out-of-sample predictions from a model ensemble. Of the 794 flagged groups, the 567 with ensemble confidence ≥ 0.95 were reviewed one by one in a purpose-built interface (6 accepted, 544 rejected, 17 custom corrections). The review is best read as a confirmation of the original annotation: only 23 of the 567 reviewed groups (4.1%) were actually changed. The 227 groups below the threshold were **not** reviewed and keep their original label — residual annotation noise may persist in those cases. Both versions (before/after corrections) are distributed so that this effect can be quantified. There are no duplicate documents in the release.
 
@@ -96,7 +96,7 @@ The original texts contained CPF numbers (a Brazilian government identifier) of 
 
 **Any other comments?**
 
-The entity distribution is strongly skewed (MULTA accounts for ~46% of entities) and spans are long (median ~300 characters for MULTA), characteristics that drive the choice of metrics and labelling schemes (see Section 5).
+The entity distribution is strongly skewed (MULTA accounts for ~49% of entities) and spans are long (median ~300 characters for MULTA), characteristics that drive the choice of metrics and labelling schemes (see Section 5).
 
 ---
 
@@ -158,7 +158,7 @@ None.
 
 Yes:
 
-1. **Manual labelling** — the 866 imported documents were annotated at the span level in Label Studio, recording the start and end boundaries of each entity, following delimitation guidelines anchored on the operative part of the decision (the command, not its reasoning). Fine-grained labels used during annotation were collapsed into the four evaluation categories: `MULTA_FIXA`/`MULTA_PERCENTUAL` → `MULTA`; `OBRIGACAO_MULTA` → `OBRIGACAO`.
+1. **Manual labelling** — the 866 imported documents were annotated at the span level in Label Studio, recording the start and end boundaries of each entity, following delimitation guidelines anchored on the operative part of the decision (the command, not its reasoning) and restricted to deliberations addressed to the audited bodies (`research/domain_rules.py` encodes the exclusion of those addressed to the Tribunal's own units). Fine-grained labels used during annotation were collapsed into the four evaluation categories: `MULTA_FIXA`/`MULTA_PERCENTUAL` → `MULTA`; `OBRIGACAO_MULTA` → `OBRIGACAO`.
 2. **Tokenisation** — whitespace-based (`re.finditer(r'\S+', text)`), identical across the whole pipeline (annotation → audit → training → evaluation), implemented in `research/dataset_io.py`, the single source of truth for token indices.
 3. **BIO projection** — character spans are projected onto per-token BIO labels (9 classes).
 4. **Removal of instances** — the 5 documents reused as few-shot exemplars in the prompts (IDs 6, 782, 790, 817 and 852 of the original export) were removed, yielding 861 documents.
@@ -195,7 +195,7 @@ Beyond NER: structured extraction of decision attributes (amounts, deadlines, re
 
 **Is there anything about the composition of the dataset or the way it was collected and preprocessed/cleaned/labelled that might impact future uses?**
 
-Yes, four points: (i) **imbalance** — MULTA concentrates ~46% of entities and 73.0% of documents are empty; micro F1 is dominated by the majority class and by the ability to abstain, so macro span F1 and the informative-subset analysis are recommended; (ii) **single-annotator gold standard** — the agreement study with two independent annotators (pairwise span F1 0.776–0.838) provides a human reference ceiling, but divergences were not adjudicated (particularly for RECOMENDACAO, the class with the lowest agreement against the gold), and the 227 groups below the audit review threshold keep their original label; (iii) **institutional and temporal scope** — a single court (TCE/RN), with 86.9% of the decisions from 2024; transfer to other Courts of Accounts, with different decision templates, must be validated empirically; (iv) **CPF masking** — models trained on the corpus will never see real CPF numbers, which affects uses that depend on that numeric pattern. The corpus vocabulary is also distant from judicial corpora (Jaccard of 0.29 with LeNER-Br over the 5,000 most frequent types), which limits direct comparisons.
+Yes, four points: (i) **imbalance** — MULTA concentrates ~49% of entities and 76.5% of documents are empty; micro F1 is dominated by the majority class and by the ability to abstain, so macro span F1 and the informative-subset analysis are recommended; (ii) **single-annotator gold standard** — the agreement study with two independent annotators (pairwise span F1 0.776–0.838) provides a human reference ceiling, but divergences were not adjudicated (particularly for RECOMENDACAO, the class with the lowest agreement against the gold), and the 227 groups below the audit review threshold keep their original label; (iii) **institutional and temporal scope** — a single court (TCE/RN), with 86.9% of the decisions from 2024; transfer to other Courts of Accounts, with different decision templates, must be validated empirically; (iv) **CPF masking** — models trained on the corpus will never see real CPF numbers, which affects uses that depend on that numeric pattern. The corpus vocabulary is also distant from judicial corpora (Jaccard of 0.29 with LeNER-Br over the 5,000 most frequent types), which limits direct comparisons.
 
 **Are there tasks for which the dataset should not be used?**
 

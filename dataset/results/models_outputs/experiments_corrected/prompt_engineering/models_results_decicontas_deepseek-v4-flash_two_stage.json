@@ -1761,16 +1761,7 @@
         }
       ]
     },
-    "golden": [
-      {
-        "start": 666,
-        "end": 851,
-        "text": "recomende à Secretaria de Controle Externo – SECEX desta Corte de Contas, que adote procedimentos com vistas a impedir a consumação de prescrição nas Unidades Técnicas a ela vinculadas.",
-        "labels": [
-          "RECOMENDACAO"
-        ]
-      }
-    ],
+    "golden": [],
     "model": "deepseek-v4-flash",
     "technique": "two_stage",
     "meta": null
@@ -2692,16 +2683,7 @@
         }
       ]
     },
-    "golden": [
-      {
-        "start": 622,
-        "end": 807,
-        "text": "recomende à Secretaria de Controle Externo – SECEX desta Corte de Contas, que adote procedimentos com vistas a impedir a consumação de prescrição nas Unidades Técnicas a ela vinculadas.",
-        "labels": [
-          "RECOMENDACAO"
-        ]
-      }
-    ],
+    "golden": [],
     "model": "deepseek-v4-flash",
     "technique": "two_stage",
     "meta": null
@@ -2719,16 +2701,7 @@
         }
       ]
     },
-    "golden": [
-      {
-        "start": 721,
-        "end": 906,
-        "text": "recomende à Secretaria de Controle Externo – SECEX desta Corte de Contas, que adote procedimentos com vistas a impedir a consumação de prescrição nas Unidades Técnicas a ela vinculadas.",
-        "labels": [
-          "RECOMENDACAO"
-        ]
-      }
-    ],
+    "golden": [],
     "model": "deepseek-v4-flash",
     "technique": "two_stage",
     "meta": null
@@ -3085,16 +3058,7 @@
         }
       ]
     },
-    "golden": [
-      {
-        "start": 611,
-        "end": 796,
-        "text": "recomende à Secretaria de Controle Externo – SECEX desta Corte de Contas, que adote procedimentos com vistas a impedir a consumação de prescrição nas Unidades Técnicas a ela vinculadas.",
-        "labels": [
-          "RECOMENDACAO"
-        ]
-      }
-    ],
+    "golden": [],
     "model": "deepseek-v4-flash",
     "technique": "two_stage",
     "meta": null
@@ -3218,16 +3182,7 @@
         }
       ]
     },
-    "golden": [
-      {
-        "start": 434,
-        "end": 619,
-        "text": "recomende à Secretaria de Controle Externo – SECEX desta Corte de Contas, que adote procedimentos com vistas a impedir a consumação de prescrição nas Unidades Técnicas a ela vinculadas.",
-        "labels": [
-          "RECOMENDACAO"
-        ]
-      }
-    ],
+    "golden": [],
     "model": "deepseek-v4-flash",
     "technique": "two_stage",
     "meta": null
@@ -3362,16 +3317,7 @@
         }
       ]
     },
-    "golden": [
-      {
-        "start": 521,
-        "end": 706,
-        "text": "recomende à Secretaria de Controle Externo – SECEX desta Corte de Contas, que adote procedimentos com vistas a impedir a consumação de prescrição nas Unidades Técnicas a ela vinculadas.",
-        "labels": [
-          "RECOMENDACAO"
-        ]
-      }
-    ],
+    "golden": [],
     "model": "deepseek-v4-flash",
     "technique": "two_stage",
     "meta": null
@@ -3389,16 +3335,7 @@
         }
       ]
     },
-    "golden": [
-      {
-        "start": 557,
-        "end": 743,
-        "text": "Recomendar a Secretaria de Controle Externo – SECEX desta Corte de Contas, que adote procedimentos com vistas a impedir a consumação de prescrição nas Unidades Técnicas a ela vinculadas.",
-        "labels": [
-          "RECOMENDACAO"
-        ]
-      }
-    ],
+    "golden": [],
     "model": "deepseek-v4-flash",
     "technique": "two_stage",
     "meta": null
@@ -3945,16 +3882,7 @@
         }
       ]
     },
-    "golden": [
-      {
-        "start": 519,
-        "end": 704,
-        "text": "recomende à Secretaria de Controle Externo (SECEX) desta Corte de Contas, que adote procedimentos com vistas a impedir a consumação de prescrição nas Unidades Técnicas a ela vinculadas.",
-        "labels": [
-          "RECOMENDACAO"
-        ]
-      }
-    ],
+    "golden": [],
     "model": "deepseek-v4-flash",
     "technique": "two_stage",
     "meta": null
@@ -4270,16 +4198,7 @@
         }
       ]
     },
-    "golden": [
-      {
-        "start": 460,
-        "end": 645,
-        "text": "recomende à Secretaria de Controle Externo – SECEX desta Corte de Contas, que adote procedimentos com vistas a impedir a consumação de prescrição nas Unidades Técnicas a ela vinculadas.",
-        "labels": [
-          "RECOMENDACAO"
-        ]
-      }
-    ],
+    "golden": [],
     "model": "deepseek-v4-flash",
     "technique": "two_stage",
     "meta": null
@@ -4946,16 +4865,7 @@
         }
       ]
     },
-    "golden": [
-      {
-        "start": 570,
-        "end": 760,
-        "text": "recomende à Secretaria de Controle Externo (SECEX) desta Corte de Contas, pela adoção de procedimentos com vistas a impedir a consumação de prescrição nas Unidades Técnicas a ela vinculadas.",
-        "labels": [
-          "RECOMENDACAO"
-        ]
-      }
-    ],
+    "golden": [],
     "model": "deepseek-v4-flash",
     "technique": "two_stage",
     "meta": null
@@ -4973,16 +4883,7 @@
         }
       ]
     },
-    "golden": [
-      {
-        "start": 570,
-        "end": 760,
-        "text": "recomende à Secretaria de Controle Externo – SECEX desta Corte de Contas, pela adoção de procedimentos com vistas a impedir a consumação de prescrição nas Unidades Técnicas a ela vinculadas.",
-        "labels": [
-          "RECOMENDACAO"
-        ]
-      }
-    ],
+    "golden": [],
     "model": "deepseek-v4-flash",
     "technique": "two_stage",
     "meta": null
@@ -5000,16 +4901,7 @@
         }
       ]
     },
-    "golden": [
-      {
-        "start": 549,
-        "end": 739,
-        "text": "recomende à Secretaria de Controle Externo (SECEX) desta Corte de Contas, pela adoção de procedimentos com vistas a impedir a consumação de prescrição nas Unidades Técnicas a ela vinculadas.",
-        "labels": [
-          "RECOMENDACAO"
-        ]
-      }
-    ],
+    "golden": [],
     "model": "deepseek-v4-flash",
     "technique": "two_stage",
     "meta": null
@@ -5041,16 +4933,7 @@
         }
       ]
     },
-    "golden": [
-      {
-        "start": 639,
-        "end": 824,
-        "text": "recomende à Secretaria de Controle Externo – SECEX desta Corte de Contas, que adote procedimentos com vistas a impedir a consumação de prescrição nas Unidades Técnicas a ela vinculadas.",
-        "labels": [
-          "RECOMENDACAO"
-        ]
-      }
-    ],
+    "golden": [],
     "model": "deepseek-v4-flash",
     "technique": "two_stage",
     "meta": null
@@ -5292,16 +5175,7 @@
         }
       ]
     },
-    "golden": [
-      {
-        "start": 512,
-        "end": 697,
-        "text": "recomende à Secretaria de Controle Externo – SECEX desta Corte de Contas, que adote procedimentos com vistas a impedir a consumação de prescrição nas Unidades Técnicas a ela vinculadas.",
-        "labels": [
-          "RECOMENDACAO"
-        ]
-      }
-    ],
+    "golden": [],
     "model": "deepseek-v4-flash",
     "technique": "two_stage",
     "meta": null
@@ -5333,16 +5207,7 @@
         }
       ]
     },
-    "golden": [
-      {
-        "start": 514,
-        "end": 699,
-        "text": "recomende à Secretaria de Controle Externo – SECEX desta Corte de Contas, que adote procedimentos com vistas a impedir a consumação de prescrição nas Unidades Técnicas a ela vinculadas.",
-        "labels": [
-          "RECOMENDACAO"
-        ]
-      }
-    ],
+    "golden": [],
     "model": "deepseek-v4-flash",
     "technique": "two_stage",
     "meta": null
@@ -5406,16 +5271,7 @@
         }
       ]
     },
-    "golden": [
-      {
-        "start": 567,
-        "end": 752,
-        "text": "recomende à Secretaria de Controle Externo – SECEX desta Corte de Contas, que adote procedimentos com vistas a impedir a consumação de prescrição nas Unidades Técnicas a ela vinculadas.",
-        "labels": [
-          "RECOMENDACAO"
-        ]
-      }
-    ],
+    "golden": [],
     "model": "deepseek-v4-flash",
     "technique": "two_stage",
     "meta": null
@@ -5517,16 +5373,7 @@
         }
       ]
     },
-    "golden": [
-      {
-        "start": 847,
-        "end": 1032,
-        "text": "recomende à Secretaria de Controle Externo – SECEX desta Corte de Contas, que adote procedimentos com vistas a impedir a consumação de prescrição nas Unidades Técnicas a ela vinculadas;",
-        "labels": [
-          "RECOMENDACAO"
-        ]
-      }
-    ],
+    "golden": [],
     "model": "deepseek-v4-flash",
     "technique": "two_stage",
     "meta": null
@@ -5600,16 +5447,7 @@
         }
       ]
     },
-    "golden": [
-      {
-        "start": 490,
-        "end": 675,
-        "text": "recomende à Secretaria de Controle Externo – SECEX desta Corte de Contas, que adote procedimentos com vistas a impedir a consumação de prescrição nas Unidades Técnicas a ela vinculadas.",
-        "labels": [
-          "RECOMENDACAO"
-        ]
-      }
-    ],
+    "golden": [],
     "model": "deepseek-v4-flash",
     "technique": "two_stage",
     "meta": null
@@ -5811,16 +5649,7 @@
         }
       ]
     },
-    "golden": [
-      {
-        "start": 566,
-        "end": 751,
-        "text": "recomende à Secretaria de Controle Externo – SECEX desta Corte de Contas, que adote procedimentos com vistas a impedir a consumação de prescrição nas Unidades Técnicas a ela vinculadas.",
-        "labels": [
-          "RECOMENDACAO"
-        ]
-      }
-    ],
+    "golden": [],
     "model": "deepseek-v4-flash",
     "technique": "two_stage",
     "meta": null
@@ -6634,16 +6463,7 @@
         }
       ]
     },
-    "golden": [
-      {
-        "start": 656,
-        "end": 841,
-        "text": "recomende à Secretaria de Controle Externo – SECEX desta Corte de Contas, que adote procedimentos com vistas a impedir a consumação de prescrição nas Unidades Técnicas a ela vinculadas.",
-        "labels": [
-          "RECOMENDACAO"
-        ]
-      }
-    ],
+    "golden": [],
     "model": "deepseek-v4-flash",
     "technique": "two_stage",
     "meta": null
@@ -6689,16 +6509,7 @@
         }
       ]
     },
-    "golden": [
-      {
-        "start": 613,
-        "end": 798,
-        "text": "recomende à Secretaria de Controle Externo – SECEX desta Corte de Contas, que adote procedimentos com vistas a impedir a consumação de prescrição nas Unidades Técnicas a ela vinculadas;",
-        "labels": [
-          "RECOMENDACAO"
-        ]
-      }
-    ],
+    "golden": [],
     "model": "deepseek-v4-flash",
     "technique": "two_stage",
     "meta": null
@@ -6730,16 +6541,7 @@
         }
       ]
     },
-    "golden": [
-      {
-        "start": 795,
-        "end": 980,
-        "text": "recomende à Secretaria de Controle Externo – SECEX desta Corte de Contas, que adote procedimentos com vistas a impedir a consumação de prescrição nas Unidades Técnicas a ela vinculadas;",
-        "labels": [
-          "RECOMENDACAO"
-        ]
-      }
-    ],
+    "golden": [],
     "model": "deepseek-v4-flash",
     "technique": "two_stage",
     "meta": null
@@ -6823,16 +6625,7 @@
         }
       ]
     },
-    "golden": [
-      {
-        "start": 526,
-        "end": 711,
-        "text": "recomende à Secretaria de Controle Externo – SECEX desta Corte de Contas, que adote procedimentos com vistas a impedir a consumação de prescrição nas Unidades Técnicas a ela vinculadas.",
-        "labels": [
-          "RECOMENDACAO"
-        ]
-      }
-    ],
+    "golden": [],
     "model": "deepseek-v4-flash",
     "technique": "two_stage",
     "meta": null
@@ -7059,16 +6852,7 @@
         }
       ]
     },
-    "golden": [
-      {
-        "start": 533,
-        "end": 718,
-        "text": "recomende à Secretaria de Controle Externo – SECEX desta Corte de Contas, que adote procedimentos com vistas a impedir a consumação de prescrição nas Unidades Técnicas a ela vinculadas.",
-        "labels": [
-          "RECOMENDACAO"
-        ]
-      }
-    ],
+    "golden": [],
     "model": "deepseek-v4-flash",
     "technique": "two_stage",
     "meta": null
@@ -7405,16 +7189,7 @@
         }
       ]
     },
-    "golden": [
-      {
-        "start": 499,
-        "end": 684,
-        "text": "recomende à Secretaria de Controle Externo – SECEX desta Corte de Contas, que adote procedimentos com vistas a impedir a consumação de prescrição nas Unidades Técnicas a ela vinculadas.",
-        "labels": [
-          "RECOMENDACAO"
-        ]
-      }
-    ],
+    "golden": [],
     "model": "deepseek-v4-flash",
     "technique": "two_stage",
     "meta": null
@@ -11999,14 +11774,6 @@
         "labels": [
           "OBRIGACAO"
         ]
-      },
-      {
-        "start": 735,
-        "end": 925,
-        "text": "recomende à Secretaria de Controle Externo – SECEX deste Tribunal de Contas, a adoção de procedimentos com vistas a impedir a consumação da prescrição nas Unidades Técnicas a ela vinculadas;",
-        "labels": [
-          "RECOMENDACAO"
-        ]
       }
     ],
     "model": "deepseek-v4-flash",
@@ -12067,16 +11834,7 @@
         }
       ]
     },
-    "golden": [
-      {
-        "start": 598,
-        "end": 901,
-        "text": "recomende à Secretaria de Controle Externo – SECEX deste Tribunal de Contas, a adoção de procedimentos com vistas a impedir que processos fiquem paralisados por mais de três anos nas Unidades Técnicas a ela vinculadas, para que se evite, assim, a ocorrência de prescrição intercorrente, como no presente",
-        "labels": [
-          "RECOMENDACAO"
-        ]
-      }
-    ],
+    "golden": [],
     "model": "deepseek-v4-flash",
     "technique": "two_stage",
     "meta": null
@@ -12432,16 +12190,7 @@
       "obrigacoes": [],
       "recomendacoes": []
     },
-    "golden": [
-      {
-        "start": 577,
-        "end": 1136,
-        "text": "imediata da Secretaria de Controle Externo – SECEX deste Tribunal de Contas acerca do teor do presente voto, para que possa levar em consideração os fatos aqui examinados quando da preparação do Plano de Fiscalização Anual, seja na elaboração de matriz de risco ou na avaliação de sua capacidade operacional no âmbito do planejamento setorial, para fins de adoção, oportunamente e se for o caso, das medidas pertientes à apuração do fato relativo à não realização de processo seletivo para contratação temporária em referência pelo Ente Municipal em epígrafe.",
-        "labels": [
-          "RECOMENDACAO"
-        ]
-      }
-    ],
+    "golden": [],
     "model": "deepseek-v4-flash",
     "technique": "two_stage",
     "meta": null
@@ -13974,16 +13723,7 @@
         }
       ]
     },
-    "golden": [
-      {
-        "start": 619,
-        "end": 928,
-        "text": "Recomendar à Secretaria de Controle Externo – SECEX deste Tribunal de Contas a adoção de procedimentos com vistas a impedir que processos fiquem paralisados por mais de três anos nas Unidades Técnicas a ela vinculadas, para que se evite, assim, a ocorrência de prescrição intercorrente, como no presente caso;",
-        "labels": [
-          "RECOMENDACAO"
-        ]
-      }
-    ],
+    "golden": [],
     "model": "deepseek-v4-flash",
     "technique": "two_stage",
     "meta": null
@@ -14368,16 +14108,7 @@
         }
       ]
     },
-    "golden": [
-      {
-        "start": 660,
-        "end": 969,
-        "text": "recomendar à Secretaria de Controle Externo – SECEX deste Tribunal de Contas a adoção de procedimentos com vistas a impedir que processos fiquem paralisados por mais de três anos nas Unidades Técnicas a ela vinculadas, para que se evite, assim, a ocorrência de prescrição intercorrente, como no presente caso;",
-        "labels": [
-          "RECOMENDACAO"
-        ]
-      }
-    ],
+    "golden": [],
     "model": "deepseek-v4-flash",
     "technique": "two_stage",
     "meta": null

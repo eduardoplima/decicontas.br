@@ -5,12 +5,12 @@ corrected version produced by `research.release.export_dataset`.
 
 | Model | Span F1 | Span P | Span R | Token F1 |
 | --- | ---: | ---: | ---: | ---: |
-| deepseek-v4-flash_few_shot | 0.7696 | 0.7390 | 0.8027 | 0.8335 |
-| gpt-4.1_few_shot | 0.7365 | 0.6578 | 0.8367 | 0.8167 |
-| gpt-5.1_few_shot | 0.7032 | 0.6190 | 0.8141 | 0.7813 |
-| gpt-4.1-mini_few_shot | 0.6986 | 0.5962 | 0.8435 | 0.7937 |
-| qwen2.5-72b_few_shot | 0.6237 | 0.5481 | 0.7234 | 0.7173 |
-| gpt-5.2_few_shot | 0.6177 | 0.5028 | 0.8005 | 0.7505 |
-| gpt-4.1-nano_few_shot | 0.4341 | 0.3544 | 0.5601 | 0.5809 |
-| gpt-5-mini_few_shot | 0.4157 | 0.2776 | 0.8277 | 0.5687 |
-| llama-3.3-70b_few_shot | 0.3558 | 0.6066 | 0.2517 | 0.4090 |
+| deepseek-v4-flash_few_shot | 0.7730 | 0.7182 | 0.8370 | 0.8387 |
+| gpt-4.1_few_shot | 0.7263 | 0.6292 | 0.8589 | 0.8114 |
+| gpt-5.1_few_shot | 0.7084 | 0.6052 | 0.8540 | 0.7886 |
+| gpt-4.1-mini_few_shot | 0.6995 | 0.5801 | 0.8808 | 0.7967 |
+| qwen2.5-72b_few_shot | 0.6526 | 0.5567 | 0.7883 | 0.7345 |
+| gpt-5.2_few_shot | 0.6433 | 0.5100 | 0.8710 | 0.7653 |
+| gpt-4.1-nano_few_shot | 0.4675 | 0.3716 | 0.6302 | 0.6122 |
+| gpt-5-mini_few_shot | 0.4345 | 0.2852 | 0.9124 | 0.5837 |
+| llama-3.3-70b_few_shot | 0.3434 | 0.5574 | 0.2482 | 0.4075 |
