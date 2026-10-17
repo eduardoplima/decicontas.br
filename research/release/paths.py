@@ -27,7 +27,7 @@ CORRECTED_EXPERIMENTS_DIR = RESULTS_ROOT / "experiments_corrected"  # has prompt
 CORPUS_DIR = RESULTS_ROOT / "corpus_and_agreement"  # corpus_analysis CSVs + REPORT.md
 EVALUATION_DIR = RESULTS_ROOT / "model_evaluation"  # block A-M CSVs + REPORT.md
 SIGNIFICANCE_DIR = RESULTS_ROOT / "significance"  # bootstrap CSVs
-FIGURES_DIR = RESULTS_ROOT / "figures"
+FIGURES_DIR = REPO_ROOT / "figures"  # result figures live at the repo root
 REPRODUCIBILITY_DIR = RESULTS_ROOT / "reproducibility"
 EXPERIMENTS_SUMMARY_DIR = RESULTS_ROOT / "experiments_summary"  # rescore_experiments md tables
 

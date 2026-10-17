@@ -291,7 +291,30 @@ def _annotate_no_overlap(fig: plt.Figure, ax: plt.Axes, df: pd.DataFrame) -> Non
             ann.remove()
 
 
-def fig_exp1_precision_recall(df: pd.DataFrame) -> None:
+EXP1_PR_TEXT = {
+    "pt": {
+        "xlabel": "Precisão (Span)",
+        "ylabel": "Revocação (Span)",
+        "title": "Precisão vs Revocação — Few-Shot e Supervisionado",
+        "llm": "LLM few-shot",
+        "supervised": "Supervisionado",
+        "suffix": "",
+    },
+    "en": {
+        "xlabel": "Precision (span)",
+        "ylabel": "Recall (span)",
+        "title": "Precision vs. recall — few-shot LLMs and supervised models",
+        "llm": "Few-shot LLM",
+        "supervised": "Supervised",
+        "suffix": "_en",
+    },
+}
+
+
+def fig_exp1_precision_recall(df: pd.DataFrame, lang: str = "pt") -> None:
+    """Precision × recall scatter; ``lang`` picks the labels (pt for the
+    dissertation, en for the README) and the file suffix."""
+    text = EXP1_PR_TEXT[lang]
     df = df.assign(model=df["model"].map(lambda m: EXP1_LABELS.get(m, m)))
     paradigm_colors = df["paradigm"].map(
         {"supervised": "#2ca02c", "few-shot": "steelblue"}
@@ -302,21 +325,21 @@ def fig_exp1_precision_recall(df: pd.DataFrame) -> None:
         edgecolors="k", zorder=5,
     )
     ax.plot([0, 1], [0, 1], "k--", alpha=0.3)
-    ax.set_xlabel("Precisão (Span)")
-    ax.set_ylabel("Revocação (Span)")
-    ax.set_title("Precisão vs Revocação — Few-Shot e Supervisionado")
+    ax.set_xlabel(text["xlabel"])
+    ax.set_ylabel(text["ylabel"])
+    ax.set_title(text["title"])
     # Limites derivados dos dados (com folga p/ rótulos) para não recortar
     # modelos de baixa precisão (gpt-5-mini) ou baixa revocação (llama-3.3-70b).
     px, py = df["span_precision"], df["span_recall"]
     ax.set_xlim(max(0.0, px.min() - 0.05), min(1.0, px.max() + 0.08))
     ax.set_ylim(max(0.0, py.min() - 0.05), min(1.02, py.max() + 0.08))
     ax.legend(handles=[
-        Patch(color="steelblue", label="LLM few-shot"),
-        Patch(color="#2ca02c", label="Supervisionado"),
+        Patch(color="steelblue", label=text["llm"]),
+        Patch(color="#2ca02c", label=text["supervised"]),
     ])
     plt.tight_layout()
     _annotate_no_overlap(fig, ax, df)
-    _save(fig, "exp1_precision_recall")
+    _save(fig, "exp1_precision_recall" + text["suffix"])
 
 
 # ----- ner_experiments.ipynb — Experiment 2 (2 figures) -------------------
@@ -523,6 +546,7 @@ def run() -> None:
     fig_exp1_overall_f1(df_exp1)
     fig_exp1_entity_heatmap(df_exp1)
     fig_exp1_precision_recall(df_exp1)
+    fig_exp1_precision_recall(df_exp1, lang="en")
 
     # FC-vs-JSON (exp2) only exists in cycles that ran that experiment.
     if (NUMS / "F_fc_vs_json_overall.csv").exists():

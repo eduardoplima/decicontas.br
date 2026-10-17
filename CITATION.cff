@@ -20,12 +20,12 @@ authors:
     given-names: "Eduardo"
     email: "eduardo.lima.059@ufrn.edu.br"
     affiliation: "Instituto Metrópole Digital, Universidade Federal do Rio Grande do Norte"
-    # orcid: "https://orcid.org/0000-0000-0000-0000"
+    orcid: "https://orcid.org/0009-0002-9111-825X"
   - family-names: "de Menezes Neto"
     given-names: "Elias Jacob"
     email: "elias.jacob@ufrn.br"
     affiliation: "Instituto Metrópole Digital, Universidade Federal do Rio Grande do Norte"
-    # orcid: "https://orcid.org/0000-0000-0000-0000"
+    orcid: "https://orcid.org/0000-0002-1153-8899"
 keywords:
   - named entity recognition
   - legal NLP
