@@ -32,12 +32,16 @@ enforcement regime — translating them would misrepresent the corpus.
 | `MULTA` | A pecuniary **fine** for administrative or fiscal misconduct | 203 |
 | `OBRIGACAO` | A binding **obligation** imposed on the audited body | 123 |
 | `RESSARCIMENTO` | A mandated **reimbursement** to the public treasury | 63 |
-| `RECOMENDACAO` | A formally documented, non-binding **recommendation** | 52 |
+| `RECOMENDACAO` | A formally documented, non-binding **recommendation** to the audited body | 22 |
 
-**861 documents, 441 entities.** Only 231 documents carry an entity; the remaining
-630 are true negatives — filings and clean-account judgments with no registrable
+Recommendations and notices that a ruling addresses to the Court's own units (the
+external-control secretariat SECEX, the legal counsel CONJU) are internal acts the
+registry does not record, so they are not annotated (`research/annotation_scope.py`).
+
+**861 documents, 411 entities.** Only 202 documents carry an entity; the remaining
+659 are true negatives — filings and clean-account judgments with no registrable
 command. They are kept deliberately: in production the system must also learn *not*
-to extract. Spans are long (per-class medians of 186–357 characters), so evaluation
+to extract. Spans are long (per-class medians of 248–357 characters), so evaluation
 uses partial matching (IoU ≥ 0.5) rather than exact boundaries.
 
 ## Get the data
@@ -50,7 +54,7 @@ no clone required. **Or, in a clone**, the bundles are under [`data/`](data)
 import json
 
 docs = [json.loads(line) for line in open("data/decicontas/decicontas.jsonl")]
-print(len(docs), sum(len(d["spans"]) for d in docs))   # 861 441
+print(len(docs), sum(len(d["spans"]) for d in docs))   # 861 411
 ```
 
 With HuggingFace `datasets`:
@@ -97,25 +101,27 @@ Holm correction over all 171 pairwise contrasts. LLM output strings are mapped t
 character offsets by an exact-first aligner (fuzzy fallback only for paraphrased strings).
 
 **Headline.** The best LLM, the open-weights **DeepSeek-V4-Flash** (macro span F1
-**0.784**), exceeds the strongest supervised baseline, the legal-domain
-**LegalBert-pt** (**0.660**), by +0.124, 95% CI [+0.066, +0.183], *p* < 0.001 — a
-contrast that survives Holm correction over all 171 pairs (*p*<sub>Holm</sub> = 0.017),
-as do the gaps to the generic encoders (BERTimbau-large, 0.646: +0.137; BERTimbau-base,
-0.622: +0.161; both *p*<sub>Holm</sub> < 0.001). LegalBert-pt does not differ
-significantly from BERTimbau-large or BERTimbau-base, and the other six domain-adapted
-encoders rank below both generic ones. The gap to GPT-4.1 (0.742) is +0.041, 95% CI
-[+0.013, +0.070], *p* = 0.002 — significant before but not after Holm correction
-(*p*<sub>Holm</sub> = 0.119), so the two share the leader group with GPT-5.1 (0.732).
-The advantage is larger on the minority classes: on `RECOMENDACAO` (52 instances) the
-leading LLMs reach span F1 0.708–0.714 against at most 0.400 for any supervised model.
-Under exact boundary matching the picture inverts (LegalBert-pt 0.573 vs
-DeepSeek-V4-Flash 0.375). On micro span F1, LegalBert-pt (0.739) ranks fourth overall,
-behind three LLMs.
+**0.799**), exceeds the strongest supervised baseline, the legal-domain
+**LegalBert-pt** (**0.613**), by +0.186, 95% CI [+0.097, +0.261], *p* < 0.001 — a
+contrast that survives Holm correction over all 171 pairs (*p*<sub>Holm</sub> < 0.001),
+as do the gaps to BERTimbau-large (0.605: +0.194) and BiLSTM-CRF (0.567: +0.230).
+No contrast among the ten supervised models survives Holm correction: LegalBert-pt
+differs from BERTimbau-large by +0.009, and the other six domain-adapted encoders
+(0.518–0.552) sit at the level of the generic BERTimbau-base (0.524). The gap to GPT-4.1
+(0.749) is +0.049, 95% CI [+0.016, +0.083], *p* = 0.002 — significant before but not
+after Holm correction (*p*<sub>Holm</sub> = 0.192), so the two share the leader group
+with GPT-5.1 (0.748). The advantage is concentrated on the rarest class: on
+`RECOMENDACAO` (22 instances) the leading LLMs reach span F1 0.737–0.778 against at
+most 0.231 for any supervised model, and five supervised models predict no
+recommendation at all. On micro span F1 the gap shrinks to +0.074 and LegalBert-pt
+(0.751) ranks fourth overall, behind three LLMs. Under exact boundary matching the
+picture inverts: all ten supervised models (0.397–0.522) beat all nine LLMs (at most
+0.373; LegalBert-pt 0.522 vs DeepSeek-V4-Flash 0.373).
 
-![Precision vs recall, all 19 models](dataset/results/models_outputs/figures/exp1_precision_recall.png)
+![Precision vs recall, all 19 models](paper/precision_recall.png)
 
-Supervised models favour precision (0.760–0.901) over recall (0.361–0.678);
-competitive LLMs do the opposite. That profile motivates evaluating LLMs as
+Supervised models favour precision (0.785–0.853) over recall (0.613–0.691);
+the leading LLMs lean toward recall (0.837–0.881, with precision 0.638–0.813). That profile motivates evaluating LLMs as
 pre-annotators in a human-in-the-loop pipeline, although the relative cost of
 correcting insertions versus omissions was not measured.
 
@@ -124,25 +130,25 @@ correcting insertions versus omissions was not measured.
 
 | Model | Type | Token F1 | Span P | Span R | Span F1 (micro) | Span F1 (macro) |
 |---|---|---:|---:|---:|---:|---:|
-| DeepSeek-V4-Flash | LLM | 0.858 | 0.779 | 0.846 | 0.811 | **0.784** |
-| GPT-4.1 | LLM | 0.834 | 0.683 | 0.868 | 0.764 | 0.742 |
-| GPT-5.1 | LLM | 0.808 | 0.657 | 0.862 | 0.746 | 0.732 |
-| GPT-4.1-mini | LLM | 0.816 | 0.627 | 0.887 | 0.734 | 0.718 |
-| GPT-5.2 | LLM | 0.783 | 0.552 | 0.873 | 0.676 | 0.670 |
-| LegalBert-pt | supervised | 0.782 | 0.848 | 0.655 | 0.739 | 0.660 |
-| BERTimbau-large | supervised | 0.782 | 0.779 | 0.678 | 0.725 | 0.646 |
-| BERTimbau-base | supervised | 0.773 | 0.790 | 0.664 | 0.722 | 0.622 |
-| Qwen2.5-72B | LLM | 0.737 | 0.580 | 0.764 | 0.659 | 0.615 |
-| JurisBERT | supervised | 0.725 | 0.760 | 0.610 | 0.677 | 0.611 |
-| BiLSTM-CRF | supervised | 0.745 | 0.777 | 0.594 | 0.674 | 0.601 |
-| GPT-5-mini | LLM | 0.600 | 0.307 | 0.914 | 0.460 | 0.594 |
-| Legal-BERTimbau-base | supervised | 0.751 | 0.810 | 0.619 | 0.702 | 0.566 |
-| GovBERT-BR | supervised | 0.705 | 0.901 | 0.578 | 0.704 | 0.555 |
-| Legal-BERT-STF | supervised | 0.730 | 0.817 | 0.578 | 0.677 | 0.538 |
-| BERTimbauLaw | supervised | 0.726 | 0.855 | 0.574 | 0.687 | 0.506 |
-| GPT-4.1-nano | LLM | 0.607 | 0.379 | 0.599 | 0.464 | 0.439 |
-| Llama-3.3-70B | LLM | 0.412 | 0.612 | 0.254 | 0.359 | 0.287 |
-| LegalBERTPT-br | supervised | 0.537 | 0.820 | 0.361 | 0.501 | 0.284 |
+| DeepSeek-V4-Flash | LLM | 0.869 | 0.813 | 0.837 | 0.825 | **0.799** |
+| GPT-4.1 | LLM | 0.841 | 0.700 | 0.859 | 0.772 | 0.749 |
+| GPT-5.1 | LLM | 0.816 | 0.672 | 0.854 | 0.752 | 0.748 |
+| GPT-4.1-mini | LLM | 0.825 | 0.638 | 0.881 | 0.740 | 0.719 |
+| GPT-5.2 | LLM | 0.790 | 0.555 | 0.871 | 0.678 | 0.692 |
+| LegalBert-pt | supervised | 0.796 | 0.823 | 0.691 | 0.751 | 0.613 |
+| Qwen2.5-72B | LLM | 0.749 | 0.586 | 0.788 | 0.672 | 0.605 |
+| BERTimbau-large | supervised | 0.797 | 0.785 | 0.691 | 0.735 | 0.605 |
+| GPT-5-mini | LLM | 0.601 | 0.299 | 0.912 | 0.450 | 0.583 |
+| BiLSTM-CRF | supervised | 0.813 | 0.825 | 0.676 | 0.743 | 0.567 |
+| Legal-BERT-STF | supervised | 0.775 | 0.811 | 0.659 | 0.728 | 0.552 |
+| GovBERT-BR | supervised | 0.748 | 0.795 | 0.642 | 0.711 | 0.539 |
+| JurisBERT | supervised | 0.747 | 0.797 | 0.640 | 0.710 | 0.532 |
+| Legal-BERTimbau-base | supervised | 0.750 | 0.807 | 0.633 | 0.709 | 0.530 |
+| BERTimbauLaw | supervised | 0.761 | 0.838 | 0.640 | 0.726 | 0.527 |
+| BERTimbau-base | supervised | 0.750 | 0.853 | 0.635 | 0.728 | 0.524 |
+| LegalBERTPT-br | supervised | 0.734 | 0.790 | 0.613 | 0.690 | 0.518 |
+| GPT-4.1-nano | LLM | 0.623 | 0.388 | 0.630 | 0.481 | 0.435 |
+| Llama-3.3-70B | LLM | 0.416 | 0.642 | 0.248 | 0.358 | 0.250 |
 
 Source: [`model_evaluation/C_main_results.csv`](dataset/results/models_outputs/model_evaluation/C_main_results.csv).
 </details>
@@ -170,8 +176,8 @@ Quality is measured, not asserted.
   mostly *confirmed* the original annotation. Both versions ship, paired.
 - **Inter-annotator agreement.** The whole corpus was independently re-annotated,
   blind, by two staff of the Court unit that feeds the registry. Token-level Fleiss
-  κ = **0.865** (pairwise Cohen's κ 0.843–0.899); pairwise span F1 between
-  **0.796** and **0.838**. Details in
+  κ = **0.879** (pairwise Cohen's κ 0.864–0.899); pairwise span F1 between
+  **0.824** and **0.838**. Details in
   [`corpus_and_agreement/AGREEMENT.md`](dataset/results/models_outputs/corpus_and_agreement/AGREEMENT.md).
 
 ## Reproduce
@@ -207,6 +213,7 @@ decicontas.br/
 │   ├── release/          # publishable bundles + DATASHEET.md + MANIFEST.json
 │   └── results/          # models_outputs/ (canonical) + old_experiments/ (archived)
 ├── notebooks/            # exploratory analysis, baselines, LLM evaluation
+├── paper/                # camera-ready of the JURIX 2026 paper + README figure
 ├── research/             # the package the notebooks and scripts import
 │   ├── dataset_io.py     # canonical tokenisation + BIO construction
 │   ├── ner_metrics.py    # token/span F1, IoU bipartite matcher
@@ -226,11 +233,30 @@ decicontas.br/
 The 861 come from an 866-document Label Studio export, minus five documents reused
 during prompt curation. All five carry no entities.
 
+## Paper
+
+Lima EP, de Menezes Neto EJ. *Few-Shot LLMs versus Domain-Adapted Encoders for Named
+Entity Recognition in Decisions from a Brazilian Court of Accounts.* In: Legal Knowledge
+and Information Systems — JURIX 2026. IOS Press; to appear.
+[Author's camera-ready version](paper/decicontas_jurix2026.pdf); the published version
+will be open access under CC BY-NC 4.0.
+
+```bibtex
+@inproceedings{lima2026decicontas,
+  author    = {Pereira Lima, Eduardo and de Menezes Neto, Elias Jacob},
+  title     = {Few-Shot {LLMs} versus Domain-Adapted Encoders for Named Entity Recognition
+               in Decisions from a {Brazilian} Court of Accounts},
+  booktitle = {Legal Knowledge and Information Systems: JURIX 2026},
+  publisher = {IOS Press},
+  year      = {2026},
+  note      = {To appear}
+}
+```
+
 ## Citation
 
-Cite via [`CITATION.cff`](CITATION.cff) — GitHub renders it under *"Cite this
-repository"*. A DOI and the BibTeX for the accompanying paper will be added here on
-publication.
+Cite the dataset via [`CITATION.cff`](CITATION.cff) — GitHub renders it under *"Cite this
+repository"*. A DOI will be added here on publication.
 
 ## License
 

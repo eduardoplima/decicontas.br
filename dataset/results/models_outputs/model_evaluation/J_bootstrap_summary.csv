@@ -2,16 +2,16 @@ metric,value
 resampling_unit,document
 n_docs_resampled,861
 n_total_pairs,171
-n_significant_5pct_uncorrected,133
-n_sig_holm_all,99
-n_sig_bonferroni_all,96
-n_sig_bh_all,128
+n_significant_5pct_uncorrected,115
+n_sig_holm_all,84
+n_sig_bonferroni_all,82
+n_sig_bh_all,110
 highlighted_family_size,12
 highlighted_n_sig_uncorrected,8
 highlighted_n_sig_holm,7
 highlighted_n_sig_bonferroni,6
-highlighted_n_sig_holm_all,5
-smallest_significant_abs_diff,0.024783537259267553
-smallest_significant_pair,GPT-4.1 vs GPT-4.1-mini
+highlighted_n_sig_holm_all,3
+smallest_significant_abs_diff,0.04868737132876085
+smallest_significant_pair,GPT-4.1 vs DeepSeek-V4-Flash
 leader_model,DeepSeek-V4-Flash
 leader_group_size_holm,3
