@@ -26,6 +26,7 @@ def _client(tmp_path):
 
 def test_documents_carry_candidates_with_their_current_decision(tmp_path):
     client = _client(tmp_path)
+    assert client.get("/api/mode").json() == {"mode": "persons"}
     docs = client.get("/api/documents").json()["documents"]
     assert [m["decision"] for m in docs[0]["mentions"]] == ["yes", None]
 

@@ -55,3 +55,6 @@ docs/
 # review tool frontend (built locally)
 tools/review/frontend/node_modules/
 tools/review/frontend/dist/
+
+# playwright MCP artefacts
+.playwright-mcp/

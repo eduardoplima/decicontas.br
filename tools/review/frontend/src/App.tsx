@@ -1,9 +1,28 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { AdjudicationView } from "./Adjudication";
 import { api, type Doc, type Mention, type Person } from "./api";
 
 type View = "docs" | "persons";
 
+/** The same build serves two local tools; the backend says which one is running. */
 export default function App() {
+  const [mode, setMode] = useState<"persons" | "adjudication" | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  useEffect(() => {
+    api
+      .mode()
+      .then((m) => {
+        setMode(m.mode);
+        document.title = m.mode === "adjudication" ? "decicontas.br — adjudicação" : "decicontas.br — revisão de pessoas";
+      })
+      .catch((e) => setError(String(e)));
+  }, []);
+  if (error) return <div className="error">{error}</div>;
+  if (!mode) return null;
+  return mode === "adjudication" ? <AdjudicationView /> : <PersonsApp />;
+}
+
+function PersonsApp() {
   const [docs, setDocs] = useState<Doc[]>([]);
   const [view, setView] = useState<View>("docs");
   const [current, setCurrent] = useState(0);

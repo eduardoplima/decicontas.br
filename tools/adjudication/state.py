@@ -148,9 +148,9 @@ class AdjudicationState:
     def documents(self) -> list[dict]:
         return [self.document(doc_id) for doc_id in sorted(self.items)]
 
-    def finish(self, out_path: Path) -> dict:
+    def finish(self, out_path: Path, gold_release: Path | None = paths.CORRECTED_GOLD_JSON) -> dict:
         """Write the decisions file and return its summary."""
-        payload = dec.build_decisions_file(self)
+        payload = dec.build_decisions_file(self, gold_release=gold_release)
         Path(out_path).write_text(json.dumps(payload, ensure_ascii=False, indent=1), encoding="utf-8")
         self.data["finished"] = True
         self.save()

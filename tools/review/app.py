@@ -49,6 +49,10 @@ def create_app(state: ReviewState | None = None) -> FastAPI:
     state = state or load_state()
     app = FastAPI(title="decicontas.br — revisão de pessoas")
 
+    @app.get("/api/mode")
+    def mode():
+        return {"mode": "persons"}  # the frontend is shared with tools.adjudication
+
     @app.get("/api/documents")
     def documents():
         return {"documents": state.documents(), "finished": state.data["finished"]}
