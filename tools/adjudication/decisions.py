@@ -155,6 +155,46 @@ def token_changes_for_doc(
     return out
 
 
+def _changes(doc: DocView, final: list[Span], owners: dict[int, str], resolved: dict[str, dict]) -> list[dict]:
+    gold = {(s, e): label for s, e, label in doc.spans["A1"]}
+    after = {(s, e): label for s, e, label in final}
+    out = []
+    for (s, e), label in sorted(after.items()):
+        if (s, e) not in gold:
+            out.append(("added", s, e, label, None))
+        elif gold[(s, e)] != label:
+            out.append(("relabelled", s, e, label, gold[(s, e)]))
+    for (s, e), label in sorted(gold.items()):
+        if (s, e) not in after:
+            out.append(("removed", s, e, label, None))
+    changes = []
+    for change, s, e, label, old_label in sorted(out, key=lambda c: (c[1], c[2])):
+        owner = owners.get(s)
+        record = resolved.get(owner, {}) if owner else {}
+        changes.append(
+            {
+                "doc_id": doc.doc_id,
+                "change": change,
+                "start": s,
+                "end": e,
+                "char_start": doc.offsets[s][0],
+                "char_end": doc.offsets[e - 1][1],
+                "label": label,
+                "old_label": old_label,
+                "excerpt": doc.text[doc.offsets[s][0] : doc.offsets[e - 1][1]],
+                "item": owner,
+                "explicit": bool(record.get("explicit")),
+            }
+        )
+    return changes
+
+
+def doc_changes(doc: DocView, items: list[Item], resolved: dict[str, dict]) -> list[dict]:
+    """Spans added, removed or relabelled in ``doc`` by the resolved decisions, with excerpts."""
+    final, owners = final_spans(doc.spans["A1"], items, resolved)
+    return _changes(doc, final, owners, resolved)
+
+
 def verify_gold_alignment(docs: dict[int, DocView], release_json: Path) -> list[int]:
     """Documents where annotator 1 no longer matches the released gold (token spans)."""
     release = load_release_spans(Path(release_json))
@@ -207,16 +247,13 @@ def build_decisions_file(
         in_scope_included += len(in_scope)
         after.subtract(label for _, _, label in gold)
         after.update(label for s in final if s not in in_scope for label in [s[2]])
-        gold_bounds = {(s, e): label for s, e, label in gold}
-        final_bounds = {(s, e): label for s, e, label in final}
-        for bounds, label in final_bounds.items():
-            if bounds not in gold_bounds:
-                added[label] += 1
-            elif gold_bounds[bounds] != label:
-                relabelled[(gold_bounds[bounds], label)] += 1
-        for bounds, label in gold_bounds.items():
-            if bounds not in final_bounds:
-                removed[label] += 1
+        for change in _changes(doc, final, owners, resolved):
+            if change["change"] == "added":
+                added[change["label"]] += 1
+            elif change["change"] == "removed":
+                removed[change["label"]] += 1
+            else:
+                relabelled[(change["old_label"], change["label"])] += 1
     summary = {
         "items_total": items_total,
         "items_decided": items_decided,

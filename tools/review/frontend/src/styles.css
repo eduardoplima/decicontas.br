@@ -64,6 +64,13 @@ table.items td.label, table.items td.sources { font-size: 12px; color: #555; whi
 .kind.label { background: #f3e5f5; }
 .scope { color: #c62828; font-weight: 600; }
 .auto { font-size: 11px; color: #777; margin-left: 4px; }
+.changes { flex: 1; overflow: auto; padding: 12px 20px; }
+table.changes-table { border-collapse: collapse; width: 100%; background: #fff; }
+table.changes-table td, table.changes-table th { padding: 4px 8px; border-bottom: 1px solid #eee; vertical-align: top; text-align: left; }
+table.changes-table tr.added { background: #e8f5e9; }
+table.changes-table tr.removed { background: #fbe9e7; }
+table.changes-table tr.relabelled { background: #fff8e1; }
+table.changes-table td.excerpt { font-size: 13px; }
 .summary { background: #fff; border-bottom: 1px solid #ddd; padding: 8px 16px; }
 .summary table { border-collapse: collapse; margin-top: 4px; }
 .summary th, .summary td { padding: 3px 10px; border-bottom: 1px solid #eee; text-align: right; }

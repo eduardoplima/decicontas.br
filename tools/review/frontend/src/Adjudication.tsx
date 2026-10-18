@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { adjudication, type Action, type AdjDoc, type Item, type Kind, type LayerSpan, type Source, type Summary } from "./api";
+import { adjudication, type Action, type AdjDoc, type Change, type Item, type Kind, type LayerSpan, type Source, type Summary } from "./api";
 import { LayeredText } from "./LayeredText";
 
 const LABELS = ["MULTA", "OBRIGACAO", "RESSARCIMENTO", "RECOMENDACAO"];
 const KIND_NAME: Record<Kind, string> = { add: "adição", gold_only: "só A1", label: "rótulo" };
+const CHANGE_NAME: Record<Change["change"], string> = { added: "+ adicionada", removed: "− removida", relabelled: "± rerrotulada" };
 const ACTION_NAME: Record<Action, string> = {
   include: "incluído",
   reject: "rejeitado",
@@ -32,6 +33,7 @@ function longest(item: Item): Source {
 
 export function AdjudicationView() {
   const [docs, setDocs] = useState<AdjDoc[]>([]);
+  const [view, setView] = useState<"docs" | "changes">("docs");
   const [finished, setFinished] = useState(false);
   const [current, setCurrent] = useState(0);
   const [label, setLabel] = useState<string | null>(null);
@@ -100,7 +102,16 @@ export function AdjudicationView() {
   );
   const keepGold = useCallback((item: Item) => apply(item, { action: item.kind === "add" ? "reject" : "keep" }), [apply]);
 
+  const openDoc = (doc_id: number) => {
+    setLabel(null);
+    setKind(null);
+    setPendingOnly(false);
+    setCurrent(Math.max(0, docs.findIndex((d) => d.doc_id === doc_id)));
+    setView("docs");
+  };
+
   useEffect(() => {
+    if (view !== "docs") return;
     const onKey = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement)?.tagName;
       if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA" || !doc) return;
@@ -112,7 +123,7 @@ export function AdjudicationView() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [doc, adopt, keepGold, visible.length]);
+  }, [view, doc, adopt, keepGold, visible.length]);
 
   const finish = async () => {
     try {
@@ -136,6 +147,14 @@ export function AdjudicationView() {
     <div className="app">
       <header>
         <h1>decicontas.br — adjudicação A1 × A2/A3</h1>
+        <nav>
+          <button className={view === "docs" ? "active" : ""} onClick={() => setView("docs")}>
+            Documentos
+          </button>
+          <button className={view === "changes" ? "active" : ""} onClick={() => setView("changes")}>
+            Alterações
+          </button>
+        </nav>
         <div className="totals">
           {totals.decided} decididos ({totals.auto} auto) · <strong>{totals.pending} pendentes</strong> de {totals.items}
           {finished && <span className="done"> · concluído</span>}
@@ -146,6 +165,9 @@ export function AdjudicationView() {
       </header>
       {error && <div className="error">{error}</div>}
       {summary && <SummaryPanel summary={summary} onClose={() => setSummary(null)} />}
+      {view === "changes" ? (
+        <ChangesView onOpen={openDoc} />
+      ) : (
       <div className="docs">
         <aside>
           <div className="filters">
@@ -216,6 +238,87 @@ export function AdjudicationView() {
           )}
         </main>
       </div>
+      )}
+    </div>
+  );
+}
+
+/** Everything the current decisions add to, remove from or relabel in the gold. */
+function ChangesView({ onOpen }: { onOpen: (doc_id: number) => void }) {
+  const [changes, setChanges] = useState<Change[]>([]);
+  const [conflicts, setConflicts] = useState<string[][]>([]);
+  const [totals, setTotals] = useState<Record<string, number>>({});
+  const [type, setType] = useState<Change["change"] | null>(null);
+  const [label, setLabel] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    adjudication
+      .changes()
+      .then((r) => {
+        setChanges(r.changes);
+        setConflicts(r.conflicts);
+        setTotals(r.totals);
+      })
+      .catch((e) => setError(String(e)));
+  }, []);
+
+  const rows = changes.filter((c) => (!type || c.change === type) && (!label || c.label === label || c.old_label === label));
+
+  return (
+    <div className="changes">
+      <div className="toolbar">
+        <strong>
+          +{totals.added ?? 0} adicionadas · −{totals.removed ?? 0} removidas · ±{totals.relabelled ?? 0} rerrotuladas
+        </strong>
+        <span className="hint">o que o arquivo de decisões fará com o gold (inclui os itens pré-marcados)</span>
+      </div>
+      {error && <div className="error">{error}</div>}
+      {conflicts.length > 0 && (
+        <div className="error">Conflitos pendentes: {conflicts.map((p) => p.join(" × ")).join("; ")} — esses documentos ficaram de fora.</div>
+      )}
+      <div className="filters">
+        {(Object.keys(CHANGE_NAME) as Change["change"][]).map((t) => (
+          <span key={t} className={type === t ? "chip sel" : "chip"} onClick={() => setType(type === t ? null : t)}>
+            {CHANGE_NAME[t]}
+          </span>
+        ))}
+        {LABELS.map((l) => (
+          <span key={l} className={label === l ? "chip sel" : "chip"} onClick={() => setLabel(label === l ? null : l)}>
+            {l}
+          </span>
+        ))}
+      </div>
+      <table className="changes-table">
+        <thead>
+          <tr>
+            <th>alteração</th>
+            <th>doc</th>
+            <th>classe</th>
+            <th>trecho</th>
+            <th>item</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((c) => (
+            <tr key={`${c.doc_id}:${c.change}:${c.start}-${c.end}`} className={c.change}>
+              <td>{CHANGE_NAME[c.change]}</td>
+              <td>{c.doc_id}</td>
+              <td>{c.old_label ? `${c.old_label} → ${c.label}` : c.label}</td>
+              <td className="excerpt">{c.excerpt.length > 220 ? c.excerpt.slice(0, 220) + "…" : c.excerpt}</td>
+              <td className="sources">
+                {c.item}
+                {c.item && !c.explicit && <span className="auto">(auto)</span>}
+              </td>
+              <td>
+                <button onClick={() => onOpen(c.doc_id)}>abrir</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {!rows.length && <p>Nenhuma alteração com esses filtros.</p>}
     </div>
   );
 }

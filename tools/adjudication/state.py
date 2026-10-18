@@ -162,6 +162,19 @@ class AdjudicationState:
     def documents(self) -> list[dict]:
         return [self.document(doc_id) for doc_id in sorted(self.items)]
 
+    def changes(self) -> dict:
+        """Every span the current decisions add, remove or relabel, plus unresolved conflicts."""
+        changes: list[dict] = []
+        conflicts: list[list[str]] = []
+        for doc_id in sorted(self.items):
+            items = self.items[doc_id]
+            try:
+                changes += dec.doc_changes(self.docs[doc_id], items, dec.resolve(items, self.data["decisions"]))
+            except dec.ConflictError as exc:
+                conflicts += [list(pair) for pair in exc.conflicts]
+        totals = {kind: sum(1 for c in changes if c["change"] == kind) for kind in ("added", "removed", "relabelled")}
+        return {"changes": changes, "conflicts": conflicts, "totals": totals}
+
     def finish(self, out_path: Path, gold_release: Path | None = paths.CORRECTED_GOLD_JSON) -> dict:
         """Write the decisions file and return its summary."""
         payload = dec.build_decisions_file(self, gold_release=gold_release)

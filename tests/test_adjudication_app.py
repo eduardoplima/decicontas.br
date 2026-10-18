@@ -59,6 +59,17 @@ def test_finish_writes_the_decisions_file_and_reports_the_summary(tmp_path):
     assert client.get("/api/adjudication/documents").json()["finished"] is True
 
 
+def test_changes_endpoint_lists_what_the_decisions_add_and_remove(tmp_path):
+    client = _client(tmp_path, a1=(MULTA, (12, 16, "OBRIGACAO")))
+    client.put("/api/adjudication/decisions/7:gold:12-16", json={"action": "remove"})
+    body = client.get("/api/adjudication/changes").json()
+    assert [(c["change"], c["doc_id"], c["label"], c["explicit"]) for c in body["changes"]] == [
+        ("removed", 7, "OBRIGACAO", True),
+        ("added", 7, "RECOMENDACAO", False),
+    ]
+    assert body["conflicts"] == [] and body["totals"] == {"added": 1, "removed": 1, "relabelled": 1 - 1}
+
+
 def test_conflicting_inclusions_are_refused_at_decision_time(tmp_path):
     client = _client(tmp_path, a2=(MULTA, (28, 32, "RECOMENDACAO")), a3=(MULTA, (31, 35, "OBRIGACAO")))
     assert client.put("/api/adjudication/decisions/7:add:28-32", json={"action": "include"}).status_code == 200

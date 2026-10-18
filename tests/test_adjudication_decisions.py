@@ -14,6 +14,7 @@ from tools.adjudication.decisions import (
     ConflictError,
     bio_from_spans,
     build_decisions_file,
+    doc_changes,
     final_spans,
     resolve,
     token_changes_for_doc,
@@ -76,6 +77,21 @@ def test_two_overlapping_included_spans_raise_a_conflict():
     with pytest.raises(ConflictError) as exc:
         final_spans(doc.spans["A1"], items, resolved)
     assert exc.value.conflicts == [("7:add:28-32", "7:add:31-35")]
+
+
+def test_doc_changes_list_the_net_effect_with_excerpts():
+    gold_obr, gold_res = (12, 16, "OBRIGACAO"), (17, 21, "RESSARCIMENTO")
+    doc = view([MULTA, gold_obr, gold_res], [MULTA, (17, 21, "MULTA"), REC], [MULTA, (17, 21, "MULTA"), REC])
+    items = build_items(doc)
+    resolved = resolve(items, {"7:gold:12-16": {"action": "remove", "decided_at": "t"}, "7:label:17-21": {"action": "relabel", "label": "MULTA", "decided_at": "t"}})
+    changes = doc_changes(doc, items, resolved)
+    assert [(c["change"], c["start"], c["end"], c["label"], c["old_label"], c["item"], c["explicit"]) for c in changes] == [
+        ("removed", 12, 16, "OBRIGACAO", None, "7:gold:12-16", True),
+        ("relabelled", 17, 21, "MULTA", "RESSARCIMENTO", "7:label:17-21", True),
+        ("added", 28, 35, "RECOMENDACAO", None, "7:add:28-35", False),
+    ]
+    assert changes[0]["excerpt"] == "obrigação de fazer x;" and changes[2]["doc_id"] == 7
+    assert (changes[2]["char_start"], changes[2]["char_end"]) == char_span(28, 35)
 
 
 def test_bio_from_spans():

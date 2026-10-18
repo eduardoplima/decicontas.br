@@ -132,8 +132,26 @@ export interface Summary {
   relabelled: { from: string; to: string; n: number }[];
 }
 
+export interface Change {
+  doc_id: number;
+  change: "added" | "removed" | "relabelled";
+  start: number;
+  end: number;
+  char_start: number;
+  char_end: number;
+  label: string;
+  old_label: string | null;
+  excerpt: string;
+  item: string | null;
+  explicit: boolean;
+}
+
 export const adjudication = {
   documents: () => call<{ documents: AdjDoc[]; finished: boolean }>("/api/adjudication/documents"),
+  changes: () =>
+    call<{ changes: Change[]; conflicts: string[][]; totals: Record<"added" | "removed" | "relabelled", number> }>(
+      "/api/adjudication/changes",
+    ),
   decide: (id: string, body: { action: string; source?: Source; label?: string }) =>
     call<{ document: AdjDoc }>(`/api/adjudication/decisions/${encodeURIComponent(id)}`, {
       method: "PUT",

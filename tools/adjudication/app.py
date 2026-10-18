@@ -44,6 +44,10 @@ def create_app(
     def documents():
         return {"documents": state.documents(), "finished": state.data["finished"]}
 
+    @app.get("/api/adjudication/changes")
+    def changes():
+        return state.changes()
+
     @app.put("/api/adjudication/decisions/{item_id}")
     def decide(item_id: str, body: Decision):
         item = state.by_id.get(item_id)
