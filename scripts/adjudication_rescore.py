@@ -11,9 +11,13 @@ Saída (``--out-dir``, padrão ``experiments/adjudication/``):
 ``adjudication_rescore.csv`` (F1 de span micro/macro por modelo e referência,
 com os deltas) e ``adjudication_rescore_per_class.csv`` (P/R/F1/suporte por classe).
 
+``--retrained DIR`` acrescenta os encoders retreinados no gold adjudicado (o
+``output_<sufixo>/`` escrito por ``research.kfold.export_oof_to_significance``),
+identificados como ``<modelo>@retrained``.
+
 Uso:
     uv run python scripts/adjudication_rescore.py
-    uv run python scripts/adjudication_rescore.py --release dataset/release/decicontas-adjudicated
+    uv run python scripts/adjudication_rescore.py --retrained dataset/results/models_outputs/output_adjudicated
 """
 
 from __future__ import annotations
@@ -37,7 +41,7 @@ from reference_sensitivity import (  # noqa: E402
 from research.annotation_scope import clause_regions, inside  # noqa: E402
 from research.dataset_io import char_span_to_token_span, collapse_label  # noqa: E402
 from research.release import paths  # noqa: E402
-from research.release.evaluation_numbers import DISPLAY_NAMES, _is_supervised_model  # noqa: E402
+from research.release.evaluation_numbers import DISPLAY_NAMES, _is_supervised_model, load_scored  # noqa: E402
 
 logger = logging.getLogger("adjudication_rescore")
 
@@ -61,7 +65,26 @@ def release_token_spans(release_json: Path) -> dict[int, list[tuple[int, int, st
     return out
 
 
-def run(adjudicated_dir: Path = ADJUDICATED_DIR, out_dir: Path = OUT_DIR) -> pd.DataFrame:
+def retrained_predictions(retrained_dir: Path) -> dict[str, dict[int, list[tuple[int, int, str]]]]:
+    """Predições OOF de encoders retreinados, com a chave ``<modelo>@retrained``."""
+    out = {}
+    for path in sorted(Path(retrained_dir).glob("models_results_decicontas_*__supervised.json")):
+        model = path.name[len("models_results_decicontas_"):-len(".json")]
+        df = load_scored(path, supervised=True)
+        out[f"{model}@retrained"] = {
+            i: [(a["start"], a["end"], a["labels"][0]) for a in (row or [])]
+            for i, row in enumerate(df["pred_as_golden"])
+        }
+    return out
+
+
+def _display(model: str) -> str:
+    base = model.removesuffix("@retrained")
+    name = DISPLAY_NAMES.get(base, base)
+    return f"{name} (retreinado)" if model.endswith("@retrained") else name
+
+
+def run(adjudicated_dir: Path = ADJUDICATED_DIR, out_dir: Path = OUT_DIR, retrained_dir: Path | None = None) -> pd.DataFrame:
     out_dir.mkdir(parents=True, exist_ok=True)
     refs = {
         "gold": release_token_spans(paths.CORRECTED_GOLD_JSON),
@@ -70,12 +93,18 @@ def run(adjudicated_dir: Path = ADJUDICATED_DIR, out_dir: Path = OUT_DIR) -> pd.
     if sorted(refs["gold"]) != sorted(refs["adjudicated"]):
         raise ValueError("os dois releases não cobrem os mesmos documentos")
     preds = predictions_by_doc()
+    if retrained_dir is not None:
+        preds.update(retrained_predictions(retrained_dir))
     logger.info("%d modelos; gold %d spans, adjudicado %d spans", len(preds),
                 sum(map(len, refs["gold"].values())), sum(map(len, refs["adjudicated"].values())))
 
     rows, per_class = [], []
     for model, pred in preds.items():
-        row = {"model": model, "display": DISPLAY_NAMES.get(model, model), "is_supervised": _is_supervised_model(model)}
+        row = {
+            "model": model,
+            "display": _display(model),
+            "is_supervised": model.endswith("@retrained") or _is_supervised_model(model),
+        }
         for ref_name, gold in refs.items():
             sc = score_against(pred, gold)
             row[f"span_f1_{ref_name}"] = sc["span_f1"]
@@ -107,9 +136,9 @@ def run(adjudicated_dir: Path = ADJUDICATED_DIR, out_dir: Path = OUT_DIR) -> pd.
         best_llm = sub[~sub.is_supervised][f"span_f1_macro_{ref_name}"].idxmax()
         best_sup = sub[sub.is_supervised][f"span_f1_macro_{ref_name}"].idxmax()
         gap = sub.loc[best_llm, f"span_f1_macro_{ref_name}"] - sub.loc[best_sup, f"span_f1_macro_{ref_name}"]
-        print(f"\n[{ref_name}] melhor LLM {DISPLAY_NAMES.get(best_llm, best_llm)} "
+        print(f"\n[{ref_name}] melhor LLM {_display(best_llm)} "
               f"{sub.loc[best_llm, f'span_f1_macro_{ref_name}']:.4f} × melhor encoder "
-              f"{DISPLAY_NAMES.get(best_sup, best_sup)} {sub.loc[best_sup, f'span_f1_macro_{ref_name}']:.4f} "
+              f"{_display(best_sup)} {sub.loc[best_sup, f'span_f1_macro_{ref_name}']:.4f} "
               f"(gap {gap:+.4f})")
     wide = pc.pivot_table(index=["display", "label"], columns="reference", values="f1").reset_index()
     wide["delta"] = wide["adjudicated"] - wide["gold"]
@@ -122,9 +151,10 @@ def main() -> None:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--release", type=Path, default=ADJUDICATED_DIR, help="diretório do release adjudicado")
     p.add_argument("--out-dir", type=Path, default=OUT_DIR)
+    p.add_argument("--retrained", type=Path, help="output_<sufixo>/ com os encoders retreinados no gold adjudicado")
     args = p.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(message)s")
-    run(args.release, args.out_dir)
+    run(args.release, args.out_dir, args.retrained)
 
 
 if __name__ == "__main__":
