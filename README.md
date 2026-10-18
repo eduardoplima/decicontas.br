@@ -253,7 +253,7 @@ Releases (git tags; `CITATION.cff` carries the current one):
 
 ## Paper
 
-Lima EP, de Menezes Neto EJ. *Few-Shot LLMs versus Domain-Adapted Encoders for Named
+Lima EP, de Menezes-Neto EJ. *Few-Shot LLMs versus Domain-Adapted Encoders for Named
 Entity Recognition in Decisions from a Brazilian Court of Accounts.* In: Legal Knowledge
 and Information Systems — JURIX 2026. IOS Press; to appear.
 [Author's camera-ready version](paper/decicontas_jurix2026.pdf); the published version
@@ -261,7 +261,7 @@ will be open access under CC BY-NC 4.0.
 
 ```bibtex
 @inproceedings{lima2026decicontas,
-  author    = {Pereira Lima, Eduardo and de Menezes Neto, Elias Jacob},
+  author    = {Lima, Eduardo Pereira and de Menezes-Neto, Elias Jacob},
   title     = {Few-Shot {LLMs} versus Domain-Adapted Encoders for Named Entity Recognition
                in Decisions from a {Brazilian} Court of Accounts},
   booktitle = {Legal Knowledge and Information Systems: JURIX 2026},
