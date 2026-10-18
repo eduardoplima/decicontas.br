@@ -273,8 +273,25 @@ will be open access under CC BY-NC 4.0.
 
 ## Citation
 
-Cite the dataset via [`CITATION.cff`](CITATION.cff) — GitHub renders it under *"Cite this
-repository"*. A DOI will be added here on publication.
+Cite the **paper** (above) for the method and the results, and the **dataset** itself
+when you use the data. The dataset metadata lives in [`CITATION.cff`](CITATION.cff) —
+GitHub renders it under *"Cite this repository"* — and is reproduced here; a Zenodo DOI
+will replace the URL once the release is archived.
+
+Lima EP, de Menezes-Neto EJ. *decicontas.br: a Named Entity Recognition dataset of Brazilian
+audit-court decisions* (version 1.2.0) [data set]. 2026. Available from:
+https://github.com/eduardoplima/decicontas.br. Licensed under CC BY 4.0.
+
+```bibtex
+@misc{lima2026decicontas_dataset,
+  author       = {Lima, Eduardo Pereira and de Menezes-Neto, Elias Jacob},
+  title        = {decicontas.br: a Named Entity Recognition dataset of {Brazilian}
+                  audit-court decisions},
+  year         = {2026},
+  howpublished = {\url{https://github.com/eduardoplima/decicontas.br}},
+  note         = {Version 1.2.0 (2026-10-17), CC BY 4.0}
+}
+```
 
 ## License
 
