@@ -58,3 +58,6 @@ tools/review/frontend/dist/
 
 # playwright MCP artefacts
 .playwright-mcp/
+
+# dissertation build (pdf + sources zip), kept out of the repository
+dissertation/
