@@ -97,8 +97,22 @@ class AdjudicationState:
             if label not in ENTITY_LABELS or label == item.label:
                 raise ValueError("relabel needs a label different from the gold one")
             record["label"] = label
+        if action == "include":
+            self._check_overlap(item, record)
         self.data["decisions"][item_id] = record
         self.save()
+
+    def _check_overlap(self, item: Item, record: dict) -> None:
+        """Refuse an inclusion that would overlap another included span of the document."""
+        items = self.items[item.doc_id]
+        tentative = {**self.data["decisions"], item.id: record}
+        try:
+            dec.final_spans(self.docs[item.doc_id].spans["A1"], items, dec.resolve(items, tentative))
+        except dec.ConflictError as exc:
+            others = sorted({other for pair in exc.conflicts for other in pair if other != item.id})
+            raise ValueError(
+                f"conflita com {', '.join(others)} (já incluído): rejeite-o ou escolha outro candidato"
+            ) from exc
 
     # ----- views -------------------------------------------------------------
 

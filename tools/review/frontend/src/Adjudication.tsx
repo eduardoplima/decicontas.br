@@ -121,7 +121,12 @@ export function AdjudicationView() {
       setFinished(true);
       setError(null);
     } catch (e) {
-      setError(String(e));
+      const msg = String(e);
+      const body = msg.startsWith("Error: 409") ? msg.slice(msg.indexOf("{")) : null;
+      if (body) {
+        const pairs: string[][] = JSON.parse(body).detail.conflicts;
+        setError(`Spans incluídos se sobrepõem: ${pairs.map((p) => p.join(" × ")).join("; ")}. Rejeite um deles (ou escolha outro candidato) antes de concluir.`);
+      } else setError(msg);
     }
   };
 

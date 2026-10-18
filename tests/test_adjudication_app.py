@@ -59,9 +59,10 @@ def test_finish_writes_the_decisions_file_and_reports_the_summary(tmp_path):
     assert client.get("/api/adjudication/documents").json()["finished"] is True
 
 
-def test_finish_reports_conflicting_inclusions(tmp_path):
+def test_conflicting_inclusions_are_refused_at_decision_time(tmp_path):
     client = _client(tmp_path, a2=(MULTA, (28, 32, "RECOMENDACAO")), a3=(MULTA, (31, 35, "OBRIGACAO")))
-    for item_id in ("7:add:28-32", "7:add:31-35"):
-        assert client.put(f"/api/adjudication/decisions/{item_id}", json={"action": "include"}).status_code == 200
+    assert client.put("/api/adjudication/decisions/7:add:28-32", json={"action": "include"}).status_code == 200
+    r = client.put("/api/adjudication/decisions/7:add:31-35", json={"action": "include"})
+    assert r.status_code == 400 and "7:add:28-32" in r.json()["detail"]
     r = client.post("/api/adjudication/finish")
-    assert r.status_code == 409 and r.json()["detail"]["conflicts"] == [["7:add:28-32", "7:add:31-35"]]
+    assert r.status_code == 200 and r.json()["summary"]["include"] == 1

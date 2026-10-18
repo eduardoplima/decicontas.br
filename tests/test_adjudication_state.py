@@ -55,6 +55,18 @@ def test_actions_are_validated_against_the_item_kind(tmp_path):
         state.decide("7:add:1-2", "reject")
 
 
+def test_an_include_that_overlaps_another_included_span_is_refused(tmp_path):
+    # A2: [28,32) REC and [32,35) OBR; A3: one long [28,35) REC -> items 28-35 (A2+A3) and 32-35 (A2)
+    state = _state(tmp_path, [MULTA], [MULTA, (28, 32, "RECOMENDACAO"), (32, 35, "OBRIGACAO")], [MULTA, (28, 35, "RECOMENDACAO")])
+    state.decide("7:add:28-35", "include", source="A3")
+    with pytest.raises(ValueError, match="7:add:28-35"):
+        state.decide("7:add:32-35", "include")
+    assert state.decision("7:add:32-35") is None and state.decision("7:add:28-35")["source"] == "A3"
+    state.decide("7:add:28-35", "include", source="A2")  # the shorter candidate leaves room
+    state.decide("7:add:32-35", "include")
+    assert state.decision("7:add:32-35")["action"] == "include"
+
+
 def test_decisions_survive_a_reload(tmp_path):
     state = _state(tmp_path, [MULTA], [MULTA, REC], [MULTA])
     state.decide("7:add:28-35", "include")
