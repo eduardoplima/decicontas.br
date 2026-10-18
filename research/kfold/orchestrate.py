@@ -205,7 +205,15 @@ def _cv_run(model: str, trainer_module: str, best_cfg: dict[str, Any]) -> dict[s
     return summary
 
 
-def run_for_model(model: str, smoke: bool = False) -> None:
+def config_from_summary(summary_dir: Path, model: str) -> dict[str, Any]:
+    """The configuration a previous run selected for ``model`` (its ``cv_<model>.json``)."""
+    path = Path(summary_dir) / f"cv_{safe_name(model)}.json"
+    return json.loads(path.read_text())["config"]
+
+
+def run_for_model(model: str, smoke: bool = False, config_from: Path | None = None) -> None:
+    """Grid search then CV; with ``config_from``, skip the grid and reuse that run's configuration
+    (a retrain on another version of the corpus keeps the hyperparameters fixed)."""
     if model == "bilstm-crf":
         trainer = "research.kfold.train_bilstm"
         grid = _bilstm_grid(smoke=smoke)
@@ -213,8 +221,12 @@ def run_for_model(model: str, smoke: bool = False) -> None:
         trainer = "research.kfold.train_bert"
         grid = _bert_grid(model, smoke=smoke)
 
-    grid_summary = _grid_search(model, trainer, grid)
-    best_cfg = grid_summary["best"]["config"]
+    if config_from is not None:
+        best_cfg = config_from_summary(config_from, model)
+        print(f"\n=== {model}: configuração reaproveitada de {config_from} -> {best_cfg}")
+    else:
+        grid_summary = _grid_search(model, trainer, grid)
+        best_cfg = grid_summary["best"]["config"]
     _cv_run(model, trainer, best_cfg)
 
 
@@ -223,11 +235,13 @@ def main() -> None:
     p.add_argument("--models", nargs="+", default=SUPERVISED_MODELS)
     p.add_argument("--smoke", action="store_true",
                    help="Tiny grid + 1 epoch — for plumbing checks only.")
+    p.add_argument("--config-from-summary", type=Path, metavar="DIR",
+                   help="skip the grid and reuse the config in DIR/cv_<model>.json")
     args = p.parse_args()
 
     for m in args.models:
         try:
-            run_for_model(m, smoke=args.smoke)
+            run_for_model(m, smoke=args.smoke, config_from=args.config_from_summary)
         except Exception as e:  # noqa: BLE001
             print(f"\n[FAIL] {m}: {e}", file=sys.stderr)
             raise
