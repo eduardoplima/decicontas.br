@@ -57,7 +57,7 @@ export const api = {
 
 export type Source = "A1" | "A2" | "A3";
 export type Kind = "add" | "gold_only" | "label";
-export type Action = "include" | "reject" | "keep" | "remove" | "relabel" | "replaced";
+export type Action = "include" | "reject" | "keep" | "remove" | "relabel" | "custom" | "replaced";
 
 export interface LayerSpan {
   start: number;
@@ -85,6 +85,8 @@ export interface AdjDecision {
   source?: Source;
   start?: number;
   end?: number;
+  char_start?: number;
+  char_end?: number;
   label?: string;
   replaced_by?: string;
   decided_at?: string;
@@ -152,7 +154,7 @@ export const adjudication = {
     call<{ changes: Change[]; conflicts: string[][]; totals: Record<"added" | "removed" | "relabelled", number> }>(
       "/api/adjudication/changes",
     ),
-  decide: (id: string, body: { action: string; source?: Source; label?: string }) =>
+  decide: (id: string, body: { action: string; source?: Source; label?: string; char_start?: number; char_end?: number }) =>
     call<{ document: AdjDoc }>(`/api/adjudication/decisions/${encodeURIComponent(id)}`, {
       method: "PUT",
       body: JSON.stringify(body),

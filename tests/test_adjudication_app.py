@@ -59,6 +59,19 @@ def test_finish_writes_the_decisions_file_and_reports_the_summary(tmp_path):
     assert client.get("/api/adjudication/documents").json()["finished"] is True
 
 
+def test_a_custom_decision_takes_character_bounds(tmp_path):
+    client = _client(tmp_path, a1=(MULTA, (17, 21, "RESSARCIMENTO")), a2=(MULTA, (17, 21, "MULTA")), a3=(MULTA, (17, 21, "MULTA")))
+    cs, ce = OFFSETS[18][0], OFFSETS[20][1]
+    r = client.put("/api/adjudication/decisions/7:label:17-21", json={"action": "custom", "char_start": cs, "char_end": ce, "label": "MULTA"})
+    assert r.status_code == 200
+    item = next(i for i in r.json()["document"]["items"] if i["id"] == "7:label:17-21")
+    assert item["decision"]["action"] == "custom" and (item["decision"]["start"], item["decision"]["end"]) == (18, 21)
+    changes = client.get("/api/adjudication/changes").json()["changes"]
+    assert [(c["change"], c["start"], c["end"], c["label"]) for c in changes if c["item"] == "7:label:17-21"] == [
+        ("removed", 17, 21, "RESSARCIMENTO"), ("added", 18, 21, "MULTA"),
+    ]
+
+
 def test_changes_endpoint_lists_what_the_decisions_add_and_remove(tmp_path):
     client = _client(tmp_path, a1=(MULTA, (12, 16, "OBRIGACAO")))
     client.put("/api/adjudication/decisions/7:gold:12-16", json={"action": "remove"})

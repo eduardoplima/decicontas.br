@@ -67,6 +67,21 @@ def test_an_include_that_overlaps_another_included_span_is_refused(tmp_path):
     assert state.decision("7:add:32-35")["action"] == "include"
 
 
+def test_custom_spans_come_in_characters_and_are_stored_in_tokens(tmp_path):
+    gold_res = (17, 21, "RESSARCIMENTO")
+    state = _state(tmp_path, [MULTA, gold_res], [MULTA, (17, 21, "MULTA")], [MULTA, (17, 21, "MULTA")])
+    cs, ce = char_span(18, 21)
+    state.decide("7:label:17-21", "custom", char_start=cs + 1, char_end=ce - 1, label="MULTA")  # inside the tokens
+    rec = state.decision("7:label:17-21")
+    assert (rec["action"], rec["start"], rec["end"], rec["label"]) == ("custom", 18, 21, "MULTA")
+    (item,) = state.document(7)["items"]
+    assert (item["decision"]["char_start"], item["decision"]["char_end"]) == (cs, ce)
+    with pytest.raises(ValueError):
+        state.decide("7:label:17-21", "custom", char_start=cs, char_end=ce)  # no label
+    with pytest.raises(ValueError):
+        state.decide("7:label:17-21", "custom", char_start=5, char_end=4, label="MULTA")
+
+
 def test_decisions_survive_a_reload(tmp_path):
     state = _state(tmp_path, [MULTA], [MULTA, REC], [MULTA])
     state.decide("7:add:28-35", "include")

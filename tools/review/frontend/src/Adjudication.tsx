@@ -11,8 +11,23 @@ const ACTION_NAME: Record<Action, string> = {
   keep: "mantido",
   remove: "removido",
   relabel: "rerrotulado",
+  custom: "personalizado",
   replaced: "substituído",
 };
+
+/** Character bounds of the current text selection inside the document panel, or null. */
+function selectionOffsets(): [number, number] | null {
+  const container = document.querySelector(".text.layered");
+  const sel = window.getSelection();
+  if (!container || !sel || sel.rangeCount === 0 || sel.isCollapsed) return null;
+  const range = sel.getRangeAt(0);
+  if (!container.contains(range.startContainer) || !container.contains(range.endContainer)) return null;
+  const before = range.cloneRange();
+  before.selectNodeContents(container);
+  before.setEnd(range.startContainer, range.startOffset);
+  const start = before.toString().length;
+  return [start, start + range.toString().length];
+}
 
 type Choice = { source?: Source; label?: string };
 
@@ -76,7 +91,7 @@ export function AdjudicationView() {
     };
   }, [docs]);
 
-  const apply = useCallback(async (item: Item, body: { action: string; source?: Source; label?: string }) => {
+  const apply = useCallback(async (item: Item, body: { action: string; source?: Source; label?: string; char_start?: number; char_end?: number }) => {
     try {
       const { document } = await adjudication.decide(item.id, body);
       setDocs((prev) => prev.map((d) => (d.doc_id === document.doc_id ? document : d)));
@@ -141,7 +156,14 @@ export function AdjudicationView() {
     }
   };
 
-  const focus: LayerSpan[] = hover ? [...hover.candidates, ...hover.candidates.flatMap((c) => c.also_adds)] : [];
+  const custom = hover?.decision?.action === "custom" ? hover.decision : null;
+  const focus: LayerSpan[] = hover
+    ? [
+        ...hover.candidates,
+        ...hover.candidates.flatMap((c) => c.also_adds),
+        ...(custom ? [{ start: custom.start!, end: custom.end!, char_start: custom.char_start!, char_end: custom.char_end!, label: custom.label! }] : []),
+      ]
+    : [];
 
   return (
     <div className="app">
@@ -213,7 +235,7 @@ export function AdjudicationView() {
                 <span className="legend">
                   <span className="seg a1">A1</span> <span className="seg a2">A2</span> <span className="seg a3">A3</span>
                 </span>
-                <span className="hint">s = adotar anotadoras · n = manter A1 · j/k = próximo/anterior</span>
+                <span className="hint">s = adotar anotadoras · n = manter A1 · j/k = próximo/anterior · selecione um trecho e use "usar seleção" para um span personalizado</span>
               </div>
               <LayeredText text={doc.text} layers={doc.layers} focus={focus} />
               <table className="items">
@@ -336,7 +358,7 @@ function ItemRow({
   text: string;
   choice: Choice;
   setChoice: (c: Choice) => void;
-  apply: (item: Item, body: { action: string; source?: Source; label?: string }) => Promise<void>;
+  apply: (item: Item, body: { action: string; source?: Source; label?: string; char_start?: number; char_end?: number }) => Promise<void>;
   adopt: (item: Item) => Promise<void> | undefined;
   onHover: (item: Item | null) => void;
 }) {
@@ -348,6 +370,12 @@ function ItemRow({
   const source = choice.source ?? item.decision?.source ?? longest(item);
   const chosenLabel = choice.label ?? item.decision?.label ?? item.label ?? "";
   const on = (a: Action) => (action === a ? "on" : "");
+  const [customLabel, setCustomLabel] = useState(item.decision?.label ?? item.label ?? proposals(item)[0] ?? "MULTA");
+  const useSelection = () => {
+    const sel = selectionOffsets();
+    if (!sel) return alert("Selecione o trecho no texto do documento primeiro.");
+    return apply(item, { action: "custom", char_start: sel[0], char_end: sel[1], label: customLabel });
+  };
 
   const notes: string[] = [];
   if (item.kind === "add")
@@ -359,6 +387,7 @@ function ItemRow({
   if (item.kind === "label" && item.labels) notes.push(["A2", "A3"].map((s) => `${s}: ${item.labels![s as Source] ?? "—"}`).join(" · "));
   if (item.in_scope_clause) notes.push("fora do escopo (SECEX/CONJU)");
   if (replaced) notes.push(`substituído por ${item.replaced_by}`);
+  if (action === "custom" && item.decision) notes.push(`personalizado: ${item.decision.label} ${bounds(item.decision as { start: number; end: number })}`);
 
   return (
     <tr className={[action ?? "pending", item.decision && !item.explicit ? "auto" : ""].join(" ")} onMouseEnter={() => onHover(item)} onMouseLeave={() => onHover(null)}>
@@ -419,6 +448,20 @@ function ItemRow({
               </button>
             ))}
           </>
+        )}
+        {!replaced && (
+          <span className="custom">
+            <select value={customLabel} onChange={(e) => setCustomLabel(e.target.value)}>
+              {LABELS.map((l) => (
+                <option key={l} value={l}>
+                  {l}
+                </option>
+              ))}
+            </select>
+            <button className={on("custom")} onClick={useSelection} title="substitui o span pelo trecho selecionado no texto">
+              usar seleção
+            </button>
+          </span>
         )}
         {action && <span className="auto">{ACTION_NAME[action]}{item.explicit ? "" : " (auto)"}</span>}
         {item.explicit && (

@@ -59,6 +59,25 @@ def test_including_a_segment_replaces_the_gold_span_and_re_adds_the_matched_half
     assert {c["group_id"] for c in changes} == {"7:add:12-16"}
 
 
+def test_a_custom_span_replaces_the_gold_span_with_new_bounds_and_label():
+    gold_res = (17, 21, "RESSARCIMENTO")
+    doc = view([MULTA, gold_res], [MULTA, (17, 21, "MULTA")], [MULTA, (17, 21, "MULTA")])
+    final, changes = _changes(doc, {"7:label:17-21": {"action": "custom", "start": 18, "end": 21, "label": "MULTA", "decided_at": "t"}})
+    assert final == [MULTA, (18, 21, "MULTA")]
+    assert [(c["token_idx_in_doc"], c["label_final"], c["group_id"]) for c in changes] == [
+        (17, "O", "7:label:17-21"), (18, "B-MULTA", "7:label:17-21"), (19, "I-MULTA", "7:label:17-21"), (20, "I-MULTA", "7:label:17-21"),
+    ]
+
+
+def test_a_custom_span_on_an_add_item_replaces_whatever_gold_it_overlaps():
+    doc = view([(0, 16, "MULTA")], [(5, 9, "MULTA"), (10, 16, "MULTA")], [])
+    items = build_items(doc)
+    resolved = resolve(items, {"7:add:5-9": {"action": "custom", "start": 4, "end": 12, "label": "OBRIGACAO", "decided_at": "t"}})
+    assert resolved["7:gold:0-16"]["action"] == "replaced"
+    final, owners = final_spans(doc.spans["A1"], items, resolved)
+    assert final == [(4, 12, "OBRIGACAO")] and owners[0] == "7:add:5-9" and owners[15] == "7:add:5-9"
+
+
 def test_an_explicit_keep_is_overridden_when_the_span_is_replaced():
     doc = view([(0, 16, "MULTA")], [(5, 9, "MULTA"), (10, 16, "MULTA")], [])
     items = build_items(doc)

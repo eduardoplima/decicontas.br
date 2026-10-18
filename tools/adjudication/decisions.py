@@ -62,10 +62,14 @@ def resolve(items: list[Item], decisions: dict[str, dict]) -> dict[str, dict]:
     gold_items = {(c.start, c.end): item.id for item in items if item.kind != "add" for c in item.candidates}
     for item in items:
         record = resolved.get(item.id)
-        if item.kind != "add" or not record or record["action"] != "include":
+        if item.kind != "add" or not record or record["action"] not in ("include", "custom"):
             continue
-        for ref in candidate_of(item, record["source"]).replaces:
-            target = gold_items.get((ref["start"], ref["end"]))
+        if record["action"] == "include":
+            refs = [(r["start"], r["end"]) for r in candidate_of(item, record["source"]).replaces]
+        else:  # a hand-drawn span replaces every gold span it touches
+            refs = [b for b in gold_items if b[0] < record["end"] and b[1] > record["start"]]
+        for ref in refs:
+            target = gold_items.get(ref)
             if target:
                 resolved[target] = {"action": "replaced", "replaced_by": item.id, "explicit": False}
     return resolved
@@ -89,9 +93,20 @@ def final_spans(
         elif item.kind == "gold_only" and record["action"] == "remove":
             kept.pop(old, None)
             removed[old] = item.id
+        elif record["action"] == "custom":  # the gold span gives way to a hand-drawn one
+            kept.pop(old, None)
+            removed[old] = item.id
+            kept[(record["start"], record["end"], record["label"])] = item.id
     for item in items:
         record = resolved.get(item.id)
-        if item.kind != "add" or not record or record["action"] != "include":
+        if item.kind != "add" or not record or record["action"] not in ("include", "custom"):
+            continue
+        if record["action"] == "custom":
+            s, e = record["start"], record["end"]
+            for old in [k for k, owner in kept.items() if owner is None and k[0] < e and k[1] > s]:
+                kept.pop(old)
+                removed[old] = item.id
+            kept[(s, e, record["label"])] = item.id
             continue
         cand = candidate_of(item, record["source"])
         for ref in cand.replaces:

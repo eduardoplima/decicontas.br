@@ -11,7 +11,7 @@ import json
 import logging
 from pathlib import Path
 
-from research.dataset_io import ENTITY_LABELS
+from research.dataset_io import ENTITY_LABELS, char_span_to_token_span
 from research.release import paths
 from tools.adjudication import decisions as dec
 from tools.adjudication.divergences import (
@@ -26,7 +26,11 @@ from tools.adjudication.divergences import (
 
 logger = logging.getLogger("tools.adjudication.state")
 
-ACTIONS = {"add": ("include", "reject"), "gold_only": ("keep", "remove"), "label": ("keep", "relabel")}
+ACTIONS = {
+    "add": ("include", "reject", "custom"),
+    "gold_only": ("keep", "remove", "custom"),
+    "label": ("keep", "relabel", "custom"),
+}
 
 
 def file_hashes(annotators_dir: Path) -> dict[str, str]:
@@ -74,7 +78,19 @@ class AdjudicationState:
         explicit = self.data["decisions"].get(item_id)
         return dict(explicit) if explicit else default_decision(item)
 
-    def decide(self, item_id: str, action: str, *, source: str | None = None, label: str | None = None) -> None:
+    def decide(
+        self,
+        item_id: str,
+        action: str,
+        *,
+        source: str | None = None,
+        label: str | None = None,
+        start: int | None = None,
+        end: int | None = None,
+        char_start: int | None = None,
+        char_end: int | None = None,
+    ) -> None:
+        """``custom`` takes the span bounds in tokens (``start``/``end``) or in characters."""
         item = self.by_id[item_id]
         if action == "pending":
             self.data["decisions"].pop(item_id, None)
@@ -97,7 +113,19 @@ class AdjudicationState:
             if label not in ENTITY_LABELS or label == item.label:
                 raise ValueError("relabel needs a label different from the gold one")
             record["label"] = label
-        if action == "include":
+        elif action == "custom":
+            if label not in ENTITY_LABELS:
+                raise ValueError("a label is required for a custom span")
+            offsets = self.docs[item.doc_id].offsets
+            if char_start is not None and char_end is not None:
+                bounds = char_span_to_token_span(char_start, char_end, offsets)
+                if bounds is None:
+                    raise ValueError("the selection covers no token")
+                start, end = bounds
+            if start is None or end is None or not 0 <= start < end <= len(offsets):
+                raise ValueError("custom needs a non-empty span inside the document")
+            record.update(start=start, end=end, label=label)
+        if action in ("include", "custom"):
             self._check_overlap(item, record)
         self.data["decisions"][item_id] = record
         self.save()
@@ -127,6 +155,8 @@ class AdjudicationState:
         out_items = []
         for item in items:
             record = resolved.get(item.id)
+            if record and "start" in record:
+                record = {**record, "char_start": doc.offsets[record["start"]][0], "char_end": doc.offsets[record["end"] - 1][1]}
             out_items.append(
                 {
                     "id": item.id,

@@ -25,6 +25,8 @@ class Decision(BaseModel):
     action: str
     source: str | None = None
     label: str | None = None
+    char_start: int | None = None
+    char_end: int | None = None
 
 
 def create_app(
@@ -54,7 +56,10 @@ def create_app(
         if item is None:
             raise HTTPException(404, item_id)
         try:
-            state.decide(item_id, body.action, source=body.source, label=body.label)
+            state.decide(
+                item_id, body.action, source=body.source, label=body.label,
+                char_start=body.char_start, char_end=body.char_end,
+            )
         except ValueError as exc:
             raise HTTPException(400, str(exc)) from exc
         return {"document": state.document(item.doc_id)}
