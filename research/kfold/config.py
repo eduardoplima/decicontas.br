@@ -21,7 +21,8 @@ N_FOLDS: int = 5
 
 REPO_ROOT: Path = Path(__file__).resolve().parents[2]
 
-_RESULTS_SUFFIX: str = os.environ.get("DECICONTAS_RESULTS_SUFFIX", "")
+_VARIANT: str = os.environ.get("DECICONTAS_VARIANT", "")
+_RESULTS_SUFFIX: str = os.environ.get("DECICONTAS_RESULTS_SUFFIX", f"_{_VARIANT}" if _VARIANT else "")
 RESULTS_ROOT: Path = (
     REPO_ROOT
     / "dataset"

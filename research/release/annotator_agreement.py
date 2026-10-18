@@ -138,7 +138,7 @@ def load_study(
         if mismatched:
             raise ValueError(f"{a}: texts differ on documents {mismatched[:5]}")
 
-    gold = load_release_spans(paths.CORRECTED_GOLD_JSON)
+    gold = load_release_spans(paths.CANONICAL_GOLD_JSON)
     missing = sorted(set(gold) - set(ids))
     if missing:
         logger.info("release docs absent from the study: %s", missing)
@@ -366,7 +366,7 @@ def run() -> None:
     confusion_df.to_csv(OUTPUT_ROOT / "A42_class_confusion.csv", index=False)
 
     # --- robustness: annotators vs the pre-correction gold ---
-    pre = load_release_spans(paths.RELEASE_PRE_DIR / "decicontas.json")
+    pre = load_release_spans(paths.CANONICAL_RELEASE_PRE_DIR / "decicontas.json")
     pre = {i: pre[i] for i in ids}
     robust_rows = [
         _pair_row("gold-pre-correcao", a, pre, data[a], ids) for a in ANNOTATOR_IDS

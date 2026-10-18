@@ -87,7 +87,7 @@ def _display(model: str) -> str:
 def run(adjudicated_dir: Path = ADJUDICATED_DIR, out_dir: Path = OUT_DIR, retrained_dir: Path | None = None) -> pd.DataFrame:
     out_dir.mkdir(parents=True, exist_ok=True)
     refs = {
-        "gold": release_token_spans(paths.CORRECTED_GOLD_JSON),
+        "gold": release_token_spans(paths.CANONICAL_GOLD_JSON),
         "adjudicated": release_token_spans(adjudicated_dir / "decicontas" / "decicontas.json"),
     }
     if sorted(refs["gold"]) != sorted(refs["adjudicated"]):

@@ -26,7 +26,8 @@ from .config import REPO_ROOT, SUMMARY_DIR, SUPERVISED_MODELS, safe_name
 # The canonical (suffix-less) run trains on the corrected release, so its
 # leaderboard bundle is ``output_corrected/`` — ``output/`` holds the raw
 # pre-correction LLM predictions only.
-_SUFFIX = os.environ.get("DECICONTAS_RESULTS_SUFFIX", "")
+_VARIANT = os.environ.get("DECICONTAS_VARIANT", "")
+_SUFFIX = os.environ.get("DECICONTAS_RESULTS_SUFFIX", f"_{_VARIANT}" if _VARIANT else "")
 _OUT_NAME = f"output{_SUFFIX}" if _SUFFIX else "output_corrected"
 OUT_DIR = REPO_ROOT / "dataset" / "results" / "models_outputs" / _OUT_NAME
 
