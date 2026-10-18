@@ -53,11 +53,26 @@ class ReleaseBundles(NamedTuple):
     after: list[Document]
 
 
-def build_bundles(labeled_path: Path, corrections_path: Path) -> ReleaseBundles:
-    """Both bundles exactly as :func:`export_release` writes them, within the annotation scope."""
+def build_bundles(
+    labeled_path: Path, corrections_path: Path, adjudication_path: Path | None = None
+) -> ReleaseBundles:
+    """Both bundles exactly as :func:`export_release` writes them, within the annotation scope.
+
+    ``adjudication_path`` (a file written by ``tools.adjudication``) is a second
+    corrections pass over the corrected annotation; the canonical release has none.
+    """
     documents = load_dataset(labeled_path, exclude_fewshot=True).documents
     corrected = apply_corrections(documents, load_corrections(corrections_path))
+    if adjudication_path is not None:
+        corrected = apply_corrections(corrected, load_corrections(adjudication_path))
     return ReleaseBundles(before=apply_scope(documents), after=apply_scope(corrected))
+
+
+def _rel(path: Path) -> str:
+    try:
+        return str(Path(path).resolve().relative_to(REPO_ROOT))
+    except ValueError:
+        return str(path)
 
 
 def _sha256(path: Path) -> str:
@@ -87,6 +102,33 @@ def _summarise_corrections(corrections_path: Path) -> dict:
     }
 
 
+def _summarise_adjudication(adjudication_path: Path) -> dict:
+    payload = json.loads(adjudication_path.read_text(encoding="utf-8"))
+    summary = payload.get("summary") or {}
+    return {
+        "source": _rel(adjudication_path),
+        "generated_at": payload.get("generated_at"),
+        "items_total": summary.get("items_total"),
+        "items_decided": summary.get("items_decided"),
+        "token_changes": summary.get("token_changes", len(payload.get("token_changes") or [])),
+        "entities_before": summary.get("entities_before"),
+        "entities_after": summary.get("entities_after"),
+    }
+
+
+def _adjudication_text(meta: dict) -> str:
+    return f"""
+## Adjudication file applied
+
+`{meta['source']}` (generated {meta['generated_at']}) was applied as a second
+corrections pass on top of the Cleanlab review: {meta['items_decided']} of
+{meta['items_total']} divergences between annotator 1 and annotators 2/3 decided,
+{meta['token_changes']} token overrides; entities {meta['entities_before']} ->
+{meta['entities_after']} before the annotation-scope filter. This is **not** the
+canonical release.
+"""
+
+
 def _stats_block(documents) -> dict:
     return {
         "documents": len(documents),
@@ -103,7 +145,9 @@ def _readme_text(
     corrections_meta: dict,
     stats_before: dict,
     stats_after: dict,
+    adjudication_meta: dict | None = None,
 ) -> str:
+    adjudication = _adjudication_text(adjudication_meta) if adjudication_meta else ""
     return f"""# DeciContas — Brazilian Audit-Court NER Release
 
 This bundle contains two versions of the DeciContas dataset, a Portuguese
@@ -195,7 +239,7 @@ characters:               {stats_after['characters']}
 entities per label:       {stats_after['entities_per_label']}
 documents per label:      {stats_after['documents_per_label']}
 ```
-
+{adjudication}
 ## Reproducibility
 
 Re-run `uv run python -m research.release.export_dataset` from the
@@ -216,11 +260,13 @@ def export_release(
     labeled_path: Path = DEFAULT_LABELED,
     corrections_path: Path = DEFAULT_CORRECTIONS,
     release_dir: Path = DEFAULT_RELEASE_DIR,
+    adjudication_path: Path | None = None,
 ) -> dict:
     logger.info("building bundles from %s and %s", labeled_path, corrections_path)
-    bundles = build_bundles(labeled_path, corrections_path)
+    bundles = build_bundles(labeled_path, corrections_path, adjudication_path)
     documents, corrected_documents = bundles.before, bundles.after
     corrections_meta = _summarise_corrections(corrections_path)
+    adjudication_meta = _summarise_adjudication(adjudication_path) if adjudication_path else None
     logger.info(
         "%d docs; %d decided groups",
         len(documents),
@@ -244,6 +290,7 @@ def export_release(
             corrections_meta=corrections_meta,
             stats_before=stats_before,
             stats_after=stats_after,
+            adjudication_meta=adjudication_meta,
         ),
         encoding="utf-8",
     )
@@ -256,10 +303,18 @@ def export_release(
     ]
     manifest = {
         "release": "decicontas",
-        "labeled_source": str(labeled_path.relative_to(REPO_ROOT)),
-        "corrections_source": str(corrections_path.relative_to(REPO_ROOT)),
+        "labeled_source": _rel(labeled_path),
+        "corrections_source": _rel(corrections_path),
         "corrections_version": corrections_meta.get("version"),
         "corrections_generated_at": corrections_meta.get("generated_at"),
+        **(
+            {
+                "adjudication_source": adjudication_meta["source"],
+                "adjudication_generated_at": adjudication_meta["generated_at"],
+            }
+            if adjudication_meta
+            else {}
+        ),
         "files": [
             {
                 "path": str(p.relative_to(release_dir)).replace("\\", "/"),
@@ -287,6 +342,7 @@ def main() -> None:
     parser.add_argument("--labeled", type=Path, default=DEFAULT_LABELED)
     parser.add_argument("--corrections", type=Path, default=DEFAULT_CORRECTIONS)
     parser.add_argument("--release-dir", type=Path, default=DEFAULT_RELEASE_DIR)
+    parser.add_argument("--adjudication", type=Path, help="apply this adjudication file as a second pass")
     parser.add_argument("--quiet", action="store_true")
     args = parser.parse_args()
 
@@ -298,6 +354,7 @@ def main() -> None:
         labeled_path=args.labeled,
         corrections_path=args.corrections,
         release_dir=args.release_dir,
+        adjudication_path=args.adjudication,
     )
     print(json.dumps(
         {
