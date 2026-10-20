@@ -14,7 +14,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from research.release import paths
-from tools.adjudication.decisions import ConflictError
+from tools.adjudication.decisions import PRE_ADJUDICATION, ConflictError
 from tools.adjudication.state import AdjudicationState, load_state
 from tools.review.app import FRONTEND_DIST
 
@@ -32,9 +32,9 @@ class Decision(BaseModel):
 def create_app(
     state: AdjudicationState | None = None,
     decisions_path: Path = DECISIONS_PATH,
-    gold_release: Path | None = paths.CORRECTED_GOLD_JSON,
+    gold_release: Path | str | None = PRE_ADJUDICATION,
 ) -> FastAPI:
-    """``gold_release``: the release annotator 1 must still match when finishing (``None`` skips it)."""
+    """``gold_release``: the gold annotator 1 must still match when finishing (``None`` skips it)."""
     state = state or load_state()
     app = FastAPI(title="decicontas.br — adjudicação")
 

@@ -2,6 +2,20 @@
   "model": "bilstm-crf",
   "rows": [
     {
+      "config_id": "dropout=0.3_hidden_dim=256_lr=0.003_max_len=1100",
+      "config": {
+        "hidden_dim": 256,
+        "dropout": 0.3,
+        "lr": 0.003,
+        "max_len": 1100
+      },
+      "span_f1": 0.8611111111111112,
+      "span_precision": 0.9393939393939394,
+      "span_recall": 0.7948717948717948,
+      "token_f1": 0.9050341966588182,
+      "elapsed_seconds": 356.9810519218445
+    },
+    {
       "config_id": "dropout=0.5_hidden_dim=128_lr=0.003_max_len=1100",
       "config": {
         "hidden_dim": 128,
@@ -9,11 +23,11 @@
         "lr": 0.003,
         "max_len": 1100
       },
-      "span_f1": 0.6771653543307087,
-      "span_precision": 0.7678571428571429,
-      "span_recall": 0.6056338028169014,
-      "token_f1": 0.8374662726455094,
-      "elapsed_seconds": 572.4781460762024
+      "span_f1": 0.8551724137931035,
+      "span_precision": 0.9253731343283582,
+      "span_recall": 0.7948717948717948,
+      "token_f1": 0.9122573488630061,
+      "elapsed_seconds": 565.5058779716492
     },
     {
       "config_id": "dropout=0.5_hidden_dim=256_lr=0.003_max_len=1100",
@@ -23,53 +37,11 @@
         "lr": 0.003,
         "max_len": 1100
       },
-      "span_f1": 0.6614173228346456,
-      "span_precision": 0.75,
-      "span_recall": 0.5915492957746479,
-      "token_f1": 0.7829467757071994,
-      "elapsed_seconds": 369.46013879776
-    },
-    {
-      "config_id": "dropout=0.5_hidden_dim=128_lr=0.001_max_len=1100",
-      "config": {
-        "hidden_dim": 128,
-        "dropout": 0.5,
-        "lr": 0.001,
-        "max_len": 1100
-      },
-      "span_f1": 0.6140350877192983,
-      "span_precision": 0.813953488372093,
-      "span_recall": 0.49295774647887325,
-      "token_f1": 0.7577240318747379,
-      "elapsed_seconds": 470.8707571029663
-    },
-    {
-      "config_id": "dropout=0.3_hidden_dim=256_lr=0.003_max_len=1100",
-      "config": {
-        "hidden_dim": 256,
-        "dropout": 0.3,
-        "lr": 0.003,
-        "max_len": 1100
-      },
-      "span_f1": 0.6055045871559632,
-      "span_precision": 0.868421052631579,
-      "span_recall": 0.4647887323943662,
-      "token_f1": 0.6452229299363057,
-      "elapsed_seconds": 395.95228004455566
-    },
-    {
-      "config_id": "dropout=0.3_hidden_dim=128_lr=0.001_max_len=1100",
-      "config": {
-        "hidden_dim": 128,
-        "dropout": 0.3,
-        "lr": 0.001,
-        "max_len": 1100
-      },
-      "span_f1": 0.5892857142857143,
-      "span_precision": 0.8048780487804879,
-      "span_recall": 0.4647887323943662,
-      "token_f1": 0.7338213762811128,
-      "elapsed_seconds": 377.2366452217102
+      "span_f1": 0.8,
+      "span_precision": 0.8656716417910447,
+      "span_recall": 0.7435897435897436,
+      "token_f1": 0.871461716937355,
+      "elapsed_seconds": 356.49096393585205
     },
     {
       "config_id": "dropout=0.3_hidden_dim=128_lr=0.003_max_len=1100",
@@ -79,11 +51,39 @@
         "lr": 0.003,
         "max_len": 1100
       },
-      "span_f1": 0.5811965811965811,
-      "span_precision": 0.7391304347826086,
-      "span_recall": 0.4788732394366197,
-      "token_f1": 0.7454669393319701,
-      "elapsed_seconds": 335.9927451610565
+      "span_f1": 0.7943262411347517,
+      "span_precision": 0.8888888888888888,
+      "span_recall": 0.717948717948718,
+      "token_f1": 0.9082347787998248,
+      "elapsed_seconds": 471.0037739276886
+    },
+    {
+      "config_id": "dropout=0.3_hidden_dim=128_lr=0.001_max_len=1100",
+      "config": {
+        "hidden_dim": 128,
+        "dropout": 0.3,
+        "lr": 0.001,
+        "max_len": 1100
+      },
+      "span_f1": 0.7536231884057971,
+      "span_precision": 0.8666666666666667,
+      "span_recall": 0.6666666666666666,
+      "token_f1": 0.877603873437676,
+      "elapsed_seconds": 595.2278189659119
+    },
+    {
+      "config_id": "dropout=0.5_hidden_dim=128_lr=0.001_max_len=1100",
+      "config": {
+        "hidden_dim": 128,
+        "dropout": 0.5,
+        "lr": 0.001,
+        "max_len": 1100
+      },
+      "span_f1": 0.7407407407407407,
+      "span_precision": 0.8771929824561403,
+      "span_recall": 0.6410256410256411,
+      "token_f1": 0.8087072844460659,
+      "elapsed_seconds": 465.50767827033997
     },
     {
       "config_id": "dropout=0.3_hidden_dim=256_lr=0.001_max_len=1100",
@@ -93,11 +93,11 @@
         "lr": 0.001,
         "max_len": 1100
       },
-      "span_f1": 0.5769230769230769,
-      "span_precision": 0.9090909090909091,
-      "span_recall": 0.4225352112676056,
-      "token_f1": 0.6821657044780777,
-      "elapsed_seconds": 300.44852018356323
+      "span_f1": 0.7401574803149606,
+      "span_precision": 0.9591836734693877,
+      "span_recall": 0.6025641025641025,
+      "token_f1": 0.788675429726997,
+      "elapsed_seconds": 339.7501139640808
     },
     {
       "config_id": "dropout=0.5_hidden_dim=256_lr=0.001_max_len=1100",
@@ -107,25 +107,25 @@
         "lr": 0.001,
         "max_len": 1100
       },
-      "span_f1": 0.5555555555555556,
-      "span_precision": 0.8108108108108109,
-      "span_recall": 0.4225352112676056,
-      "token_f1": 0.6847014925373134,
-      "elapsed_seconds": 323.15250301361084
+      "span_f1": 0.7031249999999999,
+      "span_precision": 0.9,
+      "span_recall": 0.5769230769230769,
+      "token_f1": 0.7563504406428201,
+      "elapsed_seconds": 305.11538100242615
     }
   ],
   "best": {
-    "config_id": "dropout=0.5_hidden_dim=128_lr=0.003_max_len=1100",
+    "config_id": "dropout=0.3_hidden_dim=256_lr=0.003_max_len=1100",
     "config": {
-      "hidden_dim": 128,
-      "dropout": 0.5,
+      "hidden_dim": 256,
+      "dropout": 0.3,
       "lr": 0.003,
       "max_len": 1100
     },
-    "span_f1": 0.6771653543307087,
-    "span_precision": 0.7678571428571429,
-    "span_recall": 0.6056338028169014,
-    "token_f1": 0.8374662726455094,
-    "elapsed_seconds": 572.4781460762024
+    "span_f1": 0.8611111111111112,
+    "span_precision": 0.9393939393939394,
+    "span_recall": 0.7948717948717948,
+    "token_f1": 0.9050341966588182,
+    "elapsed_seconds": 356.9810519218445
   }
 }

@@ -6,19 +6,19 @@ Gerado por `research.release.corpus_analysis` a partir de `dataset/release/decic
 
 | n_entities   |   n_docs |   pct_all_docs |   pct_informative_docs |
 |:-------------|---------:|---------------:|-----------------------:|
-| 0            |      659 |         0.7654 |               nan      |
-| 1            |       87 |         0.1010 |                 0.4307 |
-| 2            |       76 |         0.0883 |                 0.3762 |
-| 3+           |       39 |         0.0453 |                 0.1931 |
+| 0            |      638 |         0.7410 |               nan      |
+| 1            |      106 |         0.1231 |                 0.4753 |
+| 2            |       80 |         0.0929 |                 0.3587 |
+| 3+           |       37 |         0.0430 |                 0.1659 |
 
 ## (b) Coocorrência de classes no mesmo documento
 
 | label         |   MULTA |   OBRIGACAO |   RESSARCIMENTO |   RECOMENDACAO |
 |:--------------|--------:|------------:|----------------:|---------------:|
-| MULTA         |     140 |          58 |              37 |              3 |
-| OBRIGACAO     |      58 |          92 |               2 |              6 |
-| RESSARCIMENTO |      37 |           2 |              57 |              2 |
-| RECOMENDACAO  |       3 |           6 |               2 |             17 |
+| MULTA         |     144 |          59 |              38 |              6 |
+| OBRIGACAO     |      59 |         100 |               2 |              4 |
+| RESSARCIMENTO |      38 |           2 |              59 |              3 |
+| RECOMENDACAO  |       6 |           4 |               3 |             27 |
 
 ## (c) Posição relativa dos spans no documento
 
@@ -26,112 +26,118 @@ Aproximação declarada para dispositivo × fundamentação: sem segmentação e
 
 | label         |   count |   mean |   median |    q25 |    q75 |   frac_in_final_third |
 |:--------------|--------:|-------:|---------:|-------:|-------:|----------------------:|
-| MULTA         |     203 | 0.5329 |   0.4980 | 0.3589 | 0.6951 |                0.2709 |
-| OBRIGACAO     |     123 | 0.6736 |   0.7187 | 0.6191 | 0.7476 |                0.7154 |
-| RESSARCIMENTO |      63 | 0.6144 |   0.5866 | 0.4595 | 0.7879 |                0.4286 |
-| RECOMENDACAO  |      22 | 0.5989 |   0.5922 | 0.4375 | 0.7616 |                0.3636 |
+| MULTA         |     209 | 0.5338 |   0.4981 | 0.3776 | 0.6930 |                0.2679 |
+| OBRIGACAO     |     122 | 0.6750 |   0.7185 | 0.6183 | 0.7475 |                0.7295 |
+| RESSARCIMENTO |      66 | 0.6154 |   0.5777 | 0.4571 | 0.7906 |                0.4242 |
+| RECOMENDACAO  |      32 | 0.6367 |   0.6657 | 0.4736 | 0.7810 |                0.4688 |
 
 ## (d) N-gramas iniciais dos spans por classe
 
 | label         |   n | ngram                   |   count |   pct_of_spans |
 |:--------------|----:|:------------------------|--------:|---------------:|
-| MULTA         |   1 | multa                   |     157 |         0.7734 |
-| MULTA         |   1 | multas:                 |       2 |         0.0099 |
-| MULTA         |   1 | ao                      |       2 |         0.0099 |
-| MULTA         |   1 | 1.multa                 |       2 |         0.0099 |
-| MULTA         |   1 | valor                   |       2 |         0.0099 |
-| MULTA         |   1 | 06                      |       1 |         0.0049 |
-| MULTA         |   1 | carlo                   |       1 |         0.0049 |
-| MULTA         |   1 | joel                    |       1 |         0.0049 |
-| MULTA         |   1 | condenando              |       1 |         0.0049 |
-| MULTA         |   1 | osvaldo                 |       1 |         0.0049 |
-| MULTA         |   1 | obdulia                 |       1 |         0.0049 |
-| MULTA         |   1 | heloisa                 |       1 |         0.0049 |
-| MULTA         |   1 | clécio                  |       1 |         0.0049 |
-| MULTA         |   1 | alonso                  |       1 |         0.0049 |
-| MULTA         |   1 | reynaldo                |       1 |         0.0049 |
-| MULTA         |   2 | multa no                |     115 |         0.5665 |
-| MULTA         |   2 | multa de                |      15 |         0.0739 |
-| MULTA         |   2 | multa ao                |      10 |         0.0493 |
-| MULTA         |   2 | multa equivalente       |       6 |         0.0296 |
-| MULTA         |   2 | multa na                |       4 |         0.0197 |
-| MULTA         |   2 | multa à                 |       2 |         0.0099 |
-| MULTA         |   2 | ao sr.                  |       2 |         0.0099 |
-| MULTA         |   2 | 1.multa no              |       2 |         0.0099 |
-| MULTA         |   2 | valor de                |       2 |         0.0099 |
-| MULTA         |   2 | 06 multas               |       1 |         0.0049 |
-| MULTA         |   2 | carlo ruiz              |       1 |         0.0049 |
-| MULTA         |   2 | joel benigno            |       1 |         0.0049 |
-| MULTA         |   2 | condenando a            |       1 |         0.0049 |
-| MULTA         |   2 | osvaldo reynaldo        |       1 |         0.0049 |
-| MULTA         |   2 | multa da                |       1 |         0.0049 |
-| OBRIGACAO     |   1 | determinação            |      68 |         0.5528 |
-| OBRIGACAO     |   1 | determinar              |      10 |         0.0813 |
-| OBRIGACAO     |   1 | decide                  |       7 |         0.0569 |
-| OBRIGACAO     |   1 | prazo                   |       6 |         0.0488 |
-| OBRIGACAO     |   1 | determinando            |       3 |         0.0244 |
-| OBRIGACAO     |   1 | deve,                   |       2 |         0.0163 |
-| OBRIGACAO     |   1 | notificação             |       2 |         0.0163 |
-| OBRIGACAO     |   1 | galo                    |       2 |         0.0163 |
-| OBRIGACAO     |   1 | medida                  |       2 |         0.0163 |
-| OBRIGACAO     |   1 | representação           |       2 |         0.0163 |
-| OBRIGACAO     |   1 | fixação                 |       2 |         0.0163 |
-| OBRIGACAO     |   1 | decide,                 |       2 |         0.0163 |
-| OBRIGACAO     |   1 | determinada             |       1 |         0.0081 |
-| OBRIGACAO     |   1 | o                       |       1 |         0.0081 |
-| OBRIGACAO     |   1 | adote                   |       1 |         0.0081 |
-| OBRIGACAO     |   2 | determinação constante  |      48 |         0.3902 |
-| OBRIGACAO     |   2 | determinação ao         |      13 |         0.1057 |
-| OBRIGACAO     |   2 | determinar a            |       6 |         0.0488 |
-| OBRIGACAO     |   2 | prazo de                |       6 |         0.0488 |
-| OBRIGACAO     |   2 | decide pela             |       3 |         0.0244 |
-| OBRIGACAO     |   2 | determinação à          |       3 |         0.0244 |
-| OBRIGACAO     |   2 | deve, ainda,            |       2 |         0.0163 |
-| OBRIGACAO     |   2 | notificação ao          |       2 |         0.0163 |
-| OBRIGACAO     |   2 | galo chelo              |       2 |         0.0163 |
-| OBRIGACAO     |   2 | medida de               |       2 |         0.0163 |
-| OBRIGACAO     |   2 | determinação para,      |       2 |         0.0163 |
-| OBRIGACAO     |   2 | representação ao        |       2 |         0.0163 |
-| OBRIGACAO     |   2 | determinar aos          |       2 |         0.0163 |
-| OBRIGACAO     |   2 | fixação de              |       2 |         0.0163 |
-| OBRIGACAO     |   2 | decide também,          |       2 |         0.0163 |
-| RESSARCIMENTO |   1 | ressarcimento           |      49 |         0.7778 |
-| RESSARCIMENTO |   1 | ressarcir               |      10 |         0.1587 |
-| RESSARCIMENTO |   1 | chelo                   |       1 |         0.0159 |
-| RESSARCIMENTO |   1 | devolução               |       1 |         0.0159 |
-| RESSARCIMENTO |   1 | restituição             |       1 |         0.0159 |
-| RESSARCIMENTO |   1 | ressarcimentos          |       1 |         0.0159 |
-| RESSARCIMENTO |   2 | ressarcimento ao        |      32 |         0.5079 |
-| RESSARCIMENTO |   2 | ressarcir ao            |       7 |         0.1111 |
-| RESSARCIMENTO |   2 | ressarcimento da        |       4 |         0.0635 |
-| RESSARCIMENTO |   2 | ressarcimento do        |       2 |         0.0317 |
-| RESSARCIMENTO |   2 | ressarcimento no        |       2 |         0.0317 |
-| RESSARCIMENTO |   2 | ressarcimento dos       |       2 |         0.0317 |
-| RESSARCIMENTO |   2 | ressarcimento aos       |       2 |         0.0317 |
-| RESSARCIMENTO |   2 | chelo fuster            |       1 |         0.0159 |
-| RESSARCIMENTO |   2 | ressarcir aos           |       1 |         0.0159 |
-| RESSARCIMENTO |   2 | ressarcir integralmente |       1 |         0.0159 |
-| RESSARCIMENTO |   2 | ressarcimento em        |       1 |         0.0159 |
-| RESSARCIMENTO |   2 | ressarcir a             |       1 |         0.0159 |
-| RESSARCIMENTO |   2 | devolução ao            |       1 |         0.0159 |
-| RESSARCIMENTO |   2 | restituição aos         |       1 |         0.0159 |
-| RESSARCIMENTO |   2 | ressarcimento das       |       1 |         0.0159 |
-| RECOMENDACAO  |   1 | recomendação            |      14 |         0.6364 |
-| RECOMENDACAO  |   1 | recomendar              |       4 |         0.1818 |
-| RECOMENDACAO  |   1 | decide                  |       2 |         0.0909 |
-| RECOMENDACAO  |   1 | como                    |       1 |         0.0455 |
-| RECOMENDACAO  |   1 | corpo                   |       1 |         0.0455 |
-| RECOMENDACAO  |   2 | recomendação ao         |       5 |         0.2273 |
-| RECOMENDACAO  |   2 | recomendar ao           |       4 |         0.1818 |
-| RECOMENDACAO  |   2 | recomendação à          |       4 |         0.1818 |
-| RECOMENDACAO  |   2 | recomendação de         |       2 |         0.0909 |
-| RECOMENDACAO  |   2 | recomendação aos        |       1 |         0.0455 |
-| RECOMENDACAO  |   2 | como também             |       1 |         0.0455 |
-| RECOMENDACAO  |   2 | decide recomendar       |       1 |         0.0455 |
-| RECOMENDACAO  |   2 | decide também           |       1 |         0.0455 |
-| RECOMENDACAO  |   2 | recomendação que,       |       1 |         0.0455 |
-| RECOMENDACAO  |   2 | recomendação para       |       1 |         0.0455 |
-| RECOMENDACAO  |   2 | corpo de                |       1 |         0.0455 |
+| MULTA         |   1 | multa                   |     162 |         0.7751 |
+| MULTA         |   1 | multas:                 |       2 |         0.0096 |
+| MULTA         |   1 | ao                      |       2 |         0.0096 |
+| MULTA         |   1 | 1.multa                 |       2 |         0.0096 |
+| MULTA         |   1 | valor                   |       2 |         0.0096 |
+| MULTA         |   1 | 06                      |       1 |         0.0048 |
+| MULTA         |   1 | carlo                   |       1 |         0.0048 |
+| MULTA         |   1 | joel                    |       1 |         0.0048 |
+| MULTA         |   1 | condenando              |       1 |         0.0048 |
+| MULTA         |   1 | osvaldo                 |       1 |         0.0048 |
+| MULTA         |   1 | obdulia                 |       1 |         0.0048 |
+| MULTA         |   1 | heloisa                 |       1 |         0.0048 |
+| MULTA         |   1 | clécio                  |       1 |         0.0048 |
+| MULTA         |   1 | alonso                  |       1 |         0.0048 |
+| MULTA         |   1 | reynaldo                |       1 |         0.0048 |
+| MULTA         |   2 | multa no                |     117 |         0.5598 |
+| MULTA         |   2 | multa de                |      15 |         0.0718 |
+| MULTA         |   2 | multa ao                |      10 |         0.0478 |
+| MULTA         |   2 | multa equivalente       |       7 |         0.0335 |
+| MULTA         |   2 | multa na                |       4 |         0.0191 |
+| MULTA         |   2 | multa à                 |       2 |         0.0096 |
+| MULTA         |   2 | ao sr.                  |       2 |         0.0096 |
+| MULTA         |   2 | multa em                |       2 |         0.0096 |
+| MULTA         |   2 | 1.multa no              |       2 |         0.0096 |
+| MULTA         |   2 | valor de                |       2 |         0.0096 |
+| MULTA         |   2 | 06 multas               |       1 |         0.0048 |
+| MULTA         |   2 | carlo ruiz              |       1 |         0.0048 |
+| MULTA         |   2 | joel benigno            |       1 |         0.0048 |
+| MULTA         |   2 | condenando a            |       1 |         0.0048 |
+| MULTA         |   2 | osvaldo reynaldo        |       1 |         0.0048 |
+| OBRIGACAO     |   1 | determinação            |      68 |         0.5574 |
+| OBRIGACAO     |   1 | determinar              |      10 |         0.0820 |
+| OBRIGACAO     |   1 | notificação             |       7 |         0.0574 |
+| OBRIGACAO     |   1 | prazo                   |       6 |         0.0492 |
+| OBRIGACAO     |   1 | determinando            |       4 |         0.0328 |
+| OBRIGACAO     |   1 | com                     |       4 |         0.0328 |
+| OBRIGACAO     |   1 | fixação                 |       3 |         0.0246 |
+| OBRIGACAO     |   1 | deve,                   |       2 |         0.0164 |
+| OBRIGACAO     |   1 | galo                    |       2 |         0.0164 |
+| OBRIGACAO     |   1 | medida                  |       2 |         0.0164 |
+| OBRIGACAO     |   1 | determinada             |       1 |         0.0082 |
+| OBRIGACAO     |   1 | o                       |       1 |         0.0082 |
+| OBRIGACAO     |   1 | adote                   |       1 |         0.0082 |
+| OBRIGACAO     |   1 | 30                      |       1 |         0.0082 |
+| OBRIGACAO     |   1 | determinado             |       1 |         0.0082 |
+| OBRIGACAO     |   2 | determinação constante  |      48 |         0.3934 |
+| OBRIGACAO     |   2 | determinação ao         |      13 |         0.1066 |
+| OBRIGACAO     |   2 | determinar a            |       6 |         0.0492 |
+| OBRIGACAO     |   2 | prazo de                |       6 |         0.0492 |
+| OBRIGACAO     |   2 | notificação ao          |       5 |         0.0410 |
+| OBRIGACAO     |   2 | com assinatura          |       4 |         0.0328 |
+| OBRIGACAO     |   2 | fixação de              |       3 |         0.0246 |
+| OBRIGACAO     |   2 | determinação à          |       3 |         0.0246 |
+| OBRIGACAO     |   2 | deve, ainda,            |       2 |         0.0164 |
+| OBRIGACAO     |   2 | galo chelo              |       2 |         0.0164 |
+| OBRIGACAO     |   2 | medida de               |       2 |         0.0164 |
+| OBRIGACAO     |   2 | determinação para,      |       2 |         0.0164 |
+| OBRIGACAO     |   2 | notificação do          |       2 |         0.0164 |
+| OBRIGACAO     |   2 | determinar aos          |       2 |         0.0164 |
+| OBRIGACAO     |   2 | determinando que,       |       2 |         0.0164 |
+| RESSARCIMENTO |   1 | ressarcimento           |      50 |         0.7576 |
+| RESSARCIMENTO |   1 | ressarcir               |      11 |         0.1667 |
+| RESSARCIMENTO |   1 | imputação               |       1 |         0.0152 |
+| RESSARCIMENTO |   1 | chelo                   |       1 |         0.0152 |
+| RESSARCIMENTO |   1 | devolução               |       1 |         0.0152 |
+| RESSARCIMENTO |   1 | restituição             |       1 |         0.0152 |
+| RESSARCIMENTO |   1 | ressarcimentos          |       1 |         0.0152 |
+| RESSARCIMENTO |   2 | ressarcimento ao        |      32 |         0.4848 |
+| RESSARCIMENTO |   2 | ressarcir ao            |       8 |         0.1212 |
+| RESSARCIMENTO |   2 | ressarcimento da        |       4 |         0.0606 |
+| RESSARCIMENTO |   2 | ressarcimento aos       |       3 |         0.0455 |
+| RESSARCIMENTO |   2 | ressarcimento do        |       2 |         0.0303 |
+| RESSARCIMENTO |   2 | ressarcimento no        |       2 |         0.0303 |
+| RESSARCIMENTO |   2 | ressarcimento dos       |       2 |         0.0303 |
+| RESSARCIMENTO |   2 | imputação de            |       1 |         0.0152 |
+| RESSARCIMENTO |   2 | chelo fuster            |       1 |         0.0152 |
+| RESSARCIMENTO |   2 | ressarcir aos           |       1 |         0.0152 |
+| RESSARCIMENTO |   2 | ressarcir integralmente |       1 |         0.0152 |
+| RESSARCIMENTO |   2 | ressarcimento em        |       1 |         0.0152 |
+| RESSARCIMENTO |   2 | ressarcir a             |       1 |         0.0152 |
+| RESSARCIMENTO |   2 | devolução ao            |       1 |         0.0152 |
+| RESSARCIMENTO |   2 | restituição aos         |       1 |         0.0152 |
+| RECOMENDACAO  |   1 | recomendação            |      19 |         0.5938 |
+| RECOMENDACAO  |   1 | recomendar              |       7 |         0.2188 |
+| RECOMENDACAO  |   1 | decide                  |       2 |         0.0625 |
+| RECOMENDACAO  |   1 | decide-se               |       1 |         0.0312 |
+| RECOMENDACAO  |   1 | como                    |       1 |         0.0312 |
+| RECOMENDACAO  |   1 | intimação               |       1 |         0.0312 |
+| RECOMENDACAO  |   1 | corpo                   |       1 |         0.0312 |
+| RECOMENDACAO  |   2 | recomendação à          |       7 |         0.2188 |
+| RECOMENDACAO  |   2 | recomendação ao         |       6 |         0.1875 |
+| RECOMENDACAO  |   2 | recomendar ao           |       5 |         0.1562 |
+| RECOMENDACAO  |   2 | recomendação de         |       2 |         0.0625 |
+| RECOMENDACAO  |   2 | recomendação para       |       2 |         0.0625 |
+| RECOMENDACAO  |   2 | recomendar à            |       2 |         0.0625 |
+| RECOMENDACAO  |   2 | decide-se ainda         |       1 |         0.0312 |
+| RECOMENDACAO  |   2 | recomendação aos        |       1 |         0.0312 |
+| RECOMENDACAO  |   2 | como também             |       1 |         0.0312 |
+| RECOMENDACAO  |   2 | decide recomendar       |       1 |         0.0312 |
+| RECOMENDACAO  |   2 | decide também           |       1 |         0.0312 |
+| RECOMENDACAO  |   2 | intimação da            |       1 |         0.0312 |
+| RECOMENDACAO  |   2 | recomendação que,       |       1 |         0.0312 |
+| RECOMENDACAO  |   2 | corpo de                |       1 |         0.0312 |
 
 ## (d') Verbos/marcadores performativos
 
@@ -139,17 +145,17 @@ Radicais buscados nos 5 primeiros tokens do span (colunas `*_rate` = fração do
 
 | stem     |   docs_with_stem |   doc_rate |   MULTA_spans |   MULTA_rate |   OBRIGACAO_spans |   OBRIGACAO_rate |   RESSARCIMENTO_spans |   RESSARCIMENTO_rate |   RECOMENDACAO_spans |   RECOMENDACAO_rate |
 |:---------|-----------------:|-----------:|--------------:|-------------:|------------------:|-----------------:|----------------------:|---------------------:|---------------------:|--------------------:|
-| determin |              146 |     0.1696 |             0 |       0.0000 |                82 |           0.6667 |                     0 |               0.0000 |                    0 |              0.0000 |
+| determin |              146 |     0.1696 |             0 |       0.0000 |                84 |           0.6885 |                     0 |               0.0000 |                    0 |              0.0000 |
 | julg     |              860 |     0.9988 |             0 |       0.0000 |                 0 |           0.0000 |                     0 |               0.0000 |                    0 |              0.0000 |
-| aplic    |              229 |     0.2660 |             1 |       0.0049 |                 0 |           0.0000 |                     0 |               0.0000 |                    0 |              0.0000 |
-| recomend |               87 |     0.1010 |             0 |       0.0000 |                 0 |           0.0000 |                     0 |               0.0000 |                   20 |              0.9091 |
-| conden   |               51 |     0.0592 |             1 |       0.0049 |                 0 |           0.0000 |                     0 |               0.0000 |                    0 |              0.0000 |
-| imput    |               49 |     0.0569 |             0 |       0.0000 |                 0 |           0.0000 |                     0 |               0.0000 |                    0 |              0.0000 |
-| mult     |              204 |     0.2369 |           166 |       0.8177 |                 0 |           0.0000 |                     0 |               0.0000 |                    0 |              0.0000 |
-| ressarc  |              135 |     0.1568 |             0 |       0.0000 |                 0 |           0.0000 |                    60 |               0.9524 |                    0 |              0.0000 |
-| restitu  |                2 |     0.0023 |             0 |       0.0000 |                 0 |           0.0000 |                     1 |               0.0159 |                    0 |              0.0000 |
-| obrig    |               22 |     0.0256 |             0 |       0.0000 |                 1 |           0.0081 |                     0 |               0.0000 |                    0 |              0.0000 |
-| fix      |               69 |     0.0801 |             0 |       0.0000 |                 3 |           0.0244 |                     0 |               0.0000 |                    0 |              0.0000 |
+| aplic    |              229 |     0.2660 |             1 |       0.0048 |                 0 |           0.0000 |                     0 |               0.0000 |                    0 |              0.0000 |
+| recomend |               87 |     0.1010 |             0 |       0.0000 |                 0 |           0.0000 |                     0 |               0.0000 |                   28 |              0.8750 |
+| conden   |               51 |     0.0592 |             1 |       0.0048 |                 0 |           0.0000 |                     0 |               0.0000 |                    0 |              0.0000 |
+| imput    |               49 |     0.0569 |             0 |       0.0000 |                 0 |           0.0000 |                     1 |               0.0152 |                    0 |              0.0000 |
+| mult     |              204 |     0.2369 |           171 |       0.8182 |                 0 |           0.0000 |                     0 |               0.0000 |                    0 |              0.0000 |
+| ressarc  |              135 |     0.1568 |             0 |       0.0000 |                 0 |           0.0000 |                    62 |               0.9394 |                    0 |              0.0000 |
+| restitu  |                2 |     0.0023 |             0 |       0.0000 |                 0 |           0.0000 |                     1 |               0.0152 |                    0 |              0.0000 |
+| obrig    |               22 |     0.0256 |             0 |       0.0000 |                 1 |           0.0082 |                     0 |               0.0000 |                    0 |              0.0000 |
+| fix      |               69 |     0.0801 |             0 |       0.0000 |                 4 |           0.0328 |                     0 |               0.0000 |                    0 |              0.0000 |
 
 ## (e) Comparação lexical com o LeNER-Br
 

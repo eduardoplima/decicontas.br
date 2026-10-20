@@ -120,10 +120,12 @@ def _assert_release_matches(release_path: pathlib.Path, documents) -> None:
 
 @requires_corpus
 def test_released_gold_matches_the_pipeline() -> None:
-    """The shipped release must be what the pipeline currently produces."""
+    """The shipped release must be what the pipeline currently produces (audit + adjudication)."""
     from research.release.export_dataset import build_bundles
 
-    bundles = build_bundles(pathlib.Path(MASTER), pathlib.Path(CORRECTIONS))
+    bundles = build_bundles(
+        pathlib.Path(MASTER), pathlib.Path(CORRECTIONS), paths.ADJUDICATION_DECISIONS_JSON
+    )
     _assert_release_matches(paths.CORRECTED_GOLD_JSON, bundles.after)
 
 

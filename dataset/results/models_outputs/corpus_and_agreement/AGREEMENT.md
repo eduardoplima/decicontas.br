@@ -1,6 +1,6 @@
 # Concordância entre anotadores
 
-Gerado por `research.release.annotator_agreement` a partir de `dataset/annotators/` (861 documentos comuns aos três anotadores). O anotador 1 é a anotação original pós-auditoria Cleanlab (idêntica à release corrigida); os anotadores 2 e 3 anotaram de forma independente e cega. Os CSVs ao lado são as fontes canônicas.
+Gerado por `research.release.annotator_agreement` a partir de `dataset/annotators/` (861 documentos comuns aos três anotadores). O anotador 1 é a anotação do autor pós-auditoria Cleanlab e anterior à adjudicação (o padrão-ouro publicado incorpora as divergências adjudicadas, por isso a concordância não é medida contra ele); os anotadores 2 e 3 anotaram de forma independente e cega. Os CSVs ao lado são as fontes canônicas.
 
 ## (a) Concordância par-a-par
 

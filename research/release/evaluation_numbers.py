@@ -1345,6 +1345,11 @@ def write_report(out_dir: Path, j_summary: list[dict[str, Any]]) -> None:
     )
     # ----- A. Corpus -------------------------------------------------------
     parts.append("## A. Caracterização do corpus\n")
+    parts.append(
+        "`before` é a anotação original; `after` é o padrão-ouro publicado, após a "
+        "auditoria Cleanlab (bloco B) e a adjudicação das divergências entre "
+        "anotadores (`dataset/errors/adjudication-decisions.json`).\n"
+    )
     parts.append(_md_table(pd.read_csv(out_dir / "A_corpus.csv")) + "\n")
 
     # ----- B. Cleanlab -----------------------------------------------------
@@ -1360,7 +1365,7 @@ def write_report(out_dir: Path, j_summary: list[dict[str, Any]]) -> None:
     parts.append(_md_table(pd.read_csv(out_dir / "B_cleanlab_summary.csv")) + "\n")
     parts.append("**Distribuição de `label_final` (rótulos para os quais os tokens foram migrados):**\n")
     parts.append(_md_table(pd.read_csv(out_dir / "B_label_final_counts.csv")) + "\n")
-    parts.append("**Saldo líquido por classe:**\n")
+    parts.append("**Saldo líquido por classe (auditoria Cleanlab e adjudicação somadas):**\n")
     parts.append(_md_table(pd.read_csv(out_dir / "B_class_delta.csv")) + "\n")
     trans_path = out_dir / "B_transition_matrix.csv"
     if trans_path.exists():

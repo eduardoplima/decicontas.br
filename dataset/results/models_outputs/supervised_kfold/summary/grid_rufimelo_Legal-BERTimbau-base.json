@@ -9,39 +9,11 @@
         "warmup_ratio": 0.1,
         "stride": 320
       },
-      "span_f1": 0.7288135593220338,
-      "span_precision": 0.9148936170212766,
-      "span_recall": 0.6056338028169014,
-      "token_f1": 0.7711889787361486,
-      "elapsed_seconds": 947.0945889949799
-    },
-    {
-      "config_id": "lr=3e-05_model_name=rufimelo-Legal-BERTimbau-base_stride=320_warmup_ratio=0.1",
-      "config": {
-        "model_name": "rufimelo/Legal-BERTimbau-base",
-        "lr": 3e-05,
-        "warmup_ratio": 0.1,
-        "stride": 320
-      },
-      "span_f1": 0.7142857142857142,
-      "span_precision": 0.975609756097561,
-      "span_recall": 0.5633802816901409,
-      "token_f1": 0.7403846153846154,
-      "elapsed_seconds": 952.9204490184784
-    },
-    {
-      "config_id": "lr=5e-05_model_name=rufimelo-Legal-BERTimbau-base_stride=320_warmup_ratio=0",
-      "config": {
-        "model_name": "rufimelo/Legal-BERTimbau-base",
-        "lr": 5e-05,
-        "warmup_ratio": 0.0,
-        "stride": 320
-      },
-      "span_f1": 0.6724137931034483,
-      "span_precision": 0.8666666666666667,
-      "span_recall": 0.5492957746478874,
-      "token_f1": 0.7251228501228502,
-      "elapsed_seconds": 949.1891901493073
+      "span_f1": 0.8428571428571429,
+      "span_precision": 0.9516129032258065,
+      "span_recall": 0.7564102564102564,
+      "token_f1": 0.8501388721168941,
+      "elapsed_seconds": 937.2483158111572
     },
     {
       "config_id": "lr=3e-05_model_name=rufimelo-Legal-BERTimbau-base_stride=320_warmup_ratio=0",
@@ -51,11 +23,39 @@
         "warmup_ratio": 0.0,
         "stride": 320
       },
-      "span_f1": 0.6607142857142856,
-      "span_precision": 0.9024390243902439,
-      "span_recall": 0.5211267605633803,
-      "token_f1": 0.6836947791164658,
-      "elapsed_seconds": 952.0697660446167
+      "span_f1": 0.8088235294117648,
+      "span_precision": 0.9482758620689655,
+      "span_recall": 0.7051282051282052,
+      "token_f1": 0.8177866103589616,
+      "elapsed_seconds": 941.8677940368652
+    },
+    {
+      "config_id": "lr=3e-05_model_name=rufimelo-Legal-BERTimbau-base_stride=320_warmup_ratio=0.1",
+      "config": {
+        "model_name": "rufimelo/Legal-BERTimbau-base",
+        "lr": 3e-05,
+        "warmup_ratio": 0.1,
+        "stride": 320
+      },
+      "span_f1": 0.7969924812030076,
+      "span_precision": 0.9636363636363636,
+      "span_recall": 0.6794871794871795,
+      "token_f1": 0.8112359550561797,
+      "elapsed_seconds": 944.3156850337982
+    },
+    {
+      "config_id": "lr=5e-05_model_name=rufimelo-Legal-BERTimbau-base_stride=320_warmup_ratio=0",
+      "config": {
+        "model_name": "rufimelo/Legal-BERTimbau-base",
+        "lr": 5e-05,
+        "warmup_ratio": 0.0,
+        "stride": 320
+      },
+      "span_f1": 0.7611940298507462,
+      "span_precision": 0.9107142857142857,
+      "span_recall": 0.6538461538461539,
+      "token_f1": 0.8116267465069861,
+      "elapsed_seconds": 940.2457489967346
     },
     {
       "config_id": "lr=2e-05_model_name=rufimelo-Legal-BERTimbau-base_stride=320_warmup_ratio=0",
@@ -65,11 +65,11 @@
         "warmup_ratio": 0.0,
         "stride": 320
       },
-      "span_f1": 0.6019417475728155,
-      "span_precision": 0.96875,
-      "span_recall": 0.43661971830985913,
-      "token_f1": 0.6109115785873097,
-      "elapsed_seconds": 954.6488409042358
+      "span_f1": 0.7258064516129032,
+      "span_precision": 0.9782608695652174,
+      "span_recall": 0.5769230769230769,
+      "token_f1": 0.7345473880101023,
+      "elapsed_seconds": 951.5157330036163
     },
     {
       "config_id": "lr=2e-05_model_name=rufimelo-Legal-BERTimbau-base_stride=320_warmup_ratio=0.1",
@@ -79,11 +79,11 @@
         "warmup_ratio": 0.1,
         "stride": 320
       },
-      "span_f1": 0.41758241758241754,
-      "span_precision": 0.95,
-      "span_recall": 0.2676056338028169,
-      "token_f1": 0.44081475787855495,
-      "elapsed_seconds": 947.5214328765869
+      "span_f1": 0.6495726495726496,
+      "span_precision": 0.9743589743589743,
+      "span_recall": 0.48717948717948717,
+      "token_f1": 0.6650704225352113,
+      "elapsed_seconds": 940.6392319202423
     }
   ],
   "best": {
@@ -94,10 +94,10 @@
       "warmup_ratio": 0.1,
       "stride": 320
     },
-    "span_f1": 0.7288135593220338,
-    "span_precision": 0.9148936170212766,
-    "span_recall": 0.6056338028169014,
-    "token_f1": 0.7711889787361486,
-    "elapsed_seconds": 947.0945889949799
+    "span_f1": 0.8428571428571429,
+    "span_precision": 0.9516129032258065,
+    "span_recall": 0.7564102564102564,
+    "token_f1": 0.8501388721168941,
+    "elapsed_seconds": 937.2483158111572
   }
 }

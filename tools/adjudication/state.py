@@ -205,7 +205,7 @@ class AdjudicationState:
         totals = {kind: sum(1 for c in changes if c["change"] == kind) for kind in ("added", "removed", "relabelled")}
         return {"changes": changes, "conflicts": conflicts, "totals": totals}
 
-    def finish(self, out_path: Path, gold_release: Path | None = paths.CORRECTED_GOLD_JSON) -> dict:
+    def finish(self, out_path: Path, gold_release: Path | str | None = dec.PRE_ADJUDICATION) -> dict:
         """Write the decisions file and return its summary."""
         payload = dec.build_decisions_file(self, gold_release=gold_release)
         Path(out_path).write_text(json.dumps(payload, ensure_ascii=False, indent=1), encoding="utf-8")

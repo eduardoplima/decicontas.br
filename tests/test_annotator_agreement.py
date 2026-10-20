@@ -175,3 +175,37 @@ def test_load_study_real_files_align():
     data, ids = load_study()
     assert len(ids) == 861
     assert set(data) == {"anotador1", "anotador2", "anotador3"}
+
+
+def test_documents_to_spans_has_the_release_shape():
+    from research.dataset_io import build_document
+    from research.release.annotator_agreement import documents_to_spans
+
+    doc = build_document(
+        7, "aplicar multa de R$ 100 ao gestor", [{"start": 8, "end": 23, "labels": ["MULTA_FIXA"]}]
+    )
+    spans = documents_to_spans([doc])
+    assert spans == {
+        7: {
+            "text": "aplicar multa de R$ 100 ao gestor",
+            "spans": [(8, 23, "MULTA")],
+            "token_spans": [(1, 5, "MULTA")],
+        }
+    }
+
+
+def test_load_study_checks_annotator1_against_the_given_gold(tmp_path):
+    import json
+
+    from research.release.annotator_agreement import load_study
+
+    text = "aplicar multa de R$ 100 ao gestor"
+    for name in ("anotador1", "anotador2", "anotador3"):
+        rec = {"id": 7, "text": text, "spans": [{"start": 8, "end": 23, "label": "MULTA"}]}
+        (tmp_path / f"{name}.jsonl").write_text(json.dumps(rec) + "\n", encoding="utf-8")
+    gold = {7: {"text": text, "spans": [(8, 23, "MULTA")], "token_spans": [(1, 5, "MULTA")]}}
+    data, ids = load_study(tmp_path, gold=gold)
+    assert ids == [7] and data["anotador1"][7]["spans"] == [(8, 23, "MULTA")]
+    gold[7]["spans"] = []
+    with pytest.raises(ValueError, match="pre-adjudication"):
+        load_study(tmp_path, gold=gold)

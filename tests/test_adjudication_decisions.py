@@ -169,3 +169,12 @@ def test_gold_alignment_is_verified_against_the_release(tmp_path):
     assert verify_gold_alignment(docs, release) == [7]
     with pytest.raises(ValueError):
         _decision_file(tmp_path, {7: view([MULTA], [MULTA, REC], [MULTA, REC])}, {}, release=release)
+
+
+def test_gold_alignment_accepts_spans_in_memory():
+    docs = {7: view([MULTA], [MULTA], [MULTA])}
+    cs, ce = char_span(5, 11)
+    gold = {7: {"text": TEXT, "spans": [(cs, ce, "MULTA")], "token_spans": [MULTA]}}
+    assert verify_gold_alignment(docs, gold) == []
+    gold[7]["token_spans"] = []
+    assert verify_gold_alignment(docs, gold) == [7]

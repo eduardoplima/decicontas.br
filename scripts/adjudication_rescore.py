@@ -2,8 +2,9 @@
 
 Nada aqui re-executa modelo: as predições out-of-fold dos supervisionados e as
 dos LLMs (``output_corrected/``) são comparadas, documento a documento, com dois
-golds — o release canônico (``dataset/release/decicontas``) e o release exportado
-com o arquivo de adjudicação (``--adjudication`` do ``export_dataset``). O
+golds — a anotação pós-auditoria anterior à adjudicação (reconstruída em memória
+pelo ``export_dataset`` sem o arquivo de adjudicação) e o release adjudicado
+(``dataset/release/decicontas``, ou ``--release``). O
 pareamento, o filtro de escopo e as métricas são os de
 ``scripts/reference_sensitivity.py``.
 
@@ -41,28 +42,44 @@ from reference_sensitivity import (  # noqa: E402
 from research.annotation_scope import clause_regions, inside  # noqa: E402
 from research.dataset_io import char_span_to_token_span, collapse_label  # noqa: E402
 from research.release import paths  # noqa: E402
+from research.release.export_dataset import build_bundles  # noqa: E402
 from research.release.evaluation_numbers import DISPLAY_NAMES, _is_supervised_model, load_scored  # noqa: E402
 
 logger = logging.getLogger("adjudication_rescore")
 
 OUT_DIR = paths.RAW_EXPERIMENTS_DIR / "adjudication"
-ADJUDICATED_DIR = paths.DATASET / "release" / "decicontas-adjudicated"
+ADJUDICATED_DIR = paths.CANONICAL_RELEASE_DIR.parent
+
+
+def _token_spans(docs: list[tuple[str, list, list]]) -> dict[int, list[tuple[int, int, str]]]:
+    out = {}
+    for idx, (text, offsets, entities) in enumerate(docs):
+        regions = clause_regions(text, offsets)
+        spans = []
+        for start, end, label in entities:
+            tok = char_span_to_token_span(start, end, offsets)
+            if tok is not None and not inside(tok, regions):
+                spans.append((tok[0], tok[1], collapse_label(label)))
+        out[idx] = sorted(spans)
+    return out
 
 
 def release_token_spans(release_json: Path) -> dict[int, list[tuple[int, int, str]]]:
     """``{release_index: [(tok_start, tok_end, label)]}`` de um bundle JSON, dentro do escopo."""
     release = sorted(json.loads(release_json.read_text(encoding="utf-8")), key=lambda d: d["id"])
-    out = {}
-    for idx, doc in enumerate(release):
-        offsets = [tuple(o) for o in doc["token_offsets"]]
-        regions = clause_regions(doc["text"], offsets)
-        spans = []
-        for e in doc["entities"]:
-            tok = char_span_to_token_span(e["start"], e["end"], offsets)
-            if tok is not None and not inside(tok, regions):
-                spans.append((tok[0], tok[1], collapse_label(e["label"])))
-        out[idx] = sorted(spans)
-    return out
+    return _token_spans([
+        (d["text"], [tuple(o) for o in d["token_offsets"]], [(e["start"], e["end"], e["label"]) for e in d["entities"]])
+        for d in release
+    ])
+
+
+def pre_adjudication_token_spans() -> dict[int, list[tuple[int, int, str]]]:
+    """O mesmo mapa para a anotação pós-auditoria anterior à adjudicação, reconstruída em memória."""
+    docs = sorted(build_bundles(paths.LABELED_CORPUS, paths.CORRECTIONS_JSON).after, key=lambda d: d.document_id)
+    return _token_spans([
+        (d.text, [(t.char_start, t.char_end) for t in d.tokens], [(s.char_start, s.char_end, s.label) for s in d.ner_spans])
+        for d in docs
+    ])
 
 
 def retrained_predictions(retrained_dir: Path) -> dict[str, dict[int, list[tuple[int, int, str]]]]:
@@ -87,7 +104,7 @@ def _display(model: str) -> str:
 def run(adjudicated_dir: Path = ADJUDICATED_DIR, out_dir: Path = OUT_DIR, retrained_dir: Path | None = None) -> pd.DataFrame:
     out_dir.mkdir(parents=True, exist_ok=True)
     refs = {
-        "gold": release_token_spans(paths.CANONICAL_GOLD_JSON),
+        "gold": pre_adjudication_token_spans(),
         "adjudicated": release_token_spans(adjudicated_dir / "decicontas" / "decicontas.json"),
     }
     if sorted(refs["gold"]) != sorted(refs["adjudicated"]):
@@ -127,7 +144,7 @@ def run(adjudicated_dir: Path = ADJUDICATED_DIR, out_dir: Path = OUT_DIR, retrai
     pc = pd.DataFrame(per_class)
     pc.to_csv(out_dir / "adjudication_rescore_per_class.csv", index=False)
 
-    print("\n=== F1 de span macro / micro: gold v1.2.0 × adjudicado ===")
+    print("\n=== F1 de span macro / micro: gold pré-adjudicação × adjudicado ===")
     cols = ["display", "span_f1_macro_gold", "span_f1_macro_adjudicated", "delta_span_f1_macro",
             "span_f1_gold", "span_f1_adjudicated", "delta_span_f1"]
     print(df[cols].round(4).to_string(index=False))
@@ -149,7 +166,7 @@ def run(adjudicated_dir: Path = ADJUDICATED_DIR, out_dir: Path = OUT_DIR, retrai
 
 def main() -> None:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument("--release", type=Path, default=ADJUDICATED_DIR, help="diretório do release adjudicado")
+    p.add_argument("--release", type=Path, default=ADJUDICATED_DIR, help="diretório com o bundle adjudicado (decicontas/decicontas.json)")
     p.add_argument("--out-dir", type=Path, default=OUT_DIR)
     p.add_argument("--retrained", type=Path, help="output_<sufixo>/ com os encoders retreinados no gold adjudicado")
     args = p.parse_args()

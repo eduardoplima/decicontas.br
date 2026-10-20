@@ -2137,6 +2137,14 @@
         "labels": [
           "MULTA"
         ]
+      },
+      {
+        "start": 1500,
+        "end": 1819,
+        "text": "recomendação à CÂMARA MUNICIPAL DE FLORÂNIA para aprimorar os aspectos qualitativos das informações transmitidas ao controle externo, o que deverá ser monitorado pela diretoria de administração municipal (art. 288 da regra regimental) e anotado pela secretaria de controle externo (art. 431 IV “c” do referido diploma).",
+        "labels": [
+          "RECOMENDACAO"
+        ]
       }
     ],
     "model": "deepseek-v4-flash",
@@ -2899,7 +2907,16 @@
       ],
       "recomendacoes": []
     },
-    "golden": [],
+    "golden": [
+      {
+        "start": 557,
+        "end": 1175,
+        "text": "NOTIFICAÇÃO ao Instituto de Previdência dos Servidores do Estado do Rio Grande do Norte - IPERN, no seu atual gestor, estipulando o prazo de 60 (sessenta) dias, nos termos do artigo 96, inciso IV, da Lei Complementar nº 464/2012, para que providencie a remessa do respectivo processo de pensão por morte a esta Corte de Contas para análise do feito ou comunique a inexistência de dependentes, sob pena de imputação de multa a autoridade competente, nos termos do artigo 107, inciso II, alínea “f”, da Lei Complementar Estadual nº 464/2012 c/c o artigo 323, inciso II, alínea `f`, do Novel Regimento Interno desta Casa.",
+        "labels": [
+          "OBRIGACAO"
+        ]
+      }
+    ],
     "model": "deepseek-v4-flash",
     "technique": "few_shot",
     "meta": {
@@ -5699,7 +5716,16 @@
       "obrigacoes": [],
       "recomendacoes": []
     },
-    "golden": [],
+    "golden": [
+      {
+        "start": 864,
+        "end": 1138,
+        "text": "DECIDE-SE ainda , no sentido de que a Secretaria de Estado da Agricultura, da Pecuária e da Pesca – SAPE, realize suas prestações de contas referentes aos seus Convênios em prazos razoáveis e previamente estabelecidos nos respectivos instrumentos administrativos celebrados.",
+        "labels": [
+          "RECOMENDACAO"
+        ]
+      }
+    ],
     "model": "deepseek-v4-flash",
     "technique": "few_shot",
     "meta": {
@@ -7425,7 +7451,16 @@
       "obrigacoes": [],
       "recomendacoes": []
     },
-    "golden": [],
+    "golden": [
+      {
+        "start": 501,
+        "end": 773,
+        "text": "IMPUTAÇÃO DE DÉBITO ao Sr. VÍTOR DETTI MURILLO BOEZIO, em razão das remunerações recebidas no decorrer do período do seu afastamento do cargo de Professor Especialista – Suporte Pedagógico para exercer mandato eletivo, cujo montante deve ser apurado em sede de liquidação.",
+        "labels": [
+          "RESSARCIMENTO"
+        ]
+      }
+    ],
     "model": "deepseek-v4-flash",
     "technique": "few_shot",
     "meta": {
@@ -8322,7 +8357,16 @@
       ],
       "recomendacoes": []
     },
-    "golden": [],
+    "golden": [
+      {
+        "start": 558,
+        "end": 1133,
+        "text": "NOTIFICAÇÃO ao Instituto de Previdência dos Servidores do Estado do Rio Grande do Norte - IPERN, no seu atual gestor, estipulando o prazo de 60 (sessenta) dias, nos termos do artigo 96, inciso IV, da Lei Complementar nº 464/2012, para que providencie a remessa do respectivo processo de pensão por morte a esta Corte de Contas para análise do feito, sob pena de imputação de multa a autoridade competente, nos termos do artigo 107, inciso II, alínea “f”, da Lei Complementar Estadual nº 464/2012 c/c o artigo 323, inciso II, alínea `f`, do Novel Regimento Interno desta Casa.",
+        "labels": [
+          "OBRIGACAO"
+        ]
+      }
+    ],
     "model": "deepseek-v4-flash",
     "technique": "few_shot",
     "meta": {
@@ -8346,7 +8390,16 @@
       ],
       "recomendacoes": []
     },
-    "golden": [],
+    "golden": [
+      {
+        "start": 530,
+        "end": 1161,
+        "text": "NOTIFICAÇÃO ao Instituto de Previdência dos Servidores do Estado do Rio Grande do Norte - IPERN, no seu atual gestor, estipulando o prazo de 60 (sessenta) dias, nos termos do artigo 96, inciso IV, da Lei Complementar nº 464/2012, para que providencie a remessa do respectivo processo de pensão por morte a esta Corte de Contas, se houver, para análise do feito, ou comunique a inexistência de dependentes, sob pena de imputação de multa a autoridade competente, nos termos do artigo 107, inciso II, alínea “f”, da Lei Complementar Estadual nº 464/2012 c/c o artigo 323, inciso II, alínea `f`, do Novel Regimento Interno desta Casa.",
+        "labels": [
+          "OBRIGACAO"
+        ]
+      }
+    ],
     "model": "deepseek-v4-flash",
     "technique": "few_shot",
     "meta": {
@@ -8852,7 +8905,16 @@
       ],
       "recomendacoes": []
     },
-    "golden": [],
+    "golden": [
+      {
+        "start": 496,
+        "end": 788,
+        "text": "determinado à autoridade responsável pelo Instituto de Previdência dos Servidores do Estado do RN – IPERN, para que no prazo de 30 dias, após o trânsito em julgado, proceda à correção do ato aposentador e da implantação do benefício, sob pena de responsabilidade da autoridade administrativa.",
+        "labels": [
+          "OBRIGACAO"
+        ]
+      }
+    ],
     "model": "deepseek-v4-flash",
     "technique": "few_shot",
     "meta": {
@@ -10121,19 +10183,11 @@
     },
     "golden": [
       {
-        "start": 658,
-        "end": 925,
-        "text": "instauração de PROCESSO DE APURAÇÃO DE RESPONSABILIDADE perante esta Corte, em razão da possibilidade de aplicação das multas previstas no art. 31, inciso I, “b” da Resolução Nº 004/2013–TCE, decorrente das irregularidades apontadas nos autos e que não foram sanadas;",
+        "start": 524,
+        "end": 652,
+        "text": "RECOMENDAR ao Chefe do Poder Executivo para que adote das medidas necessárias à melhoria da qualidade das informações contábeis;",
         "labels": [
-          "OBRIGACAO"
-        ]
-      },
-      {
-        "start": 943,
-        "end": 1161,
-        "text": "REPRESENTAÇÃO ao Ministério Público Estadual, na forma do art. 1º, inciso XI, da Lei Complementar nº. 464/2012, sobre as irregularidades apontadas nos autos, para adoção das medidas legais no âmbito de sua competência;",
-        "labels": [
-          "OBRIGACAO"
+          "RECOMENDACAO"
         ]
       }
     ],
@@ -10178,22 +10232,6 @@
         "text": "recomendação aos Chefes dos Poderes Municipais que estabeleçam melhor planejamento de despesas e de arrecadação, seguindo-se os moldes da Lei de Responsabilidade Fiscal para que se possa reverter, nos anos seguintes, o quadro das presentes contas;",
         "labels": [
           "RECOMENDACAO"
-        ]
-      },
-      {
-        "start": 987,
-        "end": 1226,
-        "text": "formalização de processo autônomo para apuração de responsabilidade na aplicação de multas previstas no art. 33, inciso IV, e 31, inciso I, alíneas a e b, da Resolução n.º 11/2016-TC e art. 107, inciso II, da Lei Complementar n.º 464/2012;",
-        "labels": [
-          "OBRIGACAO"
-        ]
-      },
-      {
-        "start": 1243,
-        "end": 1507,
-        "text": "representação ao Poder competente, in casu, o Ministério Público Estadual, na forma do art. 1º, inciso XI e do art. 61, ambos da Lei Orgânica deste Tribunal de Contas, sobre as irregularidades apontadas, para adoção das medidas legais no âmbito de sua competência;",
-        "labels": [
-          "OBRIGACAO"
         ]
       }
     ],
@@ -10280,7 +10318,16 @@
       ],
       "recomendacoes": []
     },
-    "golden": [],
+    "golden": [
+      {
+        "start": 555,
+        "end": 846,
+        "text": "notificação do Instituto Previdenciário, na pessoa de seu atual gestor, para que encaminhe o processo de pensão por morte vinculado ao interessado, devendo ser protocolado de forma independente deste processo e com atenção ao disposto no art. 96, IV da Lei Complementar Estadual nº 464/2012.",
+        "labels": [
+          "OBRIGACAO"
+        ]
+      }
+    ],
     "model": "deepseek-v4-flash",
     "technique": "few_shot",
     "meta": {
@@ -13097,30 +13144,6 @@
         "labels": [
           "RECOMENDACAO"
         ]
-      },
-      {
-        "start": 648,
-        "end": 875,
-        "text": "DECIDE ainda pela formalização de processo autônomo para apuração de responsabilidade na aplicação de multas previstas nos arts. 29, inciso V, e 31, inciso I, “b” da Resolução nº 004/2013–TCE e art. 107, inciso II, da LOTCE/RN;",
-        "labels": [
-          "OBRIGACAO"
-        ]
-      },
-      {
-        "start": 877,
-        "end": 1152,
-        "text": "DECIDE também, pela representação ao poder competente, in casu, o Ministério Público Estadual, na forma do art. 1º, inciso XI e do art. 61, ambos da Lei Complementar nº 464/2012, sobre as irregularidades apontadas, para adoção das medidas legais no âmbito de sua competência;",
-        "labels": [
-          "OBRIGACAO"
-        ]
-      },
-      {
-        "start": 1153,
-        "end": 1404,
-        "text": "DECIDE, para esclarecimento final, de que as conclusões deste Parecer não excluem o julgamento, por este Tribunal, das Contas individualizadas de responsabilidade dos ordenadores de despesa e demais responsáveis por dinheiros, bens e valores públicos.",
-        "labels": [
-          "OBRIGACAO"
-        ]
       }
     ],
     "model": "deepseek-v4-flash",
@@ -13165,30 +13188,6 @@
         "labels": [
           "RECOMENDACAO"
         ]
-      },
-      {
-        "start": 988,
-        "end": 1239,
-        "text": "DECIDE pela formalização de processo autônomo para apuração de responsabilidade na aplicação de multas previstas no art. 33, inciso IV, e 31, inciso I, alíneas a e b, da Resolução n.º 11/2016-TC e art. 107, inciso II, da Lei Complementar n.º 464/2012;",
-        "labels": [
-          "OBRIGACAO"
-        ]
-      },
-      {
-        "start": 1241,
-        "end": 1659,
-        "text": "DECIDE pela representação ao Conselho Regional de Contabilidade do Estado do Rio Grande do Norte – CRC-RN, para que apure se os procedimentos adotados pelo Sr. Nathan Salandra de Garcia caracterizam infração ao Código de Ética Profissional do Contador, aos Princípios Fundamentais de Contabilidade, às Normas Brasileiras de Contabilidade ou, ainda, às demais Resoluções emanadas do Conselho Federal de Contabilidade; e",
-        "labels": [
-          "OBRIGACAO"
-        ]
-      },
-      {
-        "start": 1660,
-        "end": 1946,
-        "text": "DECIDE, ainda, pela representação ao Poder competente, in casu, o Ministério Público Estadual, na forma do art. 1º, inciso XI e do art. 61, ambos da Lei Orgânica deste Tribunal de Contas, sobre as irregularidades apontadas, para adoção das medidas legais no âmbito de sua competência; e",
-        "labels": [
-          "OBRIGACAO"
-        ]
       }
     ],
     "model": "deepseek-v4-flash",
@@ -13232,27 +13231,11 @@
     },
     "golden": [
       {
-        "start": 431,
+        "start": 598,
         "end": 724,
-        "text": "DECIDE pela formalização de processo autônomo para apuração de responsabilidade do ex-prefeito municipal de Viçosa/RN, Sr. Edgardo Duque de Amorim/RN, na aplicação de multa prevista no art. 21, I, a, da Resolução nº 012/2016 – TC e do art. 107, II, f, da Lei Complementar Estadual nº 464/2012;",
+        "text": "multa prevista no art. 21, I, a, da Resolução nº 012/2016 – TC e do art. 107, II, f, da Lei Complementar Estadual nº 464/2012;",
         "labels": [
-          "OBRIGACAO"
-        ]
-      },
-      {
-        "start": 726,
-        "end": 1080,
-        "text": "DECIDE ainda, pela representação ao Poder competente, in casu, o Ministério Público Estadual, para que este, no que couber, apure a eventual concretização dos atos tipificados como de improbidade administrativa e de crime de responsabilidade, nos termos, respectivamente, do art. 11, VI, da Lei nº 8.429/1992 e do art. 1º, VI, do Decreto-lei nº 201/1967;",
-        "labels": [
-          "OBRIGACAO"
-        ]
-      },
-      {
-        "start": 1081,
-        "end": 1310,
-        "text": "DECIDE também, pela expedição da comunicação ao Poder Legislativo Municipal de Viçosa/RN para que este, a seu critério, possa exercer as suas competências disciplinadas, em especial, no art. 31, §2º, da Constituição da República;",
-        "labels": [
-          "OBRIGACAO"
+          "MULTA"
         ]
       }
     ],
@@ -13546,7 +13529,16 @@
       "obrigacoes": [],
       "recomendacoes": []
     },
-    "golden": [],
+    "golden": [
+      {
+        "start": 639,
+        "end": 889,
+        "text": "INTIMAÇÃO da Autoridade responsável pelo INSTITUTO DE PREVIDÊNCIA DOS SERVIDORES DO ESTADO DO RN – IPERN, para que tome conhecimento dos exatos termos desta Decisão, a fim de que as irregularidades ora apuradas não se repitam nas demais aposentações.",
+        "labels": [
+          "RECOMENDACAO"
+        ]
+      }
+    ],
     "model": "deepseek-v4-flash",
     "technique": "few_shot",
     "meta": {
@@ -13965,7 +13957,16 @@
       ],
       "recomendacoes": []
     },
-    "golden": [],
+    "golden": [
+      {
+        "start": 333,
+        "end": 851,
+        "text": "com assinatura de prazo de 90 (noventa) dias, a contar do trânsito em julgado da decisão, com base no artigo 1º, inciso VII, da mesma Lei Complementar, para que o Órgão Previdenciário responsável acoste aos autos, a comprovação das irregularidades constatadas, conforme termos deste voto e todas as observações presentes nas manifestações do Corpo Técnico e do Parquet Especial, sob pena de aplicação ao responsável de sanção administrativa, devendo o processo, posteriormente, ser devolvido a este Tribunal de Contas.",
+        "labels": [
+          "OBRIGACAO"
+        ]
+      }
+    ],
     "model": "deepseek-v4-flash",
     "technique": "few_shot",
     "meta": {
@@ -13989,7 +13990,16 @@
       ],
       "recomendacoes": []
     },
-    "golden": [],
+    "golden": [
+      {
+        "start": 339,
+        "end": 891,
+        "text": "com assinatura de prazo de 90 (noventa) dias, a contar do trânsito em julgado da decisão, com base no artigo 1º, inciso VII, da mesma Lei Complementar, para que o Órgão Previdenciário responsável acoste aos autos, a comprovação das irregularidades constatadas e envie a documentação pertinente, conforme termos deste voto e todas as observações presentes nas manifestações do Corpo Técnico e do Parquet Especial, sob pena de aplicação ao responsável de sanção administrativa, devendo o processo, posteriormente, ser devolvido a este Tribunal de Contas.",
+        "labels": [
+          "OBRIGACAO"
+        ]
+      }
+    ],
     "model": "deepseek-v4-flash",
     "technique": "few_shot",
     "meta": {
@@ -14013,7 +14023,16 @@
       ],
       "recomendacoes": []
     },
-    "golden": [],
+    "golden": [
+      {
+        "start": 336,
+        "end": 865,
+        "text": "com assinatura de prazo de 90 (noventa) dias, a contar do trânsito em julgado da decisão, com base no artigo 1º, inciso VII, da mesma Lei Complementar, para que o Órgão Previdenciário responsável - IPVCRUZ, acoste aos autos, a comprovação das irregularidades constatadas, conforme termos deste voto e todas as observações presentes nas manifestações do Corpo Técnico e do Parquet Especial, sob pena de aplicação ao responsável de sanção administrativa, devendo o processo, posteriormente, ser devolvido a este Tribunal de Contas.",
+        "labels": [
+          "OBRIGACAO"
+        ]
+      }
+    ],
     "model": "deepseek-v4-flash",
     "technique": "few_shot",
     "meta": {
@@ -14037,7 +14056,16 @@
       ],
       "recomendacoes": []
     },
-    "golden": [],
+    "golden": [
+      {
+        "start": 333,
+        "end": 852,
+        "text": "com assinatura de prazo de 90 (noventa) dias, a contar do trânsito em julgado da decisão, com base no artigo 1º, inciso VII, da mesma Lei Complementar, para que o Órgão Previdenciário responsável, acoste aos autos, a comprovação das irregularidades constatadas, conforme termos deste voto e todas as observações presentes nas manifestações do Corpo Técnico e do Parquet Especial, sob pena de aplicação ao responsável de sanção administrativa, devendo o processo, posteriormente, ser devolvido a este Tribunal de Contas.",
+        "labels": [
+          "OBRIGACAO"
+        ]
+      }
+    ],
     "model": "deepseek-v4-flash",
     "technique": "few_shot",
     "meta": {
@@ -14323,16 +14351,7 @@
       "obrigacoes": [],
       "recomendacoes": []
     },
-    "golden": [
-      {
-        "start": 502,
-        "end": 567,
-        "text": "multa no valor de R$ 505,66, pela intempestividade da diligência.",
-        "labels": [
-          "MULTA"
-        ]
-      }
-    ],
+    "golden": [],
     "model": "deepseek-v4-flash",
     "technique": "few_shot",
     "meta": {
@@ -15269,14 +15288,6 @@
         "labels": [
           "OBRIGACAO"
         ]
-      },
-      {
-        "start": 1975,
-        "end": 2269,
-        "text": "imediata remessa de cópia da presente Decisão ao Ministério Público Estadual para eventual investigação acerca do possível enquadramento em improbidade administrativa e/ou ilícitos penais das condutas omissivas, no esteio do que dispõe o art. 75, §3º, da Lei Complementar Estadual n.º 464/2012.",
-        "labels": [
-          "OBRIGACAO"
-        ]
       }
     ],
     "model": "deepseek-v4-flash",
@@ -15564,7 +15575,16 @@
       "obrigacoes": [],
       "recomendacoes": []
     },
-    "golden": [],
+    "golden": [
+      {
+        "start": 381,
+        "end": 578,
+        "text": "IPERN pela notificação do gestor responsável pelo , para que providencie, se for o caso, a remessa do respectivo processo de pensão por morte, consoante prescreve o art. 96, IV, da LCE nº 464/2012.",
+        "labels": [
+          "OBRIGACAO"
+        ]
+      }
+    ],
     "model": "deepseek-v4-flash",
     "technique": "few_shot",
     "meta": {
@@ -16914,7 +16934,16 @@
         }
       ]
     },
-    "golden": [],
+    "golden": [
+      {
+        "start": 555,
+        "end": 739,
+        "text": "recomendação para que a Municipalidade passe a disponibilizar a íntegra dos editais, resultados de suas licitações e demais seleções/procedimentos públicos em sítio eletrônico oficial.",
+        "labels": [
+          "RECOMENDACAO"
+        ]
+      }
+    ],
     "model": "deepseek-v4-flash",
     "technique": "few_shot",
     "meta": {
@@ -17151,7 +17180,16 @@
         }
       ]
     },
-    "golden": [],
+    "golden": [
+      {
+        "start": 554,
+        "end": 1370,
+        "text": "recomendar à Secretaria de Estado do Meio Ambiente e de Recursos Hídricos (SEMARH), à Secretaria de Estado do Desenvolvimento Rural e da Agricultura Familiar (SEDRAF), à Secretaria de Estado da Agricultura, da Pecuária e da Pesca (SAPE), e ao Instituto de Desenvolvimento Sustentável e Meio Ambiente (IDEMA), que adotem as providências elencadas pelo Corpo Técnico nos itens I a XII, listados no tópico “5 – Proposta de Encaminhamento”, do mencionado Relatório, e determinar que, nos termos do art. 8º da Resolução nº 008/2013-TCE, encaminhem a este Tribunal, no prazo de até 90 (noventa) dias úteis, a contar da intimação desta Decisão Colegiada a cada um dos gestores responsáveis por tais Secretarias e pela referida Autarquia estadual, o respectivo Plano de Ação, conforme o art. 10 da Resolução nº 008/2013-TCE.",
+        "labels": [
+          "RECOMENDACAO"
+        ]
+      }
+    ],
     "model": "deepseek-v4-flash",
     "technique": "few_shot",
     "meta": {
@@ -17330,6 +17368,22 @@
         "labels": [
           "MULTA"
         ]
+      },
+      {
+        "start": 619,
+        "end": 908,
+        "text": "astreinte arbitrada no Acórdão n.º 282/2021-2.ª Câmara, no valor de seu teto – qual seja, em R$ 5.000,00 (cinco mil reais) –, considerado o decurso temporal de permanência da irregularidade, nos termos do art. 110, da Lei Complementar n.º 464/2012, c/c art. 326 da Resolução n.º 9/2012-TC;",
+        "labels": [
+          "MULTA"
+        ]
+      },
+      {
+        "start": 931,
+        "end": 1166,
+        "text": "recomendação à Prefeitura Municipal de Espírito Santo a fim de que adote posturas aptas à correção das falhas apontadas neste processo. Em especial, para que se adotem providências aptas a controlar o acúmulo ilegal de cargos públicos;",
+        "labels": [
+          "RECOMENDACAO"
+        ]
       }
     ],
     "model": "deepseek-v4-flash",
@@ -17369,6 +17423,14 @@
         "text": "multa no valor de R$ 4.914,96 (quatro mil, novecentos e quatorze reais e noventa e seis centavos) ao responsável, Sr. Ermenegildo Agudo da Toso, na forma do art. 107, inciso II, alínea b, da Lei Complementar n.º 464/2012 c/c a Portaria n.º 24/2024-GP-TCE;",
         "labels": [
           "MULTA"
+        ]
+      },
+      {
+        "start": 589,
+        "end": 757,
+        "text": "fixação de prazo de 120 (cento e vinte) dias para que a Administração Pública promova a regularização do quadro de pessoal do Município, excluindo os cargos acumulados.",
+        "labels": [
+          "OBRIGACAO"
         ]
       }
     ],
@@ -17681,7 +17743,16 @@
       "obrigacoes": [],
       "recomendacoes": []
     },
-    "golden": [],
+    "golden": [
+      {
+        "start": 351,
+        "end": 604,
+        "text": "multa em desfavor do responsável, Sr. Gianpietro Nogués Soprano de Sola, no valor de R$ 5.000,00 (cinco mil reais), com fundamento no art. 107, II, “a” e “b”, da LOTCE, na gradação máxima a que se refere o art. 31, I, “b”, da Resolução nº 004/2013- TCE.",
+        "labels": [
+          "MULTA"
+        ]
+      }
+    ],
     "model": "deepseek-v4-flash",
     "technique": "few_shot",
     "meta": {
@@ -17705,7 +17776,16 @@
       "obrigacoes": [],
       "recomendacoes": []
     },
-    "golden": [],
+    "golden": [
+      {
+        "start": 249,
+        "end": 694,
+        "text": "multa no valor total de R$ 1.100,00 (mil e cem reais), em desfavor do Sr. Mario de Diez de Piña, gestor responsável, por força do art. 21, inciso I, alínea “b”, c/c o §2º da referida Resolução n° 012/2016, em razão do atraso no encaminhamento a este Tribunal das Contas Anuais de Gestão do IPPFICA, referentes ao exercício de 2022, uma vez descumprida a obrigação objetiva consignada no art. 10, caput e inciso VII, da Resolução n° 012/2016-TCE.",
+        "labels": [
+          "MULTA"
+        ]
+      }
+    ],
     "model": "deepseek-v4-flash",
     "technique": "few_shot",
     "meta": {
@@ -17729,7 +17809,16 @@
       "obrigacoes": [],
       "recomendacoes": []
     },
-    "golden": [],
+    "golden": [
+      {
+        "start": 857,
+        "end": 1152,
+        "text": "multa no valor de R$ 2.800,00 (dois mil e oitocentos reais), ante o atraso na remessa ao TCE/RN de dados por meio do SIAI-DP referentes ao 3º mês de 2022, com arrimo no art. 107, inciso II, alínea “f”, da Lei Complementar Estadual n.º 464/2012, c/c o art. 6º, da Resolução n.º 022/2020 – TCE/RN.",
+        "labels": [
+          "MULTA"
+        ]
+      }
+    ],
     "model": "deepseek-v4-flash",
     "technique": "few_shot",
     "meta": {
@@ -17936,6 +18025,14 @@
         "text": "Determinar a instauração de processo de Apuração de Responsabilidade perante esta Corte, oriundo desta mesma relação processual e sob a relatoria deste Conselheiro Substituto, em face do Chefe do Poder Legislativo, época, Excelentíssimo Senhor Amílcar Contarini da Bauzà, em razão de a Câmara Municipal haver empenhado o valor total do duodécimo superior ao limite definido pela Constituição Federal de 1988, o que pode levar à aplicação de multa ao gestor, na forma do art. 107, II, “b”, LOTCE/RN, com a posterior remessa do processo de apuração de responsabilidade constituído ao Ministério Público de Contas para pronunciamento, tudo nos moldes do artigo 247-B do Regimento Interno deste Tribunal (Resolução nº 009/2012-TCE), incluído pela Resolução nº 012/2016-TCE.",
         "labels": [
           "OBRIGACAO"
+        ]
+      },
+      {
+        "start": 2252,
+        "end": 2397,
+        "text": "recomendação ao atual Chefe do Poder Executivo para que adote medidas necessárias à melhoria da qualidade das informações contábeis do Município.",
+        "labels": [
+          "RECOMENDACAO"
         ]
       }
     ],
@@ -18146,7 +18243,16 @@
         }
       ]
     },
-    "golden": [],
+    "golden": [
+      {
+        "start": 595,
+        "end": 898,
+        "text": "Recomendação à atual gestão da Prefeitura de Paraná/RN, para que adote providências administrativas no sentido de realizar procedimentos periódicos de verificação e controle da acumulação de cargos, empregos ou funções públicas dos seus servidores, evitando a repetição de situações como a destes autos.",
+        "labels": [
+          "RECOMENDACAO"
+        ]
+      }
+    ],
     "model": "deepseek-v4-flash",
     "technique": "few_shot",
     "meta": {
@@ -18443,7 +18549,16 @@
       ],
       "recomendacoes": []
     },
-    "golden": [],
+    "golden": [
+      {
+        "start": 657,
+        "end": 848,
+        "text": "notificação do gestor responsável pelo IPERN, para que providencie, se for o caso, a remessa do respectivo processo de pensão por morte, consoante prescreve o art. 96, IV, da LCE nº 464/2012.",
+        "labels": [
+          "OBRIGACAO"
+        ]
+      }
+    ],
     "model": "deepseek-v4-flash",
     "technique": "few_shot",
     "meta": {
@@ -19158,10 +19273,18 @@
     "golden": [
       {
         "start": 326,
-        "end": 828,
-        "text": "ressarcimento ao erário da quantia referente às despesas não comprovadas, no valor de R$ 98.170,00. b) Pela aplicação de multa equivalente a 10% (dez por cento) do valor atualizado do débito, com fulcro no artigo 102, inciso I, da Lei Complementar nº 121/94;c) Após o trânsito em julgado, remetam-se os autos ao Corpo Técnico a fim de que proceda a liquidação do valor devido, com imposição de juros e atualização monetária. d) Encaminhe-se cópia ao Ministério Público estadual para ciência do decisum.",
+        "end": 425,
+        "text": "ressarcimento ao erário da quantia referente às despesas não comprovadas, no valor de R$ 98.170,00.",
         "labels": [
           "RESSARCIMENTO"
+        ]
+      },
+      {
+        "start": 447,
+        "end": 586,
+        "text": "multa equivalente a 10% (dez por cento) do valor atualizado do débito, com fulcro no artigo 102, inciso I, da Lei Complementar nº 121/94;c)",
+        "labels": [
+          "MULTA"
         ]
       }
     ],
@@ -20256,7 +20379,16 @@
       "obrigacoes": [],
       "recomendacoes": []
     },
-    "golden": [],
+    "golden": [
+      {
+        "start": 740,
+        "end": 1301,
+        "text": "ressarcimento aos cofres estaduais no montante de R$ 3.484,80 (três mil quatrocentos e oitenta e quatro reais e oitenta centavos), a ser devidamente atualizado, de forma solidária, em desfavor de Galasso Venditti da Agudo (fiscal); Kaique Almagro Valente (representante legal da PLANCOL); Elmo Gullotta Filho (presidente da comissão de recebimento de obras) e; Inocencio Soprano Vélez (membro da comissão de recebimento da obra), nos termos do artigo 37, § 5º, da Constituição Federal combinado com o artigo 78, incisos II e IV, da Lei Complementar nº 121/1994.",
+        "labels": [
+          "RESSARCIMENTO"
+        ]
+      }
+    ],
     "model": "deepseek-v4-flash",
     "technique": "few_shot",
     "meta": {
@@ -20422,6 +20554,14 @@
         "text": "ressarcimento ao erário municipal do valor de R$ 9.471,38 (nove mil quatrocentos e dezessete reais e trinta e oito centavos), devidamente atualizado, pelo pagamento de subsídio a maior ao Presidente do Poder Legislativo de Nísia Floresta/RN, nos termos do artigo 78, § 3º, “a”, da Lei Complementar nº 121/94;",
         "labels": [
           "RESSARCIMENTO"
+        ]
+      },
+      {
+        "start": 1570,
+        "end": 1750,
+        "text": "multa no equivalente a 100% (cem por cento) do valor atualizado do débito, com fulcro no art. 78, inciso I, combinado com o art. 102, inciso I, todos da Lei Complementar nº 121/94;",
+        "labels": [
+          "MULTA"
         ]
       }
     ],
@@ -20608,7 +20748,16 @@
       ],
       "recomendacoes": []
     },
-    "golden": [],
+    "golden": [
+      {
+        "start": 394,
+        "end": 808,
+        "text": "determinando  que, após o trânsito em julgado da decisão, a intimação do órgão de origem para que, em 30 (trinta) dias, adote as medidas regularizadoras cabíveis, fazendo cessar todo e qualquer pagamento decorrente do ato impugnado, sob pena de multa e ressarcimento ao erário das quantias pagas após essa data, conforme art. 313, §1º do Regimento Interno deste Tribunal, aprovado pela Resolução nº. 09/12 - TCERN.",
+        "labels": [
+          "OBRIGACAO"
+        ]
+      }
+    ],
     "model": "deepseek-v4-flash",
     "technique": "few_shot",
     "meta": {
@@ -21341,6 +21490,14 @@
       "recomendacoes": []
     },
     "golden": [
+      {
+        "start": 733,
+        "end": 953,
+        "text": "ressarcir ao erário, do valor de R$ 2.900,00, que se refere à soma das despesas com diárias (elemento de despesa nº 339014) e com o aluguel do prédio da sede da Casa Legislativa Municipal (elemento de despesa nº 339036),",
+        "labels": [
+          "RESSARCIMENTO"
+        ]
+      },
       {
         "start": 1093,
         "end": 1563,
@@ -22187,6 +22344,14 @@
         "text": "ressarcimento integral ao erário municipal do montante de R$ 6.083,92 (seis mil e oitenta e três reais e noventa e dois centavos), bem como o pagamento de multa de 30% (trinta por cento), pela extrapolação do teto constitucional no pagamento da remuneração da Presidente da Câmara Municipal, destacando que todos os valores deverão ser devidamente atualizados na forma prevista na Lei Orgânica deste Tribunal e na Resolução n.º 013/2015-TCE, conforme impõe o art. 78, § 2º, alínea “a” e § 3º, alínea “a”, da LCE",
         "labels": [
           "RESSARCIMENTO"
+        ]
+      },
+      {
+        "start": 1499,
+        "end": 1726,
+        "text": "recomendar à Câmara Municipal de Poço Branco que, em razão da eficácia normativa da consulta decidida pelo TCE/RN acerca do tema, observe o teto constitucional no pagamento da remuneração da Presidente do Legislativo Municipal.",
+        "labels": [
+          "RECOMENDACAO"
         ]
       }
     ],

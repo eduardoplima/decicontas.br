@@ -121,11 +121,11 @@ def _adjudication_text(meta: dict) -> str:
 ## Adjudication file applied
 
 `{meta['source']}` (generated {meta['generated_at']}) was applied as a second
-corrections pass on top of the Cleanlab review: {meta['items_decided']} of
-{meta['items_total']} divergences between annotator 1 and annotators 2/3 decided,
-{meta['token_changes']} token overrides; entities {meta['entities_before']} ->
-{meta['entities_after']} before the annotation-scope filter. This is **not** the
-canonical release.
+pass on top of the Cleanlab review: {meta['items_decided']} of
+{meta['items_total']} divergences between annotator 1 and the two independent
+annotators (`dataset/annotators/`) decided, {meta['token_changes']} token
+overrides; entities {meta['entities_before']} -> {meta['entities_after']}
+before the annotation-scope filter.
 """
 
 
@@ -148,6 +148,13 @@ def _readme_text(
     adjudication_meta: dict | None = None,
 ) -> str:
     adjudication = _adjudication_text(adjudication_meta) if adjudication_meta else ""
+    adjudication_versions = (
+        " The divergences between that audited annotation and the two\n"
+        "  independent annotators were then adjudicated and the decisions applied\n"
+        "  as a second pass (see below)."
+        if adjudication_meta
+        else ""
+    )
     return f"""# DeciContas — Brazilian Audit-Court NER Release
 
 This bundle contains two versions of the DeciContas dataset, a Portuguese
@@ -167,7 +174,7 @@ of Rio Grande do Norte (TCE/RN). Four entity classes are annotated:
   from a Cleanlab error-detection pass: every group flagged by the
   ensemble with confidence ≥ 0.95 was reviewed entity-by-entity in a
   custom admin UI; groups below that threshold were left at the
-  original gold annotation.
+  original gold annotation.{adjudication_versions}
 
 ## Annotation scope
 

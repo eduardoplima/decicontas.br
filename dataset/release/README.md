@@ -17,7 +17,9 @@ of Rio Grande do Norte (TCE/RN). Four entity classes are annotated:
   from a Cleanlab error-detection pass: every group flagged by the
   ensemble with confidence ≥ 0.95 was reviewed entity-by-entity in a
   custom admin UI; groups below that threshold were left at the
-  original gold annotation.
+  original gold annotation. The divergences between that audited annotation and the two
+  independent annotators were then adjudicated and the decisions applied
+  as a second pass (see below).
 
 ## Annotation scope
 
@@ -83,12 +85,21 @@ documents per label:      {'MULTA': 139, 'OBRIGACAO': 88, 'RESSARCIMENTO': 56, '
 
 ```
 documents:                861
-documents with entity:    202
+documents with entity:    223
 tokens:                   116844
 characters:               754555
-entities per label:       {'MULTA': 203, 'OBRIGACAO': 123, 'RESSARCIMENTO': 63, 'RECOMENDACAO': 22}
-documents per label:      {'MULTA': 140, 'OBRIGACAO': 92, 'RESSARCIMENTO': 57, 'RECOMENDACAO': 17}
+entities per label:       {'MULTA': 209, 'OBRIGACAO': 122, 'RESSARCIMENTO': 66, 'RECOMENDACAO': 32}
+documents per label:      {'MULTA': 144, 'OBRIGACAO': 100, 'RESSARCIMENTO': 59, 'RECOMENDACAO': 27}
 ```
+
+## Adjudication file applied
+
+`dataset/errors/adjudication-decisions.json` (generated 2026-10-20T06:48:55+00:00) was applied as a second
+pass on top of the Cleanlab review: 163 of
+167 divergences between annotator 1 and the two independent
+annotators (`dataset/annotators/`) decided, 2419 token
+overrides; entities {'MULTA': 203, 'OBRIGACAO': 123, 'RESSARCIMENTO': 63, 'RECOMENDACAO': 22} -> {'MULTA': 209, 'OBRIGACAO': 122, 'RESSARCIMENTO': 66, 'RECOMENDACAO': 32}
+before the annotation-scope filter.
 
 ## Reproducibility
 

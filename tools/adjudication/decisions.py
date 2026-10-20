@@ -21,7 +21,7 @@ from typing import TYPE_CHECKING
 from research.annotation_scope import clause_regions, inside
 from research.dataset_io import ENTITY_LABELS
 from research.release import paths
-from research.release.annotator_agreement import load_release_spans
+from research.release.annotator_agreement import load_pre_adjudication_spans, load_release_spans
 from tools.adjudication.divergences import Candidate, DocView, Item, Span, default_decision
 
 if TYPE_CHECKING:
@@ -210,9 +210,21 @@ def doc_changes(doc: DocView, items: list[Item], resolved: dict[str, dict]) -> l
     return _changes(doc, final, owners, resolved)
 
 
-def verify_gold_alignment(docs: dict[int, DocView], release_json: Path) -> list[int]:
-    """Documents where annotator 1 no longer matches the released gold (token spans)."""
-    release = load_release_spans(Path(release_json))
+PRE_ADJUDICATION = "pre-adjudication"
+
+
+def verify_gold_alignment(docs: dict[int, DocView], gold: Path | str | dict[int, dict]) -> list[int]:
+    """Documents where annotator 1 no longer matches ``gold`` (token spans).
+
+    ``gold`` is a release JSON path, spans in the release shape, or
+    :data:`PRE_ADJUDICATION` for the audited gold before the adjudication pass.
+    """
+    if gold == PRE_ADJUDICATION:
+        release = load_pre_adjudication_spans()
+    elif isinstance(gold, dict):
+        release = gold
+    else:
+        release = load_release_spans(Path(gold))
     return sorted(i for i, d in docs.items() if i in release and release[i]["token_spans"] != d.spans["A1"])
 
 
@@ -226,10 +238,16 @@ def _rel(path: Path | str | None) -> str | None:
         return str(path)
 
 
+def _gold_source(gold: Path | str | dict | None) -> str | None:
+    if gold is None or isinstance(gold, str):
+        return gold
+    return "in-memory spans" if isinstance(gold, dict) else _rel(gold)
+
+
 def build_decisions_file(
     state: AdjudicationState,
     *,
-    gold_release: Path | None = paths.CORRECTED_GOLD_JSON,
+    gold_release: Path | str | dict[int, dict] | None = PRE_ADJUDICATION,
     generated_at: str | None = None,
 ) -> dict:
     """The corrections-file payload (``token_changes`` + ``summary``) for the current decisions."""
@@ -289,7 +307,7 @@ def build_decisions_file(
             "annotators_dir": _rel(state.annotators_dir),
             "annotators_sha256": state.data["annotators_sha256"],
             "state": _rel(state.path),
-            "gold": _rel(gold_release),
+            "gold": _gold_source(gold_release),
         },
         "token_changes": changes,
         "summary": summary,

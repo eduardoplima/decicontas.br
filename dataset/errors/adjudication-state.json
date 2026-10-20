@@ -1,0 +1,782 @@
+{
+ "version": "1",
+ "annotators_sha256": {
+  "anotador1.jsonl": "5859c498caab0f352c74cf113979297fe70c80d2d9805b589bf9eb27086997d5",
+  "anotador2.jsonl": "104d5e4f4469593e785a9298637c4bc4e8e7a3be6ef2e66720e68214f51b151c",
+  "anotador3.jsonl": "afbef41314b1716ce958572c4ee6e0d057c58c191074e48914fccb3b4fecc9dd"
+ },
+ "decisions": {
+  "86:add:124-386": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:10:16+00:00"
+  },
+  "86:gold:124-248": {
+   "action": "keep",
+   "decided_at": "2026-10-18T14:10:26+00:00"
+  },
+  "108:add:109-138": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:11:01+00:00"
+  },
+  "122:add:94-198": {
+   "action": "include",
+   "decided_at": "2026-10-18T14:11:11+00:00",
+   "source": "A2",
+   "start": 94,
+   "end": 198,
+   "label": "OBRIGACAO"
+  },
+  "133:add:53-88": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:11:32+00:00"
+  },
+  "144:add:111-140": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:11:37+00:00"
+  },
+  "218:add:136-176": {
+   "action": "include",
+   "decided_at": "2026-10-18T14:11:46+00:00",
+   "source": "A2",
+   "start": 136,
+   "end": 176,
+   "label": "RECOMENDACAO"
+  },
+  "226:gold:88-123": {
+   "action": "keep",
+   "decided_at": "2026-10-18T14:11:56+00:00"
+  },
+  "229:add:122-139": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:12:08+00:00"
+  },
+  "229:add:140-155": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:12:09+00:00"
+  },
+  "290:add:74-116": {
+   "action": "include",
+   "decided_at": "2026-10-18T14:12:19+00:00",
+   "source": "A2",
+   "start": 74,
+   "end": 116,
+   "label": "RESSARCIMENTO"
+  },
+  "325:add:95-193": {
+   "action": "include",
+   "decided_at": "2026-10-18T14:12:24+00:00",
+   "source": "A2",
+   "start": 95,
+   "end": 193,
+   "label": "OBRIGACAO"
+  },
+  "339:add:168-225": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:12:44+00:00"
+  },
+  "339:add:225-261": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:12:45+00:00"
+  },
+  "339:add:261-302": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:12:46+00:00"
+  },
+  "339:add:303-346": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:12:46+00:00"
+  },
+  "343:add:75-121": {
+   "action": "include",
+   "decided_at": "2026-10-18T14:12:51+00:00",
+   "source": "A2",
+   "start": 75,
+   "end": 121,
+   "label": "OBRIGACAO"
+  },
+  "399:add:75-94": {
+   "action": "include",
+   "decided_at": "2026-10-18T14:12:57+00:00",
+   "source": "A2",
+   "start": 75,
+   "end": 94,
+   "label": "RECOMENDACAO"
+  },
+  "399:gold:95-135": {
+   "action": "remove",
+   "decided_at": "2026-10-18T14:13:09+00:00"
+  },
+  "399:gold:138-171": {
+   "action": "remove",
+   "decided_at": "2026-10-18T14:13:13+00:00"
+  },
+  "400:gold:143-183": {
+   "action": "remove",
+   "decided_at": "2026-10-18T14:19:10+00:00"
+  },
+  "400:gold:186-229": {
+   "action": "remove",
+   "decided_at": "2026-10-18T14:19:11+00:00"
+  },
+  "404:add:89-134": {
+   "action": "include",
+   "decided_at": "2026-10-18T14:19:26+00:00",
+   "source": "A2",
+   "start": 89,
+   "end": 134,
+   "label": "OBRIGACAO"
+  },
+  "410:add:129-221": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:20:07+00:00"
+  },
+  "410:add:221-287": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:20:08+00:00"
+  },
+  "410:gold:145-287": {
+   "action": "keep",
+   "decided_at": "2026-10-18T14:20:09+00:00"
+  },
+  "432:add:186-231": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:20:43+00:00"
+  },
+  "451:gold:75-145": {
+   "action": "keep",
+   "decided_at": "2026-10-18T14:20:49+00:00"
+  },
+  "493:gold:73-135": {
+   "action": "keep",
+   "decided_at": "2026-10-18T14:21:12+00:00"
+  },
+  "493:add:74-102": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:21:13+00:00"
+  },
+  "497:gold:937-957": {
+   "action": "keep",
+   "decided_at": "2026-10-18T14:21:24+00:00"
+  },
+  "497:gold:959-1000": {
+   "action": "keep",
+   "decided_at": "2026-10-18T14:21:25+00:00"
+  },
+  "508:gold:49-144": {
+   "action": "keep",
+   "decided_at": "2026-10-18T14:21:35+00:00"
+  },
+  "517:add:131-143": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:21:43+00:00"
+  },
+  "518:add:131-143": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:21:47+00:00"
+  },
+  "524:gold:90-127": {
+   "action": "remove",
+   "decided_at": "2026-10-18T14:21:56+00:00"
+  },
+  "524:gold:127-171": {
+   "action": "remove",
+   "decided_at": "2026-10-18T14:21:58+00:00"
+  },
+  "524:gold:171-206": {
+   "action": "remove",
+   "decided_at": "2026-10-18T14:22:00+00:00"
+  },
+  "525:gold:143-185": {
+   "action": "remove",
+   "decided_at": "2026-10-18T14:22:15+00:00"
+  },
+  "525:gold:185-246": {
+   "action": "remove",
+   "decided_at": "2026-10-18T14:22:17+00:00"
+  },
+  "525:gold:246-293": {
+   "action": "remove",
+   "decided_at": "2026-10-18T14:22:17+00:00"
+  },
+  "527:label:63-111": {
+   "action": "custom",
+   "decided_at": "2026-10-18T15:06:00+00:00",
+   "start": 86,
+   "end": 111,
+   "label": "MULTA"
+  },
+  "527:gold:111-166": {
+   "action": "remove",
+   "decided_at": "2026-10-18T14:22:44+00:00"
+  },
+  "527:gold:166-200": {
+   "action": "remove",
+   "decided_at": "2026-10-18T14:22:44+00:00"
+  },
+  "529:add:117-145": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:23:43+00:00"
+  },
+  "532:add:78-133": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:24:23+00:00"
+  },
+  "532:add:134-158": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:24:24+00:00"
+  },
+  "532:add:159-171": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:24:24+00:00"
+  },
+  "532:add:172-201": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:24:25+00:00"
+  },
+  "533:add:81-173": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:24:31+00:00"
+  },
+  "533:gold:81-282": {
+   "action": "keep",
+   "decided_at": "2026-10-18T14:24:31+00:00"
+  },
+  "533:add:140-173": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:24:32+00:00"
+  },
+  "538:add:98-137": {
+   "action": "include",
+   "decided_at": "2026-10-18T14:24:42+00:00",
+   "source": "A2",
+   "start": 98,
+   "end": 137,
+   "label": "RECOMENDACAO"
+  },
+  "557:add:51-130": {
+   "action": "include",
+   "decided_at": "2026-10-18T14:24:48+00:00",
+   "source": "A2",
+   "start": 51,
+   "end": 130,
+   "label": "OBRIGACAO"
+  },
+  "558:add:53-137": {
+   "action": "include",
+   "decided_at": "2026-10-18T14:24:53+00:00",
+   "source": "A2",
+   "start": 53,
+   "end": 137,
+   "label": "OBRIGACAO"
+  },
+  "559:add:52-133": {
+   "action": "include",
+   "decided_at": "2026-10-18T14:25:11+00:00",
+   "source": "A2",
+   "start": 52,
+   "end": 133,
+   "label": "OBRIGACAO"
+  },
+  "560:add:51-130": {
+   "action": "include",
+   "decided_at": "2026-10-18T14:25:15+00:00",
+   "source": "A2",
+   "start": 51,
+   "end": 130,
+   "label": "OBRIGACAO"
+  },
+  "573:gold:78-88": {
+   "action": "remove",
+   "decided_at": "2026-10-18T14:25:27+00:00"
+  },
+  "579:add:223-265": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:25:38+00:00"
+  },
+  "596:add:319-336": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:25:49+00:00"
+  },
+  "596:add:368-375": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:25:50+00:00"
+  },
+  "596:add:431-440": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:25:51+00:00"
+  },
+  "610:gold:327-369": {
+   "action": "remove",
+   "decided_at": "2026-10-18T14:25:53+00:00"
+  },
+  "623:add:59-93": {
+   "action": "include",
+   "decided_at": "2026-10-18T14:26:11+00:00",
+   "source": "A2",
+   "start": 59,
+   "end": 93,
+   "label": "OBRIGACAO"
+  },
+  "631:add:57-93": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:26:19+00:00"
+  },
+  "667:add:95-125": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:26:24+00:00"
+  },
+  "667:add:126-149": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:26:25+00:00"
+  },
+  "673:add:58-105": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:29:15+00:00"
+  },
+  "673:add:105-111": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:29:16+00:00"
+  },
+  "673:add:111-127": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:29:17+00:00"
+  },
+  "673:add:127-142": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:29:17+00:00"
+  },
+  "673:add:142-161": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:29:18+00:00"
+  },
+  "673:add:161-169": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:29:18+00:00"
+  },
+  "673:add:169-188": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:29:18+00:00"
+  },
+  "673:add:188-218": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:29:19+00:00"
+  },
+  "677:add:90-210": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:29:41+00:00"
+  },
+  "683:add:89-113": {
+   "action": "include",
+   "decided_at": "2026-10-18T14:29:46+00:00",
+   "source": "A2",
+   "start": 89,
+   "end": 113,
+   "label": "RECOMENDACAO"
+  },
+  "694:add:85-214": {
+   "action": "include",
+   "decided_at": "2026-10-18T14:30:01+00:00",
+   "source": "A3",
+   "start": 85,
+   "end": 214,
+   "label": "RECOMENDACAO"
+  },
+  "694:add:157-214": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:49:38+00:00"
+  },
+  "702:add:151-188": {
+   "action": "include",
+   "decided_at": "2026-10-18T14:30:16+00:00",
+   "source": "A2",
+   "start": 151,
+   "end": 188,
+   "label": "RECOMENDACAO"
+  },
+  "702:add:100-147": {
+   "action": "include",
+   "decided_at": "2026-10-18T14:30:20+00:00",
+   "source": "A2",
+   "start": 100,
+   "end": 147,
+   "label": "MULTA"
+  },
+  "703:add:96-123": {
+   "action": "include",
+   "decided_at": "2026-10-18T14:30:24+00:00",
+   "source": "A2",
+   "start": 96,
+   "end": 123,
+   "label": "OBRIGACAO"
+  },
+  "717:add:55-102": {
+   "action": "include",
+   "decided_at": "2026-10-18T14:35:26+00:00",
+   "source": "A2",
+   "start": 55,
+   "end": 102,
+   "label": "MULTA"
+  },
+  "718:add:36-115": {
+   "action": "include",
+   "decided_at": "2026-10-18T14:35:38+00:00",
+   "source": "A2",
+   "start": 37,
+   "end": 115,
+   "label": "MULTA"
+  },
+  "719:add:137-192": {
+   "action": "include",
+   "decided_at": "2026-10-18T14:35:43+00:00",
+   "source": "A2",
+   "start": 137,
+   "end": 192,
+   "label": "MULTA"
+  },
+  "728:add:329-350": {
+   "action": "include",
+   "decided_at": "2026-10-18T14:35:49+00:00",
+   "source": "A2",
+   "start": 329,
+   "end": 350,
+   "label": "RECOMENDACAO"
+  },
+  "736:add:95-144": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:36:04+00:00"
+  },
+  "738:add:97-140": {
+   "action": "include",
+   "decided_at": "2026-10-18T14:36:09+00:00",
+   "source": "A2",
+   "start": 97,
+   "end": 140,
+   "label": "RECOMENDACAO"
+  },
+  "752:add:104-136": {
+   "action": "include",
+   "decided_at": "2026-10-18T14:36:12+00:00",
+   "source": "A2",
+   "start": 104,
+   "end": 136,
+   "label": "OBRIGACAO"
+  },
+  "780:add:156-195": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:36:19+00:00"
+  },
+  "780:gold:156-414": {
+   "action": "keep",
+   "decided_at": "2026-10-18T14:36:19+00:00"
+  },
+  "780:add:195-212": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:36:20+00:00"
+  },
+  "780:add:212-234": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:36:21+00:00"
+  },
+  "780:add:234-261": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:36:21+00:00"
+  },
+  "780:add:261-297": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:36:22+00:00"
+  },
+  "780:add:297-312": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:36:22+00:00"
+  },
+  "780:add:312-340": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:36:23+00:00"
+  },
+  "780:add:340-414": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:36:23+00:00"
+  },
+  "780:label:418-447": {
+   "action": "keep",
+   "decided_at": "2026-10-18T14:36:32+00:00"
+  },
+  "784:gold:46-128": {
+   "action": "remove",
+   "decided_at": "2026-10-18T14:37:02+00:00"
+  },
+  "784:add:46-61": {
+   "action": "include",
+   "decided_at": "2026-10-18T14:37:04+00:00",
+   "source": "A2",
+   "start": 46,
+   "end": 61,
+   "label": "RESSARCIMENTO"
+  },
+  "784:add:65-89": {
+   "action": "include",
+   "decided_at": "2026-10-18T14:37:09+00:00",
+   "source": "A2",
+   "start": 65,
+   "end": 89,
+   "label": "MULTA"
+  },
+  "787:gold:186-342": {
+   "action": "keep",
+   "decided_at": "2026-10-18T14:37:25+00:00"
+  },
+  "787:add:186-240": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:37:26+00:00"
+  },
+  "787:add:132-145": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:37:26+00:00"
+  },
+  "787:add:240-280": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:37:27+00:00"
+  },
+  "787:add:280-373": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:37:28+00:00"
+  },
+  "789:add:184-205": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:37:47+00:00"
+  },
+  "789:add:208-233": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:37:48+00:00"
+  },
+  "792:gold:92-107": {
+   "action": "keep",
+   "decided_at": "2026-10-18T14:37:59+00:00"
+  },
+  "794:add:66-98": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:38:03+00:00"
+  },
+  "794:add:98-116": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:38:04+00:00"
+  },
+  "794:add:117-136": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:38:04+00:00"
+  },
+  "796:gold:167-244": {
+   "action": "keep",
+   "decided_at": "2026-10-18T14:38:21+00:00"
+  },
+  "797:gold:108-160": {
+   "action": "keep",
+   "decided_at": "2026-10-18T14:38:25+00:00"
+  },
+  "798:add:82-94": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:38:43+00:00"
+  },
+  "799:label:112-150": {
+   "action": "keep",
+   "decided_at": "2026-10-18T14:38:54+00:00"
+  },
+  "799:add:139-150": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:38:57+00:00"
+  },
+  "801:add:73-84": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:39:13+00:00"
+  },
+  "803:add:134-224": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:39:19+00:00"
+  },
+  "810:add:124-144": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:39:29+00:00"
+  },
+  "810:add:144-164": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:39:30+00:00"
+  },
+  "810:add:165-190": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:39:30+00:00"
+  },
+  "811:add:114-201": {
+   "action": "include",
+   "decided_at": "2026-10-18T14:39:34+00:00",
+   "source": "A2",
+   "start": 114,
+   "end": 201,
+   "label": "RESSARCIMENTO"
+  },
+  "814:add:271-304": {
+   "action": "include",
+   "decided_at": "2026-10-18T14:39:40+00:00",
+   "source": "A2",
+   "start": 271,
+   "end": 304,
+   "label": "MULTA"
+  },
+  "815:add:126-147": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:39:49+00:00"
+  },
+  "815:label:126-179": {
+   "action": "keep",
+   "decided_at": "2026-10-18T14:39:50+00:00"
+  },
+  "818:add:54-82": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:39:56+00:00"
+  },
+  "818:add:82-109": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:39:56+00:00"
+  },
+  "818:add:109-138": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:39:57+00:00"
+  },
+  "820:add:60-126": {
+   "action": "include",
+   "decided_at": "2026-10-18T14:40:02+00:00",
+   "source": "A2",
+   "start": 60,
+   "end": 126,
+   "label": "OBRIGACAO"
+  },
+  "823:add:148-158": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:40:07+00:00"
+  },
+  "824:add:61-81": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:40:16+00:00"
+  },
+  "824:add:138-167": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:40:17+00:00"
+  },
+  "831:add:63-77": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:43:10+00:00"
+  },
+  "831:label:63-107": {
+   "action": "keep",
+   "decided_at": "2026-10-18T14:43:13+00:00"
+  },
+  "836:add:118-157": {
+   "action": "include",
+   "decided_at": "2026-10-18T14:43:19+00:00",
+   "source": "A3",
+   "start": 118,
+   "end": 157,
+   "label": "RESSARCIMENTO"
+  },
+  "836:gold:177-249": {
+   "action": "keep",
+   "decided_at": "2026-10-18T14:43:23+00:00"
+  },
+  "836:add:177-212": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:43:24+00:00"
+  },
+  "837:add:50-60": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:44:18+00:00"
+  },
+  "837:gold:50-76": {
+   "action": "keep",
+   "decided_at": "2026-10-18T14:44:19+00:00"
+  },
+  "855:label:119-150": {
+   "action": "keep",
+   "decided_at": "2026-10-18T14:44:25+00:00"
+  },
+  "855:add:185-257": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:44:29+00:00"
+  },
+  "856:add:144-166": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:44:47+00:00"
+  },
+  "856:label:144-229": {
+   "action": "keep",
+   "decided_at": "2026-10-18T14:44:49+00:00"
+  },
+  "856:add:246-280": {
+   "action": "include",
+   "decided_at": "2026-10-18T14:44:55+00:00",
+   "source": "A2",
+   "start": 246,
+   "end": 280,
+   "label": "RECOMENDACAO"
+  },
+  "858:add:259-285": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:45:16+00:00"
+  },
+  "858:add:285-291": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:45:17+00:00"
+  },
+  "858:add:292-300": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:45:18+00:00"
+  },
+  "858:add:326-345": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:45:19+00:00"
+  },
+  "858:add:345-352": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:45:19+00:00"
+  },
+  "858:add:352-359": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:45:20+00:00"
+  },
+  "858:add:359-367": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:45:21+00:00"
+  },
+  "858:add:368-384": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:45:21+00:00"
+  },
+  "861:gold:163-217": {
+   "action": "keep",
+   "decided_at": "2026-10-18T14:45:43+00:00"
+  },
+  "861:add:163-188": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:45:43+00:00"
+  },
+  "861:add:190-217": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:45:44+00:00"
+  },
+  "864:add:203-230": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:45:52+00:00"
+  },
+  "865:add:88-114": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:45:56+00:00"
+  },
+  "865:gold:88-191": {
+   "action": "keep",
+   "decided_at": "2026-10-18T14:45:57+00:00"
+  },
+  "865:add:166-191": {
+   "action": "reject",
+   "decided_at": "2026-10-18T14:45:58+00:00"
+  }
+ },
+ "finished": true
+}

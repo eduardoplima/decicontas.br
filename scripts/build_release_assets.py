@@ -32,7 +32,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from research.release import paths  # noqa: E402
 
-VERSION = "1.0.0"
+VERSION = "1.3.0"
 RELEASE_ROOT = paths.DATASET / "release"
 BUNDLES = ("decicontas", "decicontas-before-correction")
 DOCS = ("README.md", "DATASHEET.md", "MANIFEST.json")
@@ -72,7 +72,7 @@ def ensure_brat() -> None:
     print(f"BRAT trees missing for {', '.join(missing)}; rebuilding the bundles...")
     from research.release import export_dataset
 
-    export_dataset.main()
+    export_dataset.export_release(adjudication_path=paths.ADJUDICATION_DECISIONS_JSON)
 
 
 def collect(fmt: str) -> list[tuple[Path, str]]:

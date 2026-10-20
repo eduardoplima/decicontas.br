@@ -17,6 +17,7 @@ deepseek-v4-flash_few_shot,88,0,0,OBRIGACAO,,,True
 deepseek-v4-flash_few_shot,88,-5,0,OBRIGACAO,,seja ,False
 deepseek-v4-flash_few_shot,89,-13,0,OBRIGACAO,,RENOVAÇÃO DA ,False
 deepseek-v4-flash_few_shot,89,-13,-1,MULTA,.,APLICAÇÃO DE ,False
+deepseek-v4-flash_few_shot,93,0,-1,RECOMENDACAO,.,,True
 deepseek-v4-flash_few_shot,93,351,105,MULTA,,,False
 deepseek-v4-flash_few_shot,97,0,-1,MULTA,.,,True
 deepseek-v4-flash_few_shot,101,0,0,OBRIGACAO,,,True
@@ -34,6 +35,7 @@ deepseek-v4-flash_few_shot,118,-13,0,OBRIGACAO,,RENOVAÇÃO DA ,False
 deepseek-v4-flash_few_shot,118,4,16,MULTA,,,False
 deepseek-v4-flash_few_shot,119,-13,0,OBRIGACAO,,RENOVAÇÃO DA ,False
 deepseek-v4-flash_few_shot,119,5,4,MULTA,,,False
+deepseek-v4-flash_few_shot,120,0,0,OBRIGACAO,,,True
 deepseek-v4-flash_few_shot,123,-13,0,OBRIGACAO,,RENOVAÇÃO DA ,False
 deepseek-v4-flash_few_shot,123,22,36,MULTA,,,False
 deepseek-v4-flash_few_shot,124,-13,0,OBRIGACAO,,RENOVAÇÃO DA ,False
@@ -113,6 +115,7 @@ deepseek-v4-flash_few_shot,252,0,-1,MULTA,.,,True
 deepseek-v4-flash_few_shot,274,52,0,MULTA,,,False
 deepseek-v4-flash_few_shot,278,53,-7,MULTA,fatos).,,False
 deepseek-v4-flash_few_shot,287,0,0,RECOMENDACAO,,,True
+deepseek-v4-flash_few_shot,288,0,0,RESSARCIMENTO,,,True
 deepseek-v4-flash_few_shot,293,-13,0,OBRIGACAO,,RENOVAÇÃO DA ,False
 deepseek-v4-flash_few_shot,293,6,18,MULTA,,,False
 deepseek-v4-flash_few_shot,297,-13,0,OBRIGACAO,,RENOVAÇÃO DA ,False
@@ -128,6 +131,8 @@ deepseek-v4-flash_few_shot,321,-13,0,OBRIGACAO,,RENOVAÇÃO DA ,False
 deepseek-v4-flash_few_shot,321,5,17,MULTA,,,False
 deepseek-v4-flash_few_shot,322,-13,0,OBRIGACAO,,RENOVAÇÃO DA ,False
 deepseek-v4-flash_few_shot,322,6,18,MULTA,,,False
+deepseek-v4-flash_few_shot,323,0,0,OBRIGACAO,,,True
+deepseek-v4-flash_few_shot,324,0,0,OBRIGACAO,,,True
 deepseek-v4-flash_few_shot,333,-13,0,OBRIGACAO,,RENOVAÇÃO DA ,False
 deepseek-v4-flash_few_shot,333,-12,0,MULTA,,PLICAÇÃO DE ,False
 deepseek-v4-flash_few_shot,334,23,-1,MULTA,.,,False
@@ -138,6 +143,7 @@ deepseek-v4-flash_few_shot,339,-13,0,OBRIGACAO,,RENOVAÇÃO DA ,False
 deepseek-v4-flash_few_shot,339,28,27,MULTA,,,False
 deepseek-v4-flash_few_shot,340,-13,0,OBRIGACAO,,RENOVAÇÃO DA ,False
 deepseek-v4-flash_few_shot,340,5,17,MULTA,,,False
+deepseek-v4-flash_few_shot,341,-9,0,OBRIGACAO,,que seja ,False
 deepseek-v4-flash_few_shot,344,-13,0,OBRIGACAO,,RENOVAÇÃO DA ,False
 deepseek-v4-flash_few_shot,344,5,17,MULTA,,,False
 deepseek-v4-flash_few_shot,345,-13,0,OBRIGACAO,,RENOVAÇÃO DA ,False
@@ -148,8 +154,10 @@ deepseek-v4-flash_few_shot,349,0,0,OBRIGACAO,,,True
 deepseek-v4-flash_few_shot,350,0,0,OBRIGACAO,,,True
 deepseek-v4-flash_few_shot,360,121,95,MULTA,,,False
 deepseek-v4-flash_few_shot,368,0,0,RECOMENDACAO,,,True
+deepseek-v4-flash_few_shot,397,0,-1,RECOMENDACAO,;,,True
 deepseek-v4-flash_few_shot,398,0,-1,RECOMENDACAO,;,,True
 deepseek-v4-flash_few_shot,398,0,-1,RECOMENDACAO,;,,True
+deepseek-v4-flash_few_shot,402,0,0,OBRIGACAO,,,True
 deepseek-v4-flash_few_shot,408,0,-1,RECOMENDACAO,.,,True
 deepseek-v4-flash_few_shot,408,0,-1,OBRIGACAO,.,,True
 deepseek-v4-flash_few_shot,408,0,-1,RECOMENDACAO,;,,True
@@ -186,6 +194,10 @@ deepseek-v4-flash_few_shot,531,84,-26,OBRIGACAO,cerca da presente decisão.,,Fal
 deepseek-v4-flash_few_shot,543,0,-1,RECOMENDACAO,;,,True
 deepseek-v4-flash_few_shot,543,0,0,RECOMENDACAO,,,True
 deepseek-v4-flash_few_shot,543,0,0,RECOMENDACAO,,,True
+deepseek-v4-flash_few_shot,555,4,0,OBRIGACAO,,,False
+deepseek-v4-flash_few_shot,556,4,0,OBRIGACAO,,,False
+deepseek-v4-flash_few_shot,557,4,0,OBRIGACAO,,,False
+deepseek-v4-flash_few_shot,558,4,0,OBRIGACAO,,,False
 deepseek-v4-flash_few_shot,561,-14,0,OBRIGACAO,,assinatura de ,False
 deepseek-v4-flash_few_shot,567,0,-1,MULTA,.,,True
 deepseek-v4-flash_few_shot,577,40,-251,MULTA,"; 
@@ -202,6 +214,7 @@ deepseek-v4-flash_few_shot,594,0,-1,RECOMENDACAO,;,,True
 deepseek-v4-flash_few_shot,608,-360,-1,MULTA,;,"multa no valor de R$ 5.000,00 (cinco mil reais) em razão das inadimplências ocorridas no exercício de 2017 até a data de sua saída do cargo de gestor da então SEARH; ao Sr. Bryan Edgardo Ferrazzi, responsável pelo Jurisdicionado no período de 17/06/2018 a 31/12/2018, multa no valor de R$ 5.000,00 (cinco mil reais) em razão das omissões neste período; à Sra. ",False
 deepseek-v4-flash_few_shot,608,0,-1,OBRIGACAO,;,,True
 deepseek-v4-flash_few_shot,617,0,-1,MULTA,.,,True
+deepseek-v4-flash_few_shot,621,0,0,OBRIGACAO,,,True
 deepseek-v4-flash_few_shot,628,-13,-1,OBRIGACAO,;,renovação da ,False
 deepseek-v4-flash_few_shot,628,0,-4,MULTA,012;,,True
 deepseek-v4-flash_few_shot,629,29,70,OBRIGACAO,,,False
@@ -212,17 +225,30 @@ deepseek-v4-flash_few_shot,636,0,-1,RECOMENDACAO,;,,True
 deepseek-v4-flash_few_shot,647,104,-1,MULTA,.,,False
 deepseek-v4-flash_few_shot,651,-13,-1,MULTA,.,multa ao Sr. ,False
 deepseek-v4-flash_few_shot,665,-33,0,OBRIGACAO,,"após o trânsito em julgado, pela ",False
+deepseek-v4-flash_few_shot,681,0,0,RECOMENDACAO,,,True
 deepseek-v4-flash_few_shot,685,-13,-1,RECOMENDACAO,;,recomende ao ,False
+deepseek-v4-flash_few_shot,692,0,-356,RECOMENDACAO,", e determinar que, nos termos do art. 8º da Resolução nº 008/2013-TCE, encaminhem a este Tribunal, no prazo de até 90 (noventa) dias úteis, a contar da intimação desta Decisão Colegiada a cada um dos gestores responsáveis por tais Secretarias e pela referida Autarquia estadual, o respectivo Plano de Ação, conforme o art. 10 da Resolução nº 008/2013-TCE.",,False
+deepseek-v4-flash_few_shot,700,-12,-1,MULTA,;,execução da ,False
+deepseek-v4-flash_few_shot,700,0,-1,RECOMENDACAO,;,,True
 deepseek-v4-flash_few_shot,700,0,-1,MULTA,;,,True
+deepseek-v4-flash_few_shot,701,0,-1,OBRIGACAO,.,,True
 deepseek-v4-flash_few_shot,701,0,-1,MULTA,;,,True
 deepseek-v4-flash_few_shot,702,-8,0,RECOMENDACAO,,expedir ,False
 deepseek-v4-flash_few_shot,707,48,-1,MULTA,.,,False
+deepseek-v4-flash_few_shot,715,0,-1,MULTA,.,,True
+deepseek-v4-flash_few_shot,716,0,-1,MULTA,.,,True
+deepseek-v4-flash_few_shot,717,0,-1,MULTA,.,,True
+deepseek-v4-flash_few_shot,726,-11,0,RECOMENDACAO,,Emissão de ,False
+deepseek-v4-flash_few_shot,736,0,0,RECOMENDACAO,,,True
 deepseek-v4-flash_few_shot,738,111,-1,MULTA,.,,False
+deepseek-v4-flash_few_shot,750,0,-1,OBRIGACAO,.,,True
 deepseek-v4-flash_few_shot,777,0,-1,RECOMENDACAO,;,,True
 deepseek-v4-flash_few_shot,778,-13,-1,MULTA,;,aplicação de ,False
 deepseek-v4-flash_few_shot,778,-23,0,RESSARCIMENTO,,condenação do gestor a ,False
 deepseek-v4-flash_few_shot,778,-38,-1,MULTA,;,condenação do gestor ao pagamento das ,False
 deepseek-v4-flash_few_shot,779,0,0,OBRIGACAO,,,True
+deepseek-v4-flash_few_shot,781,0,-3,MULTA,;c),,True
+deepseek-v4-flash_few_shot,781,-24,-1,RESSARCIMENTO,.,"Otávio Tur Aparicio, ao ",False
 deepseek-v4-flash_few_shot,784,-13,-1,OBRIGACAO,;,expedição de ,False
 deepseek-v4-flash_few_shot,784,-187,-1,RESSARCIMENTO,;,"desaprovação das contas com relação ao senhor Bartolomé Martín de Coelho, com fincas no artigo 75, inciso IV, combinado com o §4º, inciso I, da Lei Complementar nº 464/2012, devendo este ",False
 deepseek-v4-flash_few_shot,785,0,83,OBRIGACAO,,,False
@@ -262,19 +288,22 @@ deepseek-v4-flash_few_shot,805,0,-1,RESSARCIMENTO,.,,True
 deepseek-v4-flash_few_shot,805,0,-1,MULTA,;,,True
 deepseek-v4-flash_few_shot,806,-13,-1,MULTA,.,Aplicação de ,False
 deepseek-v4-flash_few_shot,806,0,-1,RESSARCIMENTO,.,,True
+deepseek-v4-flash_few_shot,807,0,-1,RESSARCIMENTO,.,,True
 deepseek-v4-flash_few_shot,809,0,-1,MULTA,;,,True
 deepseek-v4-flash_few_shot,809,-2,-1,RESSARCIMENTO,;,O ,False
 deepseek-v4-flash_few_shot,809,0,-1,MULTA,;,,True
 deepseek-v4-flash_few_shot,809,0,-1,MULTA,;,,True
 deepseek-v4-flash_few_shot,809,0,0,MULTA,,,True
+deepseek-v4-flash_few_shot,810,-13,-1,MULTA,;,aplicação de ,False
 deepseek-v4-flash_few_shot,810,-2,-1,RESSARCIMENTO,;,O ,False
 deepseek-v4-flash_few_shot,810,0,-1,MULTA,;,,True
-deepseek-v4-flash_few_shot,810,0,0,MULTA,,,True
 deepseek-v4-flash_few_shot,810,0,-1,MULTA,;,,True
+deepseek-v4-flash_few_shot,810,0,0,MULTA,,,True
 deepseek-v4-flash_few_shot,811,0,-1,MULTA,;,,True
 deepseek-v4-flash_few_shot,813,0,0,MULTA,,,True
 deepseek-v4-flash_few_shot,813,-54,16,RESSARCIMENTO,,"vel Régulo Sgarbi Baeza, ex-prefeito de Macau-RN,  ao ",False
 deepseek-v4-flash_few_shot,814,-77,0,RESSARCIMENTO,,"imputando ao gestor responsável, o Senhor Vítor Duque Júnior, a obrigação de ",False
+deepseek-v4-flash_few_shot,815,105,103,OBRIGACAO,,,False
 deepseek-v4-flash_few_shot,818,-8,-1,MULTA,;,aplicar ,False
 deepseek-v4-flash_few_shot,818,0,-1,OBRIGACAO,.,,True
 deepseek-v4-flash_few_shot,818,-61,-1,RESSARCIMENTO,;,"condenar o senhor Elmo Soprano Sobrinho, gestor municipal, a ",False
@@ -331,6 +360,7 @@ deepseek-v4-flash_few_shot,839,-59,-1,RESSARCIMENTO,;,condenando o responsável 
 deepseek-v4-flash_few_shot,849,0,-1,MULTA,;,,True
 deepseek-v4-flash_few_shot,849,0,-1,MULTA,;,,True
 deepseek-v4-flash_few_shot,849,0,-1,MULTA,;,,True
+deepseek-v4-flash_few_shot,850,0,-1,RECOMENDACAO,.,,True
 deepseek-v4-flash_few_shot,850,-9,13,RESSARCIMENTO,,dever de ,False
 deepseek-v4-flash_few_shot,850,0,-3,MULTA,; e,,False
 deepseek-v4-flash_few_shot,851,0,-1,MULTA,;,,True
@@ -363,6 +393,7 @@ gpt-4.1_few_shot,88,0,0,OBRIGACAO,,,True
 gpt-4.1_few_shot,88,-5,-439,OBRIGACAO," Por compreender que a paralisação dos serviços certamente traria grandes prejuízos à população, em razão da imprescindível continuidade da manutenção dos elevadores da Secretaria de Saúde do RN, admitir-se-á, se for o caso, excepcionalmente, que a Administração realize a prorrogação do atual contrato em vigor (01/06/2023 a 31/05/2024) até que venha a celebrar um novo instrumento contratual, decorrente do processo licitatório em curso.",seja ,False
 gpt-4.1_few_shot,89,-13,0,OBRIGACAO,,RENOVAÇÃO DA ,False
 gpt-4.1_few_shot,89,-13,-1,MULTA,.,APLICAÇÃO DE ,False
+gpt-4.1_few_shot,93,-13,0,RECOMENDACAO,,expedição de ,False
 gpt-4.1_few_shot,97,-13,0,MULTA,,aplicação de ,False
 gpt-4.1_few_shot,101,0,0,OBRIGACAO,,,True
 gpt-4.1_few_shot,104,0,0,OBRIGACAO,,,True
@@ -379,6 +410,7 @@ gpt-4.1_few_shot,118,-13,0,OBRIGACAO,,RENOVAÇÃO DA ,False
 gpt-4.1_few_shot,118,4,16,MULTA,,,False
 gpt-4.1_few_shot,119,-13,0,OBRIGACAO,,RENOVAÇÃO DA ,False
 gpt-4.1_few_shot,119,5,17,MULTA,,,False
+gpt-4.1_few_shot,120,0,0,OBRIGACAO,,,True
 gpt-4.1_few_shot,123,-13,0,OBRIGACAO,,RENOVAÇÃO DA ,False
 gpt-4.1_few_shot,123,-13,0,MULTA,,APLICAÇÃO DE ,False
 gpt-4.1_few_shot,124,-13,0,OBRIGACAO,,RENOVAÇÃO DA ,False
@@ -456,6 +488,7 @@ gpt-4.1_few_shot,252,-13,0,MULTA,,aplicação de ,False
 gpt-4.1_few_shot,274,52,0,MULTA,,,False
 gpt-4.1_few_shot,278,39,-6,MULTA,atos).,,False
 gpt-4.1_few_shot,287,0,0,RECOMENDACAO,,,True
+gpt-4.1_few_shot,288,0,0,RESSARCIMENTO,,,True
 gpt-4.1_few_shot,293,-13,0,OBRIGACAO,,RENOVAÇÃO DA ,False
 gpt-4.1_few_shot,293,6,18,MULTA,,,False
 gpt-4.1_few_shot,297,-13,0,OBRIGACAO,,RENOVAÇÃO DA ,False
@@ -471,6 +504,8 @@ gpt-4.1_few_shot,321,-13,0,OBRIGACAO,,RENOVAÇÃO DA ,False
 gpt-4.1_few_shot,321,5,17,MULTA,,,False
 gpt-4.1_few_shot,322,-13,0,OBRIGACAO,,RENOVAÇÃO DA ,False
 gpt-4.1_few_shot,322,6,18,MULTA,,,False
+gpt-4.1_few_shot,323,0,0,OBRIGACAO,,,True
+gpt-4.1_few_shot,324,0,0,OBRIGACAO,,,True
 gpt-4.1_few_shot,333,-13,0,OBRIGACAO,,RENOVAÇÃO DA ,False
 gpt-4.1_few_shot,333,-12,0,MULTA,,PLICAÇÃO DE ,False
 gpt-4.1_few_shot,334,23,0,MULTA,,,False
@@ -481,6 +516,7 @@ gpt-4.1_few_shot,339,-13,0,OBRIGACAO,,RENOVAÇÃO DA ,False
 gpt-4.1_few_shot,339,-13,-1,MULTA,.,APLICAÇÃO DE ,False
 gpt-4.1_few_shot,340,-13,0,OBRIGACAO,,RENOVAÇÃO DA ,False
 gpt-4.1_few_shot,340,5,17,MULTA,,,False
+gpt-4.1_few_shot,341,0,0,OBRIGACAO,,,True
 gpt-4.1_few_shot,344,-13,0,OBRIGACAO,,RENOVAÇÃO DA ,False
 gpt-4.1_few_shot,344,5,17,MULTA,,,False
 gpt-4.1_few_shot,345,-13,0,OBRIGACAO,,RENOVAÇÃO DA ,False
@@ -491,8 +527,10 @@ gpt-4.1_few_shot,349,0,0,OBRIGACAO,,,True
 gpt-4.1_few_shot,350,0,0,OBRIGACAO,,,True
 gpt-4.1_few_shot,360,24,0,MULTA,,,False
 gpt-4.1_few_shot,368,0,0,RECOMENDACAO,,,True
+gpt-4.1_few_shot,397,0,-1,RECOMENDACAO,;,,True
 gpt-4.1_few_shot,398,0,-1,RECOMENDACAO,;,,True
 gpt-4.1_few_shot,398,0,-1,RECOMENDACAO,;,,True
+gpt-4.1_few_shot,402,0,0,OBRIGACAO,,,True
 gpt-4.1_few_shot,408,17,0,OBRIGACAO,,,False
 gpt-4.1_few_shot,408,22,-444,OBRIGACAO,"do plano de ação (previsto na alínea “b.1” supra) deverá contemplar as providências necessárias à solução dos problemas que venham a ser identificados no diagnóstico que será realizado, devendo, ainda, o plano em questão prever o prazo de até mais 180 (cento e oitenta) dias corridos para a regularização/correção/aperfeiçoamento das ocorrências e inadequações evidenciadas, de modo a promover oportunamente melhorias para a oferta educacional.",,False
 gpt-4.1_few_shot,408,0,-1,OBRIGACAO,;,,True
@@ -527,12 +565,16 @@ gpt-4.1_few_shot,527,-13,0,MULTA,,APLICAÇÃO DE ,False
 gpt-4.1_few_shot,527,-17,-165,RESSARCIMENTO,", sem prejuízo da aplicação da multa prevista no art. 107, I, da Lei Complementar 464/2012, ao qual fixo, antecipadamente, em 10% (dez por cento) do valor do débito.",condenando a Sra ,False
 gpt-4.1_few_shot,528,5,-2,OBRIGACAO,”.,,False
 gpt-4.1_few_shot,530,2,-531,OBRIGACAO,"da, no caso de descumprimento da presente Decisão, a imposição de multa diária, desde já fixada no valor de R$ 50,00 (cinquenta reais) por dia que superar o interregno fixado no “b”, com base no art. 110, da Lei Complementar Estadual nº 464/2012, sem prejuízo da aplicação da sanção prevista no art. 107, II, “f”, da Lei Complementar Estadual nº 464/2012, valor esse passível de revisão, limitado ao teto previsto no art. 323, inciso II, alínea `f`, do Regimento Interno, a ser apurado por ocasião de eventual subsistência de mora.",,False
+gpt-4.1_few_shot,536,0,0,RECOMENDACAO,,,True
 gpt-4.1_few_shot,543,0,0,RECOMENDACAO,,,True
 gpt-4.1_few_shot,543,0,0,RECOMENDACAO,,,True
 gpt-4.1_few_shot,543,0,0,RECOMENDACAO,,,True
+gpt-4.1_few_shot,555,4,0,OBRIGACAO,,,False
+gpt-4.1_few_shot,556,4,0,OBRIGACAO,,,False
+gpt-4.1_few_shot,557,4,0,OBRIGACAO,,,False
+gpt-4.1_few_shot,558,4,0,OBRIGACAO,,,False
 gpt-4.1_few_shot,561,-14,0,OBRIGACAO,,assinatura de ,False
 gpt-4.1_few_shot,567,-28,0,MULTA,,aplicando ao ora Recorrente ,False
-gpt-4.1_few_shot,571,0,0,MULTA,,,True
 gpt-4.1_few_shot,577,40,-250,MULTA," 
 c) Multa de R$ 600,00 (seiscentos reais), conforme previsão do artigo 28, I, “a” da Resolução nº 022/2011-TCE, pelo descumprimento do artigo 5º da Resolução nº 022/2011- TCE, em razão do atraso no envio dos Anexos Bimestrais do 6º bimestre de 2012.",,False
 gpt-4.1_few_shot,577,26,0,MULTA,,,False
@@ -547,6 +589,7 @@ gpt-4.1_few_shot,594,0,-1,OBRIGACAO,;,,True
 gpt-4.1_few_shot,608,-360,0,MULTA,,"multa no valor de R$ 5.000,00 (cinco mil reais) em razão das inadimplências ocorridas no exercício de 2017 até a data de sua saída do cargo de gestor da então SEARH; ao Sr. Bryan Edgardo Ferrazzi, responsável pelo Jurisdicionado no período de 17/06/2018 a 31/12/2018, multa no valor de R$ 5.000,00 (cinco mil reais) em razão das omissões neste período; à Sra. ",False
 gpt-4.1_few_shot,608,-8,0,OBRIGACAO,,assinar ,False
 gpt-4.1_few_shot,617,0,0,MULTA,,,True
+gpt-4.1_few_shot,621,0,0,OBRIGACAO,,,True
 gpt-4.1_few_shot,628,-13,0,OBRIGACAO,,renovação da ,False
 gpt-4.1_few_shot,628,-13,0,MULTA,,aplicação de ,False
 gpt-4.1_few_shot,629,29,70,OBRIGACAO,,,False
@@ -557,19 +600,32 @@ gpt-4.1_few_shot,636,0,-1,RECOMENDACAO,;,,True
 gpt-4.1_few_shot,647,104,0,MULTA,,,False
 gpt-4.1_few_shot,651,-26,0,MULTA,,aplicação de multa ao Sr. ,False
 gpt-4.1_few_shot,665,5,38,OBRIGACAO,,,False
+gpt-4.1_few_shot,681,-13,0,RECOMENDACAO,,expedição de ,False
 gpt-4.1_few_shot,685,-13,-1,RECOMENDACAO,;,recomende ao ,False
+gpt-4.1_few_shot,692,0,-356,RECOMENDACAO,", e determinar que, nos termos do art. 8º da Resolução nº 008/2013-TCE, encaminhem a este Tribunal, no prazo de até 90 (noventa) dias úteis, a contar da intimação desta Decisão Colegiada a cada um dos gestores responsáveis por tais Secretarias e pela referida Autarquia estadual, o respectivo Plano de Ação, conforme o art. 10 da Resolução nº 008/2013-TCE.",,False
+gpt-4.1_few_shot,700,-12,-1,MULTA,;,execução da ,False
+gpt-4.1_few_shot,700,0,-1,RECOMENDACAO,;,,True
 gpt-4.1_few_shot,700,0,-1,MULTA,;,,True
+gpt-4.1_few_shot,701,0,0,OBRIGACAO,,,True
 gpt-4.1_few_shot,701,0,-1,MULTA,;,,True
 gpt-4.1_few_shot,702,-8,0,RECOMENDACAO,,expedir ,False
 gpt-4.1_few_shot,707,35,0,MULTA,,,False
+gpt-4.1_few_shot,715,0,0,MULTA,,,True
+gpt-4.1_few_shot,716,0,0,MULTA,,,True
+gpt-4.1_few_shot,717,0,0,MULTA,,,True
 gpt-4.1_few_shot,726,0,0,OBRIGACAO,,,True
 gpt-4.1_few_shot,726,0,0,OBRIGACAO,,,True
+gpt-4.1_few_shot,726,-11,0,RECOMENDACAO,,Emissão de ,False
+gpt-4.1_few_shot,736,-8,0,RECOMENDACAO,,expedir ,False
 gpt-4.1_few_shot,738,111,0,MULTA,,,False
+gpt-4.1_few_shot,750,0,0,OBRIGACAO,,,True
 gpt-4.1_few_shot,777,0,0,RECOMENDACAO,,,True
 gpt-4.1_few_shot,778,-13,-1,MULTA,;,aplicação de ,False
 gpt-4.1_few_shot,778,-23,0,RESSARCIMENTO,,condenação do gestor a ,False
 gpt-4.1_few_shot,778,-38,-1,MULTA,;,condenação do gestor ao pagamento das ,False
 gpt-4.1_few_shot,779,0,0,OBRIGACAO,,,True
+gpt-4.1_few_shot,781,-13,-3,MULTA,;c),aplicação de ,False
+gpt-4.1_few_shot,781,-49,-1,RESSARCIMENTO,.,"condenando o responsável Otávio Tur Aparicio, ao ",False
 gpt-4.1_few_shot,784,-13,-1,OBRIGACAO,;,expedição de ,False
 gpt-4.1_few_shot,784,-141,-1,RESSARCIMENTO,;,"Bartolomé Martín de Coelho, com fincas no artigo 75, inciso IV, combinado com o §4º, inciso I, da Lei Complementar nº 464/2012, devendo este ",False
 gpt-4.1_few_shot,785,0,83,OBRIGACAO,,,False
@@ -611,19 +667,22 @@ gpt-4.1_few_shot,805,0,0,RESSARCIMENTO,,,True
 gpt-4.1_few_shot,805,0,0,MULTA,,,True
 gpt-4.1_few_shot,806,-13,0,MULTA,,Aplicação de ,False
 gpt-4.1_few_shot,806,0,0,RESSARCIMENTO,,,True
+gpt-4.1_few_shot,807,0,0,RESSARCIMENTO,,,True
 gpt-4.1_few_shot,809,-13,-1,MULTA,;,aplicação de ,False
 gpt-4.1_few_shot,809,-2,-1,RESSARCIMENTO,;,O ,False
 gpt-4.1_few_shot,809,0,-1,MULTA,;,,True
 gpt-4.1_few_shot,809,0,-1,MULTA,;,,True
 gpt-4.1_few_shot,809,0,0,MULTA,,,True
+gpt-4.1_few_shot,810,-13,-1,MULTA,;,aplicação de ,False
 gpt-4.1_few_shot,810,-2,-1,RESSARCIMENTO,;,O ,False
 gpt-4.1_few_shot,810,0,-1,MULTA,;,,True
-gpt-4.1_few_shot,810,0,0,MULTA,,,True
 gpt-4.1_few_shot,810,0,-1,MULTA,;,,True
+gpt-4.1_few_shot,810,0,0,MULTA,,,True
 gpt-4.1_few_shot,811,0,-1,MULTA,;,,True
 gpt-4.1_few_shot,813,-10,0,MULTA,,aplicando ,False
 gpt-4.1_few_shot,813,46,42,RESSARCIMENTO,,,False
 gpt-4.1_few_shot,814,-77,0,RESSARCIMENTO,,"imputando ao gestor responsável, o Senhor Vítor Duque Júnior, a obrigação de ",False
+gpt-4.1_few_shot,815,60,0,OBRIGACAO,,,False
 gpt-4.1_few_shot,818,-8,-1,MULTA,;,aplicar ,False
 gpt-4.1_few_shot,818,0,0,OBRIGACAO,,,True
 gpt-4.1_few_shot,818,-61,-75,RESSARCIMENTO,", acrescido da multa de 50% (cinqüenta por cento) sobre o respectivo valor;","condenar o senhor Elmo Soprano Sobrinho, gestor municipal, a ",False
@@ -686,6 +745,7 @@ gpt-4.1_few_shot,849,-13,-81,MULTA,", devendo os agentes ser remunerados com bas
 gpt-4.1_few_shot,849,0,0,RECOMENDACAO,,,True
 gpt-4.1_few_shot,849,-13,-1,MULTA,;,imputação de ,False
 gpt-4.1_few_shot,849,-13,-1,MULTA,;,aplicação de ,False
+gpt-4.1_few_shot,850,0,0,RECOMENDACAO,,,True
 gpt-4.1_few_shot,850,0,-3,MULTA,; e,,False
 gpt-4.1_few_shot,851,-13,-1,MULTA,;,aplicação de ,False
 gpt-4.1_few_shot,851,-60,-1,RESSARCIMENTO,.,"condenando o responsável Josué Salandra de Onisto Filho, ao ",False

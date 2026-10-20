@@ -3,8 +3,9 @@
 Three annotators labelled the same set of documents independently, using the
 same Label Studio configuration and the annotation guidelines:
 
-- **anotador1** — the original author annotation *after* the Cleanlab audit
-  (span-identical to the corrected release ``dataset/release/decicontas``);
+- **anotador1** — the author annotation *after* the Cleanlab audit and *before*
+  the adjudication of the divergences (the released gold adds the adjudicated
+  spans; the pre-adjudication gold is rebuilt in memory for the check);
 - **anotador2** / **anotador3** — independent blind annotations produced by
   staff of the decisions-monitoring unit of the TCE/RN.
 
@@ -120,13 +121,39 @@ def load_release_spans(release_json: Path) -> dict[int, dict]:
     return docs
 
 
+def documents_to_spans(documents) -> dict[int, dict]:
+    """Pipeline :class:`~research.dataset_io.Document` objects in the release-bundle shape."""
+    docs: dict[int, dict] = {}
+    for doc in documents:
+        spans = sorted((s.char_start, s.char_end, collapse_label(s.label)) for s in doc.ner_spans)
+        docs[doc.document_id] = {
+            "text": doc.text,
+            "spans": spans,
+            "token_spans": _to_token_spans(doc.text, spans),
+        }
+    return docs
+
+
+def load_pre_adjudication_spans() -> dict[int, dict]:
+    """Annotator 1's reference: the audited annotation *before* the adjudication pass.
+
+    The released gold also carries the adjudicated divergences, so it is rebuilt
+    here in memory from the master export and the Cleanlab corrections only.
+    """
+    from research.release.export_dataset import build_bundles
+
+    return documents_to_spans(build_bundles(paths.LABELED_CORPUS, paths.CORRECTIONS_JSON).after)
+
+
 def load_study(
     annotators_dir: Path = paths.ANNOTATORS_DIR,
+    gold: dict[int, dict] | None = None,
 ) -> tuple[dict[str, dict[int, dict]], list[int]]:
     """Load the three annotator files and validate their alignment.
 
     Ensures all annotators cover the same document ids with identical texts,
-    and that ``anotador1`` is span-identical to the corrected release gold.
+    and that ``anotador1`` is span-identical to ``gold`` — by default the
+    pre-adjudication gold of :func:`load_pre_adjudication_spans`.
     Returns the annotations and the sorted list of common document ids.
     """
     data = {a: load_annotator(annotators_dir / f"{a}.jsonl") for a in ANNOTATOR_IDS}
@@ -138,14 +165,15 @@ def load_study(
         if mismatched:
             raise ValueError(f"{a}: texts differ on documents {mismatched[:5]}")
 
-    gold = load_release_spans(paths.CANONICAL_GOLD_JSON)
+    if gold is None:
+        gold = load_pre_adjudication_spans()
     missing = sorted(set(gold) - set(ids))
     if missing:
         logger.info("release docs absent from the study: %s", missing)
     diverging = [i for i in ids if gold[i]["spans"] != data["anotador1"][i]["spans"]]
     if diverging:
         raise ValueError(
-            f"anotador1 differs from the corrected gold on documents {diverging[:5]}"
+            f"anotador1 differs from the pre-adjudication gold on documents {diverging[:5]}"
         )
     return data, ids
 
@@ -393,9 +421,10 @@ def _write_report(
     parts.append(
         "Gerado por `research.release.annotator_agreement` a partir de "
         f"`dataset/annotators/` ({len(ids)} documentos comuns aos três anotadores). "
-        "O anotador 1 é a anotação original pós-auditoria Cleanlab (idêntica à "
-        "release corrigida); os anotadores 2 e 3 anotaram de forma independente "
-        "e cega. Os CSVs ao lado são as fontes canônicas.\n"
+        "O anotador 1 é a anotação do autor pós-auditoria Cleanlab e anterior à "
+        "adjudicação (o padrão-ouro publicado incorpora as divergências adjudicadas, "
+        "por isso a concordância não é medida contra ele); os anotadores 2 e 3 anotaram "
+        "de forma independente e cega. Os CSVs ao lado são as fontes canônicas.\n"
     )
     parts.append("## (a) Concordância par-a-par\n")
     parts.append(

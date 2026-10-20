@@ -10,7 +10,7 @@ llama-3.3-70b_few_shot,Llama-3.3-70B,24,0
 qwen2.5-72b_few_shot,Qwen2.5-72B,28,0
 rufimelo_Legal-BERTimbau-base__supervised,Legal-BERTimbau-base,0,0
 neuralmind_bert-base-portuguese-cased__supervised,BERTimbau-base,0,0
-neuralmind_bert-large-portuguese-cased__supervised,BERTimbau-large,0,0
+neuralmind_bert-large-portuguese-cased__supervised,BERTimbau-large,2,0
 bilstm-crf__supervised,BiLSTM-CRF,0,0
 alfaneo_jurisbert-base-portuguese-uncased__supervised,JurisBERT,0,0
 alfaneo_bertimbaulaw-base-portuguese-cased__supervised,BERTimbauLaw,0,0

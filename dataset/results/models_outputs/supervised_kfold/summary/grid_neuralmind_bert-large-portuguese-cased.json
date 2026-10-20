@@ -2,60 +2,18 @@
   "model": "neuralmind/bert-large-portuguese-cased",
   "rows": [
     {
-      "config_id": "lr=3e-05_model_name=neuralmind-bert-large-portuguese-cased_stride=320_warmup_ratio=0.1",
+      "config_id": "lr=5e-05_model_name=neuralmind-bert-large-portuguese-cased_stride=320_warmup_ratio=0.1",
       "config": {
         "model_name": "neuralmind/bert-large-portuguese-cased",
-        "lr": 3e-05,
+        "lr": 5e-05,
         "warmup_ratio": 0.1,
         "stride": 320
       },
-      "span_f1": 0.7518796992481203,
-      "span_precision": 0.8064516129032258,
-      "span_recall": 0.704225352112676,
-      "token_f1": 0.7969688304260795,
-      "elapsed_seconds": 3033.988357067108
-    },
-    {
-      "config_id": "lr=2e-05_model_name=neuralmind-bert-large-portuguese-cased_stride=320_warmup_ratio=0",
-      "config": {
-        "model_name": "neuralmind/bert-large-portuguese-cased",
-        "lr": 2e-05,
-        "warmup_ratio": 0.0,
-        "stride": 320
-      },
-      "span_f1": 0.7438016528925621,
-      "span_precision": 0.9,
-      "span_recall": 0.6338028169014085,
-      "token_f1": 0.7783338239623196,
-      "elapsed_seconds": 2942.638715982437
-    },
-    {
-      "config_id": "lr=3e-05_model_name=neuralmind-bert-large-portuguese-cased_stride=320_warmup_ratio=0",
-      "config": {
-        "model_name": "neuralmind/bert-large-portuguese-cased",
-        "lr": 3e-05,
-        "warmup_ratio": 0.0,
-        "stride": 320
-      },
-      "span_f1": 0.7360000000000001,
-      "span_precision": 0.8518518518518519,
-      "span_recall": 0.647887323943662,
-      "token_f1": 0.7734201568743525,
-      "elapsed_seconds": 2952.2185521125793
-    },
-    {
-      "config_id": "lr=2e-05_model_name=neuralmind-bert-large-portuguese-cased_stride=320_warmup_ratio=0.1",
-      "config": {
-        "model_name": "neuralmind/bert-large-portuguese-cased",
-        "lr": 2e-05,
-        "warmup_ratio": 0.1,
-        "stride": 320
-      },
-      "span_f1": 0.7241379310344829,
-      "span_precision": 0.9333333333333333,
-      "span_recall": 0.5915492957746479,
-      "token_f1": 0.7635588056063376,
-      "elapsed_seconds": 2989.4832756519318
+      "span_f1": 0.9066666666666667,
+      "span_precision": 0.9444444444444444,
+      "span_recall": 0.8717948717948718,
+      "token_f1": 0.9304967698819336,
+      "elapsed_seconds": 2826.34903216362
     },
     {
       "config_id": "lr=5e-05_model_name=neuralmind-bert-large-portuguese-cased_stride=320_warmup_ratio=0",
@@ -65,39 +23,81 @@
         "warmup_ratio": 0.0,
         "stride": 320
       },
-      "span_f1": 0.704225352112676,
-      "span_precision": 0.704225352112676,
-      "span_recall": 0.704225352112676,
-      "token_f1": 0.7938888102984863,
-      "elapsed_seconds": 2996.069394826889
+      "span_f1": 0.8903225806451613,
+      "span_precision": 0.8961038961038961,
+      "span_recall": 0.8846153846153846,
+      "token_f1": 0.9103495233772129,
+      "elapsed_seconds": 2969.5064668655396
     },
     {
-      "config_id": "lr=5e-05_model_name=neuralmind-bert-large-portuguese-cased_stride=320_warmup_ratio=0.1",
+      "config_id": "lr=2e-05_model_name=neuralmind-bert-large-portuguese-cased_stride=320_warmup_ratio=0.1",
       "config": {
         "model_name": "neuralmind/bert-large-portuguese-cased",
-        "lr": 5e-05,
+        "lr": 2e-05,
         "warmup_ratio": 0.1,
         "stride": 320
       },
-      "span_f1": 0.611111111111111,
-      "span_precision": 0.8918918918918919,
-      "span_recall": 0.4647887323943662,
-      "token_f1": 0.6243852806511786,
-      "elapsed_seconds": 2965.6134400367737
+      "span_f1": 0.8811188811188813,
+      "span_precision": 0.9692307692307692,
+      "span_recall": 0.8076923076923077,
+      "token_f1": 0.8879059480852054,
+      "elapsed_seconds": 3412.6172981262207
+    },
+    {
+      "config_id": "lr=3e-05_model_name=neuralmind-bert-large-portuguese-cased_stride=320_warmup_ratio=0",
+      "config": {
+        "model_name": "neuralmind/bert-large-portuguese-cased",
+        "lr": 3e-05,
+        "warmup_ratio": 0.0,
+        "stride": 320
+      },
+      "span_f1": 0.8811188811188813,
+      "span_precision": 0.9692307692307692,
+      "span_recall": 0.8076923076923077,
+      "token_f1": 0.8689769760265844,
+      "elapsed_seconds": 3339.7471117973328
+    },
+    {
+      "config_id": "lr=2e-05_model_name=neuralmind-bert-large-portuguese-cased_stride=320_warmup_ratio=0",
+      "config": {
+        "model_name": "neuralmind/bert-large-portuguese-cased",
+        "lr": 2e-05,
+        "warmup_ratio": 0.0,
+        "stride": 320
+      },
+      "span_f1": 0.8571428571428572,
+      "span_precision": 0.967741935483871,
+      "span_recall": 0.7692307692307693,
+      "token_f1": 0.8506831096602587,
+      "elapsed_seconds": 3090.888345003128
+    },
+    {
+      "config_id": "lr=3e-05_model_name=neuralmind-bert-large-portuguese-cased_stride=320_warmup_ratio=0.1",
+      "config": {
+        "model_name": "neuralmind/bert-large-portuguese-cased",
+        "lr": 3e-05,
+        "warmup_ratio": 0.1,
+        "stride": 320
+      },
+      "span_f1": 0.8333333333333333,
+      "span_precision": 0.9090909090909091,
+      "span_recall": 0.7692307692307693,
+      "token_f1": 0.8441101540701201,
+      "elapsed_seconds": 3336.7021811008453
     }
   ],
   "best": {
-    "config_id": "lr=3e-05_model_name=neuralmind-bert-large-portuguese-cased_stride=320_warmup_ratio=0.1",
+    "config_id": "lr=5e-05_model_name=neuralmind-bert-large-portuguese-cased_stride=320_warmup_ratio=0.1",
     "config": {
       "model_name": "neuralmind/bert-large-portuguese-cased",
-      "lr": 3e-05,
+      "lr": 5e-05,
       "warmup_ratio": 0.1,
       "stride": 320
     },
-    "span_f1": 0.7518796992481203,
-    "span_precision": 0.8064516129032258,
-    "span_recall": 0.704225352112676,
-    "token_f1": 0.7969688304260795,
-    "elapsed_seconds": 3033.988357067108
+    "span_f1": 0.9066666666666667,
+    "span_precision": 0.9444444444444444,
+    "span_recall": 0.8717948717948718,
+    "token_f1": 0.9304967698819336,
+    "elapsed_seconds": 2826.34903216362
   }
 }

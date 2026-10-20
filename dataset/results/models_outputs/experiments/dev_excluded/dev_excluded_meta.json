@@ -2,7 +2,7 @@
   "n_docs": 861,
   "n_dev": 173,
   "n_docs_nodev": 688,
-  "n_entities_nodev": 340,
-  "n_entities_dev": 71,
-  "n_informative_nodev": 161
+  "n_entities_nodev": 351,
+  "n_entities_dev": 78,
+  "n_informative_nodev": 178
 }
