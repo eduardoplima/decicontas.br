@@ -273,7 +273,7 @@ def build_decisions_file(
         "items_total": items_total,
         "items_decided": items_decided,
         "items_pending": items_total - items_decided,
-        **{action: actions[action] for action in ("include", "reject", "keep", "remove", "relabel", "replaced")},
+        **{action: actions[action] for action in ("include", "reject", "keep", "remove", "relabel", "custom", "replaced")},
         "token_changes": len(changes),
         "in_scope_included": in_scope_included,
         "entities_before": {label: before[label] for label in ENTITY_LABELS},
