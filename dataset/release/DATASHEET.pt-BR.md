@@ -4,7 +4,7 @@
 
 Este documento segue o modelo *Datasheets for Datasets* (GEBRU, T. et al. Datasheets for datasets. *Communications of the ACM*, v. 64, n. 12, 2021. arXiv:1803.09010v8), respondendo pergunta a pergunta às sete seções propostas: motivação, composição, processo de coleta, pré-processamento/limpeza/rotulagem, usos, distribuição e manutenção. Perguntas não aplicáveis são respondidas com "N/A" e justificativa breve, conforme recomendado pelos autores.
 
-Versão do dataset documentada: **decicontas** (861 documentos, correções Cleanlab aplicadas), com a versão **decicontas-before-correction** distribuída em paralelo.
+Versão do dataset documentada: **decicontas** (861 documentos, correções Cleanlab e decisões de adjudicação aplicadas), com a versão **decicontas-before-correction** distribuída em paralelo.
 
 ---
 
@@ -36,7 +36,7 @@ Cada instância é o texto integral de uma decisão colegiada (acórdão ou deci
 
 **Quantas instâncias há no total (de cada tipo, se apropriado)?**
 
-861 documentos, totalizando 116.844 *tokens* e 754.555 caracteres. Desses, 202 documentos (23,5%) contêm ao menos uma entidade anotada e 659 (76,5%) são vazios — verdadeiros negativos, integralmente lidos e julgados sem comando registrável (arquivamentos, julgamentos de regularidade plena). Na versão corrigida há 411 entidades: 203 MULTA, 123 OBRIGACAO, 63 RESSARCIMENTO e 22 RECOMENDACAO (na versão antes das correções: 404 entidades — 202/119/62/21).
+861 documentos, totalizando 116.844 *tokens* e 754.555 caracteres. Desses, 223 documentos (25,9%) contêm ao menos uma entidade anotada e 638 (74,1%) são vazios — verdadeiros negativos, integralmente lidos e julgados sem comando registrável (arquivamentos, julgamentos de regularidade plena). Na versão corrigida e adjudicada há 429 entidades: 209 MULTA, 122 OBRIGACAO, 66 RESSARCIMENTO e 32 RECOMENDACAO (na versão antes das correções: 404 entidades — 202/119/62/21).
 
 **O dataset contém todas as instâncias possíveis ou é uma amostra (não necessariamente aleatória) de um conjunto maior?**
 
@@ -48,7 +48,7 @@ Texto bruto (não processado) da decisão, acompanhado dos artefatos derivados: 
 
 **Há um rótulo ou alvo associado a cada instância?**
 
-Sim. Cada *token* recebe um dos nove rótulos BIO: `O`, `B-/I-MULTA`, `B-/I-OBRIGACAO`, `B-/I-RESSARCIMENTO`, `B-/I-RECOMENDACAO`. As quatro categorias correspondem aos subcadastros do CGAD: MULTA (sanção pecuniária), OBRIGACAO (determinação vinculante de fazer/não fazer), RESSARCIMENTO (devolução de valores ao erário) e RECOMENDACAO (orientação não vinculante dirigida ao jurisdicionado). Deliberações dirigidas a unidades do próprio Tribunal — recomendações e cientificações à Secretaria de Controle Externo (SECEX) ou à Consultoria Jurídica (CONJU) — são atos de gestão interna que o CGAD não registra e não são anotadas. O esquema é *flat* — sem aninhamento nem sobreposição de *spans* (nas 411 entidades não há um único par sobreposto).
+Sim. Cada *token* recebe um dos nove rótulos BIO: `O`, `B-/I-MULTA`, `B-/I-OBRIGACAO`, `B-/I-RESSARCIMENTO`, `B-/I-RECOMENDACAO`. As quatro categorias correspondem aos subcadastros do CGAD: MULTA (sanção pecuniária), OBRIGACAO (determinação vinculante de fazer/não fazer), RESSARCIMENTO (devolução de valores ao erário) e RECOMENDACAO (orientação não vinculante dirigida ao jurisdicionado). Deliberações dirigidas a unidades do próprio Tribunal — recomendações e cientificações à Secretaria de Controle Externo (SECEX) ou à Consultoria Jurídica (CONJU) — são atos de gestão interna que o CGAD não registra e não são anotadas. O esquema é *flat* — sem aninhamento nem sobreposição de *spans* (nas 429 entidades não há um único par sobreposto).
 
 **Falta alguma informação em instâncias individuais?**
 
@@ -60,7 +60,7 @@ Não. As decisões são tratadas como documentos independentes. Decisões distin
 
 **Há divisões (splits) recomendadas (treino, validação, teste)?**
 
-Não há *split* fixo. O protocolo da dissertação usa validação cruzada de 5 *folds* no nível de documento (semente 1007) para os modelos supervisionados, e avaliação sobre os 861 documentos para os LLMs *few-shot*, com intervalos de confiança por *bootstrap* pareado de documento (B = 10.000, semente 42). Recomenda-se reportar macro-F1 de *span* (IoU ≥ 0,5) como métrica primária, dado o desbalanceamento entre classes, além do subconjunto informativo (231 documentos) em separado.
+Não há *split* fixo. O protocolo da dissertação usa validação cruzada de 5 *folds* no nível de documento (semente 1007) para os modelos supervisionados, e avaliação sobre os 861 documentos para os LLMs *few-shot*, com intervalos de confiança por *bootstrap* pareado de documento (B = 10.000, semente 42). Recomenda-se reportar macro-F1 de *span* (IoU ≥ 0,5) como métrica primária, dado o desbalanceamento entre classes, além do subconjunto informativo (223 documentos) em separado.
 
 **Há erros, fontes de ruído ou redundâncias conhecidas no dataset?**
 
@@ -116,7 +116,7 @@ O autor da dissertação (extração e anotação de referência) e duas anotado
 
 **Ao longo de que período os dados foram coletados? Esse período corresponde ao período de criação dos dados das instâncias?**
 
-Os textos anotados provêm de decisões proferidas em sessões realizadas entre julho de 2015 e maio de 2025, com 86,9% concentradas em 2024. A importação para o Label Studio e a anotação de referência ocorreram em junho de 2025; a auditoria Cleanlab e a revisão das correções foram concluídas em maio de 2026; a re-anotação independente pelas Anotadoras 2 e 3 ocorreu em agosto de 2026. O período de coleta é, portanto, próximo ao de criação dos documentos (decisões recentes, não um recorte histórico).
+Os textos anotados provêm de decisões proferidas em sessões realizadas entre julho de 2015 e maio de 2025, com 86,9% concentradas em 2024. A importação para o Label Studio e a anotação de referência ocorreram em junho de 2025; a auditoria Cleanlab e a revisão das correções foram concluídas em maio de 2026; a re-anotação independente pelas Anotadoras 2 e 3 ocorreu em agosto de 2026, e a adjudicação das divergências em outubro de 2026. O período de coleta é, portanto, próximo ao de criação dos documentos (decisões recentes, não um recorte histórico).
 
 **Foram conduzidos processos de revisão ética (por exemplo, por um comitê institucional)?**
 
@@ -191,7 +191,7 @@ Além de REN: extração estruturada de atributos das decisões (valores, prazos
 
 **Há algo na composição do dataset ou na forma como foi coletado e pré-processado/limpo/rotulado que possa impactar usos futuros?**
 
-Sim, quatro pontos: (i) **desbalanceamento** — MULTA concentra ~49% das entidades e 76,5% dos documentos são vazios; o micro-F1 é dominado pela classe majoritária e pela capacidade de abstenção, recomendando-se o macro-F1 de *span* e a análise do subconjunto informativo; (ii) **padrão-ouro de anotador único** — o estudo de concordância com duas anotadoras independentes (F1 de *span* par-a-par 0,776–0,838) fornece um teto humano de referência, mas as divergências não foram adjudicadas (em especial na classe RECOMENDACAO, a de menor concordância frente ao padrão-ouro) e os 227 grupos abaixo do limiar de revisão da auditoria mantêm o rótulo original; (iii) **recorte institucional e temporal** — um único tribunal (TCE/RN), com 86,9% das decisões de 2024; a transferência para outras Cortes de Contas, com formulários decisórios distintos, deve ser validada empiricamente; (iv) **mascaramento de CPFs** — modelos treinados no corpus não verão CPFs reais, o que afeta usos que dependam desse padrão numérico. O vocabulário do corpus também é distante do de corpora judiciais (Jaccard de 0,29 com o LeNER-Br nos 5.000 tipos mais frequentes), o que limita comparações diretas.
+Sim, quatro pontos: (i) **desbalanceamento** — MULTA concentra ~49% das entidades e 74,1% dos documentos são vazios; o micro-F1 é dominado pela classe majoritária e pela capacidade de abstenção, recomendando-se o macro-F1 de *span* e a análise do subconjunto informativo; (ii) **padrão-ouro de adjudicador único** — o estudo de concordância com duas anotadoras independentes (F1 de *span* par-a-par 0,776–0,838) fornece um teto humano de referência, e as divergências (concentradas na classe RECOMENDACAO, a de menor concordância) foram adjudicadas por uma única pessoa, o primeiro anotador; e os 227 grupos abaixo do limiar de revisão da auditoria mantêm o rótulo original; (iii) **recorte institucional e temporal** — um único tribunal (TCE/RN), com 86,9% das decisões de 2024; a transferência para outras Cortes de Contas, com formulários decisórios distintos, deve ser validada empiricamente; (iv) **mascaramento de CPFs** — modelos treinados no corpus não verão CPFs reais, o que afeta usos que dependam desse padrão numérico. O vocabulário do corpus também é distante do de corpora judiciais (Jaccard de 0,29 com o LeNER-Br nos 5.000 tipos mais frequentes), o que limita comparações diretas.
 
 **Há tarefas para as quais o dataset não deve ser usado?**
 
@@ -247,11 +247,11 @@ Eduardo Pereira Lima — `eduardo.lima.059@ufrn.edu.br`, ou via *issues* no repo
 
 **Há uma errata?**
 
-Sim, na prática: o arquivo `dataset/errors/dataset-corrections.json` documenta, decisão a decisão, todas as correções de rótulo aplicadas após a auditoria Cleanlab, e o par de versões `decicontas-before-correction`/`decicontas` materializa o antes/depois. Correções futuras seguirão o mesmo mecanismo, com registro no README do release.
+Sim, na prática: o arquivo `dataset/errors/dataset-corrections.json` documenta, decisão a decisão, todas as correções de rótulo aplicadas após a auditoria Cleanlab, o arquivo `dataset/errors/adjudication-decisions.json` faz o mesmo para a adjudicação das divergências entre anotadores, e o par de versões `decicontas-before-correction`/`decicontas` materializa o antes/depois. Correções futuras seguirão o mesmo mecanismo, com registro no README do release.
 
 **O dataset será atualizado (para corrigir erros de rotulagem, adicionar ou remover instâncias)?**
 
-Sim, se necessário. Correções de rótulo identificadas por usuários ou por novas rodadas de auditoria serão incorporadas via arquivo de correções versionado e novo release regenerado deterministicamente (`research.release.export_dataset`), com atualização do `MANIFEST.json`. As atualizações serão comunicadas pelo histórico do repositório GitHub (commits e *releases*).
+Sim, se necessário. Correções de rótulo identificadas por usuários ou por novas rodadas de auditoria serão incorporadas via arquivos versionados de correções e de adjudicação e novo release regenerado deterministicamente (`research.release.export_dataset`), com atualização do `MANIFEST.json`. As atualizações serão comunicadas pelo histórico do repositório GitHub (commits e *releases*).
 
 **Se o dataset se relaciona a pessoas, há limites aplicáveis à retenção dos dados (os indivíduos foram informados de que seus dados seriam retidos por período fixo)?**
 

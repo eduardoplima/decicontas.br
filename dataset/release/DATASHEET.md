@@ -2,7 +2,7 @@
 
 This document follows the *Datasheets for Datasets* template (GEBRU, T. et al. Datasheets for datasets. *Communications of the ACM*, v. 64, n. 12, 2021. arXiv:1803.09010v8), answering, question by question, the seven proposed sections: motivation, composition, collection process, preprocessing/cleaning/labelling, uses, distribution and maintenance. Questions that do not apply are answered "N/A" with a brief justification, as the authors recommend.
 
-Documented dataset version: **decicontas** (861 documents, cleanlab corrections applied), distributed alongside **decicontas-before-correction**.
+Documented dataset version: **decicontas** (861 documents, cleanlab corrections and adjudication decisions applied), distributed alongside **decicontas-before-correction**.
 
 A Portuguese translation of this document is kept at [`DATASHEET.pt-BR.md`](DATASHEET.pt-BR.md).
 
@@ -36,7 +36,7 @@ Each instance is the full text of a collegiate decision (*acórdão* or *decisã
 
 **How many instances are there in total (of each type, if appropriate)?**
 
-861 documents, totalling 116,844 tokens and 754,555 characters. Of these, 202 documents (23.5%) contain at least one annotated entity and 659 (76.5%) are empty — true negatives, read in full and judged to carry no registrable command (filings, clean-account judgments). The corrected version holds 411 entities: 203 MULTA, 123 OBRIGACAO, 63 RESSARCIMENTO and 22 RECOMENDACAO (before corrections: 404 entities — 202/119/62/21).
+861 documents, totalling 116,844 tokens and 754,555 characters. Of these, 223 documents (25.9%) contain at least one annotated entity and 638 (74.1%) are empty — true negatives, read in full and judged to carry no registrable command (filings, clean-account judgments). The corrected and adjudicated version holds 429 entities: 209 MULTA, 122 OBRIGACAO, 66 RESSARCIMENTO and 32 RECOMENDACAO (before corrections: 404 entities — 202/119/62/21).
 
 **Does the dataset contain all possible instances or is it a sample (not necessarily random) of a larger set?**
 
@@ -48,7 +48,7 @@ Raw (unprocessed) decision text, accompanied by derived artefacts: token list, p
 
 **Is there a label or target associated with each instance?**
 
-Yes. Each token receives one of nine BIO labels: `O`, `B-/I-MULTA`, `B-/I-OBRIGACAO`, `B-/I-RESSARCIMENTO`, `B-/I-RECOMENDACAO`. The four categories map onto the CGAD subregistries: MULTA (pecuniary sanction), OBRIGACAO (binding order to do or refrain from doing), RESSARCIMENTO (reimbursement to the treasury) and RECOMENDACAO (non-binding guidance addressed to the audited body). Deliberations addressed to the Tribunal's own units — recommendations and notices to the external-control secretariat (SECEX) or the legal counsel (CONJU) — are internal management acts that the CGAD does not record, and are not annotated. The scheme is flat — no nesting and no overlapping spans (across the 411 entities there is not a single overlapping pair).
+Yes. Each token receives one of nine BIO labels: `O`, `B-/I-MULTA`, `B-/I-OBRIGACAO`, `B-/I-RESSARCIMENTO`, `B-/I-RECOMENDACAO`. The four categories map onto the CGAD subregistries: MULTA (pecuniary sanction), OBRIGACAO (binding order to do or refrain from doing), RESSARCIMENTO (reimbursement to the treasury) and RECOMENDACAO (non-binding guidance addressed to the audited body). Deliberations addressed to the Tribunal's own units — recommendations and notices to the external-control secretariat (SECEX) or the legal counsel (CONJU) — are internal management acts that the CGAD does not record, and are not annotated. The scheme is flat — no nesting and no overlapping spans (across the 429 entities there is not a single overlapping pair).
 
 **Is any information missing from individual instances?**
 
@@ -60,7 +60,7 @@ No. Decisions are treated as independent documents. Distinct decisions may refer
 
 **Are there recommended data splits (training, validation, test)?**
 
-There is no fixed split. The dissertation protocol uses 5-fold cross-validation at the document level (seed 1007) for the supervised models, and evaluation over all 861 documents for the few-shot LLMs, with confidence intervals from a paired document-level bootstrap (B = 10,000, seed 42). We recommend reporting macro span F1 (IoU ≥ 0.5) as the primary metric, given the class imbalance, alongside the informative subset (231 documents) reported separately.
+There is no fixed split. The dissertation protocol uses 5-fold cross-validation at the document level (seed 1007) for the supervised models, and evaluation over all 861 documents for the few-shot LLMs, with confidence intervals from a paired document-level bootstrap (B = 10,000, seed 42). We recommend reporting macro span F1 (IoU ≥ 0.5) as the primary metric, given the class imbalance, alongside the informative subset (223 documents) reported separately.
 
 **Are there any errors, sources of noise, or redundancies in the dataset?**
 
@@ -120,7 +120,7 @@ The dissertation author (extraction and reference annotation) and two annotators
 
 **Over what timeframe was the data collected? Does this timeframe match the creation timeframe of the data associated with the instances?**
 
-The annotated texts come from decisions issued in sessions held between July 2015 and May 2025, with 86.9% concentrated in 2024 and a sparse tail over the earlier years. Import into Label Studio and the reference annotation took place in June 2025; the cleanlab audit and the review of corrections were completed in May 2026; the independent re-annotation by Annotators 2 and 3 took place in August 2026. The collection timeframe is therefore close to the creation timeframe of the documents.
+The annotated texts come from decisions issued in sessions held between July 2015 and May 2025, with 86.9% concentrated in 2024 and a sparse tail over the earlier years. Import into Label Studio and the reference annotation took place in June 2025; the cleanlab audit and the review of corrections were completed in May 2026; the independent re-annotation by Annotators 2 and 3 took place in August 2026, and the adjudication of the divergences in October 2026. The collection timeframe is therefore close to the creation timeframe of the documents.
 
 **Were any ethical review processes conducted (e.g., by an institutional review board)?**
 
@@ -195,7 +195,7 @@ Beyond NER: structured extraction of decision attributes (amounts, deadlines, re
 
 **Is there anything about the composition of the dataset or the way it was collected and preprocessed/cleaned/labelled that might impact future uses?**
 
-Yes, four points: (i) **imbalance** — MULTA concentrates ~49% of entities and 76.5% of documents are empty; micro F1 is dominated by the majority class and by the ability to abstain, so macro span F1 and the informative-subset analysis are recommended; (ii) **single-annotator gold standard** — the agreement study with two independent annotators (pairwise span F1 0.776–0.838) provides a human reference ceiling, but divergences were not adjudicated (particularly for RECOMENDACAO, the class with the lowest agreement against the gold), and the 227 groups below the audit review threshold keep their original label; (iii) **institutional and temporal scope** — a single court (TCE/RN), with 86.9% of the decisions from 2024; transfer to other Courts of Accounts, with different decision templates, must be validated empirically; (iv) **CPF masking** — models trained on the corpus will never see real CPF numbers, which affects uses that depend on that numeric pattern. The corpus vocabulary is also distant from judicial corpora (Jaccard of 0.29 with LeNER-Br over the 5,000 most frequent types), which limits direct comparisons.
+Yes, four points: (i) **imbalance** — MULTA concentrates ~49% of entities and 74.1% of documents are empty; micro F1 is dominated by the majority class and by the ability to abstain, so macro span F1 and the informative-subset analysis are recommended; (ii) **single-adjudicator gold standard** — the agreement study with two independent annotators (pairwise span F1 0.776–0.838) provides a human reference ceiling, and the divergences (concentrated in RECOMENDACAO, the class with the lowest agreement) were adjudicated by a single person, the first annotator; and the 227 groups below the audit review threshold keep their original label; (iii) **institutional and temporal scope** — a single court (TCE/RN), with 86.9% of the decisions from 2024; transfer to other Courts of Accounts, with different decision templates, must be validated empirically; (iv) **CPF masking** — models trained on the corpus will never see real CPF numbers, which affects uses that depend on that numeric pattern. The corpus vocabulary is also distant from judicial corpora (Jaccard of 0.29 with LeNER-Br over the 5,000 most frequent types), which limits direct comparisons.
 
 **Are there tasks for which the dataset should not be used?**
 
@@ -251,11 +251,11 @@ Eduardo Pereira Lima — `eduardo.lima.059@ufrn.edu.br`, or through issues in th
 
 **Is there an erratum?**
 
-Yes, in practice: the file `dataset/errors/dataset-corrections.json` documents, decision by decision, every label correction applied after the cleanlab audit, and the version pair `decicontas-before-correction`/`decicontas` materialises the before/after. Future corrections will follow the same mechanism, recorded in the release README.
+Yes, in practice: the file `dataset/errors/dataset-corrections.json` documents, decision by decision, every label correction applied after the cleanlab audit, and `dataset/errors/adjudication-decisions.json` does the same for the adjudication of the divergences between annotators, and the version pair `decicontas-before-correction`/`decicontas` materialises the before/after. Future corrections will follow the same mechanism, recorded in the release README.
 
 **Will the dataset be updated (to correct labelling errors, add or remove instances)?**
 
-Yes, if needed. Label corrections identified by users or by new audit rounds will be incorporated through the versioned corrections file and a new release regenerated deterministically (`research.release.export_dataset`), with `MANIFEST.json` updated. Updates will be communicated through the GitHub repository history (commits and releases).
+Yes, if needed. Label corrections identified by users or by new audit rounds will be incorporated through the versioned corrections and adjudication files and a new release regenerated deterministically (`research.release.export_dataset`), with `MANIFEST.json` updated. Updates will be communicated through the GitHub repository history (commits and releases).
 
 **If the dataset relates to people, are there applicable limits on the retention of the data (were individuals told their data would be retained for a fixed period)?**
 

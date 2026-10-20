@@ -29,19 +29,19 @@ enforcement regime — translating them would misrepresent the corpus.
 
 | Label | What it is | Count |
 |---|---|---:|
-| `MULTA` | A pecuniary **fine** for administrative or fiscal misconduct | 203 |
-| `OBRIGACAO` | A binding **obligation** imposed on the audited body | 123 |
-| `RESSARCIMENTO` | A mandated **reimbursement** to the public treasury | 63 |
-| `RECOMENDACAO` | A formally documented, non-binding **recommendation** to the audited body | 22 |
+| `MULTA` | A pecuniary **fine** for administrative or fiscal misconduct | 209 |
+| `OBRIGACAO` | A binding **obligation** imposed on the audited body | 122 |
+| `RESSARCIMENTO` | A mandated **reimbursement** to the public treasury | 66 |
+| `RECOMENDACAO` | A formally documented, non-binding **recommendation** to the audited body | 32 |
 
 Recommendations and notices that a ruling addresses to the Court's own units (the
 external-control secretariat SECEX, the legal counsel CONJU) are internal acts the
 registry does not record, so they are not annotated (`research/annotation_scope.py`).
 
-**861 documents, 411 entities.** Only 202 documents carry an entity; the remaining
-659 are true negatives — filings and clean-account judgments with no registrable
+**861 documents, 429 entities.** Only 223 documents carry an entity; the remaining
+638 are true negatives — filings and clean-account judgments with no registrable
 command. They are kept deliberately: in production the system must also learn *not*
-to extract. Spans are long (per-class medians of 248–357 characters), so evaluation
+to extract. Spans are long (per-class medians of 246–372 characters), so evaluation
 uses partial matching (IoU ≥ 0.5) rather than exact boundaries.
 
 ## Get the data
@@ -54,7 +54,7 @@ no clone required. **Or, in a clone**, the bundles are under [`data/`](data)
 import json
 
 docs = [json.loads(line) for line in open("data/decicontas/decicontas.jsonl")]
-print(len(docs), sum(len(d["spans"]) for d in docs))   # 861 411
+print(len(docs), sum(len(d["spans"]) for d in docs))   # 861 429
 ```
 
 With HuggingFace `datasets`:
@@ -105,27 +105,29 @@ Holm correction over all 171 pairwise contrasts. LLM output strings are mapped t
 character offsets by an exact-first aligner (fuzzy fallback only for paraphrased strings).
 
 **Headline.** The best LLM, the open-weights **DeepSeek-V4-Flash** (macro span F1
-**0.799**), exceeds the strongest supervised baseline, the legal-domain
-**LegalBert-pt** (**0.613**), by +0.186, 95% CI [+0.097, +0.261], *p* < 0.001 — a
-contrast that survives Holm correction over all 171 pairs (*p*<sub>Holm</sub> < 0.001),
-as do the gaps to BERTimbau-large (0.605: +0.194) and BiLSTM-CRF (0.567: +0.230).
-No contrast among the ten supervised models survives Holm correction: LegalBert-pt
-differs from BERTimbau-large by +0.009, and the other six domain-adapted encoders
-(0.518–0.552) sit at the level of the generic BERTimbau-base (0.524). The gap to GPT-4.1
-(0.749) is +0.049, 95% CI [+0.016, +0.083], *p* = 0.002 — significant before but not
-after Holm correction (*p*<sub>Holm</sub> = 0.192), so the two share the leader group
-with GPT-5.1 (0.748). The advantage is concentrated on the rarest class: on
-`RECOMENDACAO` (22 instances) the leading LLMs reach span F1 0.737–0.778 against at
-most 0.231 for any supervised model, and five supervised models predict no
-recommendation at all. On micro span F1 the gap shrinks to +0.074 and LegalBert-pt
-(0.751) ranks fourth overall, behind three LLMs. Under exact boundary matching the
-picture inverts: all ten supervised models (0.397–0.522) beat all nine LLMs (at most
-0.373; LegalBert-pt 0.522 vs DeepSeek-V4-Flash 0.373).
+**0.871**), leads the strongest supervised baseline, the legal-domain **LegalBert-pt**
+(**0.821**), by +0.049, 95% CI [−0.004, +0.103], *p* = 0.070 — a difference that is not
+significant, and even less so after Holm correction over all 171 pairs
+(*p*<sub>Holm</sub> = 1.00). The leader's group — the models not distinguishable from
+DeepSeek-V4-Flash after the correction — holds three LLMs (GPT-4.1 0.823, GPT-5.1 0.811)
+and three encoders (LegalBert-pt, BERTimbau-large 0.813, BERTimbau-base 0.778); only
+the BiLSTM-CRF (0.621) and the other six domain-adapted encoders (0.585–0.702) are
+significantly behind. Among the supervised models, the three leaders are
+indistinguishable from one another (LegalBert-pt vs BERTimbau-large +0.009) and
+distinguishable from the other seven: 19 of the 45 supervised contrasts survive Holm
+correction, every one of them opposing a leader to one of the seven. The residual gap
+sits on the rarest class: on `RECOMENDACAO` (32 instances) the leading LLMs reach span
+F1 0.896–0.921, BERTimbau-large 0.821 and LegalBert-pt 0.787, while seven supervised
+models stay below 0.52. On micro span F1 the gap is +0.043 and LegalBert-pt (0.835)
+ranks second overall. Under exact boundary matching the picture inverts: all ten
+supervised models (0.446–0.686) beat all nine LLMs (at most 0.421; LegalBert-pt 0.686 vs
+DeepSeek-V4-Flash 0.421).
 
 ![Precision vs recall, all 19 models](paper/precision_recall.png)
 
-Supervised models favour precision (0.785–0.853) over recall (0.613–0.691);
-the leading LLMs lean toward recall (0.837–0.881, with precision 0.638–0.813). That profile motivates evaluating LLMs as
+Supervised models favour precision (0.776–0.869) over recall (0.639–0.828); GPT-4.1
+and GPT-5.1 lean toward recall (0.886–0.893, with precision 0.728–0.760), while the
+leader is balanced (0.884 / 0.872). That profile motivates evaluating LLMs as
 pre-annotators in a human-in-the-loop pipeline, although the relative cost of
 correcting insertions versus omissions was not measured.
 
@@ -134,25 +136,25 @@ correcting insertions versus omissions was not measured.
 
 | Model | Type | Token F1 | Span P | Span R | Span F1 (micro) | Span F1 (macro) |
 |---|---|---:|---:|---:|---:|---:|
-| DeepSeek-V4-Flash | LLM | 0.869 | 0.813 | 0.837 | 0.825 | **0.799** |
-| GPT-4.1 | LLM | 0.841 | 0.700 | 0.859 | 0.772 | 0.749 |
-| GPT-5.1 | LLM | 0.816 | 0.672 | 0.854 | 0.752 | 0.748 |
-| GPT-4.1-mini | LLM | 0.825 | 0.638 | 0.881 | 0.740 | 0.719 |
-| GPT-5.2 | LLM | 0.790 | 0.555 | 0.871 | 0.678 | 0.692 |
-| LegalBert-pt | supervised | 0.796 | 0.823 | 0.691 | 0.751 | 0.613 |
-| Qwen2.5-72B | LLM | 0.749 | 0.586 | 0.788 | 0.672 | 0.605 |
-| BERTimbau-large | supervised | 0.797 | 0.785 | 0.691 | 0.735 | 0.605 |
-| GPT-5-mini | LLM | 0.601 | 0.299 | 0.912 | 0.450 | 0.583 |
-| BiLSTM-CRF | supervised | 0.813 | 0.825 | 0.676 | 0.743 | 0.567 |
-| Legal-BERT-STF | supervised | 0.775 | 0.811 | 0.659 | 0.728 | 0.552 |
-| GovBERT-BR | supervised | 0.748 | 0.795 | 0.642 | 0.711 | 0.539 |
-| JurisBERT | supervised | 0.747 | 0.797 | 0.640 | 0.710 | 0.532 |
-| Legal-BERTimbau-base | supervised | 0.750 | 0.807 | 0.633 | 0.709 | 0.530 |
-| BERTimbauLaw | supervised | 0.761 | 0.838 | 0.640 | 0.726 | 0.527 |
-| BERTimbau-base | supervised | 0.750 | 0.853 | 0.635 | 0.728 | 0.524 |
-| LegalBERTPT-br | supervised | 0.734 | 0.790 | 0.613 | 0.690 | 0.518 |
-| GPT-4.1-nano | LLM | 0.623 | 0.388 | 0.630 | 0.481 | 0.435 |
-| Llama-3.3-70B | LLM | 0.416 | 0.642 | 0.248 | 0.358 | 0.250 |
+| DeepSeek-V4-Flash | LLM | 0.914 | 0.884 | 0.872 | 0.878 | **0.871** |
+| GPT-4.1 | LLM | 0.886 | 0.760 | 0.893 | 0.821 | 0.823 |
+| LegalBert-pt | supervised | 0.882 | 0.843 | 0.828 | 0.835 | 0.821 |
+| BERTimbau-large | supervised | 0.874 | 0.832 | 0.809 | 0.820 | 0.813 |
+| GPT-5.1 | LLM | 0.859 | 0.728 | 0.886 | 0.799 | 0.811 |
+| BERTimbau-base | supervised | 0.869 | 0.831 | 0.793 | 0.811 | 0.778 |
+| GPT-4.1-mini | LLM | 0.865 | 0.686 | 0.907 | 0.781 | 0.771 |
+| GPT-5.2 | LLM | 0.834 | 0.603 | 0.907 | 0.724 | 0.755 |
+| LegalBERTPT-br | supervised | 0.813 | 0.786 | 0.718 | 0.750 | 0.702 |
+| JurisBERT | supervised | 0.813 | 0.776 | 0.720 | 0.747 | 0.681 |
+| Legal-BERTimbau-base | supervised | 0.857 | 0.781 | 0.772 | 0.776 | 0.671 |
+| Qwen2.5-72B | LLM | 0.792 | 0.637 | 0.821 | 0.717 | 0.664 |
+| BERTimbauLaw | supervised | 0.825 | 0.869 | 0.725 | 0.790 | 0.643 |
+| GPT-5-mini | LLM | 0.624 | 0.314 | 0.921 | 0.469 | 0.629 |
+| Legal-BERT-STF | supervised | 0.812 | 0.818 | 0.704 | 0.757 | 0.625 |
+| BiLSTM-CRF | supervised | 0.830 | 0.828 | 0.639 | 0.721 | 0.621 |
+| GovBERT-BR | supervised | 0.774 | 0.853 | 0.662 | 0.745 | 0.585 |
+| GPT-4.1-nano | LLM | 0.643 | 0.411 | 0.639 | 0.500 | 0.451 |
+| Llama-3.3-70B | LLM | 0.425 | 0.673 | 0.249 | 0.364 | 0.267 |
 
 Source: [`model_evaluation/C_main_results.csv`](dataset/results/models_outputs/model_evaluation/C_main_results.csv).
 </details>
@@ -163,8 +165,8 @@ the BiLSTM-CRF takes up to 1,100 tokens, so no document is truncated
 (`research.release.check_alignment` verifies it). Supervised learning rate and warmup were selected once on
 a global 80/20 split rather than inside each cross-validation fold, which can bias
 supervised scores upward. The ranking is stable across IoU thresholds 0.3–0.7 and
-across all three reference annotations, but changes substantially under exact
-matching.
+across the pre-adjudication annotation and the two independent annotations, but
+changes substantially under exact matching.
 
 Every number cited in the paper is regenerated into
 [`model_evaluation/REPORT.md`](dataset/results/models_outputs/model_evaluation/REPORT.md), one section
@@ -178,6 +180,13 @@ Quality is measured, not asserted.
   flagged 794 suspicious token groups; the 567 above an ensemble confidence of 0.95
   were reviewed one by one, and only 23 (4.1%) were actually changed — the audit
   mostly *confirmed* the original annotation. Both versions ship, paired.
+- **Adjudication.** The divergences between the audited annotation and the two
+  independent annotators (167 items in 85 documents, matched at IoU ≥ 0.5) were
+  adjudicated one by one by the first author in an interface that shows the three
+  annotations and never a model prediction: 33 spans adopted, 90 rejected, 14 removed,
+  one re-delimited. The decisions ship in
+  [`dataset/errors/adjudication-decisions.json`](dataset/errors/adjudication-decisions.json)
+  and are applied as a second pass by `export_dataset`.
 - **Inter-annotator agreement.** The whole corpus was independently re-annotated,
   blind, by two staff of the Court unit that feeds the registry. Token-level Fleiss
   κ = **0.879** (pairwise Cohen's κ 0.864–0.899); pairwise span F1 between
@@ -230,7 +239,7 @@ decicontas.br/
 ## Dataset versions
 
 - **`decicontas/`** — the canonical release: 861 documents with the reviewed
-  cleanlab corrections applied.
+  cleanlab corrections and the adjudication decisions applied.
 - **`decicontas-before-correction/`** — the same 861 documents with the original gold
   annotations, so the effect of the audit can be measured.
 
@@ -247,9 +256,11 @@ Releases (git tags; `CITATION.cff` carries the current one):
   proceedings pseudonymised (synthetic names, one token per token; the names of the
   Court's members are kept). Annotations, token counts and every reported metric are
   unchanged; the few-shot exemplars and the stored LLM predictions follow the same map.
-  All results in the JURIX 2026 paper and in the dissertation refer to this release.
-- Planned — adjudication of the annotator-study disagreements and decisions validated
-  through the Court's human-in-the-loop registry pipeline.
+- **v1.3.0** — 2026-10-20: divergences between the audited annotation and the two
+  independent annotators adjudicated (167 items in 85 documents; +34 / −16 spans) and
+  applied as a second pass; 429 entities (32 `RECOMENDACAO`). All results in the
+  JURIX 2026 paper and in the dissertation refer to this release.
+- Planned — decisions validated through the Court's human-in-the-loop registry pipeline.
 
 ## Paper
 
@@ -279,7 +290,7 @@ GitHub renders it under *"Cite this repository"* — and is reproduced here; a Z
 will replace the URL once the release is archived.
 
 Lima EP, de Menezes-Neto EJ. *decicontas.br: a Named Entity Recognition dataset of Brazilian
-audit-court decisions* (version 1.2.0) [data set]. 2026. Available from:
+audit-court decisions* (version 1.3.0) [data set]. 2026. Available from:
 https://github.com/eduardoplima/decicontas.br. Licensed under CC BY 4.0.
 
 ```bibtex
@@ -289,7 +300,7 @@ https://github.com/eduardoplima/decicontas.br. Licensed under CC BY 4.0.
                   audit-court decisions},
   year         = {2026},
   howpublished = {\url{https://github.com/eduardoplima/decicontas.br}},
-  note         = {Version 1.2.0 (2026-10-17), CC BY 4.0}
+  note         = {Version 1.3.0 (2026-10-20), CC BY 4.0}
 }
 ```
 

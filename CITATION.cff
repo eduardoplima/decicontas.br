@@ -7,12 +7,13 @@ abstract: >-
   four audit-relevant entity types (MULTA, OBRIGACAO, RESSARCIMENTO,
   RECOMENDACAO). The corpus is distributed in paired pre- and post-review
   versions, audited for label errors with confident learning, and validated by
-  an independent three-annotator agreement study. Release bundles are provided
+  an independent three-annotator agreement study whose divergences were
+  adjudicated. Release bundles are provided
   in JSON, JSONL, CoNLL-2003 and BRAT formats, together with the evaluation and
   training pipelines used to produce the reported results.
 type: dataset
-version: 1.2.0
-date-released: "2026-10-17"
+version: 1.3.0
+date-released: "2026-10-20"
 license: CC-BY-4.0
 repository-code: "https://github.com/eduardoplima/decicontas.br"
 authors:
