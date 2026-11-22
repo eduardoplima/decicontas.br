@@ -154,7 +154,7 @@ Nenhum.
 
 Sim:
 
-1. **Rotulagem manual** — os 866 documentos importados foram anotados no nível de *span* no Label Studio, com registro dos limites de início e fim de cada entidade, seguindo diretrizes de delimitação ancoradas no dispositivo da decisão (o comando, não sua fundamentação) e restritas às deliberações dirigidas aos jurisdicionados (`research/domain_rules.py` codifica a exclusão das dirigidas a unidades do próprio Tribunal). Rótulos finos usados durante a anotação foram colapsados nas quatro categorias de avaliação: `MULTA_FIXA`/`MULTA_PERCENTUAL` → `MULTA`; `OBRIGACAO_MULTA` → `OBRIGACAO`.
+1. **Rotulagem manual** — os 866 documentos importados foram anotados no nível de *span* no Label Studio, com registro dos limites de início e fim de cada entidade, seguindo diretrizes de delimitação ancoradas no dispositivo da decisão (o comando, não sua fundamentação) e restritas às deliberações dirigidas aos jurisdicionados (`research/annotation_scope.py` codifica a exclusão das dirigidas a unidades do próprio Tribunal). Rótulos finos usados durante a anotação foram colapsados nas quatro categorias de avaliação: `MULTA_FIXA`/`MULTA_PERCENTUAL` → `MULTA`; `OBRIGACAO_MULTA` → `OBRIGACAO`.
 2. **Tokenização** — por espaço em branco (`re.finditer(r'\S+', text)`), única em todo o *pipeline* (anotação → auditoria → treino → avaliação), implementada em `research/dataset_io.py`, fonte única de verdade para índices de *tokens*.
 3. **Projeção BIO** — os *spans* de caracteres são projetados para rótulos BIO por *token* (9 classes).
 4. **Remoção de instâncias** — os 5 documentos usados como exemplares *few-shot* nos *prompts* (IDs 6, 782, 790, 817 e 852 do export original) foram removidos, resultando em 861 documentos.

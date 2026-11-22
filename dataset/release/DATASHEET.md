@@ -158,7 +158,7 @@ None.
 
 Yes:
 
-1. **Manual labelling** — the 866 imported documents were annotated at the span level in Label Studio, recording the start and end boundaries of each entity, following delimitation guidelines anchored on the operative part of the decision (the command, not its reasoning) and restricted to deliberations addressed to the audited bodies (`research/domain_rules.py` encodes the exclusion of those addressed to the Tribunal's own units). Fine-grained labels used during annotation were collapsed into the four evaluation categories: `MULTA_FIXA`/`MULTA_PERCENTUAL` → `MULTA`; `OBRIGACAO_MULTA` → `OBRIGACAO`.
+1. **Manual labelling** — the 866 imported documents were annotated at the span level in Label Studio, recording the start and end boundaries of each entity, following delimitation guidelines anchored on the operative part of the decision (the command, not its reasoning) and restricted to deliberations addressed to the audited bodies (`research/annotation_scope.py` encodes the exclusion of those addressed to the Tribunal's own units). Fine-grained labels used during annotation were collapsed into the four evaluation categories: `MULTA_FIXA`/`MULTA_PERCENTUAL` → `MULTA`; `OBRIGACAO_MULTA` → `OBRIGACAO`.
 2. **Tokenisation** — whitespace-based (`re.finditer(r'\S+', text)`), identical across the whole pipeline (annotation → audit → training → evaluation), implemented in `research/dataset_io.py`, the single source of truth for token indices.
 3. **BIO projection** — character spans are projected onto per-token BIO labels (9 classes).
 4. **Removal of instances** — the 5 documents reused as few-shot exemplars in the prompts (IDs 6, 782, 790, 817 and 852 of the original export) were removed, yielding 861 documents.

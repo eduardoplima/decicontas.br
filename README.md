@@ -85,7 +85,8 @@ Four formats ship per release: **JSON**, **JSONL** (HuggingFace-compatible),
 **CoNLL-2003** BIO and **BRAT** standoff. See
 [`dataset/release/README.md`](dataset/release/README.md) for the schema of each and
 [`DATASHEET.md`](dataset/release/DATASHEET.md) for provenance, collection and intended
-uses.
+uses. The annotation rules are in
+[`ANNOTATION_GUIDELINES.md`](dataset/release/ANNOTATION_GUIDELINES.md).
 
 > **Schema note.** `decicontas.jsonl` uses `spans` with `start_char`/`end_char` and a
 > string `id`; `decicontas.json` uses `entities` with `start`/`end` and an integer

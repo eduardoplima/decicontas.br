@@ -184,6 +184,9 @@ external-control secretariat (SECEX) or the legal counsel (CONJU) — are
 internal management acts that the CGAD sub-registries do not record, so
 neither version annotates them (`research/annotation_scope.py`).
 
+The delimitation rules for the four classes are in `ANNOTATION_GUIDELINES.md`
+(Portuguese: `ANNOTATION_GUIDELINES.pt-BR.md`).
+
 ## Formats
 
 Each version ships in four formats:

@@ -8,19 +8,29 @@
   "adjudication_generated_at": "2026-10-20T06:48:55+00:00",
   "files": [
     {
+      "path": "ANNOTATION_GUIDELINES.md",
+      "size_bytes": 6614,
+      "sha256": "b61170ffe5ef849e27b252abc91fb56eba04765a557b7ec41b4622144ea66482"
+    },
+    {
+      "path": "ANNOTATION_GUIDELINES.pt-BR.md",
+      "size_bytes": 6565,
+      "sha256": "92987e85a0e0fce639fa021d4fd2049d751b675d537decd77a41d57085a716f6"
+    },
+    {
       "path": "DATASHEET.md",
-      "size_bytes": 27587,
-      "sha256": "fd3e4f0453498b593c35aa480d0efe13700b6c2de1c67c62b8d6af8e6db27b0d"
+      "size_bytes": 27591,
+      "sha256": "3902517a536118c408d7aa8b9307b21edabd3fa1030eab92653fcd5384b4f9c9"
     },
     {
       "path": "DATASHEET.pt-BR.md",
-      "size_bytes": 28638,
-      "sha256": "c04ef1dc165ee21cbcd99289015cc62e29fc84f5681fa5f582621e58725c84d2"
+      "size_bytes": 28642,
+      "sha256": "5ab1c5998d66eb69184c7d6c966ea73aac4a7ab753394506b334c8b658c41c70"
     },
     {
       "path": "README.md",
-      "size_bytes": 5198,
-      "sha256": "92f8dd07707c03b7e805e26e4c7e441027092bb146f0179ac2e31102dcda3db4"
+      "size_bytes": 5325,
+      "sha256": "8dd850213cfa6e7a9d43a1d46a894970677d8ba85bf96603b0b41df4312781fb"
     },
     {
       "path": "decicontas/brat/1.ann",
