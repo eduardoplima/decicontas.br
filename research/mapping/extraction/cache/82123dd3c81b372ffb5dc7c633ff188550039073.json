@@ -1,0 +1,45 @@
+{
+  "referencia_curta": "Narayan et al. (2022)",
+  "titulo": "Detecting Regulation Violations for an Indian Regulatory Body through Multi Label Classification",
+  "autores": [
+    "Narayan, Ujwal",
+    "Parikh, Pulkit",
+    "Karlapalem, Kamalakar",
+    "Raman, Natraj"
+  ],
+  "ano": 2022,
+  "venue": "WWW '22 Companion (Companion Proceedings of the Web Conference)",
+  "pais_corpus": "India",
+  "idioma_corpus": "en",
+  "subdominio": "regulacao_compliance",
+  "tarefa_principal": "classificacao",
+  "tecnica_principal": "transformer_dominio",
+  "modelos_usados": [
+    "SEBI-BERT",
+    "BERT",
+    "LSTM",
+    "Hierarchical LSTM",
+    "SVM",
+    "Random Forest",
+    "MLP",
+    "GloVe",
+    "spaCy NER"
+  ],
+  "entidades_anotadas": [
+    "LAW",
+    "RegulationID",
+    "StatutoryFacts",
+    "ProceduralFacts",
+    "MaterialFacts",
+    "RelatedFacts"
+  ],
+  "num_classes_entidade": 50,
+  "esquema_anotacao": "nao_reportado",
+  "corpus_publico": true,
+  "f1_melhor_reportado": 62.0,
+  "metrica_tipo": "macro",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Criação de um corpus extraído automaticamente de processos da SEBI para detectar violações regulatórias e desenvolvimento de um classificador multilabel; fine-tuning de BERT no domínio (SEBI-BERT) alcançando F1 de 0.62, além da análise de desafios do domínio.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.9
+}

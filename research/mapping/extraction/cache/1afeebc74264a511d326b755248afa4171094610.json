@@ -1,0 +1,40 @@
+{
+  "referencia_curta": "Bordia (2024)",
+  "titulo": "Bonafide at LegalLens 2024 Shared Task: Using Lightweight DeBERTa Based Encoder For Legal Violation Detection and Resolution",
+  "autores": [
+    "Bordia, Shikha"
+  ],
+  "ano": 2024,
+  "venue": "Proceedings of the Natural Legal Language Processing Workshop 2024",
+  "pais_corpus": null,
+  "idioma_corpus": "en",
+  "subdominio": "outros",
+  "tarefa_principal": "pipeline_completo",
+  "tecnica_principal": "transformer_dominio",
+  "modelos_usados": [
+    "DeBERTaV3",
+    "GLiNER (gliner-bi-base-v1.0)",
+    "GLiNER (gliner-poly-small-v1.0)",
+    "GLiNER (gliner_small)",
+    "GLiNER (gliner_base)",
+    "GLiNER (gliner_small-v2.1)",
+    "GLiNER (gliner-bi-small-v1.0)",
+    "Tasksource (DeBERTaV3-based NLI model)",
+    "Mixtral-8x7B"
+  ],
+  "entidades_anotadas": [
+    "LAW",
+    "VIOLATION",
+    "VIOLATED BY",
+    "VIOLATED ON"
+  ],
+  "num_classes_entidade": 4,
+  "esquema_anotacao": "nao_reportado",
+  "corpus_publico": null,
+  "f1_melhor_reportado": 84.73,
+  "metrica_tipo": "macro",
+  "compara_llm_supervisionado": true,
+  "contribuicao_principal": "Propõe dois sistemas leves baseados em DeBERTa (um para NER e outro multitarefa para NLI), e usa geração sintética de dados (Mixtral-8x7B) para aumentar o conjunto NLI; alcança F1 de 60.01% (NER) e 84.73% (NLI) no desenvolvimento, ficando 6º e 5º nas leaderboards.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.85
+}

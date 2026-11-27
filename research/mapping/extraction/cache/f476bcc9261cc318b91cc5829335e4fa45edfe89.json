@@ -1,0 +1,41 @@
+{
+  "referencia_curta": "Sulis et al. (2020)",
+  "titulo": "Exploring Network Analysis in a Corpus-Based Approach to Legal Texts: a Case Study",
+  "autores": [
+    "Sulis, Emilio",
+    "Humphreys, Llio",
+    "Vernero, Fabiana",
+    "Amantea, Ilaria Angela",
+    "Di Caro, Luigi",
+    "Audrito, Davide",
+    "Montaldo, Stefano"
+  ],
+  "ano": 2020,
+  "venue": "COUrT - CAiSE for Legal Documents (Virtual Workshop)",
+  "pais_corpus": "European Union",
+  "idioma_corpus": "it",
+  "subdominio": "legislacao",
+  "tarefa_principal": "extracao_relacoes",
+  "tecnica_principal": "hibrido",
+  "modelos_usados": [],
+  "entidades_anotadas": [
+    "Conceptually Similar",
+    "Constitutive",
+    "Motivation",
+    "Impact",
+    "Indirect Internal",
+    "Via Other Law",
+    "Procedural",
+    "Contextual",
+    "Norm Group"
+  ],
+  "num_classes_entidade": 8,
+  "esquema_anotacao": "nao_reportado",
+  "corpus_publico": null,
+  "f1_melhor_reportado": null,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Propõe um framework em duas etapas que combina anotação manual (corpus gold standard) com análise de redes (graph-based metrics) para identificar e classificar relações implícitas entre recitais e artigos em legislação, e apresenta resultados iniciais de anotação e de caracterização de grafos.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.9
+}

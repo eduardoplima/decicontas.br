@@ -1,0 +1,40 @@
+{
+  "referencia_curta": "Naik et al. (2023)",
+  "titulo": "Legal Entity Extraction: An Experimental Study of NER Approach for Legal Documents",
+  "autores": [
+    "Naik, Varsha",
+    "Patel, Purvang",
+    "Kannan, Rajeswari"
+  ],
+  "ano": 2023,
+  "venue": "International Journal of Advanced Computer Science and Applications (IJACSA), Vol. 14, No. 3",
+  "pais_corpus": "India",
+  "idioma_corpus": "en",
+  "subdominio": "decisoes_judiciais",
+  "tarefa_principal": "ner",
+  "tecnica_principal": "transformer_generico",
+  "modelos_usados": [
+    "en_core_web_trf",
+    "en_core_sci_sm",
+    "spaCy pre-trained pipelines"
+  ],
+  "entidades_anotadas": [
+    "PERSON",
+    "LOC",
+    "DATE",
+    "ORG",
+    "COURT",
+    "LEGAL",
+    "ACT",
+    "CASE_NO"
+  ],
+  "num_classes_entidade": 8,
+  "esquema_anotacao": "span_based",
+  "corpus_publico": null,
+  "f1_melhor_reportado": 48.0,
+  "metrica_tipo": "weighted",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Criação de um corpus anotado de julgados indianos (≈30 documentos, ~5.000 sentenças) com entidades legais e avaliação de pipelines pré-treinados do spaCy (en_core_web_trf, en_core_sci_sm). Revisão comparativa de ferramentas de anotação e descrição do processo de anotação com Label Studio.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.75
+}

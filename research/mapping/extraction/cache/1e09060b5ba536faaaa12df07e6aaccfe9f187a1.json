@@ -1,0 +1,45 @@
+{
+  "referencia_curta": "Bakker et al. (2025)",
+  "titulo": "Semantic role extraction in law texts: a comparative analysis of language models for legal information extraction",
+  "autores": [
+    "Bakker, Roos M.",
+    "Schoevers, Akke J.",
+    "van Drie, Romy A. N.",
+    "Schraagen, Marijn P.",
+    "de Boer, Maaike H. T."
+  ],
+  "ano": 2025,
+  "venue": "Artificial Intelligence and Law",
+  "pais_corpus": "European Union",
+  "idioma_corpus": "en",
+  "subdominio": "legislacao",
+  "tarefa_principal": "outros",
+  "tecnica_principal": "transformer_dominio",
+  "modelos_usados": [
+    "LEGAL-BERT",
+    "SpanBERT",
+    "EURLEX-LEGAL-BERT",
+    "BERT",
+    "M-BERT",
+    "BERTje",
+    "GPT-3.5 Turbo",
+    "GPT-4",
+    "Rule-based (spaCy rules)",
+    "Mapping model (PropBank SRL + VerbAtlas mapping)"
+  ],
+  "entidades_anotadas": [
+    "action",
+    "actor",
+    "object",
+    "recipient"
+  ],
+  "num_classes_entidade": 4,
+  "esquema_anotacao": "nao_reportado",
+  "corpus_publico": true,
+  "f1_melhor_reportado": null,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": true,
+  "contribuicao_principal": "Apresenta um dataset inglês anotado com papéis Flint (2335 anotações), fine-tunes vários modelos (domain- e task-specific) e compara-os a abordagens com LLMs (GPT-3.5/GPT-4), mostrando que modelos fine-tuned domínio-específicos superam LLMs não fine-tuned.",
+  "citacao_relevante_para_tce": "Ferramentas e modelos para extrair e formalizar papéis normativos (Flint) de legislação — aplicável a apoio à interpretação normativa em auditoria e fiscalização.",
+  "confianca_extracao": 0.8
+}

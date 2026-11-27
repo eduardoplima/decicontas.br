@@ -1,0 +1,41 @@
+{
+  "referencia_curta": "Hong et al. (2021)",
+  "titulo": "Learning from Limited Labels for Long Legal Dialogue",
+  "autores": [
+    "Hong, Jenny",
+    "Chong, Derek",
+    "Manning, Christopher D."
+  ],
+  "ano": 2021,
+  "venue": "Natural Legal Language Processing Workshop 2021",
+  "pais_corpus": "United States",
+  "idioma_corpus": "en",
+  "subdominio": "criminal",
+  "tarefa_principal": "pipeline_completo",
+  "tecnica_principal": "hibrido",
+  "modelos_usados": [
+    "RoBERTa + BigBird (RoB+BB)",
+    "BERT-Base-Cased",
+    "RoBERTa",
+    "BigBird",
+    "Transformer-XL",
+    "XLNet",
+    "GPT-2",
+    "GPT-Neo"
+  ],
+  "entidades_anotadas": [
+    "job_offer",
+    "edu_level",
+    "risk_assess",
+    "last_writeup"
+  ],
+  "num_classes_entidade": null,
+  "esquema_anotacao": "nao_reportado",
+  "corpus_publico": false,
+  "f1_melhor_reportado": 89.0,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": true,
+  "contribuicao_principal": "Propõe uma arquitetura híbrida Reducer-Producer (rules-based Reducer para reduzir texto e Producer neural para gerar extrações/classes) para extrair fatores de caso de longos diálogos de audiências de liberdade condicional com poucos rótulos, atingindo F1s de 0.83–0.89.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.8
+}

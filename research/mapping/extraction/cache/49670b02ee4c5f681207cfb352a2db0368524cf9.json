@@ -1,0 +1,44 @@
+{
+  "referencia_curta": "Chalkidis et al. (2017)",
+  "titulo": "Extracting Contract Elements",
+  "autores": [
+    "Chalkidis, Ilias",
+    "Androutsopoulos, Ion",
+    "Michos, Achilleas"
+  ],
+  "ano": 2017,
+  "venue": "ICAIL '17 (Proceedings of the 16th International Conference on Artificial Intelligence and Law)",
+  "pais_corpus": null,
+  "idioma_corpus": "en",
+  "subdominio": "contratos",
+  "tarefa_principal": "ner",
+  "tecnica_principal": "hibrido",
+  "modelos_usados": [
+    "LogisticRegression",
+    "LinearSVM",
+    "word2vec (pre-trained embeddings)",
+    "spaCy NER (baseline)"
+  ],
+  "entidades_anotadas": [
+    "ContractTitle",
+    "ContractingParties",
+    "StartDate",
+    "EffectiveDate",
+    "TerminationDate",
+    "ContractPeriod",
+    "ContractValue",
+    "GoverningLaw",
+    "Jurisdiction",
+    "LegislationReferences",
+    "ClauseHeadings"
+  ],
+  "num_classes_entidade": 11,
+  "esquema_anotacao": "span_based",
+  "corpus_publico": true,
+  "f1_melhor_reportado": 86.0,
+  "metrica_tipo": "macro",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Disponibiliza um benchmark de ~3,500 contratos ingleses anotados com 11 tipos de elementos contratuais e um corpus não anotado de ~750k contratos para treinar embeddings; propõe e compara métodos (LR/SVM com features manuais, embeddings e regras) e demonstra que um método híbrido (ML + regras) atinge os melhores resultados.",
+  "citacao_relevante_para_tce": "Extração de datas, partes e valores de contratos — útil para localizar contratos ativos, durações e detectar transações suspeitas, aplicável a controle externo/auditoria.",
+  "confianca_extracao": 0.9
+}

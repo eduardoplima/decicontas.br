@@ -1,0 +1,29 @@
+% Parágrafo descritivo da categoria "Híbrido" usada nas figuras e tabelas
+% de extração estruturada. Inclui referências cruzadas para
+% \ref{fig:bubble-tecnica-ano}, \ref{fig:bubble-tecnica-subdominio} e
+% \ref{tab:resumo-artigos}.
+
+A categoria \emph{Híbrido}, que concentra \percHibrido{} dos artigos
+incluídos no mapeamento (\totalIncluidos{} no total), agrupa trabalhos
+cuja arquitetura predominante combina, de forma essencial, mais de
+uma família técnica e que, por isso, não admitem classificação
+unívoca em nenhuma das demais categorias. Quatro padrões recorrentes
+foram identificados nesse grupo. O primeiro corresponde a
+\textbf{empilhamentos neurais compostos}, nos quais camadas BiLSTM
+e/ou CRF são acopladas sobre um \emph{transformer} pré-treinado
+(e.g., RoBERTa--BiLSTM--CRF, BERT--BiLSTM--CRF). O segundo combina
+\textbf{regras simbólicas com modelos estatísticos ou neurais},
+tipicamente dicionários, listas controladas ou ontologias operando
+em conjunto com classificadores supervisionados. O terceiro reúne
+\textbf{pipelines multi-etapa}, nos quais o reconhecimento de
+entidades é apenas um módulo de uma cadeia maior que inclui extração
+de relações, sumarização ou construção de grafos de conhecimento. O
+quarto agrupa \textbf{ensembles de aprendizado de máquina clássico}
+(Random Forest, SGD, MLP) operando sobre representações textuais
+como TF--IDF ou FastText, sem componente de aprendizado profundo.
+Embora metodologicamente distintos, esses trabalhos compartilham a
+propriedade de não serem redutíveis a uma única família de técnica,
+motivo pelo qual aparecem consolidados sob o mesmo rótulo nas
+Figuras~\ref{fig:bubble-tecnica-ano}
+e~\ref{fig:bubble-tecnica-subdominio} e na
+Tabela~\ref{tab:resumo-artigos}.

@@ -1,0 +1,40 @@
+{
+  "referencia_curta": "Au et al. (2022)",
+  "titulo": "E-NER — An Annotated Named Entity Recognition Corpus of Legal Text",
+  "autores": [
+    "Au, Ting Wai Terence",
+    "Lampos, Vasileios",
+    "Cox, Ingemar J."
+  ],
+  "ano": 2022,
+  "venue": "Proceedings of the Natural Legal Language Processing Workshop",
+  "pais_corpus": "United States",
+  "idioma_corpus": "en",
+  "subdominio": "outros",
+  "tarefa_principal": "ner",
+  "tecnica_principal": "hibrido",
+  "modelos_usados": [
+    "dictionary_baseline",
+    "HMM",
+    "CRF",
+    "BERT (bert-base-uncased)"
+  ],
+  "entidades_anotadas": [
+    "Person",
+    "Location",
+    "Business",
+    "Government",
+    "Court",
+    "Legislation/Act",
+    "Miscellaneous"
+  ],
+  "num_classes_entidade": 7,
+  "esquema_anotacao": "bio_iob",
+  "corpus_publico": true,
+  "f1_melhor_reportado": 96.1,
+  "metrica_tipo": "micro",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Apresenta E-NER, um corpus público anotado de NER para textos legais baseado em documentos EDGAR (52 ficheiros, ~403k tokens, 7 classes). Mostra que modelos treinados em inglês geral degradam muito em texto legal e que fine-tuning em E-NER (BERT) alcança alta performance (96.1% micro-F1).",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.9
+}

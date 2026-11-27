@@ -1,0 +1,35 @@
+{
+  "referencia_curta": "Puccetti et al. (nao_reportado)",
+  "titulo": "A simple and Fast Method for Named Entity Context Extraction from Patents",
+  "autores": [
+    "Puccetti, Giovanni",
+    "Chiarello, Filippo",
+    "Fantoni, Gualtiero"
+  ],
+  "ano": 0,
+  "venue": null,
+  "pais_corpus": null,
+  "idioma_corpus": "en",
+  "subdominio": "outros",
+  "tarefa_principal": "ner",
+  "tecnica_principal": "transformer_generico",
+  "modelos_usados": [
+    "BERT",
+    "Universal Sentence Encoder",
+    "SVM",
+    "Decision Tree",
+    "Neural Network"
+  ],
+  "entidades_anotadas": [
+    "user (user of the invention)"
+  ],
+  "num_classes_entidade": 2,
+  "esquema_anotacao": "nao_reportado",
+  "corpus_publico": null,
+  "f1_melhor_reportado": 94.0,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": true,
+  "contribuicao_principal": "Propõe um método baseado em conhecimento para criar automaticamente conjuntos de treino para NER em patentes (usando pronome como proxy para a entidade 'user') e compara vários classificadores; demonstra que modelos transformer pré-treinados (BERT) fine-tuned alcançam melhor desempenho sem anotações manuais.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.75
+}

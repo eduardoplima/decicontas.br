@@ -1,0 +1,40 @@
+{
+  "referencia_curta": "Taniguchi et al. (2018)",
+  "titulo": "Legal Question Answering System using FrameNet",
+  "autores": [
+    "Taniguchi, Ryosuke",
+    "Hoshino, Reina",
+    "Kano, Yoshinobu"
+  ],
+  "ano": 2018,
+  "venue": null,
+  "pais_corpus": "Japan",
+  "idioma_corpus": "ja",
+  "subdominio": "legislacao",
+  "tarefa_principal": "pipeline_completo",
+  "tecnica_principal": "regras",
+  "modelos_usados": [
+    "FrameNet",
+    "Japanese FrameNet",
+    "Japanese WordNet",
+    "KNP",
+    "JUMAN"
+  ],
+  "entidades_anotadas": [
+    "predicate",
+    "subject",
+    "object",
+    "frame",
+    "frame_element",
+    "clause"
+  ],
+  "num_classes_entidade": null,
+  "esquema_anotacao": "nao_reportado",
+  "corpus_publico": true,
+  "f1_melhor_reportado": null,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Propõe um sistema rule-based de pergunta/resposta yes/no para domínio estatutário que integra análise de predicado-argumento (JUMAN/KNP) com FrameNet para detectar correspondências semânticas; aplicado ao COLIEE 2018 (Task 4) e alcançou o segundo melhor resultado.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.85
+}

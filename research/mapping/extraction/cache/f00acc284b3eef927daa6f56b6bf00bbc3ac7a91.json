@@ -1,0 +1,47 @@
+{
+  "referencia_curta": "Çetindag˘ et al. (2022)",
+  "titulo": "Named-entity recognition in Turkish legal texts",
+  "autores": [
+    "Çetindag˘, Can",
+    "Yazıcıog˘lu, Berkay",
+    "Koç, Aykut"
+  ],
+  "ano": 2022,
+  "venue": "Natural Language Engineering",
+  "pais_corpus": "Turkey",
+  "idioma_corpus": "tr",
+  "subdominio": "decisoes_judiciais",
+  "tarefa_principal": "ner",
+  "tecnica_principal": "bilstm_crf",
+  "modelos_usados": [
+    "GloVe",
+    "Morph2Vec",
+    "GloVe+Morph2Vec (hybrid)",
+    "BiLSTM-CRF",
+    "LSTM-LSTM-CRF",
+    "CNN-LSTM-CRF",
+    "BiLSTM (char)",
+    "CNN (char)",
+    "CRF"
+  ],
+  "entidades_anotadas": [
+    "PER",
+    "LOC",
+    "ORG",
+    "DAT",
+    "LEG",
+    "COU",
+    "REF",
+    "OFF",
+    "O"
+  ],
+  "num_classes_entidade": 8,
+  "esquema_anotacao": "bio_iob",
+  "corpus_publico": true,
+  "f1_melhor_reportado": 92.27,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Compilação e disponibilização de um corpus anotado para NER no domínio jurídico em turco e proposta/avaliação de várias arquiteturas (BiLSTM/CRF, CNN+LSTM+CRF) e representações (GloVe, Morph2Vec, híbrido), estabelecendo baseline com 92.27% F1.",
+  "citacao_relevante_para_tce": "Corpus e NE específicas: legislação (LEG), tribunal (COU), referência (REF) e diário oficial (OFF) — úteis para extração de informações em fiscalização e controle externo.",
+  "confianca_extracao": 0.8
+}

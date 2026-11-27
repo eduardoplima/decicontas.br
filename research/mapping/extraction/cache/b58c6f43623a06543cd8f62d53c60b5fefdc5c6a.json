@@ -1,0 +1,48 @@
+{
+  "referencia_curta": "Mudalige et al. (2020)",
+  "titulo": "SigmaLaw-ABSA: Dataset for Aspect-Based Sentiment Analysis in Legal Opinion Texts",
+  "autores": [
+    "Mudalige, Chanika Ruchini",
+    "Karunarathna, Dilini",
+    "Rajapaksha, Isanka",
+    "de Silva, Nisansa",
+    "Ratnayaka, Gathika",
+    "Perera, Amal Shehan",
+    "Pathirana, Ramesh"
+  ],
+  "ano": 2020,
+  "venue": null,
+  "pais_corpus": "United States",
+  "idioma_corpus": "en",
+  "subdominio": "decisoes_judiciais",
+  "tarefa_principal": "pipeline_completo",
+  "tecnica_principal": "hibrido",
+  "modelos_usados": [
+    "TD-LSTM",
+    "TC-LSTM",
+    "AE-LSTM",
+    "AT-LSTM",
+    "ATAE-LSTM",
+    "IAN",
+    "MemNet",
+    "Cabasc",
+    "RAM",
+    "GloVe"
+  ],
+  "entidades_anotadas": [
+    "party_members",
+    "party_category",
+    "aspect_terms",
+    "sentiment_polarity",
+    "overall_sentiment"
+  ],
+  "num_classes_entidade": 2,
+  "esquema_anotacao": "json_indices",
+  "corpus_publico": true,
+  "f1_melhor_reportado": 60.22,
+  "metrica_tipo": "macro",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Introduz um dataset humano-anotado (SigmaLaw-ABSA) de 2000 sentenças de textos de opiniões legais em inglês, anotado para tarefas de ABSA (extração de aspectos/partes, polaridades por parte e sentimento geral), e apresenta resultados baselines com modelos deep-learning.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.8
+}

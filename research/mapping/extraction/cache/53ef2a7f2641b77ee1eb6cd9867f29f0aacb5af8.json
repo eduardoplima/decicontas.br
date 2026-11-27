@@ -1,0 +1,38 @@
+{
+  "referencia_curta": "Siragusa et al. (2020)",
+  "titulo": "Relating Legal Entities via Open Information Extraction",
+  "autores": [
+    "Siragusa, Giovanni",
+    "Nanda, Rohan",
+    "De Paiva, Valeria",
+    "Di Caro, Luigi"
+  ],
+  "ano": 2020,
+  "venue": "Springer Verlag (conference proceedings, LNCS)",
+  "pais_corpus": "European Union",
+  "idioma_corpus": "en",
+  "subdominio": "legislacao",
+  "tarefa_principal": "extracao_relacoes",
+  "tecnica_principal": "regras",
+  "modelos_usados": [
+    "LegOIE (proposto)",
+    "Stanford CoreNLP",
+    "fastText",
+    "IATE (terminology resource)",
+    "Ollie",
+    "Reverb",
+    "ClausIE"
+  ],
+  "entidades_anotadas": [
+    "IATE_concept (legal term / multi-word legal expressions)"
+  ],
+  "num_classes_entidade": null,
+  "esquema_anotacao": "span_based",
+  "corpus_publico": true,
+  "f1_melhor_reportado": null,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Apresenta LegOIE, um sistema OIE que usa o dicionário IATE e análise de dependências para descobrir e extrair triples (entidade; frase relacional; entidade) em textos legais, e mostra melhora de precisão em comparação com Ollie, Reverb e ClausIE.",
+  "citacao_relevante_para_tce": "Extrai relações a partir de diretivas europeias usando vocabulário jurídico (IATE), útil para enriquecer recursos semânticos em tarefas de interpretação normativa e controle externo.",
+  "confianca_extracao": 0.8
+}

@@ -1,0 +1,44 @@
+{
+  "referencia_curta": "García-Constantino et al. (2017)",
+  "titulo": "CLIEL: Context-Based Information Extraction from Commercial Law Documents",
+  "autores": [
+    "García-Constantino, Matías",
+    "Atkinson, Katie",
+    "Bollegala, Danushka",
+    "Chapman, Karl",
+    "Coenen, Frans",
+    "Roberts, Claire",
+    "Robson, Katy"
+  ],
+  "ano": 2017,
+  "venue": "ICAIL '17",
+  "pais_corpus": null,
+  "idioma_corpus": "en",
+  "subdominio": "contratos",
+  "tarefa_principal": "pipeline_completo",
+  "tecnica_principal": "regras",
+  "modelos_usados": [
+    "JAPE",
+    "GATE",
+    "RLDT",
+    "ANNIE"
+  ],
+  "entidades_anotadas": [
+    "Dateofdocument",
+    "Nameofparty",
+    "Nameofcounterparty",
+    "Governinglaw",
+    "Jurisdiction",
+    "Section",
+    "Subsection"
+  ],
+  "num_classes_entidade": 5,
+  "esquema_anotacao": "xml",
+  "corpus_publico": false,
+  "f1_melhor_reportado": 91.5,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Propõe o sistema CLIEL, um ambiente de extração de informação sensível ao layout para documentos de direito comercial, que combina NLP (GATE/ANNIE), regras JAPE e uma fase de detecção de layout (RLD/RLDT) para gerar anotações XML e extrair datapoints. Mostra, em um corpus de 97 documentos, melhoria significativa na extração de campos factuais (ex.: governing law, jurisdiction) em comparação a baselines não contextuais.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.9
+}

@@ -1,0 +1,50 @@
+{
+  "referencia_curta": "Nigam e Deroy (2023)",
+  "titulo": "Fact-based Court Judgment Prediction",
+  "autores": [
+    "Nigam, Shubham Kumar",
+    "Deroy, Aniket"
+  ],
+  "ano": 2023,
+  "venue": "Forum for Information Retrieval Evaluation (FIRE 2023), Panjim, India",
+  "pais_corpus": "India",
+  "idioma_corpus": "en",
+  "subdominio": "decisoes_judiciais",
+  "tarefa_principal": "classificacao",
+  "tecnica_principal": "transformer_generico",
+  "modelos_usados": [
+    "BERT",
+    "LegalBERT",
+    "InLegalBert",
+    "InCaseLawBert",
+    "RoBERTa",
+    "XLNet",
+    "HierarchicalXLNET",
+    "XLNet-large",
+    "Bert-base",
+    "Hierarchical BiLSTM-CRF",
+    "DELSumm (algoritmo de sumarização, não é um modelo de linguagem)"
+  ],
+  "entidades_anotadas": [
+    "Fact",
+    "Issue",
+    "FinalJudgement",
+    "Argument",
+    "Statute",
+    "RatioOfDecision",
+    "Precedent",
+    "Person",
+    "Organization",
+    "Location",
+    "Judge"
+  ],
+  "num_classes_entidade": 7,
+  "esquema_anotacao": "nao_reportado",
+  "corpus_publico": true,
+  "f1_melhor_reportado": 77.79,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Apresenta um estudo focado em predição de julgamentos baseada apenas em fatos (fact-based), avaliando várias arquiteturas transformer e variantes de um sumarizador (DELSumm) para extrair fatos; descreve dificuldades práticas e lacunas em relação ao trabalho ILDCforCJPE original, e propõe estratégias de enriquecimento por recuperação de casos e integração de conhecimento externo.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.85
+}

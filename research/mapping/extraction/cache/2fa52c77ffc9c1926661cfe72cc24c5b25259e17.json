@@ -1,0 +1,39 @@
+{
+  "referencia_curta": "Andersson et al. (2016)",
+  "titulo": "When is the Time Ripe for Natural Language Processing for Patent Passage Retrieval?",
+  "autores": [
+    "Andersson, Linda",
+    "Lupu, Mihai",
+    "Palotti, Joao",
+    "Hanbury, Allan",
+    "Rauber, Andreas"
+  ],
+  "ano": 2016,
+  "venue": "CIKM '16 (ACM Conference on Information and Knowledge Management)",
+  "pais_corpus": null,
+  "idioma_corpus": "en",
+  "subdominio": "outros",
+  "tarefa_principal": "outros",
+  "tecnica_principal": "hibrido",
+  "modelos_usados": [
+    "LMJM (Language Model with Jelinek-Mercer)",
+    "BM25",
+    "VectorSpaceModel",
+    "RandomForest",
+    "Stanford PoS-tagger",
+    "Solr"
+  ],
+  "entidades_anotadas": [
+    "multi-word terms (MWT)",
+    "noun phrases (NP)"
+  ],
+  "num_classes_entidade": 2,
+  "esquema_anotacao": "span_based",
+  "corpus_publico": true,
+  "f1_melhor_reportado": 85.1,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Propõe um método híbrido (linguístico + estatístico + uso de metadados IPC) para extrair termos técnicos (MWTs) e mostra que combinar palavras e frases (NPs) e mesclar índices de documento e passagem melhora significativamente a recuperação de passagens em CLEF-IP 2013.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.88
+}

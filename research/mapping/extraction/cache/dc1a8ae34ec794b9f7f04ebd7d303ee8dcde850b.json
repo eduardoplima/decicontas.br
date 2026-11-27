@@ -1,0 +1,27 @@
+{
+  "referencia_curta": "Qi et al. (2021)",
+  "titulo": "Dependency Parsing-based Entity Relation Extraction over Chinese Complex Text",
+  "autores": [
+    "Qi, Shanshan",
+    "Zheng, Limin",
+    "Shang, Feiyu"
+  ],
+  "ano": 2021,
+  "venue": "Transactions on Asian and Low-Resource Language Information Processing (ACM Trans. Asian Low-Resour. Lang. Inf. Process.)",
+  "pais_corpus": "China",
+  "idioma_corpus": "zh",
+  "subdominio": "outros",
+  "tarefa_principal": "extracao_relacoes",
+  "tecnica_principal": "regras",
+  "modelos_usados": [],
+  "entidades_anotadas": [],
+  "num_classes_entidade": null,
+  "esquema_anotacao": "nao_reportado",
+  "corpus_publico": true,
+  "f1_melhor_reportado": 70.55,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Propõe Clause_CORE, um método não supervisionado que decompoõe sentenças chinesas complexas e complementa dinamicamente componentes perdidos, aplicando parsing de dependência e regras gramaticais chinesas para extração aberta de entidades e relações; demonstra ganhos de precisão, recall e F1 em datasets Wikipedia, Sina News e mistos.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.8
+}

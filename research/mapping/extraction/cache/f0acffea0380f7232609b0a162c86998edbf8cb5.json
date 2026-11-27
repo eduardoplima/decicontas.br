@@ -1,0 +1,33 @@
+{
+  "referencia_curta": "Niu e Zeng (2018)",
+  "titulo": "A New Efficiency Approach For Chinese Litigants Extraction",
+  "autores": [
+    "Niu, Haibo",
+    "Zeng, Zhuoying"
+  ],
+  "ano": 2018,
+  "venue": "Procedia Computer Science (2017 International Conference on Identification, Information and Knowledge in the Internet of Things - IIKI2017)",
+  "pais_corpus": "China",
+  "idioma_corpus": "zh",
+  "subdominio": "decisoes_judiciais",
+  "tarefa_principal": "ner",
+  "tecnica_principal": "hibrido",
+  "modelos_usados": [
+    "LTP (Harbin Institute of Technology)",
+    "JMLE (proposed algorithm)"
+  ],
+  "entidades_anotadas": [
+    "plaintiff",
+    "defendant",
+    "legal representative"
+  ],
+  "num_classes_entidade": 2,
+  "esquema_anotacao": "nao_reportado",
+  "corpus_publico": null,
+  "f1_melhor_reportado": 89.37,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Propõe o algoritmo JMLE que combina regras (dicionário de indicadores e sufixos), correspondência por maior substrings e um componente NER universal (LTP) para extrair autores e réus de sentenças judiciais chinesas sem necessidade de corpus anotado, melhorando a identificação de limites de entidade e alcançando F1=89.37% em 5.000 documentos.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.85
+}

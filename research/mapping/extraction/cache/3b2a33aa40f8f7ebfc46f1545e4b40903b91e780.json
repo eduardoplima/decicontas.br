@@ -1,0 +1,45 @@
+{
+  "referencia_curta": "Chaplynskyi e Romanyshyn (2024)",
+  "titulo": "Introducing NER-UK 2.0: A Rich Corpus of Named Entities for Ukrainian",
+  "autores": [
+    "Chaplynskyi, Dmytro",
+    "Romanyshyn, Mariana"
+  ],
+  "ano": 2024,
+  "venue": "UNLP @ LREC-COLING-2024 (The Third Ukrainian NLP Workshop)",
+  "pais_corpus": "Ukraine",
+  "idioma_corpus": "uk",
+  "subdominio": "outros",
+  "tarefa_principal": "ner",
+  "tecnica_principal": "transformer_generico",
+  "modelos_usados": [
+    "roberta-large (Ukrainian)",
+    "uk_ner_web_trf_large",
+    "uk_ner_web_trf_13class",
+    "spaCy (transformers)"
+  ],
+  "entidades_anotadas": [
+    "ORG",
+    "PERS",
+    "LOC",
+    "ART",
+    "DOC",
+    "JOB",
+    "DATE",
+    "TIME",
+    "PERIOD",
+    "MON",
+    "PCT",
+    "QUANT",
+    "MISC"
+  ],
+  "num_classes_entidade": 13,
+  "esquema_anotacao": "span_based",
+  "corpus_publico": true,
+  "f1_melhor_reportado": 89.2,
+  "metrica_tipo": "weighted",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Apresenta NER-UK 2.0, um corpus manualmente anotado em ucraniano com 560 textos e 21.993 entidades em 13 tipos, disponibilizado em Brat Standoff/IOB, e fornece um novo baseline (roberta-large) com F1 weighted ≈ 89.2%.",
+  "citacao_relevante_para_tce": "Inclui textos de contratos de compras públicas, documentos oficiais e valores monetários, úteis para análise de contratos e fiscalização de contas públicas.",
+  "confianca_extracao": 0.9
+}

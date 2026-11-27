@@ -232,7 +232,8 @@ decicontas.br/
 │   ├── dataset_io.py     # canonical tokenisation + BIO construction
 │   ├── ner_metrics.py    # token/span F1, IoU bipartite matcher
 │   ├── release/          # dataset export, number regeneration, bootstrap
-│   └── kfold/            # supervised 5-fold CV
+│   ├── kfold/            # supervised 5-fold CV
+│   └── mapping/          # systematic literature mapping: protocol, 473 records, 79 studies
 ├── scripts/              # analysis + release packaging
 └── tests/                # pytest suite
 ```

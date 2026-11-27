@@ -1,0 +1,44 @@
+{
+  "referencia_curta": "Nunes et al. (2024)",
+  "titulo": "Out of Sesame Street: A Study of Portuguese Legal Named Entity Recognition Through In-Context Learning",
+  "autores": [
+    "Nunes, Rafael Oleques",
+    "Spritzer, Andre Suslik",
+    "Dal Sasso Freitas, Carla Maria",
+    "Balreira, Dennis Giovani"
+  ],
+  "ano": 2024,
+  "venue": "ICEIS 2024 - Proceedings of the 26th International Conference on Enterprise Information Systems (Volume 1)",
+  "pais_corpus": "Brazil",
+  "idioma_corpus": "pt",
+  "subdominio": "outros",
+  "tarefa_principal": "ner",
+  "tecnica_principal": "llm_few_shot",
+  "modelos_usados": [
+    "Sabia-7B",
+    "LLama-7B",
+    "Sentence-BERT (SBERT)",
+    "distiluse-base-multilingual-cased"
+  ],
+  "entidades_anotadas": [
+    "PESSOA",
+    "JURISPRUDENCIA",
+    "TEMPO",
+    "LOCAL",
+    "LEGISLACAO",
+    "ORGANIZACAO",
+    "DATA",
+    "FUNDAMENTO",
+    "PRODUTODELEI",
+    "EVENTO"
+  ],
+  "num_classes_entidade": 10,
+  "esquema_anotacao": "bio_iob",
+  "corpus_publico": true,
+  "f1_melhor_reportado": 51.0,
+  "metrica_tipo": "micro",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Avalia o uso de In-Context Learning com o LLM Sabia´ para NER no domínio jurídico em português, propondo heurísticas de seleção de exemplos e filtros de pós-processamento. Fornece análise quantitativa e qualitativa em dois corpora (LeNER-Br e UlyssesNER-Br) e reporta micro-F1 de 51% com a melhor heurística.",
+  "citacao_relevante_para_tce": "Discussões e erros envolvendo 'Secretaria de Controle Externo' (Secex/RJ) e TCE mostram aplicabilidade para tarefas de controle externo e fiscalização.",
+  "confianca_extracao": 0.9
+}

@@ -1,0 +1,38 @@
+{
+  "referencia_curta": "Funaki et al. (2020)",
+  "titulo": "A Contract Corpus for Recognizing Rights and Obligations",
+  "autores": [
+    "Funaki, Ruka",
+    "Nagata, Yusuke",
+    "Suenaga, Kohei",
+    "Mori, Shinsuke"
+  ],
+  "ano": 2020,
+  "venue": "LREC 2020",
+  "pais_corpus": null,
+  "idioma_corpus": "en, ja",
+  "subdominio": "contratos",
+  "tarefa_principal": "ner",
+  "tecnica_principal": "bilstm_crf",
+  "modelos_usados": [
+    "BiLSTM-CRF",
+    "word2vec",
+    "LogisticRegression"
+  ],
+  "entidades_anotadas": [
+    "Party",
+    "Right",
+    "Obligation",
+    "Condition",
+    "Exception"
+  ],
+  "num_classes_entidade": 5,
+  "esquema_anotacao": "xml",
+  "corpus_publico": null,
+  "f1_melhor_reportado": 96.0,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Apresenta um corpus anotado (46 contratos em inglês e 25 em japonês) destinado ao reconhecimento de direitos e obrigações em contratos, com marcação de partes, condições e exceções; descreve o esquema de anotação XML-like e experimentos (BiLSTM-CRF + módulos de associação) para extração e ligação de spans.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.9
+}

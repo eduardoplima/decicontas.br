@@ -1,0 +1,38 @@
+{
+  "referencia_curta": "Decker et al. (2023)",
+  "titulo": "Hybrid Classification of Audit Court Decisions using Online Context-Driven Neural Networks",
+  "autores": [
+    "Decker, Leticia",
+    "Palmirani, Monica",
+    "Sapienza, Salvatore",
+    "Pistone, Vittoria"
+  ],
+  "ano": 2023,
+  "venue": "CEUR Workshop Proceedings (CEUR-WS.org)",
+  "pais_corpus": "Italy",
+  "idioma_corpus": "it",
+  "subdominio": "decisoes_judiciais",
+  "tarefa_principal": "classificacao",
+  "tecnica_principal": "hibrido",
+  "modelos_usados": [
+    "Online Context-Driven Neural Network",
+    "Offline Context-Driven Neural Network",
+    "TFIDF variants (tfidf2, tfidf3, tfidf4)",
+    "P-norm (1-4)",
+    "S-norm (max)"
+  ],
+  "entidades_anotadas": [
+    "quantity (monetary amounts)",
+    "Semantic_Context (context words around quantities)",
+    "Class_Expert (taxonomic class labels from the quantity taxonomy)"
+  ],
+  "num_classes_entidade": 29,
+  "esquema_anotacao": "xml",
+  "corpus_publico": true,
+  "f1_melhor_reportado": null,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Propõe uma metodologia híbrida que combina extração por expressões regulares em documentos Akoma Ntoso, anotação semântica e um classificador Online Context-Driven Neural Network para categorizar quantias monetárias em decisões da Corte dei Conti segundo uma taxonomia hierárquica; avaliada em 584 amostras (Emilia-Romagna) com análise técnica e jurídica.",
+  "citacao_relevante_para_tce": "Classifies monetary amounts in Italian Audit Court (Corte dei Conti) decisions using Akoma Ntoso and hybrid ML to support judges in 'following the money'.",
+  "confianca_extracao": 0.9
+}

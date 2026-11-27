@@ -1,0 +1,46 @@
+{
+  "referencia_curta": "Pereira et al. (2025)",
+  "titulo": "INACIA: Integrating Large Language Models in Brazilian Audit Courts: Opportunities and Challenges",
+  "autores": [
+    "Pereira, Jayr",
+    "Assumpcao, Andre",
+    "Trecenti, Julio",
+    "Airosa, Luiz",
+    "Lente, Caio",
+    "Cléto, Jhonatan",
+    "Dobins, Guilherme",
+    "Nogueira, Rodrigo",
+    "Mitchell, Luis",
+    "Lotufo, Roberto"
+  ],
+  "ano": 2025,
+  "venue": "Digital Government: Research and Practice",
+  "pais_corpus": "Brazil",
+  "idioma_corpus": "pt",
+  "subdominio": "tribunais_administrativos",
+  "tarefa_principal": "pipeline_completo",
+  "tecnica_principal": "llm_zero_shot",
+  "modelos_usados": [
+    "GPT-4"
+  ],
+  "entidades_anotadas": [
+    "case_id",
+    "plaintiff_name",
+    "plaintiff_document_id",
+    "case_summary",
+    "allegations",
+    "recommendations",
+    "admissibility_decisions",
+    "periculum_in_mora",
+    "fumus_boni_iuris"
+  ],
+  "num_classes_entidade": 33,
+  "esquema_anotacao": "nao_reportado",
+  "corpus_publico": false,
+  "f1_melhor_reportado": 42.9,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Apresenta o sistema INACIA, que integra LLMs (p.ex. GPT-4) ao fluxo de trabalho do Tribunal de Contas da União para automatizar extração de informações, exames de admissibilidade, análises de periculum/fumus e geração de recomendações; e propone um dataset de validação e um método de avaliação baseado em checklists gerados por LLMs que correlaciona bem com avaliações humanas.",
+  "citacao_relevante_para_tce": "INACIA integra LLMs ao Tribunal de Contas da União (TCU) para automatizar análise de processos, incluindo extração, exame de admissibilidade e geração de recomendações para auditores do TCU.",
+  "confianca_extracao": 0.9
+}

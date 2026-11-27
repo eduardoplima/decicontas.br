@@ -1,0 +1,46 @@
+{
+  "referencia_curta": "Steinigen et al. (2023)",
+  "titulo": "Semantic Extraction of Key Figures and Their Properties From Tax Legal Texts Using Neural Models",
+  "autores": [
+    "Steinigen, Daniel",
+    "Namysl, Marcin",
+    "Hepperle, Markus",
+    "Krekeler, Jan",
+    "Landgraf, Susanne"
+  ],
+  "ano": 2023,
+  "venue": "Proceedings of the Sixth Workshop on Automated Semantic Analysis of Information in Legal Text (ASAIL 2023) — CEUR-WS",
+  "pais_corpus": "Germany",
+  "idioma_corpus": "de",
+  "subdominio": "tributario",
+  "tarefa_principal": "ner",
+  "tecnica_principal": "transformer_generico",
+  "modelos_usados": [
+    "XLM-RoBERTa-large",
+    "XLM-RoBERTa-longformer (XLM-R-Longform)",
+    "GBERT (GermanBERT)",
+    "GElectra",
+    "Longformer",
+    "spaCy NER",
+    "RASA CRF"
+  ],
+  "entidades_anotadas": [
+    "Keyfigure (stated)",
+    "Keyfigure (declarative)",
+    "Expression (stated)",
+    "Expression (declarative)",
+    "Unit",
+    "Condition",
+    "Range",
+    "Factor"
+  ],
+  "num_classes_entidade": 8,
+  "esquema_anotacao": "span_based",
+  "corpus_publico": true,
+  "f1_melhor_reportado": 60.91,
+  "metrica_tipo": "macro",
+  "compara_llm_supervisionado": true,
+  "contribuicao_principal": "Define um esquema de anotação e um modelo semântico (ontologia) para \"key figures\" em textos tributários, publica o conjunto KeyFiTax e um Knowledge Graph; avalia modelos de extração (transformers, spaCy, RASA-CRF) e propõe um método transformer-based para extração conjunta de entidades e relações com marcadores e task-triggers.",
+  "citacao_relevante_para_tce": "Modela key figures de leis tributárias e popula um Knowledge Graph para comparar mudanças legislativas e estimar impacto sobre a receita tributária.",
+  "confianca_extracao": 0.85
+}

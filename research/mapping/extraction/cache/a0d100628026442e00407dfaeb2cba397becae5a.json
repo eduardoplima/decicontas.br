@@ -1,0 +1,47 @@
+{
+  "referencia_curta": "Murillo Sossa e León Guzmán (2023)",
+  "titulo": "Supervised Fine-Grained Entity Recognition Model for Legal Documents in Spanish",
+  "autores": [
+    "Murillo Sossa, Viviana Sofía",
+    "León Guzmán, Elizabeth"
+  ],
+  "ano": 2023,
+  "venue": "Proc. of 4th International Conference on Electrical, Communication and Computer Engineering (ICECCE)",
+  "pais_corpus": "Colombia",
+  "idioma_corpus": "es",
+  "subdominio": "contratos",
+  "tarefa_principal": "ner",
+  "tecnica_principal": "bilstm_crf",
+  "modelos_usados": [
+    "Bi-LSTM",
+    "BERT",
+    "ChatGPT"
+  ],
+  "entidades_anotadas": [
+    "Acta",
+    "Barrio",
+    "CertDisponPres",
+    "Ciudad",
+    "Contrato",
+    "Decreto",
+    "EntidadPrivada",
+    "EntidadPublica",
+    "FechaInicio",
+    "Ley",
+    "Municipio",
+    "Pais",
+    "PersonaNatural",
+    "Resolucion",
+    "ServidorPublico",
+    "O"
+  ],
+  "num_classes_entidade": 28,
+  "esquema_anotacao": "bio_iob",
+  "corpus_publico": true,
+  "f1_melhor_reportado": 99.31,
+  "metrica_tipo": "micro",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Construção de um corpus anotado (contratos públicos colombianos, SECOP) com 28 entidades finas e proposta/avaliação de um modelo Bi-LSTM para NER em espanhol, alcançando F1 global muito alto (~99%).",
+  "citacao_relevante_para_tce": "Corpus construído a partir de contratos públicos do sistema SECOP da Colômbia, aplicável ao monitoramento de compras públicas e fiscalização.",
+  "confianca_extracao": 0.9
+}

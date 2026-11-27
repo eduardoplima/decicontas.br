@@ -1,0 +1,35 @@
+{
+  "referencia_curta": "Kowsrihawat e Vateekul (2015)",
+  "titulo": "An Information Extraction Framework for Legal Documents: a Case Study of Thai Supreme Court Verdicts",
+  "autores": [
+    "Kowsrihawat, Kankawin",
+    "Vateekul, Peerapon"
+  ],
+  "ano": 2015,
+  "venue": "12th International Joint Conference on Computer Science and Software Engineering (JCSSE)",
+  "pais_corpus": "Thailand",
+  "idioma_corpus": "th",
+  "subdominio": "decisoes_judiciais",
+  "tarefa_principal": "pipeline_completo",
+  "tecnica_principal": "regras",
+  "modelos_usados": [],
+  "entidades_anotadas": [
+    "numero_de_processo",
+    "tipo_de_caso",
+    "partes",
+    "questoes",
+    "juizes",
+    "partes_recorrentes",
+    "decisao_final",
+    "alegacoes"
+  ],
+  "num_classes_entidade": null,
+  "esquema_anotacao": "nao_reportado",
+  "corpus_publico": true,
+  "f1_melhor_reportado": 99.34,
+  "metrica_tipo": "macro",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Propõe o protótipo JudgeDoll, um sistema baseado em regras/expressões regulares e máquinas de estado finito para extrair pontos essenciais de julgamentos do Supremo Tribunal da Tailândia e gerar sumários curtos e longos. Demonstra alto desempenho em extração (F1 > 90%) e boa satisfação de especialistas na sumarização.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.85
+}

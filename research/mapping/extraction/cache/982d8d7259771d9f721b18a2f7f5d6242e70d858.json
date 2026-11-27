@@ -1,0 +1,39 @@
+{
+  "referencia_curta": "Paulino-Passos et al. (2023)",
+  "titulo": "A Dataset of Contractual Events in Court Decisions",
+  "autores": [
+    "Paulino-Passos, Guilherme",
+    "Satoh, Ken",
+    "Toni, Francesca"
+  ],
+  "ano": 2023,
+  "venue": "LPLR2023 (CEUR-WS)",
+  "pais_corpus": "United States",
+  "idioma_corpus": "en",
+  "subdominio": "contratos",
+  "tarefa_principal": "outros",
+  "tecnica_principal": "regras",
+  "modelos_usados": [],
+  "entidades_anotadas": [
+    "Thing",
+    "Contract",
+    "ContractEvent",
+    "Natural_person",
+    "Legal_person",
+    "Person",
+    "Party",
+    "Agent",
+    "Theme",
+    "Object",
+    "Relevant_span"
+  ],
+  "num_classes_entidade": null,
+  "esquema_anotacao": "span_based",
+  "corpus_publico": true,
+  "f1_melhor_reportado": 75.19,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Apresenta um novo dataset anotado de eventos contratuais em decisões judiciais (jurisdição da Louisiana) com 207 documentos, diretrizes de anotação, análises de concordância entre anotadores e estatísticas da coleção, visando suportar extração de eventos e NER para raciocínio jurídico.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.85
+}

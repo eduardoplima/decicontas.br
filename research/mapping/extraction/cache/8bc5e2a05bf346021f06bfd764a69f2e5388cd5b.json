@@ -1,0 +1,44 @@
+{
+  "referencia_curta": "Abdullayeva et al. (nao_reportado)",
+  "titulo": "Ontology-Guided Legal NER and Relation Extraction for Uzbek Statutes with a Juridical Knowledge Graph",
+  "autores": [
+    "Abdullayeva, Shaxnoza",
+    "Madadova, Afag",
+    "Abdullayeva, Nasima",
+    "Madatov, Khabibulla",
+    "Kazakbaeva, Sarbinaz",
+    "Khabibullayeva, Shoira"
+  ],
+  "ano": 0,
+  "venue": null,
+  "pais_corpus": "Uzbekistan",
+  "idioma_corpus": "uz",
+  "subdominio": "legislacao",
+  "tarefa_principal": "pipeline_completo",
+  "tecnica_principal": "hibrido",
+  "modelos_usados": [
+    "XLM-R",
+    "BiLSTM",
+    "CRF",
+    "Span-marker Transformer"
+  ],
+  "entidades_anotadas": [
+    "ACT_ID",
+    "STRUCT",
+    "ORG",
+    "ROLE",
+    "JURIS",
+    "DATE",
+    "REF",
+    "TERM"
+  ],
+  "num_classes_entidade": 8,
+  "esquema_anotacao": "bio_iob",
+  "corpus_publico": null,
+  "f1_melhor_reportado": 91.3,
+  "metrica_tipo": "micro",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Propõe um algoritmo ontologia-orientado e híbrido (regras + transformador+CRF) para extração de entidades, relações e temporalidade de atos normativos uzbeques, gerando um grafo jurídico temporal validado por OWL/SHACL e um corpus anotado de ~18k sentenças.",
+  "citacao_relevante_para_tce": "Aplicações potenciais: buscas legais, verificações de conformidade e reconstrução da versão vigente de uma norma em dada data.",
+  "confianca_extracao": 0.85
+}

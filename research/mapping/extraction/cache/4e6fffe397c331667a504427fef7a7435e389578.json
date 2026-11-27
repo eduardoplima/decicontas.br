@@ -1,0 +1,44 @@
+{
+  "referencia_curta": "Shi et al. (2022)",
+  "titulo": "A Named Entity Recognition Method Based on Deep Learning For Chinese Legal Documents",
+  "autores": [
+    "Shi, Jianwei",
+    "Zheng, Kai",
+    "Zhang, Zhihua",
+    "Liu, Qi"
+  ],
+  "ano": 2022,
+  "venue": "2022 7th International Conference on Image, Vision and Computing",
+  "pais_corpus": "China",
+  "idioma_corpus": "zh",
+  "subdominio": "decisoes_judiciais",
+  "tarefa_principal": "ner",
+  "tecnica_principal": "hibrido",
+  "modelos_usados": [
+    "Lattice-CRF",
+    "BiLSTM-CRF",
+    "IDCNN-CRF",
+    "BERT-BiLSTM-CRF",
+    "RoBERTa-BiLSTM-CRF"
+  ],
+  "entidades_anotadas": [
+    "NaturalPerson",
+    "Non-naturalperson",
+    "MotorVehicle",
+    "Non-motorVehicles",
+    "Insurance",
+    "Responsibility",
+    "PersonalInjury",
+    "Articledamage",
+    "Offence"
+  ],
+  "num_classes_entidade": 9,
+  "esquema_anotacao": "bio_iob",
+  "corpus_publico": null,
+  "f1_melhor_reportado": 84.62,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Cria um corpus anotado focalizado em \"motor vehicle traffic accident liability dispute\" e propõe o modelo RoBERTa-BiLSTM-CRF, que supera várias arquiteturas de referência em NER jurídico chinês (F1=84.62%).",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.8
+}

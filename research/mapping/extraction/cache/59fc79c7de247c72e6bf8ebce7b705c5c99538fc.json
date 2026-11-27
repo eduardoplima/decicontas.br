@@ -1,0 +1,36 @@
+{
+  "referencia_curta": "Ngandu et al. (2025)",
+  "titulo": "Automated Citation Detection in Congolese Legal Texts: Leveraging LLM-Based NER for Knowledge Graph Construction",
+  "autores": [
+    "Ngandu, Bernard",
+    "Mateus, Jovita",
+    "Mbale, Landry",
+    "Bagula, Antoine"
+  ],
+  "ano": 2025,
+  "venue": null,
+  "pais_corpus": "DR Congo",
+  "idioma_corpus": "fr",
+  "subdominio": "legislacao",
+  "tarefa_principal": "ner",
+  "tecnica_principal": "hibrido",
+  "modelos_usados": [
+    "GPT-4o-mini",
+    "spaCy (fr_core_news_lg)",
+    "spaCy (base efficiency model)"
+  ],
+  "entidades_anotadas": [
+    "TYPE",
+    "REFERENCE",
+    "DATE"
+  ],
+  "num_classes_entidade": 3,
+  "esquema_anotacao": "span_based",
+  "corpus_publico": null,
+  "f1_melhor_reportado": null,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Propõe um pipeline end-to-end que usa anotações LLM (GPT-4o-mini) para gerar rótulos e treina modelos spaCy em duas configurações (precisão vs eficiência) para extrair TYPE, REFERENCE e DATE de títulos legais congoleses, gerando um grafo preliminar de citações (~1.400 arestas a partir de 8.400 títulos).",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.8
+}

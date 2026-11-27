@@ -1,0 +1,43 @@
+{
+  "referencia_curta": "Karamitsos et al. (2025)",
+  "titulo": "LegNER: a domain-adapted transformer for legal named entity recognition and text anonymization",
+  "autores": [
+    "Karamitsos, Ioannis",
+    "Roufas, Nikolaos",
+    "Al-Hussaeni, Khalil",
+    "Kanavos, Andreas"
+  ],
+  "ano": 2025,
+  "venue": "Frontiers in Artificial Intelligence",
+  "pais_corpus": "European Union",
+  "idioma_corpus": "en",
+  "subdominio": "decisoes_judiciais",
+  "tarefa_principal": "ner",
+  "tecnica_principal": "transformer_dominio",
+  "modelos_usados": [
+    "LegNER (domain-adapted BERT-base)",
+    "BERT-base",
+    "Legal-BERT",
+    "RoBERTa-Legal",
+    "SpanBERT-Legal",
+    "LegalNER.pt",
+    "ContractNLI"
+  ],
+  "entidades_anotadas": [
+    "PERSON",
+    "ORGANIZATION",
+    "LAW",
+    "CASE_REFERENCE",
+    "LOCATION",
+    "DATE"
+  ],
+  "num_classes_entidade": 6,
+  "esquema_anotacao": "span_based",
+  "corpus_publico": null,
+  "f1_melhor_reportado": 99.4,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Apresenta o LegNER, um transformer adaptado ao domínio jurídico (base BERT) com pré-treinamento específico e supervisão em nível de span, integrado a um pipeline de anonimização; demonstra desempenho de estado-da-arte em NER legal e outputs de anonimização consistentes e legíveis, adequados a fluxos GDPR-compliant.",
+  "citacao_relevante_para_tce": "Pipeline de anonimização para redação compatível com GDPR de decisões judiciais, útil para acesso público e proteção de dados em processos de controle externo.",
+  "confianca_extracao": 0.85
+}

@@ -1,0 +1,40 @@
+{
+  "referencia_curta": "Song e de la Clergerie (2020)",
+  "titulo": "Clustering-based Automatic Construction of Legal Entity Knowledge Base from Contracts",
+  "autores": [
+    "Song, Fuqi",
+    "de la Clergerie, Éric"
+  ],
+  "ano": 2020,
+  "venue": "IEEE (conference)",
+  "pais_corpus": "France",
+  "idioma_corpus": "fr",
+  "subdominio": "contratos",
+  "tarefa_principal": "pipeline_completo",
+  "tecnica_principal": "hibrido",
+  "modelos_usados": [
+    "Affinity Propagation",
+    "SequenceMatcher",
+    "Jaccard index",
+    "OCR (unspecified)",
+    "NER (unspecified)"
+  ],
+  "entidades_anotadas": [
+    "corporate name",
+    "nature",
+    "capital",
+    "registration number",
+    "registration city",
+    "headquarter address",
+    "legal representative"
+  ],
+  "num_classes_entidade": 7,
+  "esquema_anotacao": "nao_reportado",
+  "corpus_publico": false,
+  "f1_melhor_reportado": null,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Propõe uma abordagem não supervisionada baseada em clustering (Affinity Propagation) e medidas híbridas de similaridade para construir automaticamente uma base de conhecimento de entidades legais a partir de contratos, robusta a erros de OCR/NER; avaliada em 800 contratos franceses com 80% de acurácia em informações-chave e 84% no total.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.85
+}

@@ -1,0 +1,46 @@
+{
+  "referencia_curta": "Ngo et al. (2019)",
+  "titulo": "Reference Extraction from Vietnamese Legal Documents",
+  "autores": [
+    "Ngo, Xuan Bach",
+    "Nguyen, Thi Thanh Thuy",
+    "Dang, Bao Chien",
+    "Trieu, Khuong Duy",
+    "To, Minh Hien",
+    "Tu, Minh Phuong"
+  ],
+  "ano": 2019,
+  "venue": "SoICT 2019 (Proceedings of the 10th International Symposium on Information and Communication Technology)",
+  "pais_corpus": "Vietnam",
+  "idioma_corpus": "vi",
+  "subdominio": "legislacao",
+  "tarefa_principal": "ner",
+  "tecnica_principal": "bilstm_crf",
+  "modelos_usados": [
+    "CRF++",
+    "CRF",
+    "BiLSTM",
+    "BiLSTM-CRF",
+    "NCRF++"
+  ],
+  "entidades_anotadas": [
+    "Constitution",
+    "Code",
+    "Law",
+    "Decree",
+    "Circular",
+    "JointCircular",
+    "Decision",
+    "Ordinance",
+    "Resolution"
+  ],
+  "num_classes_entidade": 9,
+  "esquema_anotacao": "bio_iob",
+  "corpus_publico": null,
+  "f1_melhor_reportado": 95.35,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Apresenta um corpus anotado de documentos legais vietnamitas (~11k sentenças, 14k referências) e compara abordagens CRF, BiLSTM e BiLSTM-CRF; o melhor modelo (BiLSTM-CRF com features handcrafted) alcança 95.35% F1.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.9
+}

@@ -1,0 +1,53 @@
+{
+  "referencia_curta": "Xu et al. (2024)",
+  "titulo": "Distinguish Confusion in Legal Judgment Prediction via Revised Relation Knowledge",
+  "autores": [
+    "Xu, Nuo",
+    "Wang, Pinghui",
+    "Zhao, Junzhou",
+    "Sun, Feiyang",
+    "Lan, Lin",
+    "Tao, Jing",
+    "Pan, Li",
+    "Guan, Xiaohong"
+  ],
+  "ano": 2024,
+  "venue": "ACM Transactions on Information Systems",
+  "pais_corpus": "China",
+  "idioma_corpus": "zh",
+  "subdominio": "criminal",
+  "tarefa_principal": "classificacao",
+  "tecnica_principal": "hibrido",
+  "modelos_usados": [
+    "D-LADAN",
+    "LADAN",
+    "HARNN",
+    "BERT",
+    "Lawformer",
+    "NeurJudge",
+    "CL4LJP",
+    "GFDN",
+    "Few-shot",
+    "CNN",
+    "Llama-2-7b-128k",
+    "Qwen1.5-7B-Chat",
+    "Yi-6B-200k",
+    "chatglm3-6b-32k",
+    "GPT-3.5",
+    "GPT-4"
+  ],
+  "entidades_anotadas": [
+    "law_article",
+    "charge",
+    "term_of_penalty"
+  ],
+  "num_classes_entidade": null,
+  "esquema_anotacao": "nao_reportado",
+  "corpus_publico": true,
+  "f1_melhor_reportado": 89.05,
+  "metrica_tipo": "macro",
+  "compara_llm_supervisionado": true,
+  "contribuicao_principal": "Propõe D-LADAN, um modelo end-to-end que combina distilação de diferenças entre artigos de lei (GDO) e um mecanismo de memória com atualização por momentum para corrigir confusões posteriores induzidas por desequilíbrio de dados, melhorando acurácia e robustez em tarefas de previsão de julgamentos legais.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.9
+}

@@ -1,0 +1,41 @@
+{
+  "referencia_curta": "Yuan e Zhang (2021)",
+  "titulo": "Improving Named Entity Recognition of Chinese Legal Documents by Lexical Enhancement",
+  "autores": [
+    "Yuan, Zhenzhen",
+    "Zhang, Hong"
+  ],
+  "ano": 2021,
+  "venue": "2021 IEEE International Conference on Artificial Intelligence and Computer Applications (ICAICA)",
+  "pais_corpus": "China",
+  "idioma_corpus": "zh",
+  "subdominio": "decisoes_judiciais",
+  "tarefa_principal": "ner",
+  "tecnica_principal": "bilstm_crf",
+  "modelos_usados": [
+    "BiLSTM-CRF",
+    "Char-NER",
+    "Char2-NER",
+    "Word-NER",
+    "IDCNN-CRF",
+    "SVM-LSTM-CRF",
+    "CNN-LSTM-CRF",
+    "Joint-CNN-LSTM-CRF",
+    "Word2Vec embeddings"
+  ],
+  "entidades_anotadas": [
+    "PER",
+    "LOC",
+    "ORG",
+    "LAW"
+  ],
+  "num_classes_entidade": 4,
+  "esquema_anotacao": "bio_iob",
+  "corpus_publico": false,
+  "f1_melhor_reportado": 95.35,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Propõe um método simples e portátil para incorporar informação lexical (fronteiras de palavras em formato BIESO) em um sistema baseado em caracteres, juntando essa informação ao embedding de caracteres e treinando conjuntamente com uma arquitetura BiLSTM-CRF; demonstra melhora substancial (F1=95.35) em um corpus anotado de ações civis.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.9
+}

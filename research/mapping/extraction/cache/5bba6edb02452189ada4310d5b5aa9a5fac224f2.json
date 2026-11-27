@@ -1,0 +1,49 @@
+{
+  "referencia_curta": "Gupta et al. (2017)",
+  "titulo": "Toward Building a Legal Knowledge-Base of Chinese Judicial Documents for Large-Scale Analytics",
+  "autores": [
+    "Gupta, Amarnath",
+    "Wang, Alice Z.",
+    "Lin, Kai",
+    "Hong, Haoshen",
+    "Sun, Haoran",
+    "Liebman, Benjamin L.",
+    "Stern, Rachel E.",
+    "Dasgupta, Subhasis",
+    "Roberts, Margaret E."
+  ],
+  "ano": 2017,
+  "venue": "Legal Knowledge and Information Systems (IOS Press)",
+  "pais_corpus": "China (Henan)",
+  "idioma_corpus": "zh",
+  "subdominio": "decisoes_judiciais",
+  "tarefa_principal": "pipeline_completo",
+  "tecnica_principal": "hibrido",
+  "modelos_usados": [
+    "Structural Topic Model (STM)",
+    "Context-Free Grammar (CFG)-based extractor",
+    "Sentence classification / rule-based verdict models",
+    "Neo4J / SciGraph (ontology graph storage)",
+    "AWESOME polystore (AsterixDB, PostgreSQL, Solr integration)"
+  ],
+  "entidades_anotadas": [
+    "CourtCase",
+    "Party",
+    "Fact",
+    "Holding",
+    "Decision",
+    "Statute",
+    "Judge",
+    "LegalCaseType",
+    "VerdictSentenceCategory"
+  ],
+  "num_classes_entidade": null,
+  "esquema_anotacao": "json_indices",
+  "corpus_publico": true,
+  "f1_melhor_reportado": null,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Propõe e implementa uma abordagem escalável para construir uma knowledge-base jurídica sobre mais de 1.1M de decisões chinesas, combinando ontologias híbridas, extração semiestruturada (CFG e modelos de sentença) e modelagem de tópicos (STM) para habilitar recuperação, descoberta e análises de padrão em nível de corpus.",
+  "citacao_relevante_para_tce": "Exemplo de consulta: 'Find the most common government entities that are defendants in administrative litigation cases' — útil para identificar órgãos públicos mais frequentemente responsabilizados.",
+  "confianca_extracao": 0.9
+}

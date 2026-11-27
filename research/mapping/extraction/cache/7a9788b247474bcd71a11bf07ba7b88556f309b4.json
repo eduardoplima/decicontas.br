@@ -1,0 +1,38 @@
+{
+  "referencia_curta": "Joshi et al. (2025)",
+  "titulo": "Corpus-based analysis of human values in blockchain and constitutions",
+  "autores": [
+    "Joshi, Aditya",
+    "Morgan, Eric Lease",
+    "Marczak-Czajka, Agnieszka",
+    "Kuehlkamp, Andrey",
+    "Joyce, Ellen",
+    "Radha, Swapna Krishnakumar",
+    "Powell, Emilia Justyna",
+    "Nabrzyski, Jarek"
+  ],
+  "ano": 2025,
+  "venue": "Distributed Ledger Technologies: Research and Practice",
+  "pais_corpus": "global",
+  "idioma_corpus": "en",
+  "subdominio": "outros",
+  "tarefa_principal": "ner",
+  "tecnica_principal": "hibrido",
+  "modelos_usados": [
+    "Custom NER model",
+    "WordNet synsets",
+    "Distant Reader Toolbox"
+  ],
+  "entidades_anotadas": [
+    "human_value"
+  ],
+  "num_classes_entidade": null,
+  "esquema_anotacao": "json_indices",
+  "corpus_publico": true,
+  "f1_melhor_reportado": 73.09,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Apresenta datasets anotados publicamente de referências a valores humanos em 3.086 documentos de blockchain e 194 constituições, e descreve um método semi-supervisionado baseado em NER para identificar, priorizar e comparar esses valores entre domínios geopolíticos.",
+  "citacao_relevante_para_tce": "Destaca valores compartilhados como transparência e accountability entre blockchains e constituições, úteis para desenho de políticas e supervisão pública.",
+  "confianca_extracao": 0.9
+}

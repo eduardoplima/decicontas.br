@@ -1,0 +1,41 @@
+{
+  "referencia_curta": "Castano et al. (2024)",
+  "titulo": "Enforcing legal information extraction through context-aware techniques: The ASKE approach",
+  "autores": [
+    "Castano, Silvana",
+    "Ferrara, Alfio",
+    "Furiosi, Emanuela",
+    "Montanelli, Stefano",
+    "Picascia, Sergio",
+    "Riva, Davide",
+    "Stefanetti, Carolina"
+  ],
+  "ano": 2024,
+  "venue": "Computer Law & Security Review",
+  "pais_corpus": "European Union (EurLex) and Italy (case study)",
+  "idioma_corpus": "en, it",
+  "subdominio": "legislacao",
+  "tarefa_principal": "grafo_conhecimento",
+  "tecnica_principal": "hibrido",
+  "modelos_usados": [
+    "Sentence-BERT (paraphrase-multilingual-MiniLM-L12-v2)",
+    "BERTopic",
+    "Zero-Shot TM",
+    "WordNet",
+    "Affinity Propagation"
+  ],
+  "entidades_anotadas": [
+    "document_chunk",
+    "term",
+    "concept"
+  ],
+  "num_classes_entidade": 4108,
+  "esquema_anotacao": "ontologico",
+  "corpus_publico": true,
+  "f1_melhor_reportado": null,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Propõe ASKE, um sistema cíclico (classificação de trechos, enriquecimento terminológico, derivação de conceitos) que combina embeddings contextuais e zero-shot learning para extrair um grafo conceitual e classificar trechos legais em múltiplas labels sem anotação prévia; avaliado no conjunto EurLex e aplicado a decisões judiciais italianas com retorno de especialistas.",
+  "citacao_relevante_para_tce": "“In the context of administrative decisions, knowledge extraction from legal documents could help public administration to identify the legislation applicable to the specific case, being able to ensure in-depth and always up-to-date knowledge of any relevant legislation.”",
+  "confianca_extracao": 0.8
+}

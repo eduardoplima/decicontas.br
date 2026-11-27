@@ -1,0 +1,38 @@
+{
+  "referencia_curta": "Roegiest et al. (2018)",
+  "titulo": "A Dataset and an Examination of Identifying Passages for Due Diligence",
+  "autores": [
+    "Roegiest, Adam",
+    "Hudek, Alexander K.",
+    "McNulty, Anne"
+  ],
+  "ano": 2018,
+  "venue": "SIGIR '18 (ACM SIGIR Conference)",
+  "pais_corpus": "United States; Canada; United Kingdom",
+  "idioma_corpus": "en",
+  "subdominio": "contratos",
+  "tarefa_principal": "classificacao",
+  "tecnica_principal": "crf",
+  "modelos_usados": [
+    "CRFsuite (CRF)",
+    "SVMhmm",
+    "Vowpal Wabbit",
+    "word2vec (feature training)"
+  ],
+  "entidades_anotadas": [
+    "provision_topic (50 topics)",
+    "change_of_control",
+    "mentioned_parties",
+    "contract_values",
+    "covenants"
+  ],
+  "num_classes_entidade": 50,
+  "esquema_anotacao": "span_based",
+  "corpus_publico": true,
+  "f1_melhor_reportado": 93.0,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Publicação de um dataset anotado para due diligence (≈4,222 documentos, ~15M sentenças, 50 tópicos) e avaliação comparativa mostrando que modelagem sequencial de sentenças com CRFs supera abordagens lineares e SVM-HMM para identificar trechos relevantes em contratos.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.9
+}

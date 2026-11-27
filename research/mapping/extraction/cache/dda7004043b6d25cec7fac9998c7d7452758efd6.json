@@ -1,0 +1,45 @@
+{
+  "referencia_curta": "Noronha et al. (2025)",
+  "titulo": "Revolutionizing Legal Intelligence: Advances in Neural Networks and Language Models for Legal NLP",
+  "autores": [
+    "Noronha, Raoul Samuel",
+    "Alenchery, Alex Stanley",
+    "Deepa, S",
+    "Jayapriya, J",
+    "Vinay, M"
+  ],
+  "ano": 2025,
+  "venue": "2025 3rd International Conference on Intelligent Systems, Advanced Computing and Communication (ISACC)",
+  "pais_corpus": null,
+  "idioma_corpus": "en",
+  "subdominio": "outros",
+  "tarefa_principal": "outros",
+  "tecnica_principal": "transformer_generico",
+  "modelos_usados": [
+    "BERT",
+    "GPT-2",
+    "GPT-3",
+    "T5",
+    "LSTM",
+    "CNN-RNN",
+    "OpenLLAMA",
+    "ChatLaw (GPT-3)",
+    "Legal-BigBird"
+  ],
+  "entidades_anotadas": [
+    "Parties",
+    "Dates",
+    "Monetary amounts",
+    "Contract clauses",
+    "Legal provisions"
+  ],
+  "num_classes_entidade": null,
+  "esquema_anotacao": "nao_reportado",
+  "corpus_publico": null,
+  "f1_melhor_reportado": 87.0,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": true,
+  "contribuicao_principal": "Revisão sistemática e avaliação crítica de modelos de ponta (transformers, LLMs, redes neurais tradicionais e híbridos) aplicados a tarefas de Legal NLP (classificação, sumarização, NER, QA), discutindo datasets, métricas, desafios e direções futuras.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.8
+}

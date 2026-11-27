@@ -1,0 +1,38 @@
+{
+  "referencia_curta": "Zambrano (2024)",
+  "titulo": "Case Law as Data: Prompt Engineering Strategies for Case Outcome Extraction with Large Language Models in a Zero-Shot Setting",
+  "autores": [
+    "Zambrano, Guillaume"
+  ],
+  "ano": 2024,
+  "venue": "Law, Technology and Humans (Volume 6(3), 2024)",
+  "pais_corpus": "France",
+  "idioma_corpus": "fr",
+  "subdominio": "decisoes_judiciais",
+  "tarefa_principal": "extracao_relacoes",
+  "tecnica_principal": "llm_zero_shot",
+  "modelos_usados": [
+    "Llama3 (70B)",
+    "Mixtral (8x7B)"
+  ],
+  "entidades_anotadas": [
+    "trial_court_outcome",
+    "appellate_court_outcome",
+    "decisionDate",
+    "decisionID",
+    "court_city",
+    "patientSex",
+    "foreignerCountryOrigin",
+    "compensation_amount",
+    "20_words_summary"
+  ],
+  "num_classes_entidade": 2,
+  "esquema_anotacao": "outros",
+  "corpus_publico": true,
+  "f1_melhor_reportado": 99.4,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Mostra empiricamente que LLMs em zero-shot (Llama3 70B e Mixtral 8x7B), com prompt engineering em JSON, conseguem extrair com alta precisão resultados de processos (decisão de primeira instância e de apelação) de acórdãos franceses sem fine-tuning; fornece templates de prompt e disponibiliza o conjunto anotado.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.9
+}

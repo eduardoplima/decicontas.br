@@ -1,0 +1,41 @@
+{
+  "referencia_curta": "Xu et al. (2025)",
+  "titulo": "How Vital Is the Jurisprudential Relevance: Law Article-Intervened Legal Case Retrieval and Matching",
+  "autores": [
+    "Xu, Nuo",
+    "Wang, Pinghui",
+    "Liang, Zi",
+    "Zhao, Junzhou",
+    "Guan, Xiaohong"
+  ],
+  "ano": 2025,
+  "venue": "ACM Transactions on Information Systems",
+  "pais_corpus": "China",
+  "idioma_corpus": "zh",
+  "subdominio": "decisoes_judiciais",
+  "tarefa_principal": "classificacao",
+  "tecnica_principal": "transformer_dominio",
+  "modelos_usados": [
+    "BERT",
+    "Lawformer",
+    "Legal-RoBERTa",
+    "XLNet",
+    "BGE",
+    "Sentence-BERT",
+    "BERT-PLI"
+  ],
+  "entidades_anotadas": [
+    "law_article",
+    "rationale_label",
+    "sentence_alignment"
+  ],
+  "num_classes_entidade": null,
+  "esquema_anotacao": "outros",
+  "corpus_publico": true,
+  "f1_melhor_reportado": 83.44,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Propõe LCM-LAI, um framework end-to-end de dependent multi-task learning que incorpora uma sub-tarefa de predição de artigos de lei e um mecanismo de article-aware attention para capturar a relevância jurisprudencial entre casos, melhorando desempenho em tarefas de recuperação e matching de casos legais.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.9
+}

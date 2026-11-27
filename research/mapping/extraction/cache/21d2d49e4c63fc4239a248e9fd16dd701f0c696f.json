@@ -1,0 +1,42 @@
+{
+  "referencia_curta": "Peng e Lu (2022)",
+  "titulo": "Named Entity Recognition of Chinese Legal Text Based on BERT",
+  "autores": [
+    "Peng, Yinan",
+    "Lu, Huawei"
+  ],
+  "ano": 2022,
+  "venue": "2022 4th International Conference on Applied Machine Learning (ICAML)",
+  "pais_corpus": "China",
+  "idioma_corpus": "zh",
+  "subdominio": "decisoes_judiciais",
+  "tarefa_principal": "ner",
+  "tecnica_principal": "transformer_dominio",
+  "modelos_usados": [
+    "BERT-wwm",
+    "BERT-CRF",
+    "BiLSTM-CRF",
+    "Lattice LSTM"
+  ],
+  "entidades_anotadas": [
+    "suspeitos_criminais",
+    "vitimas",
+    "ferramentas_para_crime",
+    "itens_roubados",
+    "quantia_roubada",
+    "valor_dos_itens",
+    "lucro_do_roubo",
+    "tempo",
+    "local",
+    "organizacao"
+  ],
+  "num_classes_entidade": 10,
+  "esquema_anotacao": "nao_reportado",
+  "corpus_publico": null,
+  "f1_melhor_reportado": 89.53,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Propõe um método de NER para textos jurídicos chineses baseado em BERT com pré-treinamento em domínio (corpus jurídico), aumento de dados (adição de palavras-clue e substituição por sinônimos), camada CRF e treinamento adversarial, mostrando ganho de desempenho sobre BiLSTM-CRF e Lattice LSTM.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.85
+}

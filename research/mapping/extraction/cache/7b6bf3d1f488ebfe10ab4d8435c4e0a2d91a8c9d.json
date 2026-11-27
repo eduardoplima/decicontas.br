@@ -1,0 +1,42 @@
+{
+  "referencia_curta": "Bauer et al. (2022)",
+  "titulo": "NLP in Human Rights Research: Extracting Knowledge Graphs About Police and Army Units and Their Commanders",
+  "autores": [
+    "Bauer, Daniel",
+    "Longley, Tom",
+    "Ma, Yueen",
+    "Wilson, Tony"
+  ],
+  "ano": 2022,
+  "venue": "Proceedings of the 16th Linguistic Annotation Workshop (LAW-XVI) @ LREC2022",
+  "pais_corpus": "Nigeria",
+  "idioma_corpus": "en",
+  "subdominio": "criminal",
+  "tarefa_principal": "ner",
+  "tecnica_principal": "bilstm_crf",
+  "modelos_usados": [
+    "BiLSTM-CNN-CRF",
+    "GloVe embeddings",
+    "CNN character embeddings",
+    "Dependency parser (Nguyen & Verspoor, 2018)",
+    "Neural network (relation extraction)",
+    "Shortest dependency path (heuristic)",
+    "NearestPerson baseline"
+  ],
+  "entidades_anotadas": [
+    "Person",
+    "Organization",
+    "Rank",
+    "Title",
+    "Role"
+  ],
+  "num_classes_entidade": 4,
+  "esquema_anotacao": "span_based",
+  "corpus_publico": true,
+  "f1_melhor_reportado": 82.0,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Publica um corpus anotado (130 artigos de notícia sobre forças de segurança na Nigéria) e o código do sistema, e descreve um sistema piloto que extrai entidades (NER via BiLSTM-CNN-CRF) e relações (várias estratégias: dependência, NN, heurística), alcançando desempenho de razoável a bom.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.85
+}

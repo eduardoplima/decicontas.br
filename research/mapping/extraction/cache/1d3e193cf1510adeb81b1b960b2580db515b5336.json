@@ -1,0 +1,41 @@
+{
+  "referencia_curta": "Pozzi et al. (2023)",
+  "titulo": "Named Entity Recognition and Linking for Entity Extraction from Italian Civil Judgements",
+  "autores": [
+    "Pozzi, Riccardo",
+    "Rubini, Riccardo",
+    "Bernasconi, Christian",
+    "Palmonari, Matteo"
+  ],
+  "ano": 2023,
+  "venue": null,
+  "pais_corpus": "Italy",
+  "idioma_corpus": "it",
+  "subdominio": "decisoes_judiciais",
+  "tarefa_principal": "pipeline_completo",
+  "tecnica_principal": "transformer_generico",
+  "modelos_usados": [
+    "ITA (bert-base-italian)",
+    "LGL (Italian-Legal-BERT)",
+    "ITA+LGL+ICCJ900k (MLM-adapted)",
+    "LGL+ICCJ900k (MLM-adapted)",
+    "BLINK-ITA (bi-encoder, ItalianBERT-base initialization)"
+  ],
+  "entidades_anotadas": [
+    "PER",
+    "ORG",
+    "LOC",
+    "DATE",
+    "MONEY",
+    "MISC"
+  ],
+  "num_classes_entidade": 6,
+  "esquema_anotacao": "span_based",
+  "corpus_publico": false,
+  "f1_melhor_reportado": 91.74,
+  "metrica_tipo": "micro",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Propõe e avalia um pipeline end-to-end de NER, NEL e NIL prediction para julgamentos civis italianos; apresenta o corpus anotado ICCJ (146 documentos) e analisa estratégias de adaptação por MLM em backbones BERT.",
+  "citacao_relevante_para_tce": "Entity extraction supports anonymization, semantic search and advanced statistical analyses (e.g., average alimony by district).",
+  "confianca_extracao": 0.9
+}

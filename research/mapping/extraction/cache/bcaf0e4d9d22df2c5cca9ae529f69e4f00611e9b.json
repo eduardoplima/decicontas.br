@@ -1,0 +1,40 @@
+{
+  "referencia_curta": "Song (2021)",
+  "titulo": "Classification of Contract-Amendment Relationships",
+  "autores": [
+    "Song, Fuqi"
+  ],
+  "ano": 2021,
+  "venue": "RELATED - Relations in the Legal Domain Workshop (in conjunction with ICAIL 2021)",
+  "pais_corpus": null,
+  "idioma_corpus": "en,fr",
+  "subdominio": "contratos",
+  "tarefa_principal": "classificacao",
+  "tecnica_principal": "hibrido",
+  "modelos_usados": [
+    "Random Forest",
+    "Linear SGD",
+    "Multi-layer Perceptron (MLP)",
+    "TF-IDF",
+    "FastText",
+    "heuristic_baseline",
+    "OCR",
+    "NER"
+  ],
+  "entidades_anotadas": [
+    "corporate_name",
+    "contract_number",
+    "date",
+    "legal_party",
+    "keywords"
+  ],
+  "num_classes_entidade": null,
+  "esquema_anotacao": "nao_reportado",
+  "corpus_publico": false,
+  "f1_melhor_reportado": 90.9,
+  "metrica_tipo": "macro",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Propõe um método baseado em ML e NLP para detectar relações contrato–aditamento entre pares de documentos, construindo features de nome, texto, partes legais e referências cruzadas e avaliando classificadores (RF, MLP, Linear) sobre 1.124 pares multilíngues, obtendo F1 de 90.9%.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.9
+}

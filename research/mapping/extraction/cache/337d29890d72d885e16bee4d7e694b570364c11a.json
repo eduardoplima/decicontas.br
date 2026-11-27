@@ -1,0 +1,32 @@
+{
+  "referencia_curta": "Meyers et al. (2021)",
+  "titulo": "Legal Terminology Extraction with the Termolator",
+  "autores": [
+    "Pham, Nhi",
+    "Pham, Lachlan",
+    "Meyers, Adam"
+  ],
+  "ano": 2021,
+  "venue": "Natural Legal Language Processing Workshop 2021",
+  "pais_corpus": "United States",
+  "idioma_corpus": "en",
+  "subdominio": "decisoes_judiciais",
+  "tarefa_principal": "outros",
+  "tecnica_principal": "hibrido",
+  "modelos_usados": [
+    "Termolator (original, com Yahoo websearch)",
+    "Termolator (modificado, com Harvard Case Law Access Project API)"
+  ],
+  "entidades_anotadas": [
+    "terminologia_juridica"
+  ],
+  "num_classes_entidade": null,
+  "esquema_anotacao": "nao_reportado",
+  "corpus_publico": true,
+  "f1_melhor_reportado": null,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Adaptação e filtragem específica ao domínio jurídico do Termolator (remoção de citações, nomes de casos/leis, filtros de dígitos/hífen e substituição do Yahoo websearch pelo Harvard CaseLaw API), resultando em aumento da precisão de extração de terminologia em decisões da Suprema Corte dos EUA (de ≈23% para ≈63%).",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.9
+}

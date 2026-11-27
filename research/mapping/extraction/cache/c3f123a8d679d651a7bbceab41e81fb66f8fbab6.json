@@ -1,0 +1,48 @@
+{
+  "referencia_curta": "Zhang et al. (nao_reportado)",
+  "titulo": "A RoBERTa-GlobalPointer-Based Method for Named Entity Recognition of Legal Documents",
+  "autores": [
+    "Zhang, Xinrui",
+    "Luo, Xudong",
+    "Wu, Jiaye"
+  ],
+  "ano": 0,
+  "venue": null,
+  "pais_corpus": "China",
+  "idioma_corpus": "zh",
+  "subdominio": "decisoes_judiciais",
+  "tarefa_principal": "ner",
+  "tecnica_principal": "transformer_dominio",
+  "modelos_usados": [
+    "RoBERTa-wwm-ext",
+    "RoBERTa",
+    "MacBERT",
+    "Lawformer",
+    "RoBERTa-CRF",
+    "RoBERTa-BiLSTM-CRF",
+    "RoBERTa-Biaffine",
+    "GlobalPointer",
+    "Skip-Gram"
+  ],
+  "entidades_anotadas": [
+    "NHCS (CrimeSuspect)",
+    "NASI (StolenItems)",
+    "NS (Site)",
+    "NHVI (Victim)",
+    "NT (Time)",
+    "NCGV (GoodsValue)",
+    "NCSM (StolenMoney)",
+    "NO (Organisation)",
+    "NATS (Crimetool)",
+    "NCSP (Theftofprofit)"
+  ],
+  "num_classes_entidade": 10,
+  "esquema_anotacao": "json_indices",
+  "corpus_publico": true,
+  "f1_melhor_reportado": 90.54,
+  "metrica_tipo": "micro",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Propõe um método RoBERTa-GlobalPointer para NER em documentos jurídicos chineses que funde representações em nível de caractere (RoBERTa) e nível de palavra (Skip-Gram), emprega RoPE para codificar posições relativas e balanced softmax para lidar com desequilíbrio de classes, alcançando 90.54% F1 no LegalCorpus e superando baselines.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.85
+}

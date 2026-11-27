@@ -1,0 +1,47 @@
+{
+  "referencia_curta": "Bhandari et al. (2025)",
+  "titulo": "Evaluating Transformer Models for Named Entity Recognition in Indian Legal Texts",
+  "autores": [
+    "Bhandari, Ayush",
+    "Giriyan, Priyanshu",
+    "Gawade, Prathamesh",
+    "Sahitya, Aarti"
+  ],
+  "ano": 2025,
+  "venue": "2025 3rd International Conference on Disruptive Technologies (ICDT)",
+  "pais_corpus": "India",
+  "idioma_corpus": "en",
+  "subdominio": "decisoes_judiciais",
+  "tarefa_principal": "ner",
+  "tecnica_principal": "transformer_generico",
+  "modelos_usados": [
+    "DistilBERT",
+    "DistilRoBERTa",
+    "InLegalBERT"
+  ],
+  "entidades_anotadas": [
+    "COURT",
+    "PETITIONER",
+    "RESPONDENT",
+    "JUDGE",
+    "LAWYER",
+    "DATE",
+    "ORG",
+    "GPE",
+    "STATUTE",
+    "PROVISION",
+    "PRECEDENT",
+    "CASE_NUMBER",
+    "WITNESS",
+    "OTHER_PERSON"
+  ],
+  "num_classes_entidade": 14,
+  "esquema_anotacao": "bio_iob",
+  "corpus_publico": null,
+  "f1_melhor_reportado": 86.72,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Apresenta e compara fine-tuning de transformers (DistilBERT, DistilRoBERTa, InLegalBERT) para NER em sentenças judiciais indianas e propõe uma metodologia baseada em Jensen-Shannon Divergence para otimizar a divisão do dataset e balancear a distribuição de entidades, resultando em ganho de desempenho (melhor F1: DistilRoBERTa).",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.9
+}

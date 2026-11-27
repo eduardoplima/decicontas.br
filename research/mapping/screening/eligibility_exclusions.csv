@@ -1,0 +1,12 @@
+record_id,source,title,year,doi,reason,detail
+134,Scopus,Key Information Extraction of Food Environmental Safety Criminal Judgment Documents Based on Deep Learning,2022,10.1155/2022/4661166,texto_completo_nao_obtido,PDF não localizado
+143,Scopus,Deep Learning-Based Legal System Architecture for Africa: An Architectural Study,2022,10.1007/978-981-16-3675-2_20,texto_completo_nao_obtido,PDF não localizado
+163,Scopus,Semantic types of legal norms in German laws: classification and analysis using local linear explanations,2019,10.1007/s10506-018-9228-y,texto_completo_nao_obtido,PDF não localizado
+94,Scopus,Combining Rule-Based and Machine Learning Methods for Efficient Information Extraction from Enforcement Decisions,2024,10.3233/FAIA241262,texto_completo_nao_obtido,arquivo baixado não é um PDF válido
+152,Scopus,BERT-Based Ensemble Model for Statute Law Retrieval and Legal Information Entailment,2021,10.1007/978-3-030-79942-7_15,texto_completo_nao_obtido,PDF baixado é de outro artigo (DOI 10.1145/3462757.3466105)
+78,Scopus,A systematical procedure to extracting legal entities from Indonesian judicial decisions,2025,10.1016/j.mex.2025.103610,texto_completo_nao_obtido,PDF baixado é de outro artigo (DOI 10.11591/eei.v14i3.8407)
+362,Scopus,A Study on the Impact of Intradomain Finetuning of Deep Language Models for Legal Named Entity Recognition in Portuguese,2020,10.1007/978-3-030-61377-8_46,texto_completo_nao_obtido,PDF baixado é de outro artigo (Nunes et al.)
+81,Scopus,"Legal information extraction and classification using BERT, Bi-LSTM, and CRF models",2025,10.1177/14727978251323131,texto_completo_nao_obtido,PDF baixado é de outro artigo (DOI 10.1145/3487553.3524640)
+371,Scopus,Fine-grained legal entity annotation: A case study on the Brazilian Supreme Court,2022,10.1016/j.ipm.2021.102794,texto_completo_nao_obtido,apenas a primeira página do artigo foi obtida
+471,IEEE,Legal Entity Recognition in Indonesian Court Decision Documents Using Bi-LSTM and CRF Approaches,2020,10.1109/ICACSIS51025.2020.9263157,texto_nao_extraivel,PDF de 6 páginas com fontes codificadas; texto não legível por máquina
+112,Scopus,RuLegalNER: a new dataset for Russian legal named entities recognition; RuLegalNER: новый датасет для распознавания именованных юридических сущностей на русском языке,2023,10.17586/2226-1494-2023-23-4-854-857,idioma,artigo em russo (CE7)

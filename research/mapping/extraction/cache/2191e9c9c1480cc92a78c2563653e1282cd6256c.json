@@ -1,0 +1,36 @@
+{
+  "referencia_curta": "Chen et al. (2020)",
+  "titulo": "Joint Entity and Relation Extraction for Legal Documents with Legal Feature Enhancement",
+  "autores": [
+    "Chen, Yanguang",
+    "Sun, Yuanyuan",
+    "Yang, Zhihao",
+    "Lin, Hongfei"
+  ],
+  "ano": 2020,
+  "venue": "Proceedings of the 28th International Conference on Computational Linguistics (COLING)",
+  "pais_corpus": "China",
+  "idioma_corpus": "zh",
+  "subdominio": "criminal",
+  "tarefa_principal": "extracao_relacoes",
+  "tecnica_principal": "transformer_dominio",
+  "modelos_usados": [
+    "RoBERTa-wwm-ext (Chinese)",
+    "RoBERTa (BASE/LARGE)",
+    "BERT-Base (Chinese)",
+    "BiLSTM",
+    "PNDec (pointer-network baseline)"
+  ],
+  "entidades_anotadas": [
+    "drug_name"
+  ],
+  "num_classes_entidade": null,
+  "esquema_anotacao": "bio_iob",
+  "corpus_publico": false,
+  "f1_melhor_reportado": 83.6,
+  "metrica_tipo": "micro",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Propõe um sistema de extração conjunta de entidades e relações (triplets) baseado em Seq2Seq com encoder RoBERTa e reforço por lexicon jurídico (nomes de drogas) e uma tarefa auxiliar de sequence tagging; além disso, anotam manualmente um dataset chinês de casos criminais relacionados a drogas e obtêm F1 de 83.6% no conjunto legal.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.9
+}

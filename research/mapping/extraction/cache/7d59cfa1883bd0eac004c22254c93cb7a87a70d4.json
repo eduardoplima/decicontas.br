@@ -1,0 +1,51 @@
+{
+  "referencia_curta": "Ratnayaka et al. (2022)",
+  "titulo": "Context Sensitive Verb Similarity Dataset for Legal Information Extraction",
+  "autores": [
+    "Ratnayaka, Gathika",
+    "de Silva, Nisansade",
+    "Perera, Amal Shehan",
+    "Kavirathne, Gayan",
+    "Ariyarathna, Thirasara",
+    "Wijesinghe, Anjana"
+  ],
+  "ano": 2022,
+  "venue": "Data (MDPI)",
+  "pais_corpus": "United States",
+  "idioma_corpus": "en",
+  "subdominio": "decisoes_judiciais",
+  "tarefa_principal": "classificacao",
+  "tecnica_principal": "hibrido",
+  "modelos_usados": [
+    "Word2Vec(G)",
+    "Word2Vec(LR)",
+    "Word2Vec(LL)",
+    "Word2Vec(LLR)",
+    "Sense2Vec(R)",
+    "Sense2Vec(SG-2)",
+    "Sense2Vec(CBOW-10)",
+    "Sense2Vec(SG-10)",
+    "BERT(G)",
+    "BERT(L) (improved)",
+    "ArtificialNeuralNetwork (proposed)"
+  ],
+  "entidades_anotadas": [
+    "verb_pair",
+    "target_sentence",
+    "source_sentence",
+    "target_verb",
+    "source_verb",
+    "lemmatized_forms",
+    "similarity_label",
+    "rating_confidence"
+  ],
+  "num_classes_entidade": null,
+  "esquema_anotacao": "nao_reportado",
+  "corpus_publico": true,
+  "f1_melhor_reportado": 80.0,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": true,
+  "contribuicao_principal": "Introduce LeCoVe, a publicly available context-sensitive verb similarity dataset (959 verb pairs) for the legal domain; evaluates domain-specific and generic embeddings (Word2Vec, Sense2Vec, BERT) and proposes a neural-network model that combines model outputs to improve verb-similarity classification (best F1 = 0.80).",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.9
+}

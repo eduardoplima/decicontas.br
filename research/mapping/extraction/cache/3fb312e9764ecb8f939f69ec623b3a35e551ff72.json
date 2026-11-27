@@ -1,0 +1,48 @@
+{
+  "referencia_curta": "Koolen et al. (2023)",
+  "titulo": "The Value of Preexisting Structures for Digital Access: Modelling the Resolutions of the Dutch States General",
+  "autores": [
+    "Koolen, Marijn",
+    "Hoekstra, Rik",
+    "Oddens, Joris",
+    "Sluijter, Ronald",
+    "van Koert, Rutger",
+    "Brouwer, Gijsjan",
+    "Brugman, Hennie"
+  ],
+  "ano": 2023,
+  "venue": "ACM Journal on Computing and Cultural Heritage",
+  "pais_corpus": "Netherlands",
+  "idioma_corpus": "nl",
+  "subdominio": "outros",
+  "tarefa_principal": "pipeline_completo",
+  "tecnica_principal": "hibrido",
+  "modelos_usados": [
+    "spaCy NER",
+    "Transkribus HTR",
+    "P2PaLA (Page-to-Page Layout Analysis)",
+    "Custom OCR/HTR models"
+  ],
+  "entidades_anotadas": [
+    "datas/meeting dates",
+    "meetings/sessions",
+    "attendants/president",
+    "resolutions (proposition and decision)",
+    "person qualifications (occupation, title, legal status)",
+    "person names",
+    "place names",
+    "organisations/institutes",
+    "document types (request, report, missive)",
+    "index terms/topics",
+    "insertions/referenced documents"
+  ],
+  "num_classes_entidade": null,
+  "esquema_anotacao": "nao_reportado",
+  "corpus_publico": true,
+  "f1_melhor_reportado": 27.4,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Apresenta uma abordagem iterativa e orientada por especialistas que explora estruturas pré-existentes (fórmulas, índices e templates) e técnicas híbridas (fuzzy matching, templates e NER) para transformar um arquivo digitalizado de resoluções históricas em camadas ricas de metadados conectados, priorizando qualificações de pessoas e tipos documentais para criar pontos de acesso precisos e interpretáveis.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.85
+}

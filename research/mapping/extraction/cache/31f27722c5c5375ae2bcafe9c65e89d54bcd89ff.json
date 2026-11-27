@@ -1,0 +1,48 @@
+{
+  "referencia_curta": "Lee et al. (2023)",
+  "titulo": "LeArNER: Few-shot Legal Argument Named Entity Recognition",
+  "autores": [
+    "Lee, Shao-Man",
+    "Tan, Yu-Hsiang",
+    "Yu, Han-Ting"
+  ],
+  "ano": 2023,
+  "venue": "ICAIL 2023 (Proceedings of the Nineteenth International Conference on Artificial Intelligence and Law)",
+  "pais_corpus": "Taiwan",
+  "idioma_corpus": "zh",
+  "subdominio": "decisoes_judiciais",
+  "tarefa_principal": "ner",
+  "tecnica_principal": "hibrido",
+  "modelos_usados": [
+    "Lattice LSTM",
+    "Entity-enhanced BERT",
+    "BERT-CRF",
+    "RoBERTa",
+    "LERT",
+    "LeArNER"
+  ],
+  "entidades_anotadas": [
+    "administrative actions",
+    "countries",
+    "courts",
+    "dates",
+    "durations",
+    "laws",
+    "legal cases",
+    "new-word references",
+    "persons",
+    "principles",
+    "procedures",
+    "regulations",
+    "rights"
+  ],
+  "num_classes_entidade": 13,
+  "esquema_anotacao": "bio_iob",
+  "corpus_publico": null,
+  "f1_melhor_reportado": 94.88,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Propõe LeArNER, um método few-shot para NER em textos jurídicos em chinês tradicional que integra pré-treinamento com um dicionário de entidades (LERT), Bi-LSTM, CRF e R-Drop, alcançando 94.88% de F1 em 13 tipos de entidade com apenas ~2000 sentenças de treino.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.9
+}

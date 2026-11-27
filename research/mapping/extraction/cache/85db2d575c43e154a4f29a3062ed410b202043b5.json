@@ -1,0 +1,33 @@
+{
+  "referencia_curta": "Koboyatshwene et al. (nao_reportado)",
+  "titulo": "Machine Learning Approaches for Catchphrase Extraction in Legal Documents",
+  "autores": [
+    "Koboyatshwene, Tshepho",
+    "Lefoane, Moemedi",
+    "Narasimhan, Lakshmi"
+  ],
+  "ano": 0,
+  "venue": null,
+  "pais_corpus": null,
+  "idioma_corpus": "en",
+  "subdominio": "decisoes_judiciais",
+  "tarefa_principal": "outros",
+  "tecnica_principal": "hibrido",
+  "modelos_usados": [
+    "RAKE",
+    "MAUI"
+  ],
+  "entidades_anotadas": [
+    "catchphrase",
+    "keyword"
+  ],
+  "num_classes_entidade": null,
+  "esquema_anotacao": "nao_reportado",
+  "corpus_publico": true,
+  "f1_melhor_reportado": null,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Comparação experimental entre abordagens de extração de catchphrases: RAKE (não supervisionado) e MAUI (supervisionado), com ajuste de parâmetros; relatório de que MAUI obteve melhor precisão e MAP, enquanto RAKE apresentou maior recall.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.8
+}

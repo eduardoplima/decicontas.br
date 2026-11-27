@@ -1,0 +1,37 @@
+{
+  "referencia_curta": "Skylaki et al. (2021)",
+  "titulo": "Legal Entity Extraction using a Pointer Generator Network",
+  "autores": [
+    "Skylaki, Stavroula",
+    "Oskooei, Ali",
+    "Bari, Omar",
+    "Herger, Nadja",
+    "Kriegman, Zac"
+  ],
+  "ano": 2021,
+  "venue": "2021 International Conference on Data Mining Workshops (ICDMW)",
+  "pais_corpus": "United States",
+  "idioma_corpus": "en",
+  "subdominio": "decisoes_judiciais",
+  "tarefa_principal": "ner",
+  "tecnica_principal": "hibrido",
+  "modelos_usados": [
+    "Pointer Generator (seq2seq LSTM)",
+    "BiLSTM-CRF",
+    "DistilBERT (fine-tuned)"
+  ],
+  "entidades_anotadas": [
+    "plaintiff",
+    "defendant",
+    "case_number"
+  ],
+  "num_classes_entidade": 2,
+  "esquema_anotacao": "bio_iob",
+  "corpus_publico": false,
+  "f1_melhor_reportado": 88.9,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Propõe reformular extração de entidades legais como tarefa de geração seq2seq usando um pointer-generator para lidar com textos longos e ruidosos extraídos por OCR sem rótulos de token. Mostra que esse modelo supera arquiteturas clássicas de NER em documentos longos e lida melhor com OOVs e números de processo (com melhoras adicionais usando tokenização por caractere).",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.9
+}

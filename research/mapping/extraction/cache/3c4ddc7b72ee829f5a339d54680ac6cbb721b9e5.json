@@ -1,0 +1,50 @@
+{
+  "referencia_curta": "Naik et al. (2023)",
+  "titulo": "An Effective Search Algorithm for Analyzing and Extracting Indian Legal Judgments using NER and Document Summarization.",
+  "autores": [
+    "Naik, Varsha",
+    "Kannan, Rajeswari",
+    "Agarwal, Sanket",
+    "Sable, Aryan",
+    "Chaudhari, Himanshu"
+  ],
+  "ano": 2023,
+  "venue": "2023 7th International Conference On Computing, Communication, Control And Automation (ICCUBEA)",
+  "pais_corpus": "India",
+  "idioma_corpus": "en",
+  "subdominio": "decisoes_judiciais",
+  "tarefa_principal": "pipeline_completo",
+  "tecnica_principal": "hibrido",
+  "modelos_usados": [
+    "spaCy (pre-trained NER)",
+    "abstractive summarization model (treinado em documentos legais, não especificado)",
+    "RAKE (keyword extraction)",
+    "cosine similarity",
+    "RDF/RDFS knowledge graph construction"
+  ],
+  "entidades_anotadas": [
+    "LAWYER",
+    "COURT",
+    "JUDGE",
+    "PETITIONER",
+    "RESPONDENT",
+    "CASENUMBER",
+    "GPE",
+    "STATUTE",
+    "WITNESS",
+    "PRECEDENT",
+    "PROVISION",
+    "OTHERPERSON",
+    "ORG",
+    "DATE"
+  ],
+  "num_classes_entidade": 14,
+  "esquema_anotacao": "nao_reportado",
+  "corpus_publico": null,
+  "f1_melhor_reportado": null,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Propõe um mecanismo de busca semântico para precedentes jurídicos indianos combinando extração de entidades (NER) para construir um knowledge graph e uma abordagem baseada em sumarização (abstractive + RAKE) para recuperação por similaridade; demonstra fluxo de produção do grafo e avaliação de sumarização com ROUGE.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.8
+}

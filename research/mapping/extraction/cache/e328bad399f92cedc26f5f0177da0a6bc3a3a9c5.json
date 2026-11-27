@@ -1,0 +1,40 @@
+{
+  "referencia_curta": "Jiang (2020)",
+  "titulo": "The Application of Ensemble Learning on Named Entity Recognition for Legal Knowledgebase of Properties Involved in Criminal Cases",
+  "autores": [
+    "Jiang, Zongshen"
+  ],
+  "ano": 2020,
+  "venue": "2020 IEEE International Conference on Advances in Electrical Engineering and Computer Applications (AEECA)",
+  "pais_corpus": "China",
+  "idioma_corpus": "zh",
+  "subdominio": "criminal",
+  "tarefa_principal": "ner",
+  "tecnica_principal": "hibrido",
+  "modelos_usados": [
+    "HMM",
+    "CRF",
+    "BiLSTM",
+    "MEM",
+    "Ensemble (plurality voting)",
+    "Ensemble (weighted voting)"
+  ],
+  "entidades_anotadas": [
+    "organizations",
+    "properties",
+    "clauses",
+    "public_department",
+    "procuratorate",
+    "judicial_department",
+    "person_role"
+  ],
+  "num_classes_entidade": 7,
+  "esquema_anotacao": "bio_iob",
+  "corpus_publico": false,
+  "f1_melhor_reportado": 90.78,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Propõe o uso de ensemble learning (votação pluralitária e votação ponderada) combinando HMM, CRF, MEM e BiLSTM para NER em um corpus jurídico de pequeno porte (propriedades em casos criminais), mostrando ganho de desempenho (melhor F1 90.78%).",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.8
+}

@@ -1,0 +1,41 @@
+{
+  "referencia_curta": "Kamat et al. (2022)",
+  "titulo": "An Indian Court Decision Annotated Corpus and Knowledge Graph",
+  "autores": [
+    "Kamat, Pariskhit",
+    "Kalson, Shubham",
+    "S, Suraj",
+    "Harde, Pooja",
+    "Mihindukulasooriya, Nandana",
+    "Jain, Sarika"
+  ],
+  "ano": 2022,
+  "venue": "Joint Proceedings of ISWC2022 Workshops (AI4LEGAL), CEUR Workshop Proceedings",
+  "pais_corpus": "India",
+  "idioma_corpus": "en",
+  "subdominio": "decisoes_judiciais",
+  "tarefa_principal": "ner",
+  "tecnica_principal": "regras",
+  "modelos_usados": [],
+  "entidades_anotadas": [
+    "Party",
+    "Court",
+    "DateOfJudgment",
+    "CourtOfficial",
+    "Author",
+    "Location",
+    "CaseType",
+    "CourtDecision",
+    "Jurisdiction",
+    "Documents"
+  ],
+  "num_classes_entidade": 40,
+  "esquema_anotacao": "bio_iob",
+  "corpus_publico": true,
+  "f1_melhor_reportado": 100.0,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Apresenta um corpus anotado de decisões judiciais indianas (50 documentos; 10 classes coarse-grained e 30 fine-grained) e descreve a construção de um knowledge graph usando abordagem rule-based para NER e RE, com avaliação quantitativa (precision/recall/F1) e consultas SPARQL.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.85
+}

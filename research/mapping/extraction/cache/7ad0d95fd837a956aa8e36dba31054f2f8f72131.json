@@ -1,0 +1,43 @@
+{
+  "referencia_curta": "Berrazega et al. (2016)",
+  "titulo": "A Semantic Annotation Model for Arabic Legal Texts",
+  "autores": [
+    "Berrazega, Ines",
+    "Faiz, Rim",
+    "Bouhafs, Asma",
+    "Mourad, Ghassan"
+  ],
+  "ano": 2016,
+  "venue": "SETN '16: Proceedings of the 9th Hellenic Conference on Artificial Intelligence",
+  "pais_corpus": "Tunisia",
+  "idioma_corpus": "ar",
+  "subdominio": "legislacao",
+  "tarefa_principal": "classificacao",
+  "tecnica_principal": "regras",
+  "modelos_usados": [],
+  "entidades_anotadas": [
+    "Definition",
+    "Presumption",
+    "Obligation",
+    "Prohibition",
+    "Right/Permission",
+    "Procedure",
+    "Application rule",
+    "Penalty",
+    "Insertion",
+    "Completion",
+    "Modification",
+    "Replacement",
+    "Repeal",
+    "Deletion"
+  ],
+  "num_classes_entidade": 14,
+  "esquema_anotacao": "xml",
+  "corpus_publico": false,
+  "f1_melhor_reportado": 96.23,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Propõe um modelo de anotação semântica para textos normativos em árabe baseado no método de Contextual Exploration, combinando uma taxonomia de categorias normativas, uma base terminológica e uma base de regras de anotação; avaliado sobre 600 textos (teste: 1700 provisões) do Diário Oficial da Tunísia com F1 geral de ~96,23%.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.9
+}

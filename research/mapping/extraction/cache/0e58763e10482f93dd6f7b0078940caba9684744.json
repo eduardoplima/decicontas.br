@@ -1,0 +1,43 @@
+{
+  "referencia_curta": "Kirsch et al. (2020)",
+  "titulo": "Using Probabilistic Soft Logic to Improve Information Extraction in the Legal Domain",
+  "autores": [
+    "Kirsch, Birgit",
+    "Giesselbach, Sven",
+    "Schmude, Timothée",
+    "Völkening, Malte",
+    "Rostalski, Frauke",
+    "Rüping, Stefan"
+  ],
+  "ano": 2020,
+  "venue": null,
+  "pais_corpus": "Germany",
+  "idioma_corpus": "de",
+  "subdominio": "criminal",
+  "tarefa_principal": "pipeline_completo",
+  "tecnica_principal": "hibrido",
+  "modelos_usados": [
+    "BERT (bert-base-german-cased)",
+    "spaCy (CNN)",
+    "Probabilistic Soft Logic (PSL)"
+  ],
+  "entidades_anotadas": [
+    "date",
+    "loc",
+    "f_amnt",
+    "f_units",
+    "d_impr",
+    "previous_convictions",
+    "type_of_sentence",
+    "probation"
+  ],
+  "num_classes_entidade": 5,
+  "esquema_anotacao": "nao_reportado",
+  "corpus_publico": null,
+  "f1_melhor_reportado": 88.6,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Propõe um modelo probabilístico baseado em PSL que realiza inferência conjunta sobre classificação de documentos e NER, integrando regras de domínio legais para reduzir propagação de erro e melhorar a extração em sentenças judiciais alemãs.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.9
+}

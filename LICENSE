@@ -12,6 +12,11 @@ Estado do Rio Grande do Norte. The CC BY 4.0 license covers the annotations,
 the tokenisation, the release bundles and the accompanying documentation
 produced by the authors.
 
+The data and documentation of the systematic literature mapping under
+`research/mapping/` (protocol, screening records, extracted data, charts and
+tables) are likewise licensed under CC BY 4.0. The bibliographic records are
+metadata exported from ACM Digital Library, IEEE Xplore and Scopus.
+
 CODE
 All source code (`research/`, `scripts/`, `tests/`, `notebooks/`) is licensed
 under the MIT License:

@@ -1,0 +1,41 @@
+{
+  "referencia_curta": "Koutsopoulos et al. (2025)",
+  "titulo": "CLAIM: A Tool for Analyzing Legal Documents",
+  "autores": [
+    "Koutsopoulos, Georgios",
+    "Kniby, Noran",
+    "Wiman, Pauline",
+    "Karina-Berzina, Ingrida",
+    "Stirna, Janis"
+  ],
+  "ano": 2025,
+  "venue": "Selected Papers of HybridAIMS and CAI Workshops (Co-located with CAiSE 2025)",
+  "pais_corpus": "European Union",
+  "idioma_corpus": "en",
+  "subdominio": "decisoes_judiciais",
+  "tarefa_principal": "pipeline_completo",
+  "tecnica_principal": "llm_zero_shot",
+  "modelos_usados": [
+    "ChatGPT-4 (OpenAI)"
+  ],
+  "entidades_anotadas": [
+    "IP Case",
+    "Trademark",
+    "Document",
+    "AssessmentFactor",
+    "Assessment",
+    "ProceedingsStage",
+    "Institution",
+    "Outcome",
+    "Appeal"
+  ],
+  "num_classes_entidade": null,
+  "esquema_anotacao": "ontologico",
+  "corpus_publico": false,
+  "f1_melhor_reportado": null,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Apresenta o protótipo CLAIM, que combina Model-Driven Development (UML/enterprise modeling) com um LLM (ChatGPT-4) para extração semântica de informação e recuperação legal em corpora de decisões de propriedade intelectual; os conceitos extraídos são armazenados numa base relacional (MariaDB) e consultados via mapeamento de consultas em linguagem natural para SQL gerado pelo LLM.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.85
+}

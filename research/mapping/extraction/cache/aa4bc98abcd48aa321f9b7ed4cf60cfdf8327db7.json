@@ -1,0 +1,45 @@
+{
+  "referencia_curta": "Li et al. (2025)",
+  "titulo": "LEE: An Efficient Scheme of Legal Element Extraction based on Large Language Model",
+  "autores": [
+    "Li, Huaiyong",
+    "Liu, Wenjiang",
+    "Qu, Zhao",
+    "Xia, Yongping",
+    "Jiang, Heling",
+    "Ding, Hongfa"
+  ],
+  "ano": 2025,
+  "venue": "2025 IEEE International Symposium on Parallel and Distributed Processing with Applications (ISPA)",
+  "pais_corpus": "China",
+  "idioma_corpus": "zh",
+  "subdominio": "criminal",
+  "tarefa_principal": "ner",
+  "tecnica_principal": "hibrido",
+  "modelos_usados": [
+    "GLM-9B-Chat",
+    "YAYI-UIE",
+    "ChatIE",
+    "UIE"
+  ],
+  "entidades_anotadas": [
+    "BasicInformation",
+    "DefendantInformation",
+    "DefenseAttorneyInformation",
+    "PriorConvictions",
+    "CriminalFacts",
+    "CoerciveMeasures",
+    "Evidence",
+    "ProsecutionSituation",
+    "SentencingCircumstances"
+  ],
+  "num_classes_entidade": 9,
+  "esquema_anotacao": "nao_reportado",
+  "corpus_publico": null,
+  "f1_melhor_reportado": 98.7,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": true,
+  "contribuicao_principal": "Propõe LEE, um framework em três estágios que combina Rule-Based Parsing e Context-Prompting Learning sobre LLMs para extração de elementos em documentos de acusação. Demonstra superioridade frente a métodos estado-da-arte em um conjunto privado de acusação e dois datasets públicos (CAIL2019, CAIL2021).",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.9
+}

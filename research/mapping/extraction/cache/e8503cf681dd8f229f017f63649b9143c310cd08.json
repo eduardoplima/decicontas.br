@@ -1,0 +1,42 @@
+{
+  "referencia_curta": "Pa˘is et al. (2021)",
+  "titulo": "Named entity recognition in the Romanian legal domain",
+  "autores": [
+    "Pa˘is, Vasile",
+    "Mitrofan, Maria",
+    "Gasan, Carol Luca",
+    "Coneschi, Vlad",
+    "Ianov, Alexandru"
+  ],
+  "ano": 2021,
+  "venue": "Natural Legal Language Processing Workshop (RELATE / ACL workshop)",
+  "pais_corpus": "Romania",
+  "idioma_corpus": "ro",
+  "subdominio": "legislacao",
+  "tarefa_principal": "ner",
+  "tecnica_principal": "bilstm_crf",
+  "modelos_usados": [
+    "BiLSTM-CRF",
+    "NeuroNER (modificado)",
+    "spaCy (ro_core_news_lg)",
+    "FastText (CoRoLa embeddings)",
+    "FastText (MARCELL embeddings)",
+    "Modelos em ensemble (união/interseção/votação/maior extensão)"
+  ],
+  "entidades_anotadas": [
+    "person (PER)",
+    "location (LOC)",
+    "organization (ORG)",
+    "time (TIME)",
+    "legal reference (LEGAL)"
+  ],
+  "num_classes_entidade": 5,
+  "esquema_anotacao": "span_based",
+  "corpus_publico": true,
+  "f1_melhor_reportado": 90.36,
+  "metrica_tipo": "macro",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Criação e disponibilização do corpus LegalNERo anotado para o domínio jurídico romeno, desenvolvimento de um sistema NER (BiLSTM+CRF) com embeddings específicos (CoRoLa e MARCELL) e publicação de modelos/recursos na plataforma RELATE, alcançando macro‑F1 até 90.36.",
+  "citacao_relevante_para_tce": "O trabalho anota referências a documentos legais (leis, ordenanţe, decizii guvernamentale), permitindo extrair referências documentais úteis para análise e fiscalização.",
+  "confianca_extracao": 0.9
+}

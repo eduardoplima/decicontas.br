@@ -1,0 +1,45 @@
+{
+  "referencia_curta": "Cabrera-Diego e Gheewala (2023)",
+  "titulo": "Jus Mundi at SemEval-2023 Task 6: Using a Frustratingly Easy Domain Adaption for a Legal Named Entity Recognition System",
+  "autores": [
+    "Cabrera-Diego, Luis Adrián",
+    "Gheewala, Akshita"
+  ],
+  "ano": 2023,
+  "venue": "Proceedings of the 17th International Workshop on Semantic Evaluation (SemEval-2023)",
+  "pais_corpus": "India",
+  "idioma_corpus": "en",
+  "subdominio": "decisoes_judiciais",
+  "tarefa_principal": "ner",
+  "tecnica_principal": "transformer_dominio",
+  "modelos_usados": [
+    "DeBERTaV3-Large",
+    "CRF",
+    "FEDA"
+  ],
+  "entidades_anotadas": [
+    "Casenumber",
+    "Court",
+    "Date",
+    "GPE",
+    "Judge",
+    "Lawyer",
+    "Organization",
+    "OtherPerson",
+    "Petitioner",
+    "Precedent",
+    "Provision",
+    "Respondent",
+    "Statute",
+    "Witness"
+  ],
+  "num_classes_entidade": 14,
+  "esquema_anotacao": "bio_iob",
+  "corpus_publico": null,
+  "f1_melhor_reportado": 90.07,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Proposta e avaliação de um sistema NER para sentenças indianas treinado com Frustratingly Easy Domain Adaptation (FEDA) sobre DeBERTaV3-Large + CRF, incluindo técnicas para processar textos longos (contexto sobreposto) e pós-processamento; obteve F1=0.9007 no subtask B do SemEval-2023.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.9
+}

@@ -1,0 +1,46 @@
+{
+  "referencia_curta": "Dong et al. (2022)",
+  "titulo": "Named Entity Recognition for Public Interest Litigation Based on a Deep Contextualized Pretraining Approach",
+  "autores": [
+    "Dong, Hongsong",
+    "Kong, Yuehui",
+    "Gao, Wenlian",
+    "Liu, Jihua"
+  ],
+  "ano": 2022,
+  "venue": "Scientific Programming",
+  "pais_corpus": "China",
+  "idioma_corpus": "zh",
+  "subdominio": "decisoes_judiciais",
+  "tarefa_principal": "ner",
+  "tecnica_principal": "transformer_dominio",
+  "modelos_usados": [
+    "BERT-WWM-EXT",
+    "BERT-WWM",
+    "BERT",
+    "RoBERTa-WWM-EXT",
+    "RoBERTa",
+    "ALBERT",
+    "ALBERT-tiny",
+    "BiLSTM-CRF",
+    "CNN-BiLSTM-CRF",
+    "CRF"
+  ],
+  "entidades_anotadas": [
+    "PER",
+    "LOC",
+    "ORG",
+    "GAS",
+    "WATER",
+    "SOLID"
+  ],
+  "num_classes_entidade": 6,
+  "esquema_anotacao": "bio_iob",
+  "corpus_publico": false,
+  "f1_melhor_reportado": 96.0,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": false,
+  "contribuicao_principal": "Desenvolve um conjunto de ontologias e corpus para NER em litígios de interesse público (ambiental) e propõe um método baseado em BERT-WWM-EXT combinado com BiLSTM+CRF, alcançando até 96% de F1 em NER (e 90% em NERP).",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.85
+}

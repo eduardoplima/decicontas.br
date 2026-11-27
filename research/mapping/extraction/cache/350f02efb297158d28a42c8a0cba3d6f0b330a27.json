@@ -1,0 +1,42 @@
+{
+  "referencia_curta": "Abdulhamed et al. (2025)",
+  "titulo": "Entity Naming in NLP: Hybrid Approach GPT Transformer and Multi-level RNN",
+  "autores": [
+    "Abdulhamed, Ahmed",
+    "Ranjan, Prabhat",
+    "Xiong, Shengwu"
+  ],
+  "ano": 2025,
+  "venue": "ACM Transactions on Asian and Low-Resource Language Information Processing",
+  "pais_corpus": "China",
+  "idioma_corpus": "en",
+  "subdominio": "outros",
+  "tarefa_principal": "ner",
+  "tecnica_principal": "hibrido",
+  "modelos_usados": [
+    "T-MFRNN (proposed)",
+    "BERT",
+    "GPT-2",
+    "ELECTRA",
+    "XNet",
+    "BiLSTM-CRF",
+    "BoundaryAssembly (BA)"
+  ],
+  "entidades_anotadas": [
+    "Person",
+    "Organization",
+    "Drug",
+    "Protein",
+    "Gene",
+    "MedicalEntity"
+  ],
+  "num_classes_entidade": 2,
+  "esquema_anotacao": "nao_reportado",
+  "corpus_publico": true,
+  "f1_melhor_reportado": 100.0,
+  "metrica_tipo": "nao_reportado",
+  "compara_llm_supervisionado": true,
+  "contribuicao_principal": "Propõe o modelo híbrido T-MFRNN que combina camadas transformer com uma Multi-Level Fusion RNN e mecanismos de atenção para melhorar o 'entity naming' em textos biomédicos/medical, mostrando ganhos substanciais sobre BERT, GPT-2, ELECTRA e modelos baselines em múltiplos conjuntos de dados.",
+  "citacao_relevante_para_tce": null,
+  "confianca_extracao": 0.8
+}
